@@ -19,6 +19,7 @@ model questions {
   sectionId  Int
   title      String
   question   String
+  view       String?
   answer     String
   category   String
   createdAt  DateTime @default(now())
