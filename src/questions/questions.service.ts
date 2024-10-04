@@ -12,6 +12,7 @@ export class QuestionsService {
     sectionId: number,
     title: string,
     question: string,
+    view: string,
     answer: string,
     category: string,
   ) {
@@ -21,6 +22,7 @@ export class QuestionsService {
         sectionId,
         title,
         question,
+        view,
         answer,
         category,
       },

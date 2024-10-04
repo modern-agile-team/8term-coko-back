@@ -19,6 +19,7 @@ export class QuestionsController {
     @Body('sectionId') sectionId: string,
     @Body('title') title: string,
     @Body('question') question: string,
+    @Body('view') view: string,
     @Body('answer') answer: string,
     @Body('category') category: string,
   ) {
@@ -27,6 +28,7 @@ export class QuestionsController {
       +sectionId,
       title,
       question,
+      view,
       answer,
       category,
     );
