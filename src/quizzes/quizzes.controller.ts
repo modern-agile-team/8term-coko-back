@@ -15,8 +15,8 @@ export class QuizzesController {
 
   @Post()
   create(
-    @Body('partId') partId: string,
     @Body('sectionId') sectionId: string,
+    @Body('part') part: string,
     @Body('title') title: string,
     @Body('question') question: string,
     @Body('answerChoice') answerChoice: string[],
@@ -24,8 +24,8 @@ export class QuizzesController {
     @Body('category') category: string,
   ) {
     return this.questionsService.create(
-      +partId,
       +sectionId,
+      part,
       title,
       question,
       answerChoice,
@@ -39,19 +39,31 @@ export class QuizzesController {
     return this.questionsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.questionsService.findOne(+id);
-  }
+  //@Get(':id') //없앨듯
+  //findOne(@Param('id') id: string) {
+  //  return this.questionsService.findOne(+id);
+  //}
 
   @Get(':section')
-  findSection(@Param('id') id: string) {
-    return this.questionsService.findOne(+id);
+  findSection(@Param('section') section: string) {
+    return this.questionsService.findSection(section);
   }
 
-  @Get(':section:part:id')
-  findPart(@Param('id') id: string) {
-    return this.questionsService.findOne(+id);
+  @Get(':section/:part')
+  findSectionPart(
+    @Param('section') section: string,
+    @Param('part') part: string,
+  ) {
+    return this.questionsService.findSectionPart(section, part);
+  }
+
+  @Get(':section/:part/:id')
+  findSectionPartId(
+    @Param('section') section: string,
+    @Param('part') part: string,
+    @Param('id') id: string,
+  ) {
+    return this.questionsService.findSectionPartId(section, part, +id);
   }
 
   @Patch(':id')
