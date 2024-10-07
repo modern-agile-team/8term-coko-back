@@ -19,8 +19,8 @@ export class QuizzesController {
     @Body('sectionId') sectionId: string,
     @Body('title') title: string,
     @Body('question') question: string,
-    @Body('view') view: string,
-    @Body('answer') answer: string,
+    @Body('answerChoice') answerChoice: string[],
+    @Body('answer') answer: string[],
     @Body('category') category: string,
   ) {
     return this.questionsService.create(
@@ -28,7 +28,7 @@ export class QuizzesController {
       +sectionId,
       title,
       question,
-      view,
+      answerChoice,
       answer,
       category,
     );
@@ -57,7 +57,7 @@ export class QuizzesController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    //@Body() updateQuestionDto: UpdateQuestionDto
+    //@Body() updateQuizDto: UpdateQuizDto
   ) {
     return this.questionsService.update(+id);
   }
