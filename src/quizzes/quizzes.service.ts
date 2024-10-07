@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateQuestionDto } from './dto/create-question.dto';
-import { UpdateQuestionDto } from './dto/update-question.dto';
+import { CreateQuestionDto } from './dto/create-quiz.dto';
+import { UpdateQuestionDto } from './dto/update-quiz.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
-export class QuestionsService {
+export class QuizzesService {
   constructor(private prisma: PrismaService) {}
 
   create(
@@ -12,17 +12,17 @@ export class QuestionsService {
     sectionId: number,
     title: string,
     question: string,
-    view: string,
-    answer: string,
+    answerChoice: string[],
+    answer: string[],
     category: string,
   ) {
-    return this.prisma.questions.create({
+    return this.prisma.quizzes.create({
       data: {
         partId,
         sectionId,
         title,
         question,
-        view,
+        answerChoice,
         answer,
         category,
       },
@@ -30,7 +30,7 @@ export class QuestionsService {
   }
 
   findAll() {
-    return this.prisma.questions.findMany();
+    return this.prisma.quizzes.findMany();
   }
 
   findOne(id: number) {

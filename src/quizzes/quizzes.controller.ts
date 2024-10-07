@@ -7,11 +7,11 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { QuestionsService } from './questions.service';
+import { QuizzesService } from './quizzes.service';
 
-@Controller('questions')
-export class QuestionsController {
-  constructor(private readonly questionsService: QuestionsService) {}
+@Controller('quizzes')
+export class QuizzesController {
+  constructor(private readonly questionsService: QuizzesService) {}
 
   @Post()
   create(
@@ -41,6 +41,16 @@ export class QuestionsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
+    return this.questionsService.findOne(+id);
+  }
+
+  @Get(':section')
+  findSection(@Param('id') id: string) {
+    return this.questionsService.findOne(+id);
+  }
+
+  @Get(':section:part:id')
+  findPart(@Param('id') id: string) {
     return this.questionsService.findOne(+id);
   }
 
