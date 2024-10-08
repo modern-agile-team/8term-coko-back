@@ -1,15 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { UpdateSectionDto } from './dto/update-section.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class SectionsService {
-  create(createSectionDto: CreateSectionDto) {
-    return 'This action adds a new section';
+  constructor(private prisma: PrismaService) {}
+  create(name: string) {
+    return this.prisma.sections.create({
+      data: {
+        name,
+      },
+    });
   }
 
   findAll() {
-    return `This action returns all sections`;
+    return this.prisma.sections.findMany();
   }
 
   findOne(id: number) {
