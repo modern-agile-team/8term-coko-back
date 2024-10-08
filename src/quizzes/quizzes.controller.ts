@@ -3,9 +3,9 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { QuizzesService } from './quizzes.service';
 
@@ -39,11 +39,6 @@ export class QuizzesController {
     return this.questionsService.findAll();
   }
 
-  //@Get(':id') //없앨듯
-  //findOne(@Param('id') id: string) {
-  //  return this.questionsService.findOne(+id);
-  //}
-
   @Get(':section')
   findSection(@Param('section') section: string) {
     return this.questionsService.findSection(section);
@@ -66,12 +61,28 @@ export class QuizzesController {
     return this.questionsService.findSectionPartId(section, part, +id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(
     @Param('id') id: string,
+    @Body('sectionId') sectionId: string,
+    @Body('part') part: string,
+    @Body('title') title: string,
+    @Body('question') question: string,
+    @Body('answerChoice') answerChoice: string[],
+    @Body('answer') answer: string[],
+    @Body('category') category: string,
     //@Body() updateQuizDto: UpdateQuizDto
   ) {
-    return this.questionsService.update(+id);
+    return this.questionsService.update(
+      +id,
+      +sectionId,
+      part,
+      title,
+      question,
+      answerChoice,
+      answer,
+      category,
+    );
   }
 
   @Delete(':id')

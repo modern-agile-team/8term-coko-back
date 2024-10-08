@@ -12,7 +12,7 @@ import { part as PartEnum } from '@prisma/client';
 export class QuizzesService {
   constructor(private prisma: PrismaService) {}
 
-  create(
+  async create(
     sectionId: number,
     part: string,
     title: string,
@@ -21,6 +21,15 @@ export class QuizzesService {
     answer: string[],
     category: string,
   ) {
+    const section = await this.prisma.sections.findUnique({
+      where: {
+        id: sectionId,
+      },
+    });
+
+    if (!section) {
+      throw new NotFoundException();
+    }
     const enumPart = PartEnum[part as keyof typeof PartEnum];
 
     if (!enumPart) {
@@ -42,10 +51,6 @@ export class QuizzesService {
 
   findAll() {
     return this.prisma.quizzes.findMany();
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} question`;
   }
 
   async findSection(sectionName: string) {
@@ -127,11 +132,68 @@ export class QuizzesService {
     });
   }
 
-  update(id: number) {
-    return `This action updates a #${id} question`;
+  async update(
+    id: number,
+    sectionId: number,
+    part: string,
+    title: string,
+    question: string,
+    answerChoice: string[],
+    answer: string[],
+    category: string,
+  ) {
+    const section = await this.prisma.sections.findUnique({
+      where: {
+        id: sectionId,
+      },
+    });
+
+    if (!section) {
+      throw new NotFoundException();
+    }
+    const enumPart = PartEnum[part as keyof typeof PartEnum];
+
+    if (!enumPart) {
+      throw new BadRequestException(`Invalid part value: ${part}`);
+    }
+
+    const quiz = await this.prisma.quizzes.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!quiz) {
+      throw new NotFoundException();
+    }
+
+    return this.prisma.quizzes.update({
+      where: {
+        id,
+      },
+      data: {
+        sectionId,
+        part: enumPart,
+        title,
+        question,
+        answerChoice,
+        answer,
+        category,
+      },
+    });
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    const quiz = await this.prisma.quizzes.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!quiz) {
+      throw new NotFoundException();
+    }
+
     return this.prisma.quizzes.delete({
       where: {
         id,
