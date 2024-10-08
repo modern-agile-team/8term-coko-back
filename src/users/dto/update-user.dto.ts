@@ -11,15 +11,18 @@
 //   point Int @default(0)
 // }
 
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdateUserDto {
+  @IsOptional()
   @IsString()
-  readonly nickname: string;
+  readonly nickname?: string;
 
+  @IsOptional()
   @IsNumber()
-  readonly exprience: number;
+  readonly experience?: number;
 
+  @IsOptional()
   @IsNumber()
-  readonly point: number;
+  readonly point?: number;
 }
