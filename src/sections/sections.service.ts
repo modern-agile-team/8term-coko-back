@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { UpdateSectionDto } from './dto/update-section.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -18,15 +18,56 @@ export class SectionsService {
     return this.prisma.sections.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} section`;
+  async findOne(id: number) {
+    const section = await this.prisma.sections.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!section) {
+      throw new NotFoundException();
+    }
+
+    return section;
   }
 
-  update(id: number, updateSectionDto: UpdateSectionDto) {
-    return `This action updates a #${id} section`;
+  async update(id: number, name: string) {
+    const section = await this.prisma.sections.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!section) {
+      throw new NotFoundException();
+    }
+
+    return this.prisma.sections.update({
+      where: {
+        id,
+      },
+      data: {
+        name,
+      },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} section`;
+  async remove(id: number) {
+    const section = await this.prisma.sections.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!section) {
+      throw new NotFoundException();
+    }
+
+    return this.prisma.sections.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

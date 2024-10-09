@@ -34,8 +34,12 @@ export class SectionsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSectionDto: UpdateSectionDto) {
-    return this.sectionsService.update(+id, updateSectionDto);
+  update(
+    @Param('id') id: string,
+    @Body('name') name: string,
+    //@Body() updateSectionDto: UpdateSectionDto
+  ) {
+    return this.sectionsService.update(+id, name);
   }
 
   @Delete(':id')
