@@ -13,22 +13,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum part {
-  Easy
-  Normal
-  Hard
-  VeryHard
+enum Part {
+  EASY
+  NORMAL
+  HARD
+  VERY_HARD
+}
+
+enum Category {
+  COMBINATION
+  MULTIPLE_CHOICE
+  OX_SELECTOR
+  SHORT_ANSWER
 }
 
 model quizzes {
   id              Int      @id @default(autoincrement())
-  part            part
+  part            Part
   sectionId       Int
   title           String
   question        String
   answer          String[]
   answerChoice    String[]
-  category        String
+  category        Category
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   section         sections @relation(fields: [sectionId], references: [id])
