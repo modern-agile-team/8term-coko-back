@@ -1,15 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreatePointDto } from './dto/create-point.dto';
 import { UpdatePointDto } from './dto/update-point.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class PointsService {
   constructor(private prisma: PrismaService) {}
-
-  create(createPointDto: CreatePointDto) {
-    return 'This action adds a new point';
-  }
 
   async getUsersPoint() {
     const usersPoint = await this.prisma.users.findMany({
@@ -48,9 +43,5 @@ export class PointsService {
     });
 
     return userPoint;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} point`;
   }
 }
