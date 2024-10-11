@@ -17,13 +17,10 @@ export class ExperienceController {
   }
 
   @Patch(':id')
-  updateUserExperience(
+  updateExperience(
     @Param('id') id: number,
     @Body() updateExperienceData: UpdateExperienceDto,
   ) {
-    return this.experienceService.updateUserExperience(
-      id,
-      updateExperienceData,
-    );
+    return this.experienceService.updateExperience(id, updateExperienceData);
   }
 }
