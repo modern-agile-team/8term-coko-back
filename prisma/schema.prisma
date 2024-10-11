@@ -16,15 +16,15 @@ datasource db {
 enum Part {
   EASY
   NORMAL
-  HARD
+  HARD 
   VERY_HARD
 }
 
 enum Category {
-  COMBINATION
+  COMBINATION 
   MULTIPLE_CHOICE
   OX_SELECTOR
-  SHORT_ANSWER
+  SHORT_ANSWER @map("xzvcxvc")
 }
 
 model quizzes {
@@ -34,11 +34,13 @@ model quizzes {
   title           String
   question        String
   answer          String[]
-  answerChoice    String[]
+  answerChoice    String[] @map("")
   category        Category
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   section         sections @relation(fields: [sectionId], references: [id])
+
+  @@map("fhghg")
 }
 
 model sections {

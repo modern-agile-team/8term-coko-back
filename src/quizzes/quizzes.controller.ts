@@ -6,11 +6,12 @@ import {
   Param,
   Delete,
   Put,
+  Query,
 } from '@nestjs/common';
 import { QuizzesService } from './quizzes.service';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
-import { ParamQuizDto } from './dto/param-quiz.dto';
+import { QueryQuizDto } from './dto/query-quiz.dto';
 
 @Controller('quizzes')
 export class QuizzesController {
@@ -22,37 +23,22 @@ export class QuizzesController {
   }
 
   @Get()
-  findAll() {
-    return this.questionsService.findAll();
+  getAll(@Query() query: QueryQuizDto) {
+    return this.questionsService.findAll(query);
   }
 
-  @Get(':section')
-  findSection(@Param() params: ParamQuizDto) {
-    const { section } = params;
-    return this.questionsService.findSection(section);
-  }
-
-  @Get(':section/:part')
-  findSectionPart(@Param() params: ParamQuizDto) {
-    const { section, part } = params;
-    return this.questionsService.findSectionPart(section, part);
-  }
-
-  @Get(':section/:part/:id')
-  findSectionPartId(@Param() params: ParamQuizDto) {
-    const { section, part, id } = params;
-    return this.questionsService.findSectionPartId(section, part, id);
+  @Get(':id')
+  getOneBySectionPartId(@Param('id') id: number) {
+    return this.questionsService.findQuizById(id);
   }
 
   @Put(':id')
-  update(@Param() params: ParamQuizDto, @Body() quizData: UpdateQuizDto) {
-    const { id } = params;
+  update(@Param('id') id: number, @Body() quizData: UpdateQuizDto) {
     return this.questionsService.update(id, quizData);
   }
 
   @Delete(':id')
-  remove(@Param() params: ParamQuizDto) {
-    const { id } = params;
+  remove(@Param('id') id: number) {
     return this.questionsService.remove(id);
   }
 }

@@ -1,30 +1,46 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Part } from '@prisma/client';
+import { QueryQuizDto } from './dto/query-quiz.dto';
 
 @Injectable()
 export class QuizzesService {
   constructor(private prisma: PrismaService) {}
 
-  async create(quizData: CreateQuizDto) {
-    const { sectionId, ...orders } = quizData;
-
-    //섹션 있는지 확인
+  async findSectionById(id: number) {
     const section = await this.prisma.sections.findUnique({
       where: {
-        id: sectionId,
+        id,
       },
     });
 
     if (!section) {
       throw new NotFoundException();
     }
+
+    return section.id;
+  }
+
+  async findSectionByName(name: string) {
+    const section = await this.prisma.sections.findUnique({
+      where: {
+        name,
+      },
+    });
+
+    if (!section) {
+      throw new NotFoundException();
+    }
+
+    return section.id;
+  }
+
+  async create(quizData: CreateQuizDto) {
+    const { sectionId, ...orders } = quizData;
+
+    await this.findSectionById(sectionId);
 
     return this.prisma.quizzes.create({
       data: {
@@ -34,63 +50,19 @@ export class QuizzesService {
     });
   }
 
-  findAll() {
-    return this.prisma.quizzes.findMany();
-  }
-
-  async findSection(sectionName: string) {
-    //섹션 있는지 확인
-    const section = await this.prisma.sections.findUnique({
-      where: {
-        name: sectionName,
-      },
-    });
-
-    if (!section) {
-      throw new NotFoundException();
-    }
+  async findAll(query: QueryQuizDto) {
+    const { sectionId, part } = query;
 
     return this.prisma.quizzes.findMany({
       where: {
-        sectionId: section.id,
+        ...(sectionId && { sectionId }),
+        ...(part && { part }),
       },
     });
   }
 
-  async findSectionPart(sectionName: string, part: Part) {
-    //섹션 있는지 확인
-    const section = await this.prisma.sections.findUnique({
-      where: {
-        name: sectionName,
-      },
-    });
-
-    if (!section) {
-      throw new NotFoundException();
-    }
-
-    return this.prisma.quizzes.findMany({
-      where: {
-        sectionId: section.id,
-        part,
-      },
-    });
-  }
-
-  async findSectionPartId(sectionName: string, part: Part, id: number) {
-    //섹션 있는지 확인
-    const section = await this.prisma.sections.findUnique({
-      where: {
-        name: sectionName,
-      },
-    });
-
-    if (!section) {
-      throw new NotFoundException();
-    }
-
-    //문제 있는지 확인
-    const quiz = await this.prisma.quizzes.findUnique({
+  async findQuizById(id: number) {
+    const quiz = this.prisma.quizzes.findUnique({
       where: {
         id,
       },
@@ -100,39 +72,15 @@ export class QuizzesService {
       throw new NotFoundException();
     }
 
-    return this.prisma.quizzes.findMany({
-      where: {
-        id: quiz.id,
-        sectionId: section.id,
-        part,
-      },
-    });
+    return quiz;
   }
 
   async update(id: number, quizData: UpdateQuizDto) {
     const { sectionId, ...orders } = quizData;
 
-    //섹션 있는지 확인
-    const section = await this.prisma.sections.findUnique({
-      where: {
-        id: sectionId,
-      },
-    });
+    await this.findSectionById(sectionId);
 
-    if (!section) {
-      throw new NotFoundException();
-    }
-
-    // 문제 있는지 확인
-    const quiz = await this.prisma.quizzes.findUnique({
-      where: {
-        id,
-      },
-    });
-
-    if (!quiz) {
-      throw new NotFoundException();
-    }
+    await this.findQuizById(id);
 
     return this.prisma.quizzes.update({
       where: {
@@ -146,16 +94,7 @@ export class QuizzesService {
   }
 
   async remove(id: number) {
-    // 문제 있는지 확인
-    const quiz = await this.prisma.quizzes.findUnique({
-      where: {
-        id,
-      },
-    });
-
-    if (!quiz) {
-      throw new NotFoundException();
-    }
+    await this.findQuizById(id);
 
     return this.prisma.quizzes.delete({
       where: {
