@@ -36,48 +36,48 @@ export class ExperienceService {
     updateExperienceData: UpdateExperienceDto,
   ) {
     const user = await this.prisma.users.findUnique({ where: { id } });
-    const experienceForNextLevel = { nowExperience: 50 };
 
     if (!user) {
       throw new NotFoundException(`ID ${id} not found`);
     }
 
-    const { userLevel, userExperience, nowExperience } = this.calculateLevel(
-      user.experience,
-      user.level,
-      updateExperienceData.experience,
-      experienceForNextLevel.nowExperience,
-    );
-
-    console.log(userLevel, userExperience, nowExperience);
+    const { userLevel, userExperience, experienceForNextLevel } =
+      this.calculateLevel(
+        user.level,
+        user.experience,
+        user.experienceForNextLevel,
+        updateExperienceData.experience,
+      );
 
     const updatedExperience = await this.prisma.users.update({
       where: { id },
       data: {
-        experience: userExperience,
         level: userLevel,
+        experience: userExperience,
+        experienceForNextLevel: experienceForNextLevel,
       },
       select: {
         id: true,
         level: true,
         experience: true,
+        experienceForNextLevel: true,
       },
     });
     return updatedExperience;
   }
 
   calculateLevel(
-    userExperience: number,
     userLevel: number,
+    userExperience: number,
+    experienceForNextLevel: number,
     updateExperience: number,
-    nowExperience: number,
   ) {
     userExperience += updateExperience;
-    if (userExperience >= nowExperience) {
+    if (userExperience >= experienceForNextLevel) {
       userLevel += 1;
-      userExperience -= nowExperience;
-      nowExperience *= 1.2;
+      userExperience -= experienceForNextLevel;
+      experienceForNextLevel = Math.floor(experienceForNextLevel * 1.2);
     }
-    return { userLevel, userExperience, nowExperience };
+    return { userLevel, userExperience, experienceForNextLevel };
   }
 }

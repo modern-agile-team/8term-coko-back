@@ -23,5 +23,6 @@ model Users{
   lastLogin DateTime @default(now())
   level Int @default(1)
   experience Int @default(0)
+  experienceForNextLevel Int @default(50)
   point Int @default(0)
 }
