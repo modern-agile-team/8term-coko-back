@@ -8,30 +8,17 @@ import {
   Put,
 } from '@nestjs/common';
 import { QuizzesService } from './quizzes.service';
+import { CreateQuizDto } from './dto/create-quiz.dto';
+import { UpdateQuizDto } from './dto/update-quiz.dto';
+import { ParamQuizDto } from './dto/param-quiz.dto';
 
 @Controller('quizzes')
 export class QuizzesController {
   constructor(private readonly questionsService: QuizzesService) {}
 
   @Post()
-  create(
-    @Body('sectionId') sectionId: string,
-    @Body('part') part: string,
-    @Body('title') title: string,
-    @Body('question') question: string,
-    @Body('answerChoice') answerChoice: string[],
-    @Body('answer') answer: string[],
-    @Body('category') category: string,
-  ) {
-    return this.questionsService.create(
-      +sectionId,
-      part,
-      title,
-      question,
-      answerChoice,
-      answer,
-      category,
-    );
+  create(@Body() quizData: CreateQuizDto) {
+    return this.questionsService.create(quizData);
   }
 
   @Get()
@@ -40,53 +27,32 @@ export class QuizzesController {
   }
 
   @Get(':section')
-  findSection(@Param('section') section: string) {
+  findSection(@Param() params: ParamQuizDto) {
+    const { section } = params;
     return this.questionsService.findSection(section);
   }
 
   @Get(':section/:part')
-  findSectionPart(
-    @Param('section') section: string,
-    @Param('part') part: string,
-  ) {
+  findSectionPart(@Param() params: ParamQuizDto) {
+    const { section, part } = params;
     return this.questionsService.findSectionPart(section, part);
   }
 
   @Get(':section/:part/:id')
-  findSectionPartId(
-    @Param('section') section: string,
-    @Param('part') part: string,
-    @Param('id') id: string,
-  ) {
-    return this.questionsService.findSectionPartId(section, part, +id);
+  findSectionPartId(@Param() params: ParamQuizDto) {
+    const { section, part, id } = params;
+    return this.questionsService.findSectionPartId(section, part, id);
   }
 
   @Put(':id')
-  update(
-    @Param('id') id: string,
-    @Body('sectionId') sectionId: string,
-    @Body('part') part: string,
-    @Body('title') title: string,
-    @Body('question') question: string,
-    @Body('answerChoice') answerChoice: string[],
-    @Body('answer') answer: string[],
-    @Body('category') category: string,
-    //@Body() updateQuizDto: UpdateQuizDto
-  ) {
-    return this.questionsService.update(
-      +id,
-      +sectionId,
-      part,
-      title,
-      question,
-      answerChoice,
-      answer,
-      category,
-    );
+  update(@Param() params: ParamQuizDto, @Body() quizData: UpdateQuizDto) {
+    const { id } = params;
+    return this.questionsService.update(id, quizData);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.questionsService.remove(+id);
+  remove(@Param() params: ParamQuizDto) {
+    const { id } = params;
+    return this.questionsService.remove(id);
   }
 }
