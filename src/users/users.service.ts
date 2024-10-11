@@ -41,7 +41,6 @@ export class UsersService {
     if (!(await this.prisma.users.findUnique({ where: { id } }))) {
       throw new NotFoundException(`ID ${id} not found`);
     }
-
     return this.prisma.users.delete({ where: { id } });
   }
 }

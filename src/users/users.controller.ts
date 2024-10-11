@@ -40,6 +40,7 @@ export class UsersController {
 
   @Delete(':id')
   remove(@Param('id') userId: number) {
-    return this.usersService.deleteUser(userId);
+    this.usersService.deleteUser(userId);
+    return { statusCode: 204, message: 'No Content' };
   }
 }
