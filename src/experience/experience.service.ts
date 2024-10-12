@@ -66,7 +66,7 @@ export class ExperienceService {
     return updatedExperience;
   }
 
-  calculateLevel(
+  private calculateLevel(
     userLevel: number,
     userExperience: number,
     experienceForNextLevel: number,
