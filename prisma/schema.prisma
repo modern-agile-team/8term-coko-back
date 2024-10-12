@@ -17,7 +17,7 @@ model Users{
   id Int @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  nickname String
+  nickname String @db.VarChar(50)
   profileImage String?
   maxHealthPoint Int @default(5)
   lastLogin DateTime @default(now())
