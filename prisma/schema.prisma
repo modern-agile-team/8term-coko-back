@@ -6,7 +6,9 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
+
 
 datasource db {
   provider = "postgresql"
@@ -24,7 +26,7 @@ enum Category {
   COMBINATION 
   MULTIPLE_CHOICE
   OX_SELECTOR
-  SHORT_ANSWER @map("xzvcxvc")
+  SHORT_ANSWER
 }
 
 model quizzes {
@@ -34,13 +36,13 @@ model quizzes {
   title           String
   question        String
   answer          String[]
-  answerChoice    String[] @map("")
+  answerChoice    String[]
   category        Category
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   section         sections @relation(fields: [sectionId], references: [id])
 
-  @@map("fhghg")
+  @@map("quizzes")
 }
 
 model sections {
