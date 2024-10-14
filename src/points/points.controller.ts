@@ -1,4 +1,11 @@
-import { Controller, Get, Body, Patch, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Patch,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { PointsService } from './points.service';
 import { UpdatePointDto } from './dto/update-point.dto';
 
@@ -12,12 +19,15 @@ export class PointsController {
   }
 
   @Get(':id')
-  getUserPoint(@Param('id') id: number) {
+  getUserPoint(@Param('id', ParseIntPipe) id: number) {
     return this.pointsService.getUserPoint(id);
   }
 
   @Patch(':id')
-  update(@Param('id') userId: number, @Body() updatePointData: UpdatePointDto) {
+  update(
+    @Param('id', ParseIntPipe) userId: number,
+    @Body() updatePointData: UpdatePointDto,
+  ) {
     return this.pointsService.updatePoint(userId, updatePointData);
   }
 }

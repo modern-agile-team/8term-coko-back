@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -21,7 +22,9 @@ export class UsersController {
   }
 
   @Get(':id')
-  getUser(@Param('id') userId: number) {
+  getUser(@Param('id', ParseIntPipe) userId: number) {
+    console.log(userId);
+    console.log(typeof userId);
     return this.usersService.getUser(userId);
   }
 
@@ -32,14 +35,14 @@ export class UsersController {
 
   @Patch(':id')
   updateUser(
-    @Param('id') userId: number,
+    @Param('id', ParseIntPipe) userId: number,
     @Body() updateUserData: UpdateUserDto,
   ) {
     return this.usersService.updateUser(userId, updateUserData);
   }
 
   @Delete(':id')
-  remove(@Param('id') userId: number) {
+  remove(@Param('id', ParseIntPipe) userId: number) {
     this.usersService.deleteUser(userId);
     return { statusCode: 204, message: 'No Content' };
   }
