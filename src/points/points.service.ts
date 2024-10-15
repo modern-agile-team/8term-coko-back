@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { UpdatePointDto } from './dto/update-point.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ResponsePointDto } from './dto/response-point.dto';
@@ -31,8 +35,11 @@ export class PointsService {
     id: number,
     updatePointData: UpdatePointDto,
   ): Promise<ResponsePointDto> {
-    if (!(await this.prisma.users.findUnique({ where: { id } }))) {
+    const user = await this.prisma.users.findUnique({ where: { id } });
+    if (!user) {
       throw new NotFoundException(`ID ${id} not found`);
+    } else if (0 > user.point + updatePointData.point) {
+      throw new BadRequestException('User points are not enough');
     }
 
     const userPoint = await this.prisma.users.update({
