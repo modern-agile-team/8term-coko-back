@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateExperienceDto } from './dto/update-experience.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma } from '@prisma/client';
 import { ResponseExperienceDto } from './dto/response-experience.dto';
+import { INCREASE_MULTIPLIER, LEVEL_UP } from './constants/experience.constant';
 
 @Injectable()
 export class ExperienceService {
@@ -69,9 +69,11 @@ export class ExperienceService {
   ) {
     userExperience += updateExperience;
     if (userExperience >= experienceForNextLevel) {
-      userLevel += 1;
+      userLevel += LEVEL_UP;
       userExperience -= experienceForNextLevel;
-      experienceForNextLevel = Math.floor(experienceForNextLevel * 1.2);
+      experienceForNextLevel = Math.floor(
+        experienceForNextLevel * INCREASE_MULTIPLIER,
+      );
     }
     return { userLevel, userExperience, experienceForNextLevel };
   }
