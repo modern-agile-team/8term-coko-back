@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { SectionsService } from './sections.service';
 import { CreateSectionDto } from './dto/create-section.dto';
@@ -29,21 +30,21 @@ export class SectionsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.sectionsService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.sectionsService.findOne(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body('name') name: string,
     //@Body() updateSectionDto: UpdateSectionDto
   ) {
-    return this.sectionsService.update(+id, name);
+    return this.sectionsService.update(id, name);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.sectionsService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.sectionsService.remove(id);
   }
 }

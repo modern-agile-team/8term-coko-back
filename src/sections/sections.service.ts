@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { UpdateSectionDto } from './dto/update-section.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -6,7 +10,32 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class SectionsService {
   constructor(private prisma: PrismaService) {}
-  create(name: string) {
+
+  private async findSectionById(id: number) {
+    const section = await this.prisma.sections.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!section) {
+      throw new NotFoundException();
+    }
+
+    return section.id;
+  }
+
+  async create(name: string) {
+    const section = await this.prisma.sections.findUnique({
+      where: {
+        name,
+      },
+    });
+
+    if (section) {
+      throw new ConflictException();
+    }
+
     return this.prisma.sections.create({
       data: {
         name,
@@ -14,7 +43,7 @@ export class SectionsService {
     });
   }
 
-  findAll() {
+  async findAll() {
     return this.prisma.sections.findMany();
   }
 
@@ -33,15 +62,7 @@ export class SectionsService {
   }
 
   async update(id: number, name: string) {
-    const section = await this.prisma.sections.findUnique({
-      where: {
-        id,
-      },
-    });
-
-    if (!section) {
-      throw new NotFoundException();
-    }
+    await this.findSectionById(id);
 
     return this.prisma.sections.update({
       where: {
@@ -54,15 +75,7 @@ export class SectionsService {
   }
 
   async remove(id: number) {
-    const section = await this.prisma.sections.findUnique({
-      where: {
-        id,
-      },
-    });
-
-    if (!section) {
-      throw new NotFoundException();
-    }
+    await this.findSectionById(id);
 
     return this.prisma.sections.delete({
       where: {
