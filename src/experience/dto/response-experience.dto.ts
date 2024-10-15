@@ -1,7 +1,6 @@
-import { UpdateExperienceDto } from './update-experience.dto';
 import { Users } from '@prisma/client';
 
-export class ResponseExperienceDto extends UpdateExperienceDto {
+export class ResponseExperienceDto {
   readonly id: number;
   readonly nickname: string;
   readonly level: number;
@@ -9,7 +8,6 @@ export class ResponseExperienceDto extends UpdateExperienceDto {
   readonly experienceForNextLevel: number;
 
   constructor(user: Users) {
-    super();
     this.id = user.id;
     this.nickname = user.nickname;
     this.level = user.level;
