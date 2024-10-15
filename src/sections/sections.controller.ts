@@ -17,11 +17,8 @@ export class SectionsController {
   constructor(private readonly sectionsService: SectionsService) {}
 
   @Post()
-  create(
-    @Body('name') name: string,
-    //@Body() createSectionDto: CreateSectionDto
-  ) {
-    return this.sectionsService.create(name);
+  create(@Body() sectionData: CreateSectionDto) {
+    return this.sectionsService.create(sectionData);
   }
 
   @Get()
@@ -37,10 +34,9 @@ export class SectionsController {
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body('name') name: string,
-    //@Body() updateSectionDto: UpdateSectionDto
+    @Body() sectionData: UpdateSectionDto,
   ) {
-    return this.sectionsService.update(id, name);
+    return this.sectionsService.update(id, sectionData);
   }
 
   @Delete(':id')

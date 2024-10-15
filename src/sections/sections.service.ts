@@ -25,7 +25,9 @@ export class SectionsService {
     return section.id;
   }
 
-  async create(name: string) {
+  async create(sectionData: CreateSectionDto) {
+    const { name } = sectionData;
+
     const section = await this.prisma.sections.findUnique({
       where: {
         name,
@@ -61,7 +63,9 @@ export class SectionsService {
     return section;
   }
 
-  async update(id: number, name: string) {
+  async update(id: number, sectionData: UpdateSectionDto) {
+    const { name } = sectionData;
+
     await this.findSectionById(id);
 
     return this.prisma.sections.update({
