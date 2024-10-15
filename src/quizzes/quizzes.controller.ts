@@ -7,6 +7,7 @@ import {
   Delete,
   Put,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { QuizzesService } from './quizzes.service';
 import { CreateQuizDto } from './dto/create-quiz.dto';
@@ -28,17 +29,20 @@ export class QuizzesController {
   }
 
   @Get(':id')
-  getOneBySectionPartId(@Param('id') id: number) {
+  getOneBySectionPartId(@Param('id', ParseIntPipe) id: number) {
     return this.questionsService.findQuizById(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() quizData: UpdateQuizDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() quizData: UpdateQuizDto,
+  ) {
     return this.questionsService.update(id, quizData);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.questionsService.remove(id);
   }
 }
