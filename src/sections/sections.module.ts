@@ -4,7 +4,6 @@ import { SectionsController } from './sections.controller';
 import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
-  imports: [PrismaModule],
   controllers: [SectionsController],
   providers: [SectionsService],
 })

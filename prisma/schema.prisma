@@ -32,14 +32,14 @@ enum Category {
 model quizzes {
   id              Int      @id @default(autoincrement())
   part            Part
-  sectionId       Int
-  title           String
-  question        String
+  sectionId       Int      @map("section_id")
+  title           String   @db.VarChar(255)	
+  question        String   @db.VarChar(1000)	
   answer          String[]
-  answerChoice    String[]
+  answerChoice    String[] @map("answer_choice")
   category        Category
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt      @map("updated_at")
   section         sections @relation(fields: [sectionId], references: [id])
 
   @@map("quizzes")
@@ -47,10 +47,12 @@ model quizzes {
 
 model sections {
   id              Int      @id @default(autoincrement())
-  name            String   @unique
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  name            String   @unique   @db.VarChar(255)	
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt      @map("updated_at")
   quizzes         quizzes[]
+
+  @@map("sections")
 }
 
 
