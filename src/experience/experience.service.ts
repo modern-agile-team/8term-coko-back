@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateExperienceDto } from './dto/update-experience.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Prisma } from '@prisma/client';
+import { ResponseExperienceDto } from './dto/response-experience.dto';
 
 @Injectable()
 export class ExperienceService {
@@ -10,31 +12,30 @@ export class ExperienceService {
     const usersExperience = await this.prisma.users.findMany({
       select: {
         id: true,
+        nickname: true,
         level: true,
         experience: true,
+        experienceForNextLevel: true,
       },
     });
     return usersExperience;
   }
 
-  async getUserExperience(id: number) {
+  async getUserExperience(id: number): Promise<ResponseExperienceDto> {
     const userExperience = await this.prisma.users.findUnique({
       where: { id },
-      select: {
-        experience: true,
-      },
     });
 
     if (!userExperience) {
       throw new NotFoundException(`ID ${id} not found`);
     }
-    return userExperience;
+    return new ResponseExperienceDto(userExperience);
   }
 
   async updateExperience(
     id: number,
     updateExperienceData: UpdateExperienceDto,
-  ) {
+  ): Promise<ResponseExperienceDto> {
     const user = await this.prisma.users.findUnique({ where: { id } });
 
     if (!user) {
@@ -56,14 +57,8 @@ export class ExperienceService {
         experience: userExperience,
         experienceForNextLevel: experienceForNextLevel,
       },
-      select: {
-        id: true,
-        level: true,
-        experience: true,
-        experienceForNextLevel: true,
-      },
     });
-    return updatedExperience;
+    return new ResponseExperienceDto(updatedExperience);
   }
 
   private calculateLevel(
