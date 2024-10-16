@@ -13,12 +13,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Items {
+  id          Int        @id @default(autoincrement())
+  name        String
+  cost        Int
+  image       String      
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 
-model items {
-  id Int @id @default(autoincrement())
-  name String
-  cost Int
-  image String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  userItems   userItems[] //1:N관계, Items와 userItems 연결
 }
+
+model userItems {
+  id          Int        @id @default(autoincrement())
+  userId      Int
+  itemId      Int
+  createdAt   DateTime   @default(now())
+  isEquipped  Boolean    @default(false)
+  quantity    Int        @default(1)
+
+  users Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items Items @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([itemId])
+}
+
+
