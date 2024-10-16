@@ -6,12 +6,12 @@ import {
   Param,
   ParseIntPipe,
 } from '@nestjs/common';
-import { ExperienceService } from './experience.service';
-import { UpdateExperienceDto } from './dto/update-experience.dto';
+import { UpdateExperienceDto } from '../dtos/update-experience.dto';
+import { UserExperienceService } from '../services/user-experience.service';
 
 @Controller('experience')
-export class ExperienceController {
-  constructor(private readonly experienceService: ExperienceService) {}
+export class UserExperienceController {
+  constructor(private readonly experienceService: UserExperienceService) {}
 
   @Get()
   getUsersExperience() {

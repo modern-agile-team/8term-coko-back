@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
-import { PointsModule } from './points/points.module';
-import { ExperienceModule } from './experience/experience.module';
+import { PointModule } from './users/modules/user-point.module';
+import { ExperienceModule } from './users/modules/user-experience.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { UsersModule } from './users/modules/users.module';
 
 @Module({
-  imports: [UsersModule, PointsModule, ExperienceModule, PrismaModule],
+  imports: [UsersModule, PointModule, ExperienceModule, PrismaModule],
   controllers: [AppController],
   providers: [AppService],
 })

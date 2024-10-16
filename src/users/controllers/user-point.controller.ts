@@ -6,12 +6,12 @@ import {
   Param,
   ParseIntPipe,
 } from '@nestjs/common';
-import { PointsService } from './points.service';
-import { UpdatePointDto } from './dto/update-point.dto';
+import { UserPointService } from '../services/user-point.service';
+import { UpdatePointDto } from '../dtos/update-point.dto';
 
 @Controller('points')
-export class PointsController {
-  constructor(private readonly pointsService: PointsService) {}
+export class UserPointController {
+  constructor(private readonly pointsService: UserPointService) {}
 
   @Get()
   getUsersPoint() {

@@ -3,12 +3,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { UpdatePointDto } from './dto/update-point.dto';
+import { UpdatePointDto } from '../dtos/update-point.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ResponsePointDto } from './dto/response-point.dto';
+import { ResponsePointDto } from '../dtos/response-point.dto';
 
 @Injectable()
-export class PointsService {
+export class UserPointService {
   constructor(private prisma: PrismaService) {}
 
   async getUsersPoint() {

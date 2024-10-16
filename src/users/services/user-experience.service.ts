@@ -1,11 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { UpdateExperienceDto } from './dto/update-experience.dto';
+import { UpdateExperienceDto } from '../dtos/update-experience.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ResponseExperienceDto } from './dto/response-experience.dto';
-import { INCREASE_MULTIPLIER, LEVEL_UP } from './constants/experience.constant';
+import { ResponseExperienceDto } from '../dtos/response-experience.dto';
+import {
+  INCREASE_MULTIPLIER,
+  LEVEL_UP,
+} from '../constants/user-experience.constant';
 
 @Injectable()
-export class ExperienceService {
+export class UserExperienceService {
   constructor(private prisma: PrismaService) {}
 
   async getUsersExperience() {
