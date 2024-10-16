@@ -13,11 +13,6 @@ import { UpdatePointDto } from '../dtos/update-point.dto';
 export class UserPointController {
   constructor(private readonly pointsService: UserPointService) {}
 
-  @Get()
-  getUsersPoint() {
-    return this.pointsService.getUsersPoint();
-  }
-
   @Get(':id')
   getUserPoint(@Param('id', ParseIntPipe) id: number) {
     return this.pointsService.getUserPoint(id);

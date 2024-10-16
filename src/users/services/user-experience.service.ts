@@ -11,19 +11,6 @@ import {
 export class UserExperienceService {
   constructor(private prisma: PrismaService) {}
 
-  async getUsersExperience() {
-    const usersExperience = await this.prisma.users.findMany({
-      select: {
-        id: true,
-        nickname: true,
-        level: true,
-        experience: true,
-        experienceForNextLevel: true,
-      },
-    });
-    return usersExperience;
-  }
-
   async getUserExperience(id: number): Promise<ResponseExperienceDto> {
     const userExperience = await this.prisma.users.findUnique({
       where: { id },

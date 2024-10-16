@@ -13,11 +13,6 @@ import { UserExperienceService } from '../services/user-experience.service';
 export class UserExperienceController {
   constructor(private readonly experienceService: UserExperienceService) {}
 
-  @Get()
-  getUsersExperience() {
-    return this.experienceService.getUsersExperience();
-  }
-
   @Get(':id')
   getUserExperience(@Param('id', ParseIntPipe) id: number) {
     return this.experienceService.getUserExperience(id);

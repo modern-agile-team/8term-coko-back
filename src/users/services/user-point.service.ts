@@ -11,16 +11,6 @@ import { ResponsePointDto } from '../dtos/response-point.dto';
 export class UserPointService {
   constructor(private prisma: PrismaService) {}
 
-  async getUsersPoint() {
-    const usersPoint = await this.prisma.users.findMany({
-      select: {
-        id: true,
-        point: true,
-      },
-    });
-    return usersPoint;
-  }
-
   async getUserPoint(id: number): Promise<ResponsePointDto> {
     const userPoint = await this.prisma.users.findUnique({
       where: { id },
