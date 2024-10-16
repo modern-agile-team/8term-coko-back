@@ -25,6 +25,8 @@ model Users{
   experience Int        @default(0)
   experienceForNextLevel Int @default(50)
   point      Int        @default(0)
+
+  userItems UserItems[] //1:N관계, Items와 userItems 연결
 }
 
 model Items {
@@ -35,10 +37,10 @@ model Items {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
-  userItems   userItems[] //1:N관계, Items와 userItems 연결
+  userItems   UserItems[] //1:N관계, Items와 userItems 연결
 }
 
-model userItems {
+model UserItems {
   id          Int        @id @default(autoincrement())
   userId      Int
   itemId      Int
