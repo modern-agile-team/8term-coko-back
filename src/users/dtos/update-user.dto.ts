@@ -1,7 +1,6 @@
 import { IsNumber, IsOptional } from 'class-validator';
-import { CreateUserDto } from './create-user.dto';
 
-export class UpdateUserDto extends CreateUserDto {
+export class UpdateUserDto {
   @IsOptional()
   @IsNumber()
   readonly experience?: number;

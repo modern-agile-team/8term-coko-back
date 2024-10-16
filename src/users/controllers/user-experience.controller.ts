@@ -18,7 +18,7 @@ export class UserExperienceController {
     return this.experienceService.getUserExperience(userId);
   }
 
-  @Patch(':id')
+  @Patch()
   updateExperience(
     @Param('id', ParseIntPipe) userId: number,
     @Body() updateExperienceData: UpdateExperienceDto,
