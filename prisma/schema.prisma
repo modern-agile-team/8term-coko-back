@@ -13,6 +13,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Users{
+  id         Int        @id @default(autoincrement())
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  nickname   String     @db.VarChar(50)
+  profileImage String?
+  maxHealthPoint Int    @default(5)
+  lastLogin  DateTime   @default(now())
+  level      Int        @default(1)
+  experience Int        @default(0)
+  experienceForNextLevel Int @default(50)
+  point      Int        @default(0)
+}
+
 model Items {
   id          Int        @id @default(autoincrement())
   name        String
@@ -38,5 +52,3 @@ model userItems {
   @@index([userId])
   @@index([itemId])
 }
-
-
