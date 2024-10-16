@@ -14,15 +14,18 @@ export class UserExperienceController {
   constructor(private readonly experienceService: UserExperienceService) {}
 
   @Get()
-  getUserExperience(@Param('id', ParseIntPipe) id: number) {
-    return this.experienceService.getUserExperience(id);
+  getUserExperience(@Param('id', ParseIntPipe) userId: number) {
+    return this.experienceService.getUserExperience(userId);
   }
 
-  @Patch()
+  @Patch(':id')
   updateExperience(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) userId: number,
     @Body() updateExperienceData: UpdateExperienceDto,
   ) {
-    return this.experienceService.updateExperience(id, updateExperienceData);
+    return this.experienceService.updateExperience(
+      userId,
+      updateExperienceData,
+    );
   }
 }
