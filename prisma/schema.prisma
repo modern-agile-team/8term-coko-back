@@ -26,3 +26,20 @@ model Users{
   experienceForNextLevel Int @default(50)
   point Int @default(0)
 }
+
+model progress{
+  id Int @id @default(autoincrement()) // 넣어야 할지 뺴야할지 잘 생각 해보기
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt      @map("updated_at")
+  userId  Int        @unique         @map("user_id") //나중에 복합키 설정 찾아서 해야함  
+  questionsId Int    @unique         @map("questions_id")
+  sectionId Int      @unique         @map("section_id")
+  part String    // 나중에 enum받아오면 설정하기
+  isCorrect Boolean                  @map("is_correct")
+
+  //user랑 관계
+  //quiz랑 관계
+  //section 이랑 관계
+
+  @@map("progress")
+}

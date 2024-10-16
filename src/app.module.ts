@@ -5,9 +5,10 @@ import { UsersModule } from './users/users.module';
 import { PointsModule } from './points/points.module';
 import { ExperienceModule } from './experience/experience.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { ProgressModule } from './progress/progress.module';
 
 @Module({
-  imports: [UsersModule, PointsModule, ExperienceModule, PrismaModule],
+  imports: [UsersModule, PointsModule, ExperienceModule, PrismaModule, ProgressModule],
   controllers: [AppController],
   providers: [AppService],
 })
