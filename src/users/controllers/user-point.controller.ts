@@ -9,16 +9,16 @@ import {
 import { UserPointService } from '../services/user-point.service';
 import { UpdatePointDto } from '../dtos/update-point.dto';
 
-@Controller('points')
+@Controller('users/:id/point')
 export class UserPointController {
   constructor(private readonly pointsService: UserPointService) {}
 
-  @Get(':id')
+  @Get()
   getUserPoint(@Param('id', ParseIntPipe) id: number) {
     return this.pointsService.getUserPoint(id);
   }
 
-  @Patch(':id')
+  @Patch()
   update(
     @Param('id', ParseIntPipe) userId: number,
     @Body() updatePointData: UpdatePointDto,

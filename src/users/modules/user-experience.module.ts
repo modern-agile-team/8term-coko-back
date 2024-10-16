@@ -6,4 +6,4 @@ import { UserExperienceController } from '../controllers/user-experience.control
   controllers: [UserExperienceController],
   providers: [UserExperienceService],
 })
-export class ExperienceModule {}
+export class UserExperienceModule {}

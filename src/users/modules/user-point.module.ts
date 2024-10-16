@@ -6,4 +6,4 @@ import { UserPointController } from '../controllers/user-point.controller';
   controllers: [UserPointController],
   providers: [UserPointService],
 })
-export class PointModule {}
+export class UserPointModule {}
