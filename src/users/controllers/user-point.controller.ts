@@ -14,8 +14,8 @@ export class UserPointController {
   constructor(private readonly pointsService: UserPointService) {}
 
   @Get()
-  getUserPoint(@Param('id', ParseIntPipe) id: number) {
-    return this.pointsService.getUserPoint(id);
+  getUserPoint(@Param('id', ParseIntPipe) userId: number) {
+    return this.pointsService.getUserPoint(userId);
   }
 
   @Patch()
