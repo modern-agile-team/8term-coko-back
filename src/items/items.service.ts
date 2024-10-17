@@ -1,6 +1,10 @@
 //service : 비즈니스 로직. 아이템 목록을 데이터베이스에서 가져오는 역할 -> 실제 데이터를 불러온다
 
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service'; //PrismaService를 통해 db에서 아이템목록 가져온다.
 
 @Injectable() //클래스 : 의존성 주입 가능한 (다른 곳에서 이 클래스를 불러와서 사용할 수 있게 한다.)
@@ -32,5 +36,26 @@ export class ItemsService {
     });
 
     return { message: 'Item purchased successfully.' };
+  }
+
+  //특정 사용자 아이템 목록 조회 getUserItems
+  async getUserItems(userId: number) {
+    const userItems = await this.prisma.userItems.findMany({
+      where: { userId },
+      include: {
+        items: true, //연관 아이템 정보까지 조회 (없애야되나)
+      },
+    });
+    if (!userItems || userItems.length === 0) {
+      throw new NotFoundException('No items found for this user.');
+    }
+    return userItems.map((userItem) => ({
+      id: userItem.items.id,
+      name: userItem.items.name,
+      cost: userItem.items.cost,
+      image: userItem.items.image,
+      quantity: userItem.quantity,
+      isEquipped: userItem.isEquipped,
+    }));
   }
 }

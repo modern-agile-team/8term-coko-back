@@ -1,6 +1,6 @@
 //controller : client로부터의 요청 처리. GET 요청 -> 서비스호출 -> 데이터반환
 
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { BuyItemDto } from './dto/buy-item.dto';
 
@@ -19,5 +19,11 @@ export class ItemsController {
   async buyItem(@Body() buyItemDto: BuyItemDto) {
     const { userId, itemId } = buyItemDto;
     return await this.itemsService.buyItem(userId, itemId);
+  }
+
+  // Get /items/user/:userId 요청 처리
+  @Get('users/:userId')
+  async getUserItems(@Param('userId') userId: number) {
+    return await this.itemsService.getUserItems(userId);
   }
 }
