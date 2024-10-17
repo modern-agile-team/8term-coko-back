@@ -8,7 +8,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ItemsModule } from './items/items.module';
 
 @Module({
-  imports: [],
+  imports: [ItemsModule],
   controllers: [AppController],
   providers: [AppService],
 })
