@@ -34,7 +34,6 @@ model progress{
   userId  Int        @unique         @map("user_id") //나중에 복합키 설정 찾아서 해야함  
   questionsId Int    @unique         @map("questions_id")
   sectionId Int      @unique         @map("section_id")
-  part String    // 나중에 enum받아오면 설정하기
   isCorrect Boolean                  @map("is_correct")
 
   //user랑 관계

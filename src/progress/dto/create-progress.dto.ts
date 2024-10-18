@@ -10,9 +10,6 @@ export class CreateProgressDto {
   @IsNumber()
   readonly sectionId: number;
 
-  @IsString() // enum으로 변경되야함
-  readonly part: string;
-
   @IsBoolean()
   readonly isCorrect: boolean;
 }

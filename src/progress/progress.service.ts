@@ -23,7 +23,8 @@ export class ProgressService {
   }
 
   private async findQuizById(id: number) {
-    const quiz = await this.prisma.quizzes.findUnique({
+    const quiz = await this.prisma.users.findUnique({
+      //quiz바꾸기
       where: {
         id,
       },
@@ -37,7 +38,8 @@ export class ProgressService {
   }
 
   private async findSectionById(id: number) {
-    const section = await this.prisma.sections.findUnique({
+    const section = await this.prisma.users.findUnique({
+      //section바꾸기
       where: {
         id,
       },
@@ -68,14 +70,24 @@ export class ProgressService {
       },
     });
   }
-  }
 
-  findAll(query: QueryProgressDto) {
-    return await `This action returns all progress`;
+  async findAll(query: QueryProgressDto) {
+    const { sectionId } = query;
+
+    if (sectionId) {
+      await this.findSectionById(sectionId);
+    }
+
+    return this.prisma.progress.findMany({
+      where: {
+        ...(sectionId && { sectionId }),
+      },
+    });
   }
 
   async findOne(id: number) {
-    return `This action returns a #${id} progress`;
+    const progress = await this.prisma.progress.findUnique();
+    return;
   }
 
   async update(id: number, progressData: UpdateProgressDto) {
