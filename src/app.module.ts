@@ -5,10 +5,21 @@ import { UsersModule } from './users/users.module';
 import { PointsModule } from './points/points.module';
 import { ExperienceModule } from './experience/experience.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { PrismaService } from './prisma/prisma.service';
+import { QuizzesModule } from './quizzes/quizzes.module';
+import { SectionsModule } from './sections/sections.module';
 
 @Module({
-  imports: [UsersModule, PointsModule, ExperienceModule, PrismaModule],
+  imports: [
+    QuizzesModule,
+    SectionsModule,
+    PrismaModule,
+    UsersModule,
+    PointsModule,
+    ExperienceModule,
+    PrismaModule,
+  ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, PrismaService],
 })
 export class AppModule {}
