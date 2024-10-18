@@ -28,13 +28,13 @@ export function ApiUpdateExperience() {
       content: {
         JSON: {
           examples: {
-            'not enough points': {
+            'Bad Request': {
               value: {
-                message: 'user points are not enough',
+                message: 'Experience points cannot be negative',
                 error: 'Bad Request',
                 statusCode: 400,
               },
-              description: '포인트가 부족한 경우',
+              description: '경험치 값이 음수인 경우',
             },
             'type mismatch': {
               value: {

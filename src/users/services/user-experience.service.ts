@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { UpdateExperienceDto } from '../dtos/update-experience.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ResponseExperienceDto } from '../dtos/response-experience.dto';
@@ -30,6 +34,9 @@ export class UserExperienceService {
 
     if (!user) {
       throw new NotFoundException(`ID ${id} not found`);
+    }
+    if (updateExperienceData.experience < 0) {
+      throw new BadRequestException('Experience points cannot be negative');
     }
 
     const { userLevel, userExperience, experienceForNextLevel } =
