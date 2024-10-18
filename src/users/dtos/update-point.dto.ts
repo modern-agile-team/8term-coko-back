@@ -3,13 +3,12 @@ import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdatePointDto {
   @ApiProperty({
-    required: false,
     type: String,
     description: '유저 닉네임',
     example: 'gwgw123',
     default: 'nickname',
     minimum: 2,
-    maximum: 20,
+    maximum: 10,
   })
   @IsOptional()
   @IsString()
