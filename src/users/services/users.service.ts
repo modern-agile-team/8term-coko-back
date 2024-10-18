@@ -15,7 +15,7 @@ export class UsersService {
   async getUser(id: number): Promise<ResponseUserDto> {
     const userResponse = await this.prisma.users.findUnique({ where: { id } });
     if (!userResponse) {
-      throw new NotFoundException(`ID ${id} not found`);
+      throw new NotFoundException(`id ${id} not found`);
     }
     return new ResponseUserDto(userResponse);
   }
@@ -32,7 +32,7 @@ export class UsersService {
     updateUserData: UpdateUserDto,
   ): Promise<ResponseUserDto> {
     if (!(await this.prisma.users.findUnique({ where: { id } }))) {
-      throw new NotFoundException(`ID ${id} not found`);
+      throw new NotFoundException(`id ${id} not found`);
     }
 
     const userResponse = await this.prisma.users.update({
@@ -44,7 +44,7 @@ export class UsersService {
 
   async deleteUser(id: number): Promise<void> {
     if (!(await this.prisma.users.findUnique({ where: { id } }))) {
-      throw new NotFoundException(`ID ${id} not found`);
+      throw new NotFoundException(`id ${id} not found`);
     }
     await this.prisma.users.delete({ where: { id } });
   }

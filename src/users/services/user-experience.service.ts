@@ -21,7 +21,7 @@ export class UserExperienceService {
     });
 
     if (!userExperience) {
-      throw new NotFoundException(`ID ${id} not found`);
+      throw new NotFoundException(`id ${id} not found`);
     }
     return new ResponseExperienceDto(userExperience);
   }
@@ -33,10 +33,10 @@ export class UserExperienceService {
     const user = await this.prisma.users.findUnique({ where: { id } });
 
     if (!user) {
-      throw new NotFoundException(`ID ${id} not found`);
+      throw new NotFoundException(`id ${id} not found`);
     }
     if (updateExperienceData.experience < 0) {
-      throw new BadRequestException('Experience points cannot be negative');
+      throw new BadRequestException('experience points cannot be negative');
     }
 
     const { userLevel, userExperience, experienceForNextLevel } =

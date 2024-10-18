@@ -16,7 +16,7 @@ export class UserPointService {
       where: { id },
     });
     if (!userPoint) {
-      throw new NotFoundException(`ID ${id} not found`);
+      throw new NotFoundException(`id ${id} not found`);
     }
     return new ResponsePointDto(userPoint);
   }
@@ -27,9 +27,9 @@ export class UserPointService {
   ): Promise<ResponsePointDto> {
     const user = await this.prisma.users.findUnique({ where: { id } });
     if (!user) {
-      throw new NotFoundException(`ID ${id} not found`);
+      throw new NotFoundException(`id ${id} not found`);
     } else if (0 > user.point + updatePointData.point) {
-      throw new BadRequestException('User points are not enough');
+      throw new BadRequestException('user points are not enough');
     }
 
     const userPoint = await this.prisma.users.update({
