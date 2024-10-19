@@ -15,6 +15,8 @@ import { CreateUserDto } from '../dtos/create-user.dto';
 import { ResponseUserDto } from '../dtos/response-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { ApiGetAllUsers } from '../swagger-dacorator/get-all-users-decorators';
+import { ApiGetUser } from '../swagger-dacorator/get-user-decorators';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @ApiTags('users')
@@ -22,11 +24,13 @@ import { ApiTags } from '@nestjs/swagger';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @ApiGetAllUsers()
   @Get()
   getAllUsers() {
     return this.usersService.getAllUsers();
   }
 
+  @ApiGetUser()
   @Get(':id')
   getUser(@Param('id', ParseIntPipe) userId: number) {
     return this.usersService.getUser(userId);
