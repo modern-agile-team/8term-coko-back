@@ -1,9 +1,9 @@
 import { Type } from 'class-transformer';
-import { IsNumberString, IsOptional } from 'class-validator';
+import { IsNumber, IsOptional } from 'class-validator';
 
 export class QueryProgressDto {
   @IsOptional()
-  @IsNumberString()
+  @IsNumber()
   @Type(() => Number)
   readonly sectionId?: number;
 }

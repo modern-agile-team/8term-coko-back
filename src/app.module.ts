@@ -19,7 +19,6 @@ import { ProgressModule } from './progress/progress.module';
     PointsModule,
     ExperienceModule,
     PrismaModule,
-    ,
     ProgressModule,
   ],
   controllers: [AppController],

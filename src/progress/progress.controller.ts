@@ -1,14 +1,6 @@
-import {
-  Controller,
-  Get,
-  Body,
-  Param,
-  Query,
-  ParseIntPipe,
-  Put,
-} from '@nestjs/common';
+import { Controller, Get, Body, Param, Query, Put } from '@nestjs/common';
 import { ProgressService } from './progress.service';
-import { UpdateProgressDto } from './dto/update-progress.dto';
+import { CreateProgressDto } from './dto/create-progress.dto';
 import { QueryProgressDto } from './dto/query-progress.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 
@@ -21,15 +13,15 @@ export class ProgressController {
     @Param('userId', PositiveIntPipe) userId: number,
     @Query() query: QueryProgressDto,
   ) {
-    return this.progressService.findAll(query);
+    return this.progressService.findAll(userId, query);
   }
 
-  @Put(':id')
+  @Put('quizzes/:quizzesId')
   update(
     @Param('userId', PositiveIntPipe) userId: number,
-    @Param('id', PositiveIntPipe) id: number,
-    @Body() progressData: UpdateProgressDto,
+    @Param('quizzesId', PositiveIntPipe) quizzesId: number,
+    @Body() progressData: CreateProgressDto,
   ) {
-    return this.progressService.update(userId, progressData);
+    return this.progressService.createOrUpdate(userId, quizzesId, progressData);
   }
 }
