@@ -6,11 +6,11 @@ import {
   Patch,
   Param,
   Delete,
-  ParseIntPipe,
 } from '@nestjs/common';
 import { SectionsService } from './sections.service';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { UpdateSectionDto } from './dto/update-section.dto';
+import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 
 @Controller('sections')
 export class SectionsController {
@@ -27,20 +27,20 @@ export class SectionsController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', PositiveIntPipe) id: number) {
     return this.sectionsService.findOne(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', PositiveIntPipe) id: number,
     @Body() sectionData: UpdateSectionDto,
   ) {
     return this.sectionsService.update(id, sectionData);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', PositiveIntPipe) id: number) {
     return this.sectionsService.remove(id);
   }
 }

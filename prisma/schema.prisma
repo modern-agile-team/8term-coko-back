@@ -29,7 +29,7 @@ enum Category {
   SHORT_ANSWER
 }
 
-model quizzes {
+model Quizzes {
   id              Int      @id @default(autoincrement())
   part            Part
   sectionId       Int      @map("section_id")
@@ -40,17 +40,17 @@ model quizzes {
   category        Category
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt      @map("updated_at")
-  section         sections @relation(fields: [sectionId], references: [id])
+  section         Sections @relation(fields: [sectionId], references: [id])
 
   @@map("quizzes")
 }
 
-model sections {
+model Sections {
   id              Int      @id @default(autoincrement())
   name            String   @unique   @db.VarChar(255)	
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt      @map("updated_at")
-  quizzes         quizzes[]
+  quizzes         Quizzes[]
 
   @@map("sections")
 }
