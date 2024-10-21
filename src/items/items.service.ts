@@ -59,6 +59,7 @@ export class ItemsService {
     }));
   }
 
+  //아이템 장착
   async equipItem(userId: number, itemId: number) {
     const userItem = await this.prisma.userItems.findFirst({
       where: { userId, itemId },
@@ -76,5 +77,44 @@ export class ItemsService {
       data: { isEquipped: true },
     });
     return { message: 'Item equippped successfully!' };
+  }
+
+  //아이템 장착 해제
+  async unequipItem(userId: number, itemId: number) {
+    const userItem = await this.prisma.userItems.findFirst({
+      where: { userId, itemId },
+    });
+
+    if (!userItem) {
+      throw new NotFoundException('Item not found for this user');
+    }
+
+    if (!userItem.isEquipped) {
+      throw new BadRequestException('Item is already unequipped');
+    }
+
+    await this.prisma.userItems.update({
+      where: { id: userItem.id },
+      data: { isEquipped: false },
+    });
+
+    return { message: 'Item unequipped successfully!' };
+  }
+
+  //특정 사용자의 특정 아이템 삭제
+  async deleteUserItem(userId: number, itemId: number) {
+    const userItem = await this.prisma.userItems.findFirst({
+      where: { userId, itemId },
+    });
+
+    if (!userItem) {
+      throw new NotFoundException('Item not found for this user');
+    }
+
+    await this.prisma.userItems.delete({
+      where: { id: userItem.id },
+    });
+
+    return { message: 'Item deleted successfully!' };
   }
 }
