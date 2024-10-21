@@ -17,6 +17,9 @@ import { UpdateUserDto } from '../dtos/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiGetAllUsers } from '../swagger-dacorator/get-all-users-decorators';
 import { ApiGetUser } from '../swagger-dacorator/get-user-decorators';
+import { ApiUpdateUser } from '../swagger-dacorator/patch-user-decorators';
+import { ApiCreateUser } from '../swagger-dacorator/post-user-decorators';
+import { ApiDeleteUser } from '../swagger-dacorator/delete-user-decorators';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @ApiTags('users')
@@ -36,11 +39,13 @@ export class UsersController {
     return this.usersService.getUser(userId);
   }
 
+  @ApiCreateUser()
   @Post()
   createUser(@Body() createUserData: CreateUserDto): Promise<ResponseUserDto> {
     return this.usersService.createUser(createUserData);
   }
 
+  @ApiUpdateUser()
   @Patch(':id')
   updateUser(
     @Param('id', ParseIntPipe) userId: number,
@@ -49,6 +54,7 @@ export class UsersController {
     return this.usersService.updateUser(userId, updateUserData);
   }
 
+  @ApiDeleteUser()
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) userId: number) {
     this.usersService.deleteUser(userId);
