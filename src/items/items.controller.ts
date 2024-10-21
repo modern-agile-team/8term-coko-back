@@ -44,7 +44,7 @@ export class ItemsController {
   }
 
   // DELETE /items/:userId/:itemId 요청 처리
-  @Delete('user/:userId/:itemId')
+  @Delete('users/:userId/:itemId')
   async deleteUserItem(
     @Param('userId') userId: number,
     @Param('itemId') itemId: number,
