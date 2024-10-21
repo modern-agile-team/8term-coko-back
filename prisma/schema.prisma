@@ -13,16 +13,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users{
+model users{
   id Int @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  nickname String @db.VarChar(50)
-  profileImage String?
-  maxHealthPoint Int @default(5)
-  lastLogin DateTime @default(now())
-  level Int @default(1)
+  createdAt DateTime @default(now())      @map("created_at")
+  updatedAt DateTime @updatedAt           @map("updated_at")
+  nickname String @db.VarChar(50)         
+  profileImage String?                    @map("profile_image")
+  maxHealthPoint Int @default(5)          @map("max_health_point")
+  lastLogin DateTime @default(now())      @map("last_login")
+  level Int @default(1) 
   experience Int @default(0)
-  experienceForNextLevel Int @default(50)
+  experienceForNextLevel Int @default(50) @map("experience_for_next_level")
   point Int @default(0)
+
+  @@map("users")
 }
