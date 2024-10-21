@@ -13,7 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model users{
+model Users{
   id Int @id @default(autoincrement())
   createdAt DateTime @default(now())      @map("created_at")
   updatedAt DateTime @updatedAt           @map("updated_at")

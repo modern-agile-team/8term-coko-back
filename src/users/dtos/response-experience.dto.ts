@@ -1,4 +1,4 @@
-import { users } from '@prisma/client';
+import { Users } from '@prisma/client';
 
 export class ResponseExperienceDto {
   readonly id: number;
@@ -7,7 +7,7 @@ export class ResponseExperienceDto {
   readonly experience: number;
   readonly experienceForNextLevel: number;
 
-  constructor(user: users) {
+  constructor(user: Users) {
     this.id = user.id;
     this.nickname = user.nickname;
     this.level = user.level;
