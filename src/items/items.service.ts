@@ -58,4 +58,23 @@ export class ItemsService {
       isEquipped: userItem.isEquipped,
     }));
   }
+
+  async equipItem(userId: number, itemId: number) {
+    const userItem = await this.prisma.userItems.findFirst({
+      where: { userId, itemId },
+    });
+
+    if (!userItem) {
+      throw new NotFoundException('Item not found for this user');
+    }
+    if (userItem.isEquipped) {
+      throw new BadRequestException('Item is already equipped');
+    }
+
+    await this.prisma.userItems.update({
+      where: { id: userItem.id },
+      data: { isEquipped: true },
+    });
+    return { message: 'Item equippped successfully!' };
+  }
 }
