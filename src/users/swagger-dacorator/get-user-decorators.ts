@@ -4,8 +4,8 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 export function ApiGetUser() {
   return applyDecorators(
     ApiOperation({
-      summary: '단일 유저 정보 조회',
-      description: `## 단일 유저 정보 조회`,
+      summary: '단일 유저 조회',
+      description: `## 단일 유저 조회`,
     }),
     ApiResponse({
       status: 200,
@@ -27,7 +27,7 @@ export function ApiGetUser() {
     }),
     ApiResponse({
       status: 400,
-      description: '요청 데이터 타입이 일치하지 않을 경우 (문자열 등)',
+      description: 'id 요청 데이터 타입이 일치하지 않을 경우',
       content: {
         JSON: {
           example: {
@@ -44,7 +44,7 @@ export function ApiGetUser() {
       content: {
         JSON: {
           example: {
-            message: 'ID 999 not found',
+            message: 'id 999 not found',
             error: 'Not Found',
             statusCode: 404,
           },

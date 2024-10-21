@@ -1,4 +1,4 @@
-import { Users } from '@prisma/client';
+import { users } from '@prisma/client';
 
 export class ResponseUserDto {
   readonly id: number;
@@ -10,7 +10,7 @@ export class ResponseUserDto {
   readonly experienceForNextLevel: number;
   readonly point: number;
 
-  constructor(user: Users) {
+  constructor(user: users) {
     this.id = user.id;
     this.nickname = user.nickname;
     this.profileImage = user.profileImage;

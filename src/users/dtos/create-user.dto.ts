@@ -17,8 +17,8 @@ export class CreateUserDto {
   @ApiProperty({
     type: String,
     description: '유저 프로필 이미지지',
-    example: 'imageurl.jpg',
-    default: 'imageurl',
+    example: 'image.jpg',
+    default: 'image',
   })
   @IsOptional()
   @IsString()

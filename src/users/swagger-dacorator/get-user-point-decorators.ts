@@ -22,7 +22,7 @@ export function ApiGetPoint() {
     }),
     ApiResponse({
       status: 400,
-      description: '요청 데이터 타입이 일치하지 않을 경우 (문자열 등)',
+      description: 'id 요청 데이터 타입이 일치하지 않을 경우',
       content: {
         JSON: {
           example: {
@@ -39,7 +39,7 @@ export function ApiGetPoint() {
       content: {
         JSON: {
           example: {
-            message: 'ID 999 not found',
+            message: 'id 999 not found',
             error: 'Not Found',
             statusCode: 404,
           },

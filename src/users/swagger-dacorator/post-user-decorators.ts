@@ -15,7 +15,7 @@ export function ApiCreateUser() {
           example: {
             id: 99,
             nickname: 'gwgw99',
-            profileImage: null,
+            profileImage: 'image.jpg',
             maxHealthPoint: 5,
             level: 1,
             experience: 0,
@@ -27,7 +27,7 @@ export function ApiCreateUser() {
     }),
     ApiResponse({
       status: 400,
-      description: '요청 데이터 타입이 일치하지 않을 경우 (nickname)',
+      description: 'nickname 요청 데이터 타입이 일치하지 않을 경우',
       content: {
         JSON: {
           example: {

@@ -24,19 +24,19 @@ export function ApiUpdateExperience() {
     }),
     ApiResponse({
       status: 400,
-      description: '400 error',
+      description: '400 errors',
       content: {
         JSON: {
           examples: {
-            'Bad Request': {
+            'id type mismatch': {
               value: {
-                message: 'Experience points cannot be negative',
+                message: 'Validation failed (numeric string is expected)',
                 error: 'Bad Request',
                 statusCode: 400,
               },
-              description: '경험치 값이 음수인 경우',
+              description: 'id 요청 데이터 타입이 일치하지 않을 경우',
             },
-            'type mismatch': {
+            'experience type mismatch': {
               value: {
                 message: [
                   'experience must be a number conforming to the specified constraints',
@@ -44,7 +44,15 @@ export function ApiUpdateExperience() {
                 error: 'Bad Request',
                 statusCode: 400,
               },
-              description: '요청 데이터 타입이 일치하지 않을 경우 (문자열 등)',
+              description: 'experience 요청 데이터 타입이 일치하지 않을 경우',
+            },
+            'Bad Request': {
+              value: {
+                message: ['experience must not be less than 0'],
+                error: 'Bad Request',
+                statusCode: 400,
+              },
+              description: '경험치 값이 음수인 경우',
             },
           },
         },
@@ -56,7 +64,7 @@ export function ApiUpdateExperience() {
       content: {
         JSON: {
           example: {
-            message: 'ID 999 not found',
+            message: 'id 999 not found',
             error: 'Not Found',
             statusCode: 404,
           },

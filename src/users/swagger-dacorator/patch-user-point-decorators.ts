@@ -23,19 +23,19 @@ export function ApiUpdatePoint() {
     }),
     ApiResponse({
       status: 400,
-      description: '400 error',
+      description: '400 errors',
       content: {
         JSON: {
           examples: {
-            'not enough points': {
+            'id type mismatch': {
               value: {
-                message: 'user points are not enough',
+                message: 'Validation failed (numeric string is expected)',
                 error: 'Bad Request',
                 statusCode: 400,
               },
-              description: '포인트가 부족한 경우',
+              description: 'id 요청 데이터 타입이 일치하지 않을 경우',
             },
-            'type mismatch': {
+            'point type mismatch': {
               value: {
                 message: [
                   'point must be a number conforming to the specified constraints',
@@ -43,7 +43,15 @@ export function ApiUpdatePoint() {
                 error: 'Bad Request',
                 statusCode: 400,
               },
-              description: '요청 데이터 타입이 일치하지 않을 경우 (문자열 등)',
+              description: 'point 요청 데이터 타입이 일치하지 않을 경우',
+            },
+            'not enough points': {
+              value: {
+                message: 'user points are not enough',
+                error: 'Bad Request',
+                statusCode: 400,
+              },
+              description: '포인트가 부족한 경우',
             },
           },
         },
@@ -55,7 +63,7 @@ export function ApiUpdatePoint() {
       content: {
         JSON: {
           example: {
-            message: 'ID 999 not found',
+            message: 'id 999 not found',
             error: 'Not Found',
             statusCode: 404,
           },

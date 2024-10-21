@@ -4,8 +4,8 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 export function ApiUpdateUser() {
   return applyDecorators(
     ApiOperation({
-      summary: ' 유저 정보 수정',
-      description: ` ## 유저 정보 수정`,
+      summary: ' 유저 수정',
+      description: ` ## 유저 수정`,
     }),
     ApiResponse({
       status: 200,
@@ -27,17 +27,29 @@ export function ApiUpdateUser() {
     }),
     ApiResponse({
       status: 400,
-      description:
-        '요청 데이터 타입이 일치하지 않을 경우 (id, point, experience)',
+      description: '400 errors',
       content: {
         JSON: {
-          example: {
-            value: {
-              message: [
-                'point must be a number conforming to the specified constraints',
-              ],
-              error: 'Bad Request',
-              statusCode: 400,
+          examples: {
+            'id type mismatch': {
+              value: {
+                message: 'Validation failed (numeric string is expected)',
+                error: 'Bad Request',
+                statusCode: 400,
+              },
+              description: 'id 요청 데이터 타입이 일치하지 않을 경우',
+            },
+            'experience, point type mismatch': {
+              value: {
+                message: [
+                  'experience must be a number conforming to the specified constraints',
+                  'point must be a number conforming to the specified constraints',
+                ],
+                error: 'Bad Request',
+                statusCode: 400,
+              },
+              description:
+                'experience, point 요청 데이터 타입이 일치하지 않을 경우',
             },
           },
         },
@@ -49,7 +61,7 @@ export function ApiUpdateUser() {
       content: {
         JSON: {
           example: {
-            message: 'ID 999 not found',
+            message: 'id 999 not found',
             error: 'Not Found',
             statusCode: 404,
           },

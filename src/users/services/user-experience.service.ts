@@ -35,9 +35,6 @@ export class UserExperienceService {
     if (!user) {
       throw new NotFoundException(`id ${id} not found`);
     }
-    if (updateExperienceData.experience < 0) {
-      throw new BadRequestException('experience points cannot be negative');
-    }
 
     const { userLevel, userExperience, experienceForNextLevel } =
       this.calculateLevel(

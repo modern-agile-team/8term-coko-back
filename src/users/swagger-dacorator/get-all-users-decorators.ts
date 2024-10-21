@@ -4,7 +4,7 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 export function ApiGetAllUsers() {
   return applyDecorators(
     ApiOperation({
-      summary: '전체 유저 정보 조회',
+      summary: '전체 유저 조회',
       description: `## 전체 유저 조회`,
     }),
     ApiResponse({
