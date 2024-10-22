@@ -49,12 +49,12 @@ export class ProgressService {
     return section.id;
   }
 
-  private async findProgressByCompositeId(userId: number, quizzesId: number) {
+  private async findProgressByCompositeId(userId: number, quizId: number) {
     const progress = await this.prisma.progress.findUnique({
       where: {
-        userId_quizzesId: {
+        userId_quizId: {
           userId,
-          quizzesId,
+          quizId,
         },
       },
     });
@@ -80,7 +80,7 @@ export class ProgressService {
 
   async create(
     userId: number,
-    quizzesId: number,
+    quizId: number,
     data: CreateProgressDto,
     skipValidation?: boolean,
   ) {
@@ -91,15 +91,15 @@ export class ProgressService {
 
       await this.findSectionById(sectionId);
 
-      await this.findQuizById(quizzesId);
+      await this.findQuizById(quizId);
 
-      await this.findProgressByCompositeId(userId, quizzesId);
+      await this.findProgressByCompositeId(userId, quizId);
     }
 
     return this.prisma.progress.create({
       data: {
         userId,
-        quizzesId,
+        quizId,
         ...data,
       },
     });
@@ -107,7 +107,7 @@ export class ProgressService {
 
   async update(
     userId: number,
-    quizzesId: number,
+    quizId: number,
     data: CreateProgressDto,
     skipValidation?: boolean,
   ) {
@@ -118,21 +118,21 @@ export class ProgressService {
 
       await this.findSectionById(sectionId);
 
-      await this.findQuizById(quizzesId);
+      await this.findQuizById(quizId);
 
-      await this.findProgressByCompositeId(userId, quizzesId);
+      await this.findProgressByCompositeId(userId, quizId);
     }
 
     return this.prisma.progress.update({
       where: {
-        userId_quizzesId: {
+        userId_quizId: {
           userId,
-          quizzesId,
+          quizId,
         },
       },
       data: {
         userId,
-        quizzesId,
+        quizId,
         ...data,
       },
     });
@@ -140,7 +140,7 @@ export class ProgressService {
 
   async createOrUpdate(
     userId: number,
-    quizzesId: number,
+    quizId: number,
     data: CreateProgressDto,
   ) {
     const { sectionId } = data;
@@ -149,12 +149,12 @@ export class ProgressService {
 
     await this.findSectionById(sectionId);
 
-    await this.findQuizById(quizzesId);
+    await this.findQuizById(quizId);
 
-    const progress = await this.findProgressByCompositeId(userId, quizzesId);
+    const progress = await this.findProgressByCompositeId(userId, quizId);
 
     return progress
-      ? this.update(userId, quizzesId, data, true)
-      : this.create(userId, quizzesId, data, true);
+      ? this.update(userId, quizId, data, true)
+      : this.create(userId, quizId, data, true);
   }
 }

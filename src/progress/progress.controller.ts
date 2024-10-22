@@ -19,9 +19,9 @@ export class ProgressController {
   @Put('quizzes/:quizzesId')
   update(
     @Param('userId', PositiveIntPipe) userId: number,
-    @Param('quizzesId', PositiveIntPipe) quizzesId: number,
+    @Param('quizId', PositiveIntPipe) quizId: number,
     @Body() progressData: CreateProgressDto,
   ) {
-    return this.progressService.createOrUpdate(userId, quizzesId, progressData);
+    return this.progressService.createOrUpdate(userId, quizId, progressData);
   }
 }

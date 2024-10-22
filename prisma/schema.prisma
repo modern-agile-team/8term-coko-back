@@ -73,16 +73,16 @@ model Users{
 }
 
 model Progress{
-  @@id([userId, quizzesId])
+  @@id([userId, quizId])
 
   userId    Int      @map("user_id")
-  quizzesId Int      @map("questions_id")
-  sectionId Int      @map("section_id")
+  quizId Int         @map("quiz_id")
+  sectionId Int      @map("section_id") 
   isCorrect Boolean  @map("is_correct")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt      @map("updated_at")
   users     Users    @relation(fields: [userId],    references: [id])
-  quizzes   Quizzes  @relation(fields: [quizzesId], references: [id])
+  quizzes   Quizzes  @relation(fields: [quizId],    references: [id])
   sections  Sections @relation(fields: [sectionId], references: [id])
   
   @@map("progress")
