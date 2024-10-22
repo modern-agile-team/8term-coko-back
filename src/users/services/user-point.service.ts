@@ -12,7 +12,7 @@ export class UserPointService {
   constructor(private prisma: PrismaService) {}
 
   async getUserPoint(id: number): Promise<ResponsePointDto> {
-    const userPoint = await this.prisma.users.findUnique({
+    const userPoint = await this.prisma.user.findUnique({
       where: { id },
     });
     if (!userPoint) {
@@ -25,14 +25,14 @@ export class UserPointService {
     id: number,
     updatePointData: UpdatePointDto,
   ): Promise<ResponsePointDto> {
-    const user = await this.prisma.users.findUnique({ where: { id } });
+    const user = await this.prisma.user.findUnique({ where: { id } });
     if (!user) {
       throw new NotFoundException(`id ${id} not found`);
     } else if (0 > user.point + updatePointData.point) {
       throw new BadRequestException('user points are not enough');
     }
 
-    const userPoint = await this.prisma.users.update({
+    const userPoint = await this.prisma.user.update({
       where: { id },
       data: { point: { increment: updatePointData.point } },
     });

@@ -9,11 +9,11 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   getAllUsers(): Promise<ResponseUserDto[]> {
-    return this.prisma.users.findMany();
+    return this.prisma.user.findMany();
   }
 
   async getUser(id: number): Promise<ResponseUserDto> {
-    const userResponse = await this.prisma.users.findUnique({ where: { id } });
+    const userResponse = await this.prisma.user.findUnique({ where: { id } });
     if (!userResponse) {
       throw new NotFoundException(`id ${id} not found`);
     }
@@ -21,7 +21,7 @@ export class UsersService {
   }
 
   async createUser(createUserData: CreateUserDto): Promise<ResponseUserDto> {
-    const userResponse = await this.prisma.users.create({
+    const userResponse = await this.prisma.user.create({
       data: createUserData,
     });
     return new ResponseUserDto(userResponse);
@@ -31,11 +31,11 @@ export class UsersService {
     id: number,
     updateUserData: UpdateUserDto,
   ): Promise<ResponseUserDto> {
-    if (!(await this.prisma.users.findUnique({ where: { id } }))) {
+    if (!(await this.prisma.user.findUnique({ where: { id } }))) {
       throw new NotFoundException(`id ${id} not found`);
     }
 
-    const userResponse = await this.prisma.users.update({
+    const userResponse = await this.prisma.user.update({
       where: { id },
       data: updateUserData,
     });
@@ -43,9 +43,9 @@ export class UsersService {
   }
 
   async deleteUser(id: number): Promise<void> {
-    if (!(await this.prisma.users.findUnique({ where: { id } }))) {
+    if (!(await this.prisma.user.findUnique({ where: { id } }))) {
       throw new NotFoundException(`id ${id} not found`);
     }
-    await this.prisma.users.delete({ where: { id } });
+    await this.prisma.user.delete({ where: { id } });
   }
 }
