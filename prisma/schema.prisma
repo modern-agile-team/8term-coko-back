@@ -6,12 +6,55 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
+
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum Part {
+  EASY
+  NORMAL
+  HARD 
+  VERY_HARD
+}
+
+enum Category {
+  COMBINATION 
+  MULTIPLE_CHOICE
+  OX_SELECTOR
+  SHORT_ANSWER
+}
+
+model Quizzes {
+  id              Int      @id @default(autoincrement())
+  part            Part
+  sectionId       Int      @map("section_id")
+  title           String   @db.VarChar(255)	
+  question        String   @db.VarChar(1000)	
+  answer          String[]
+  answerChoice    String[] @map("answer_choice")
+  category        Category
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt      @map("updated_at")
+  section         Sections @relation(fields: [sectionId], references: [id])
+
+  @@map("quizzes")
+}
+
+model Sections {
+  id              Int      @id @default(autoincrement())
+  name            String   @unique   @db.VarChar(255)	
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt      @map("updated_at")
+  quizzes         Quizzes[]
+
+  @@map("sections")
+}
+
 
 model Users{
   id         Int        @id @default(autoincrement())
