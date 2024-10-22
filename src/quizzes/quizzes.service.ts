@@ -9,7 +9,7 @@ export class QuizzesService {
   constructor(private prisma: PrismaService) {}
 
   private async findSectionById(id: number) {
-    const section = await this.prisma.sections.findUnique({
+    const section = await this.prisma.section.findUnique({
       where: {
         id,
       },
@@ -27,7 +27,7 @@ export class QuizzesService {
 
     await this.findSectionById(sectionId);
 
-    return this.prisma.quizzes.create({
+    return this.prisma.quiz.create({
       data: {
         sectionId,
         ...orders,
@@ -36,22 +36,22 @@ export class QuizzesService {
   }
 
   async findAll(query: QueryQuizDto) {
-    const { sectionId, part } = query;
+    const { sectionId, difficulty } = query;
 
     if (sectionId) {
       await this.findSectionById(sectionId);
     }
 
-    return this.prisma.quizzes.findMany({
+    return this.prisma.quiz.findMany({
       where: {
         ...(sectionId && { sectionId }),
-        ...(part && { part }),
+        ...(difficulty && { difficulty }),
       },
     });
   }
 
   async findQuizById(id: number) {
-    const quiz = await this.prisma.quizzes.findUnique({
+    const quiz = await this.prisma.quiz.findUnique({
       where: {
         id,
       },
@@ -71,7 +71,7 @@ export class QuizzesService {
 
     await this.findQuizById(id);
 
-    return this.prisma.quizzes.update({
+    return this.prisma.quiz.update({
       where: {
         id,
       },
@@ -85,7 +85,7 @@ export class QuizzesService {
   async remove(id: number) {
     await this.findQuizById(id);
 
-    return this.prisma.quizzes.delete({
+    return this.prisma.quiz.delete({
       where: {
         id,
       },

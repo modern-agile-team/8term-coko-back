@@ -16,7 +16,7 @@ export class ProgressController {
     return this.progressService.findAll(userId, query);
   }
 
-  @Put('quizzes/:quizzesId')
+  @Put('quizzes/:quizId')
   update(
     @Param('userId', PositiveIntPipe) userId: number,
     @Param('quizId', PositiveIntPipe) quizId: number,

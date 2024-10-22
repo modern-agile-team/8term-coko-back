@@ -1,12 +1,12 @@
 import { IsEnum, IsNumber, IsString } from 'class-validator';
-import { Part, Category } from '@prisma/client';
+import { Difficulty, Category } from '@prisma/client';
 
 export class CreateQuizDto {
   @IsNumber()
   readonly sectionId: number;
 
-  @IsEnum(Part, { message: '잘못된 part value' })
-  readonly part: Part;
+  @IsEnum(Difficulty, { message: 'bad Difficulty value' })
+  readonly difficulty: Difficulty;
 
   @IsString()
   readonly title: string;

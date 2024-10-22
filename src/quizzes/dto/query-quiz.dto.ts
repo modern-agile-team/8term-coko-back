@@ -1,4 +1,4 @@
-import { Part } from '@prisma/client';
+import { Difficulty } from '@prisma/client';
 import { Type } from 'class-transformer';
 import { IsEnum, IsNumber, IsOptional } from 'class-validator';
 
@@ -9,6 +9,6 @@ export class QueryQuizDto {
   readonly sectionId?: number;
 
   @IsOptional()
-  @IsEnum(Part, { message: '잘못된 part value' })
-  readonly part?: Part;
+  @IsEnum(Difficulty, { message: '잘못된 part value' })
+  readonly difficulty?: Difficulty;
 }

@@ -15,7 +15,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Part {
+enum Difficulty {
   EASY
   NORMAL
   HARD 
@@ -29,9 +29,9 @@ enum Category {
   SHORT_ANSWER
 }
 
-model Quizzes {
+model Quiz {
   id              Int      @id @default(autoincrement())
-  part            Part
+  difficulty      Difficulty
   sectionId       Int      @map("section_id")
   title           String   @db.VarChar(255)	
   question        String   @db.VarChar(1000)	
@@ -40,18 +40,18 @@ model Quizzes {
   category        Category
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt      @map("updated_at")
-  section         Sections @relation(fields: [sectionId], references: [id])
+  section         Section  @relation(fields: [sectionId], references: [id])
   progress        Progress[]
 
   @@map("quizzes")
 }
 
-model Sections {
+model Section {
   id              Int      @id @default(autoincrement())
   name            String   @unique   @db.VarChar(255)	
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt      @map("updated_at")
-  quizzes         Quizzes[]
+  quiz            Quiz[]
   progress        Progress[]
 
   @@map("sections")
@@ -76,14 +76,14 @@ model Progress{
   @@id([userId, quizId])
 
   userId    Int      @map("user_id")
-  quizId Int         @map("quiz_id")
+  quizId    Int      @map("quiz_id")
   sectionId Int      @map("section_id") 
   isCorrect Boolean  @map("is_correct")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt      @map("updated_at")
+  createdAt DateTime @default(now())   @map("created_at")
+  updatedAt DateTime @updatedAt        @map("updated_at")
   users     Users    @relation(fields: [userId],    references: [id])
-  quizzes   Quizzes  @relation(fields: [quizId],    references: [id])
-  sections  Sections @relation(fields: [sectionId], references: [id])
+  quiz      Quiz     @relation(fields: [quizId],    references: [id])
+  section   Section  @relation(fields: [sectionId], references: [id])
   
   @@map("progress")
 }

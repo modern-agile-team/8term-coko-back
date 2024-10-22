@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProgressDto } from './dto/create-progress.dto';
 import { QueryProgressDto } from './dto/query-progress.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Quiz } from '@prisma/client';
 
 @Injectable()
 export class ProgressService {
@@ -22,7 +23,7 @@ export class ProgressService {
   }
 
   private async findQuizById(id: number) {
-    const quiz = await this.prisma.quizzes.findUnique({
+    const quiz = await this.prisma.quiz.findUnique({
       where: {
         id,
       },
@@ -32,11 +33,11 @@ export class ProgressService {
       throw new NotFoundException();
     }
 
-    return quiz.id;
+    return quiz;
   }
 
   private async findSectionById(id: number) {
-    const section = await this.prisma.sections.findUnique({
+    const section = await this.prisma.section.findUnique({
       where: {
         id,
       },
@@ -46,7 +47,7 @@ export class ProgressService {
       throw new NotFoundException();
     }
 
-    return section.id;
+    return section;
   }
 
   private async findProgressByCompositeId(userId: number, quizId: number) {
@@ -78,61 +79,28 @@ export class ProgressService {
     });
   }
 
-  async create(
-    userId: number,
-    quizId: number,
-    data: CreateProgressDto,
-    skipValidation?: boolean,
-  ) {
-    const { sectionId } = data;
-
-    if (!skipValidation) {
-      await this.findUserById(userId);
-
-      await this.findSectionById(sectionId);
-
-      await this.findQuizById(quizId);
-
-      await this.findProgressByCompositeId(userId, quizId);
-    }
-
+  async create(userId: number, quiz: Quiz, data: CreateProgressDto) {
     return this.prisma.progress.create({
       data: {
         userId,
-        quizId,
+        quizId: quiz.id,
+        sectionId: quiz.sectionId,
         ...data,
       },
     });
   }
 
-  async update(
-    userId: number,
-    quizId: number,
-    data: CreateProgressDto,
-    skipValidation?: boolean,
-  ) {
-    const { sectionId } = data;
-
-    if (!skipValidation) {
-      await this.findUserById(userId);
-
-      await this.findSectionById(sectionId);
-
-      await this.findQuizById(quizId);
-
-      await this.findProgressByCompositeId(userId, quizId);
-    }
-
+  async update(userId: number, quiz: Quiz, data: CreateProgressDto) {
     return this.prisma.progress.update({
       where: {
         userId_quizId: {
           userId,
-          quizId,
+          quizId: quiz.id,
         },
       },
       data: {
         userId,
-        quizId,
+        quizId: quiz.id,
         ...data,
       },
     });
@@ -143,18 +111,16 @@ export class ProgressService {
     quizId: number,
     data: CreateProgressDto,
   ) {
-    const { sectionId } = data;
+    const quiz = await this.findQuizById(quizId);
+
+    await this.findSectionById(quiz.sectionId);
 
     await this.findUserById(userId);
-
-    await this.findSectionById(sectionId);
-
-    await this.findQuizById(quizId);
 
     const progress = await this.findProgressByCompositeId(userId, quizId);
 
     return progress
-      ? this.update(userId, quizId, data, true)
-      : this.create(userId, quizId, data, true);
+      ? this.update(userId, quiz, data)
+      : this.create(userId, quiz, data);
   }
 }
