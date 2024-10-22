@@ -5,7 +5,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   UseInterceptors,
@@ -20,6 +19,7 @@ import { ApiGetUser } from '../swagger-dacorator/get-user-decorators';
 import { ApiUpdateUser } from '../swagger-dacorator/patch-user-decorators';
 import { ApiCreateUser } from '../swagger-dacorator/post-user-decorators';
 import { ApiDeleteUser } from '../swagger-dacorator/delete-user-decorators';
+import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @ApiTags('users')
@@ -35,7 +35,7 @@ export class UsersController {
 
   @ApiGetUser()
   @Get(':id')
-  getUser(@Param('id', ParseIntPipe) userId: number) {
+  getUser(@Param('id', PositiveIntPipe) userId: number) {
     return this.usersService.getUser(userId);
   }
 
@@ -48,7 +48,7 @@ export class UsersController {
   @ApiUpdateUser()
   @Patch(':id')
   updateUser(
-    @Param('id', ParseIntPipe) userId: number,
+    @Param('id', PositiveIntPipe) userId: number,
     @Body() updateUserData: UpdateUserDto,
   ): Promise<ResponseUserDto> {
     return this.usersService.updateUser(userId, updateUserData);
@@ -56,7 +56,7 @@ export class UsersController {
 
   @ApiDeleteUser()
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) userId: number) {
+  remove(@Param('id', PositiveIntPipe) userId: number) {
     this.usersService.deleteUser(userId);
     return { statusCode: 204, message: 'No Content' };
   }
