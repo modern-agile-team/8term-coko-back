@@ -5,10 +5,9 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
-
 
 datasource db {
   provider = "postgresql"
@@ -18,78 +17,77 @@ datasource db {
 enum Part {
   EASY
   NORMAL
-  HARD 
+  HARD
   VERY_HARD
 }
 
 enum Category {
-  COMBINATION 
+  COMBINATION
   MULTIPLE_CHOICE
   OX_SELECTOR
   SHORT_ANSWER
 }
 
 model Quizzes {
-  id              Int      @id @default(autoincrement())
-  part            Part
-  sectionId       Int      @map("section_id")
-  title           String   @db.VarChar(255)	
-  question        String   @db.VarChar(1000)	
-  answer          String[]
-  answerChoice    String[] @map("answer_choice")
-  category        Category
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt      @map("updated_at")
-  section         Sections @relation(fields: [sectionId], references: [id])
+  id           Int      @id @default(autoincrement())
+  part         Part
+  sectionId    Int      @map("section_id")
+  title        String   @db.VarChar(255)
+  question     String   @db.VarChar(1000)
+  answer       String[]
+  answerChoice String[] @map("answer_choice")
+  category     Category
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  section      Sections @relation(fields: [sectionId], references: [id])
 
   @@map("quizzes")
 }
 
 model Sections {
-  id              Int      @id @default(autoincrement())
-  name            String   @unique   @db.VarChar(255)	
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt      @map("updated_at")
-  quizzes         Quizzes[]
+  id        Int       @id @default(autoincrement())
+  name      String    @unique @db.VarChar(255)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  quizzes   Quizzes[]
 
   @@map("sections")
 }
 
-
-model Users{
-  id         Int        @id @default(autoincrement())
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  nickname   String     @db.VarChar(50)
-  profileImage String?
-  maxHealthPoint Int    @default(5)
-  lastLogin  DateTime   @default(now())
-  level      Int        @default(1)
-  experience Int        @default(0)
-  experienceForNextLevel Int @default(50)
-  point      Int        @default(0)
+model Users {
+  id                     Int      @id @default(autoincrement())
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  nickname               String   @db.VarChar(50)
+  profileImage           String?
+  maxHealthPoint         Int      @default(5)
+  lastLogin              DateTime @default(now())
+  level                  Int      @default(1)
+  experience             Int      @default(0)
+  experienceForNextLevel Int      @default(50)
+  point                  Int      @default(0)
 
   userItems UserItems[] //1:N관계, Items와 userItems 연결
 }
 
 model Items {
-  id          Int        @id @default(autoincrement())
-  name        String
-  cost        Int
-  image       String      
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String
+  cost      Int
+  image     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  userItems   UserItems[] //1:N관계, Items와 userItems 연결
+  userItems UserItems[] //1:N관계, Items와 userItems 연결
 }
 
 model UserItems {
-  id          Int        @id @default(autoincrement())
-  userId      Int
-  itemId      Int
-  createdAt   DateTime   @default(now())
-  isEquipped  Boolean    @default(false)
-  quantity    Int        @default(1)
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  itemId     Int
+  createdAt  DateTime @default(now())
+  isEquipped Boolean  @default(false)
+  quantity   Int      @default(1)
 
   users Users @relation(fields: [userId], references: [id], onDelete: Cascade)
   items Items @relation(fields: [itemId], references: [id], onDelete: Cascade)

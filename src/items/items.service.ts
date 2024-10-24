@@ -17,7 +17,7 @@ export class ItemsService {
   }
 
   //아이템 구매 buyItem
-  async buyItem(userId: number, itemId: number) {
+  async buyItem(userId: number, itemId: number): Promise<void> {
     //유저 아이템 유무 확인
     const existingItem = await this.prisma.userItems.findFirst({
       where: { userId, itemId },
@@ -34,8 +34,6 @@ export class ItemsService {
         quantity: 1,
       },
     });
-
-    return { message: 'Item purchased successfully.' };
   }
 
   //특정 사용자 아이템 목록 조회 getUserItems
@@ -60,7 +58,7 @@ export class ItemsService {
   }
 
   //아이템 장착
-  async equipItem(userId: number, itemId: number) {
+  async equipItem(userId: number, itemId: number): Promise<void> {
     const userItem = await this.prisma.userItems.findFirst({
       where: { userId, itemId },
     });
@@ -76,11 +74,10 @@ export class ItemsService {
       where: { id: userItem.id },
       data: { isEquipped: true },
     });
-    return { message: 'Item equippped successfully!' };
   }
 
   //아이템 장착 해제
-  async unequipItem(userId: number, itemId: number) {
+  async unequipItem(userId: number, itemId: number): Promise<void> {
     const userItem = await this.prisma.userItems.findFirst({
       where: { userId, itemId },
     });
@@ -97,12 +94,10 @@ export class ItemsService {
       where: { id: userItem.id },
       data: { isEquipped: false },
     });
-
-    return { message: 'Item unequipped successfully!' };
   }
 
   //특정 사용자의 특정 아이템 삭제
-  async deleteUserItem(userId: number, itemId: number) {
+  async deleteUserItem(userId: number, itemId: number): Promise<void> {
     const userItem = await this.prisma.userItems.findFirst({
       where: { userId, itemId },
     });
@@ -114,7 +109,5 @@ export class ItemsService {
     await this.prisma.userItems.delete({
       where: { id: userItem.id },
     });
-
-    return { message: 'Item deleted successfully!' };
   }
 }

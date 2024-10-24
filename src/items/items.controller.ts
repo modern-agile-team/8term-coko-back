@@ -1,6 +1,14 @@
 //controller : client로부터의 요청 처리. GET 요청 -> 서비스호출 -> 데이터반환
 
-import { Controller, Get, Post, Param, Body, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Body,
+  Delete,
+  HttpCode,
+} from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { BuyItemDto } from './dto/buy-item.dto';
 import { EquipItemDto } from './dto/equip-item.dto';
@@ -18,9 +26,10 @@ export class ItemsController {
 
   // POST /items/buy 요청 처리
   @Post('buy')
-  async buyItem(@Body() buyItemDto: BuyItemDto) {
+  @HttpCode(204)
+  async buyItem(@Body() buyItemDto: BuyItemDto): Promise<void> {
     const { userId, itemId } = buyItemDto;
-    return await this.itemsService.buyItem(userId, itemId);
+    await this.itemsService.buyItem(userId, itemId);
   }
 
   // GET /items/user/:userId 요청 처리
@@ -31,6 +40,7 @@ export class ItemsController {
 
   // POST /items/equip 요청 처리
   @Post('equip')
+  @HttpCode(204)
   async equipItem(@Body() equipItemDto: EquipItemDto) {
     const { userId, itemId } = equipItemDto;
     return await this.itemsService.equipItem(userId, itemId);
@@ -38,6 +48,7 @@ export class ItemsController {
 
   // POST /items/unequip 요청 처리
   @Post('unequip')
+  @HttpCode(204)
   async unequipItem(@Body() unequipItemDto: UnequipItemDto) {
     const { userId, itemId } = unequipItemDto;
     return await this.itemsService.unequipItem(userId, itemId);
@@ -45,6 +56,7 @@ export class ItemsController {
 
   // DELETE /items/:userId/:itemId 요청 처리
   @Delete('users/:userId/:itemId')
+  @HttpCode(204)
   async deleteUserItem(
     @Param('userId') userId: number,
     @Param('itemId') itemId: number,
