@@ -9,6 +9,6 @@ export class QueryQuizDto {
   readonly sectionId?: number;
 
   @IsOptional()
-  @IsEnum(Difficulty, { message: '잘못된 part value' })
+  @IsEnum(Difficulty, { message: 'bad difficulty value' })
   readonly difficulty?: Difficulty;
 }
