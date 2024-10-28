@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, Length } from 'class-validator';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -7,18 +7,17 @@ export class CreateUserDto {
     type: String,
     description: '유저 닉네임',
     example: 'gwgw99',
-    default: 'nickname',
     minimum: 2,
     maximum: 10,
   })
   @IsString()
+  @Length(2, 10)
   readonly nickname: string;
 
   @ApiProperty({
     type: String,
     description: '유저 프로필 이미지지',
     example: 'image.jpg',
-    default: 'image',
   })
   @IsOptional()
   @IsString()
