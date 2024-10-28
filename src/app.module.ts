@@ -9,6 +9,7 @@ import { PrismaService } from './prisma/prisma.service';
 import { QuizzesModule } from './quizzes/quizzes.module';
 import { SectionsModule } from './sections/sections.module';
 import { ProgressModule } from './progress/progress.module';
+import { PartsModule } from './parts/parts.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ProgressModule } from './progress/progress.module';
     ExperienceModule,
     PrismaModule,
     ProgressModule,
+    PartsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
