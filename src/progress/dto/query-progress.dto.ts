@@ -6,4 +6,9 @@ export class QueryProgressDto {
   @IsNumber()
   @Type(() => Number)
   readonly sectionId?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  readonly partId?: number;
 }

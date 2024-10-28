@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { IsNumber, IsOptional } from 'class-validator';
 
 export class QueryQuizDto {
   @IsOptional()
@@ -9,5 +9,6 @@ export class QueryQuizDto {
 
   @IsOptional()
   @IsNumber()
-  readonly difficulty?: Difficulty;
+  @Type(() => Number)
+  readonly partId?: number;
 }

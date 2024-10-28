@@ -50,6 +50,20 @@ export class ProgressService {
     return section;
   }
 
+  private async findPartById(id: number) {
+    const part = await this.prisma.part.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!part) {
+      throw new NotFoundException();
+    }
+
+    return part;
+  }
+
   private async findProgressByCompositeId(userId: number, quizId: number) {
     const progress = await this.prisma.progress.findUnique({
       where: {
@@ -80,20 +94,22 @@ export class ProgressService {
   }
 
   async create(userId: number, quiz: Quiz, data: CreateProgressDto) {
+    const { sectionId, partId } = quiz;
     const quizId = quiz.id;
-    const sectionId = quiz.sectionId;
 
     return this.prisma.progress.create({
       data: {
         userId,
         quizId,
         sectionId,
+        partId,
         ...data,
       },
     });
   }
 
   async update(userId: number, quiz: Quiz, data: CreateProgressDto) {
+    const { sectionId, partId } = quiz;
     const quizId = quiz.id;
 
     return this.prisma.progress.update({
@@ -106,6 +122,8 @@ export class ProgressService {
       data: {
         userId,
         quizId,
+        sectionId,
+        partId,
         ...data,
       },
     });
@@ -119,6 +137,8 @@ export class ProgressService {
     const quiz = await this.findQuizById(quizId);
 
     await this.findSectionById(quiz.sectionId);
+
+    await this.findPartById(quiz.partId);
 
     await this.findUserById(userId);
 

@@ -19,33 +19,48 @@ export class QuizzesService {
       throw new NotFoundException();
     }
 
-    return section.id;
+    return section;
   }
 
-  async create(quizData: CreateQuizDto) {
-    const { sectionId, ...orders } = quizData;
+  private async findPartById(id: number) {
+    const part = await this.prisma.part.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!part) {
+      throw new NotFoundException();
+    }
+
+    return part;
+  }
+
+  async create(data: CreateQuizDto) {
+    const { sectionId } = data;
 
     await this.findSectionById(sectionId);
 
     return this.prisma.quiz.create({
-      data: {
-        sectionId,
-        ...orders,
-      },
+      data,
     });
   }
 
   async findAll(query: QueryQuizDto) {
-    const { sectionId, difficulty } = query;
+    const { sectionId, partId } = query;
 
     if (sectionId) {
       await this.findSectionById(sectionId);
     }
 
+    if (partId) {
+      await this.findPartById(partId);
+    }
+
     return this.prisma.quiz.findMany({
       where: {
         ...(sectionId && { sectionId }),
-        ...(difficulty && { difficulty }),
+        ...(partId && { partId }),
       },
     });
   }
@@ -64,8 +79,8 @@ export class QuizzesService {
     return quiz;
   }
 
-  async update(id: number, quizData: UpdateQuizDto) {
-    const { sectionId, ...orders } = quizData;
+  async update(id: number, data: UpdateQuizDto) {
+    const { sectionId } = data;
 
     await this.findSectionById(sectionId);
 
@@ -75,10 +90,7 @@ export class QuizzesService {
       where: {
         id,
       },
-      data: {
-        sectionId,
-        ...orders,
-      },
+      data,
     });
   }
 
