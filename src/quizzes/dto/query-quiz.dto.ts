@@ -1,4 +1,3 @@
-import { Difficulty } from '@prisma/client';
 import { Type } from 'class-transformer';
 import { IsEnum, IsNumber, IsOptional } from 'class-validator';
 
@@ -9,6 +8,6 @@ export class QueryQuizDto {
   readonly sectionId?: number;
 
   @IsOptional()
-  @IsEnum(Difficulty, { message: 'bad difficulty value' })
+  @IsNumber()
   readonly difficulty?: Difficulty;
 }
