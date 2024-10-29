@@ -12,8 +12,8 @@ export class ItemsService {
   constructor(private readonly prisma: PrismaService) {}
 
   //모든 아이템 목록 조회 getAllItems
-  async getAllItems() {
-    return await this.prisma.items.findMany(); //prisma를 통해 db에서 모든 아이템(항목) 조회 : findMany()
+  getAllItems() {
+    return this.prisma.items.findMany(); //prisma를 통해 db에서 모든 아이템(항목) 조회 : findMany()
   }
 
   //아이템 구매 buyItem
@@ -48,10 +48,7 @@ export class ItemsService {
       throw new NotFoundException('No items found for this user.');
     }
     return userItems.map((userItem) => ({
-      id: userItem.items.id,
-      name: userItem.items.name,
-      cost: userItem.items.cost,
-      image: userItem.items.image,
+      items: userItem.items,
       quantity: userItem.quantity,
       isEquipped: userItem.isEquipped,
     }));
