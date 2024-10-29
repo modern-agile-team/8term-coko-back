@@ -73,12 +73,19 @@ export class ProgressService {
       await this.findSectionById(sectionId);
     }
 
+    if (partId) {
+      await this.findPartById(partId);
+    }
+
     return this.prisma.progress.findMany({
       where: {
         userId,
         quiz: {
           part: {
-            sectionId,
+            ...(partId && { id: partId }),
+            section: {
+              ...(sectionId && { id: sectionId }),
+            },
           },
         },
       },

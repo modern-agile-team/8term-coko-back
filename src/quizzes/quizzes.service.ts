@@ -37,9 +37,9 @@ export class QuizzesService {
   }
 
   async create(data: CreateQuizDto) {
-    const { sectionId } = data;
+    const { partId } = data;
 
-    await this.findSectionById(sectionId);
+    await this.findPartById(partId);
 
     return this.prisma.quiz.create({
       data,
@@ -59,8 +59,12 @@ export class QuizzesService {
 
     return this.prisma.quiz.findMany({
       where: {
-        ...(sectionId && { sectionId }),
-        ...(partId && { partId }),
+        part: {
+          ...(partId && { id: partId }),
+          section: {
+            ...(sectionId && { id: sectionId }),
+          },
+        },
       },
     });
   }
@@ -80,10 +84,6 @@ export class QuizzesService {
   }
 
   async update(id: number, data: UpdateQuizDto) {
-    const { sectionId } = data;
-
-    await this.findSectionById(sectionId);
-
     await this.findQuizById(id);
 
     return this.prisma.quiz.update({

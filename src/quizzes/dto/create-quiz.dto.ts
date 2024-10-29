@@ -3,9 +3,6 @@ import { Category } from '@prisma/client';
 
 export class CreateQuizDto {
   @IsNumber()
-  readonly sectionId: number;
-
-  @IsNumber()
   readonly partId: number;
 
   @IsString()
