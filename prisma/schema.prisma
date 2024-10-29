@@ -23,8 +23,7 @@ enum Category {
 
 model Quiz {
   id           Int        @id @default(autoincrement())
-  partId       Int        @map("section_id")
-  sectionId    Int        @map("part_id")
+  partId       Int        @map("part_id")
   title        String     @db.VarChar(255)
   question     String     @db.VarChar(1000)
   answer       String[]
@@ -32,7 +31,6 @@ model Quiz {
   category     Category
   createdAt    DateTime   @default(now()) @map("created_at")
   updatedAt    DateTime   @updatedAt @map("updated_at")
-  section      Section    @relation(fields: [sectionId], references: [id])
   part         Part       @relation(fields: [partId], references: [id])
   progress     Progress[]
 
@@ -40,13 +38,11 @@ model Quiz {
 }
 
 model Section {
-  id        Int        @id @default(autoincrement())
-  name      String     @unique @db.VarChar(255)
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @updatedAt @map("updated_at")
-  quiz      Quiz[]
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
   part      Part[]
-  progress  Progress[]
 
   @@map("sections")
 }
@@ -67,32 +63,26 @@ model Users {
 }
 
 model Progress {
-
   userId    Int      @map("user_id")
   quizId    Int      @map("quiz_id")
-  sectionId Int      @map("section_id")
-  partId    Int      @map("part_id")
   isCorrect Boolean  @map("is_correct")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   users     Users    @relation(fields: [userId], references: [id])
   quiz      Quiz     @relation(fields: [quizId], references: [id])
-  section   Section  @relation(fields: [sectionId], references: [id])
-  part      Part     @relation(fields: [partId], references: [id])
 
   @@id([userId, quizId])
   @@map("progress")
 }
 
 model Part {
-  id        Int        @id @default(autoincrement())
-  sectionId Int        @map("section_id")
-  name      String     @unique @db.VarChar(255)
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @updatedAt @map("updated_at")
-  section   Section    @relation(fields: [sectionId], references: [id])
+  id        Int      @id @default(autoincrement())
+  sectionId Int      @map("section_id")
+  name      String   @unique @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  section   Section  @relation(fields: [sectionId], references: [id])
   quiz      Quiz[]
-  progress  Progress[]
 
   @@map("parts")
 }

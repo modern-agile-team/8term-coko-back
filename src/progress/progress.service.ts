@@ -64,21 +64,8 @@ export class ProgressService {
     return part;
   }
 
-  private async findProgressByCompositeId(userId: number, quizId: number) {
-    const progress = await this.prisma.progress.findUnique({
-      where: {
-        userId_quizId: {
-          userId,
-          quizId,
-        },
-      },
-    });
-
-    return progress;
-  }
-
   async findAll(userId: number, query: QueryProgressDto) {
-    const { sectionId } = query;
+    const { sectionId, partId } = query;
 
     await this.findUserById(userId);
 
@@ -88,28 +75,29 @@ export class ProgressService {
 
     return this.prisma.progress.findMany({
       where: {
-        ...(sectionId && { sectionId }),
+        userId,
+        quiz: {
+          part: {
+            sectionId,
+          },
+        },
       },
     });
   }
 
   async create(userId: number, quiz: Quiz, data: CreateProgressDto) {
-    const { sectionId, partId } = quiz;
     const quizId = quiz.id;
 
     return this.prisma.progress.create({
       data: {
         userId,
         quizId,
-        sectionId,
-        partId,
         ...data,
       },
     });
   }
 
   async update(userId: number, quiz: Quiz, data: CreateProgressDto) {
-    const { sectionId, partId } = quiz;
     const quizId = quiz.id;
 
     return this.prisma.progress.update({
@@ -122,8 +110,6 @@ export class ProgressService {
       data: {
         userId,
         quizId,
-        sectionId,
-        partId,
         ...data,
       },
     });
@@ -136,16 +122,25 @@ export class ProgressService {
   ) {
     const quiz = await this.findQuizById(quizId);
 
-    await this.findSectionById(quiz.sectionId);
-
-    await this.findPartById(quiz.partId);
-
     await this.findUserById(userId);
 
-    const progress = await this.findProgressByCompositeId(userId, quizId);
-
-    return progress
-      ? this.update(userId, quiz, data)
-      : this.create(userId, quiz, data);
+    return this.prisma.progress.upsert({
+      where: {
+        userId_quizId: {
+          userId,
+          quizId,
+        },
+      },
+      create: {
+        userId,
+        quizId,
+        ...data,
+      },
+      update: {
+        userId,
+        quizId,
+        ...data,
+      },
+    });
   }
 }
