@@ -92,42 +92,12 @@ export class ProgressService {
     });
   }
 
-  async create(userId: number, quiz: Quiz, data: CreateProgressDto) {
-    const quizId = quiz.id;
-
-    return this.prisma.progress.create({
-      data: {
-        userId,
-        quizId,
-        ...data,
-      },
-    });
-  }
-
-  async update(userId: number, quiz: Quiz, data: CreateProgressDto) {
-    const quizId = quiz.id;
-
-    return this.prisma.progress.update({
-      where: {
-        userId_quizId: {
-          userId,
-          quizId,
-        },
-      },
-      data: {
-        userId,
-        quizId,
-        ...data,
-      },
-    });
-  }
-
   async createOrUpdate(
     userId: number,
     quizId: number,
     data: CreateProgressDto,
   ) {
-    const quiz = await this.findQuizById(quizId);
+    await this.findQuizById(quizId);
 
     await this.findUserById(userId);
 
