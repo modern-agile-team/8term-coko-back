@@ -5,10 +5,9 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
-
 
 datasource db {
   provider = "postgresql"
@@ -16,84 +15,84 @@ datasource db {
 }
 
 enum Category {
-  COMBINATION 
+  COMBINATION
   MULTIPLE_CHOICE
   OX_SELECTOR
   SHORT_ANSWER
 }
 
 model Quiz {
-  id              Int      @id @default(autoincrement())
-  partId          Int      @map("section_id")
-  sectionId       Int      @map("part_id")
-  title           String   @db.VarChar(255)	
-  question        String   @db.VarChar(1000)	
-  answer          String[]
-  answerChoice    String[] @map("answer_choice")
-  category        Category
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt      @map("updated_at")
-  section         Section  @relation(fields: [sectionId], references: [id])
-  part            Part     @relation(fields: [partId],    references: [id])
-  progress        Progress[]
+  id           Int        @id @default(autoincrement())
+  partId       Int        @map("section_id")
+  sectionId    Int        @map("part_id")
+  title        String     @db.VarChar(255)
+  question     String     @db.VarChar(1000)
+  answer       String[]
+  answerChoice String[]   @map("answer_choice")
+  category     Category
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  section      Section    @relation(fields: [sectionId], references: [id])
+  part         Part       @relation(fields: [partId], references: [id])
+  progress     Progress[]
 
   @@map("quizzes")
 }
 
 model Section {
-  id              Int      @id @default(autoincrement())
-  name            String   @unique   @db.VarChar(255)	
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt      @map("updated_at")
-  quiz            Quiz[]
-  part            Part[]
-  progress        Progress[]
+  id        Int        @id @default(autoincrement())
+  name      String     @unique @db.VarChar(255)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  quiz      Quiz[]
+  part      Part[]
+  progress  Progress[]
 
   @@map("sections")
 }
 
-model Users{
-  id Int @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  nickname String @db.VarChar(50)
-  profileImage String?
-  maxHealthPoint Int @default(5)
-  lastLogin DateTime @default(now())
-  level Int @default(1)
-  experience Int @default(0)
-  experienceForNextLevel Int @default(50)
-  point Int @default(0)
-  progress        Progress[]
+model Users {
+  id                     Int        @id @default(autoincrement())
+  createdAt              DateTime   @default(now())
+  updatedAt              DateTime   @updatedAt
+  nickname               String     @db.VarChar(50)
+  profileImage           String?
+  maxHealthPoint         Int        @default(5)
+  lastLogin              DateTime   @default(now())
+  level                  Int        @default(1)
+  experience             Int        @default(0)
+  experienceForNextLevel Int        @default(50)
+  point                  Int        @default(0)
+  progress               Progress[]
 }
 
-model Progress{
-  @@id([userId, quizId])
+model Progress {
 
   userId    Int      @map("user_id")
   quizId    Int      @map("quiz_id")
   sectionId Int      @map("section_id")
   partId    Int      @map("part_id")
   isCorrect Boolean  @map("is_correct")
-  createdAt DateTime @default(now())   @map("created_at")
-  updatedAt DateTime @updatedAt        @map("updated_at")
-  users     Users    @relation(fields: [userId],    references: [id])
-  quiz      Quiz     @relation(fields: [quizId],    references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  users     Users    @relation(fields: [userId], references: [id])
+  quiz      Quiz     @relation(fields: [quizId], references: [id])
   section   Section  @relation(fields: [sectionId], references: [id])
-  part      Part     @relation(fields: [partId],    references: [id])
+  part      Part     @relation(fields: [partId], references: [id])
 
+  @@id([userId, quizId])
   @@map("progress")
 }
 
 model Part {
-  id              Int      @id @default(autoincrement())
-  sectionId       Int      @map("section_id")
-  name            String   @unique         @db.VarChar(255)	
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt      @map("updated_at")
-  section         Section  @relation(fields: [sectionId], references: [id])
-  quiz            Quiz[]
-  progress        Progress[]
+  id        Int        @id @default(autoincrement())
+  sectionId Int        @map("section_id")
+  name      String     @unique @db.VarChar(255)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  section   Section    @relation(fields: [sectionId], references: [id])
+  quiz      Quiz[]
+  progress  Progress[]
 
   @@map("parts")
 }

@@ -4,13 +4,13 @@ import { CreateProgressDto } from './dto/create-progress.dto';
 import { QueryProgressDto } from './dto/query-progress.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 
-@Controller('users/:userId/progress')
+@Controller('users/:id/progress')
 export class ProgressController {
   constructor(private readonly progressService: ProgressService) {}
 
   @Get()
   findAll(
-    @Param('userId', PositiveIntPipe) userId: number,
+    @Param('id', PositiveIntPipe) userId: number,
     @Query() query: QueryProgressDto,
   ) {
     return this.progressService.findAll(userId, query);
@@ -18,7 +18,7 @@ export class ProgressController {
 
   @Put('quizzes/:quizId')
   update(
-    @Param('userId', PositiveIntPipe) userId: number,
+    @Param('id', PositiveIntPipe) userId: number,
     @Param('quizId', PositiveIntPipe) quizId: number,
     @Body() progressData: CreateProgressDto,
   ) {
