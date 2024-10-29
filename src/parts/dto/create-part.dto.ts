@@ -1,7 +1,8 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsInt, IsString, Min } from 'class-validator';
 
 export class CreatePartDto {
-  @IsNumber()
+  @IsInt()
+  @Min(0)
   readonly sectionId: number;
 
   @IsString()

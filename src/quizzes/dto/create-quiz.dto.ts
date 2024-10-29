@@ -1,8 +1,9 @@
-import { IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsInt, IsString, Min } from 'class-validator';
 import { Category } from '@prisma/client';
 
 export class CreateQuizDto {
-  @IsNumber()
+  @IsInt()
+  @Min(0)
   readonly partId: number;
 
   @IsString()
