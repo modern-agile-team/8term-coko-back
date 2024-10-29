@@ -37,21 +37,24 @@ export class ItemsService {
   }
 
   //특정 사용자 아이템 목록 조회 getUserItems
-  async getUserItems(userId: number) {
-    const userItems = await this.prisma.userItems.findMany({
-      where: { userId },
-      include: {
-        items: true, //연관 아이템 정보까지 조회 (없애야되나)
-      },
-    });
-    if (!userItems || userItems.length === 0) {
-      throw new NotFoundException('No items found for this user.');
-    }
-    return userItems.map((userItem) => ({
-      items: userItem.items,
-      quantity: userItem.quantity,
-      isEquipped: userItem.isEquipped,
-    }));
+  getUserItems(userId: number) {
+    return this.prisma.userItems
+      .findMany({
+        where: { userId },
+        include: {
+          items: true, //연관 아이템 정보 조회
+        },
+      })
+      .then((userItems) => {
+        if (!userItems || userItems.length === 0) {
+          throw new NotFoundException('No items found for this user.');
+        }
+        return userItems.map((userItem) => ({
+          items: userItem.items,
+          quantity: userItem.quantity,
+          isEquipped: userItem.isEquipped,
+        }));
+      });
   }
 
   //아이템 장착
