@@ -9,6 +9,7 @@ export class QueryProgressDto {
   readonly sectionId?: number;
 
   @IsOptional()
+  @Type(() => Number)
   @IsInt()
   @Min(0)
   readonly partId?: number;
