@@ -12,7 +12,7 @@ export class SectionsService {
   constructor(private prisma: PrismaService) {}
 
   private async findSectionById(id: number) {
-    const section = await this.prisma.sections.findUnique({
+    const section = await this.prisma.section.findUnique({
       where: {
         id,
       },
@@ -28,7 +28,7 @@ export class SectionsService {
   async create(sectionData: CreateSectionDto) {
     const { name } = sectionData;
 
-    const section = await this.prisma.sections.findUnique({
+    const section = await this.prisma.section.findUnique({
       where: {
         name,
       },
@@ -38,7 +38,7 @@ export class SectionsService {
       throw new ConflictException();
     }
 
-    return this.prisma.sections.create({
+    return this.prisma.section.create({
       data: {
         name,
       },
@@ -46,11 +46,11 @@ export class SectionsService {
   }
 
   async findAll() {
-    return this.prisma.sections.findMany();
+    return this.prisma.section.findMany();
   }
 
   async findOne(id: number) {
-    const section = await this.prisma.sections.findUnique({
+    const section = await this.prisma.section.findUnique({
       where: {
         id,
       },
@@ -68,7 +68,7 @@ export class SectionsService {
 
     await this.findSectionById(id);
 
-    return this.prisma.sections.update({
+    return this.prisma.section.update({
       where: {
         id,
       },
@@ -81,7 +81,7 @@ export class SectionsService {
   async remove(id: number) {
     await this.findSectionById(id);
 
-    return this.prisma.sections.delete({
+    return this.prisma.section.delete({
       where: {
         id,
       },

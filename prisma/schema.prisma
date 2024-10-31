@@ -14,13 +14,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Part {
-  EASY
-  NORMAL
-  HARD
-  VERY_HARD
-}
-
 enum Category {
   COMBINATION
   MULTIPLE_CHOICE
@@ -28,44 +21,70 @@ enum Category {
   SHORT_ANSWER
 }
 
-model Quizzes {
-  id           Int      @id @default(autoincrement())
-  part         Part
-  sectionId    Int      @map("section_id")
-  title        String   @db.VarChar(255)
-  question     String   @db.VarChar(1000)
+model Quiz {
+  id           Int        @id @default(autoincrement())
+  partId       Int        @map("part_id")
+  title        String     @db.VarChar(255)
+  question     String     @db.VarChar(1000)
   answer       String[]
-  answerChoice String[] @map("answer_choice")
+  answerChoice String[]   @map("answer_choice")
   category     Category
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  section      Sections @relation(fields: [sectionId], references: [id])
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  part         Part       @relation(fields: [partId], references: [id])
+  progress     Progress[]
 
   @@map("quizzes")
 }
 
-model Sections {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique @db.VarChar(255)
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  quizzes   Quizzes[]
+model Section {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  part      Part[]
 
   @@map("sections")
 }
 
 model User {
-  id                     Int      @id @default(autoincrement())
-  createdAt              DateTime @default(now()) @map("created_at")
-  updatedAt              DateTime @updatedAt @map("updated_at")
-  nickname               String   @db.VarChar(50)
-  profileImage           String?  @map("profile_image")
-  maxHealthPoint         Int      @default(5) @map("max_health_point")
-  lastLogin              DateTime @default(now()) @map("last_login")
-  level                  Int      @default(1)
-  experience             Int      @default(0)
-  experienceForNextLevel Int      @default(50) @map("experience_for_next_level")
-  point                  Int      @default(0)
+  id                     Int        @id @default(autoincrement())
+  createdAt              DateTime   @default(now()) @map("created_at")
+  updatedAt              DateTime   @updatedAt @map("updated_at")
+  nickname               String     @db.VarChar(50)
+  profileImage           String?    @map("profile_image")
+  maxHealthPoint         Int        @default(5) @map("max_health_point")
+  lastLogin              DateTime   @default(now()) @map("last_login")
+  level                  Int        @default(1)
+  experience             Int        @default(0)
+  experienceForNextLevel Int        @default(50) @map("experience_for_next_level")
+  point                  Int        @default(0)
+  Progress               Progress[]
 
   @@map("users")
+}
+
+model Progress {
+  userId    Int      @map("user_id")
+  quizId    Int      @map("quiz_id")
+  isCorrect Boolean  @map("is_correct")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@id([userId, quizId])
+  @@map("progress")
+}
+
+model Part {
+  id        Int      @id @default(autoincrement())
+  sectionId Int      @map("section_id")
+  name      String   @unique @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  section   Section  @relation(fields: [sectionId], references: [id])
+  quiz      Quiz[]
+
+  @@map("parts")
 }

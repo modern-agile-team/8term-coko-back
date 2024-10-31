@@ -9,7 +9,7 @@ export class QuizzesService {
   constructor(private prisma: PrismaService) {}
 
   private async findSectionById(id: number) {
-    const section = await this.prisma.sections.findUnique({
+    const section = await this.prisma.section.findUnique({
       where: {
         id,
       },
@@ -19,39 +19,58 @@ export class QuizzesService {
       throw new NotFoundException();
     }
 
-    return section.id;
+    return section;
   }
 
-  async create(quizData: CreateQuizDto) {
-    const { sectionId, ...orders } = quizData;
-
-    await this.findSectionById(sectionId);
-
-    return this.prisma.quizzes.create({
-      data: {
-        sectionId,
-        ...orders,
+  private async findPartById(id: number) {
+    const part = await this.prisma.part.findUnique({
+      where: {
+        id,
       },
+    });
+
+    if (!part) {
+      throw new NotFoundException();
+    }
+
+    return part;
+  }
+
+  async create(data: CreateQuizDto) {
+    const { partId } = data;
+
+    await this.findPartById(partId);
+
+    return this.prisma.quiz.create({
+      data,
     });
   }
 
   async findAll(query: QueryQuizDto) {
-    const { sectionId, part } = query;
+    const { sectionId, partId } = query;
 
     if (sectionId) {
       await this.findSectionById(sectionId);
     }
 
-    return this.prisma.quizzes.findMany({
+    if (partId) {
+      await this.findPartById(partId);
+    }
+
+    return this.prisma.quiz.findMany({
       where: {
-        ...(sectionId && { sectionId }),
-        ...(part && { part }),
+        part: {
+          ...(partId && { id: partId }),
+          section: {
+            ...(sectionId && { id: sectionId }),
+          },
+        },
       },
     });
   }
 
   async findQuizById(id: number) {
-    const quiz = await this.prisma.quizzes.findUnique({
+    const quiz = await this.prisma.quiz.findUnique({
       where: {
         id,
       },
@@ -64,28 +83,21 @@ export class QuizzesService {
     return quiz;
   }
 
-  async update(id: number, quizData: UpdateQuizDto) {
-    const { sectionId, ...orders } = quizData;
-
-    await this.findSectionById(sectionId);
-
+  async update(id: number, data: UpdateQuizDto) {
     await this.findQuizById(id);
 
-    return this.prisma.quizzes.update({
+    return this.prisma.quiz.update({
       where: {
         id,
       },
-      data: {
-        sectionId,
-        ...orders,
-      },
+      data,
     });
   }
 
   async remove(id: number) {
     await this.findQuizById(id);
 
-    return this.prisma.quizzes.delete({
+    return this.prisma.quiz.delete({
       where: {
         id,
       },
