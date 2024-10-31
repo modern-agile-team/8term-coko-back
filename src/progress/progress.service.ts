@@ -9,7 +9,7 @@ export class ProgressService {
   constructor(private prisma: PrismaService) {}
 
   private async findUserById(id: number) {
-    const user = await this.prisma.users.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: {
         id,
       },
