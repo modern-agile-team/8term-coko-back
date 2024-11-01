@@ -3,7 +3,9 @@ import { ProgressService } from './progress.service';
 import { CreateProgressDto } from './dto/create-progress.dto';
 import { QueryProgressDto } from './dto/query-progress.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('progress')
 @Controller('users/:id/progress')
 export class ProgressController {
   constructor(private readonly progressService: ProgressService) {}

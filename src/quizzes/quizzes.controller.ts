@@ -13,7 +13,9 @@ import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
 import { QueryQuizDto } from './dto/query-quiz.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('quizzes')
 @Controller('quizzes')
 export class QuizzesController {
   constructor(private readonly quizzesService: QuizzesService) {}

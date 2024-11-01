@@ -10,7 +10,9 @@ import {
 import { PartsService } from './parts.service';
 import { CreatePartDto } from './dto/create-part.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('parts')
 @Controller('parts')
 export class PartsController {
   constructor(private readonly partsService: PartsService) {}

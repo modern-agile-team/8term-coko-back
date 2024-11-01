@@ -31,7 +31,7 @@ model Quiz {
   category     Category
   createdAt    DateTime   @default(now()) @map("created_at")
   updatedAt    DateTime   @updatedAt @map("updated_at")
-  part         Part       @relation(fields: [partId], references: [id])
+  part         Part       @relation(fields: [partId], references: [id], onDelete: Cascade)
   progress     Progress[]
 
   @@map("quizzes")
@@ -83,7 +83,7 @@ model Part {
   name      String   @unique @db.VarChar(255)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  section   Section  @relation(fields: [sectionId], references: [id])
+  section   Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
   quiz      Quiz[]
 
   @@map("parts")
