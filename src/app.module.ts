@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserPointModule } from './users/modules/user-point.module';
 import { UserExperienceModule } from './users/modules/user-experience.module';
@@ -8,6 +7,8 @@ import { UsersModule } from './users/modules/users.module';
 import { PrismaService } from './prisma/prisma.service';
 import { QuizzesModule } from './quizzes/quizzes.module';
 import { SectionsModule } from './sections/sections.module';
+import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -18,8 +19,11 @@ import { SectionsModule } from './sections/sections.module';
     UserPointModule,
     UserExperienceModule,
     PrismaModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    AuthModule,
   ],
-  controllers: [AppController],
   providers: [AppService, PrismaService],
 })
 export class AppModule {}
