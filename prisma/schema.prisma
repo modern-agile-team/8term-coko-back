@@ -54,20 +54,22 @@ model Sections {
   @@map("sections")
 }
 
-model Users {
+model User {
   id                     Int      @id @default(autoincrement())
-  createdAt              DateTime @default(now())
-  updatedAt              DateTime @updatedAt
+  createdAt              DateTime @default(now()) @map("created_at")
+  updatedAt              DateTime @updatedAt @map("updated_at")
   nickname               String   @db.VarChar(50)
-  profileImage           String?
-  maxHealthPoint         Int      @default(5)
-  lastLogin              DateTime @default(now())
+  profileImage           String?  @map("profile_image")
+  maxHealthPoint         Int      @default(5) @map("max_health_point")
+  lastLogin              DateTime @default(now()) @map("last_login")
   level                  Int      @default(1)
   experience             Int      @default(0)
-  experienceForNextLevel Int      @default(50)
+  experienceForNextLevel Int      @default(50) @map("experience_for_next_level")
   point                  Int      @default(0)
 
-  userItem UserItems[] //1:N관계, Items와 userItems 연결
+  userItem UserItems[]
+
+  @@map("users")
 }
 
 model Items {
@@ -89,7 +91,7 @@ model UserItems {
   isEquipped Boolean  @default(false)
   quantity   Int      @default(1)
 
-  users Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+  users User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   items Items @relation(fields: [itemId], references: [id], onDelete: Cascade)
 
   @@index([userId])

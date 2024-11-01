@@ -1,11 +1,11 @@
-import { Users } from '@prisma/client';
+import { User } from '@prisma/client';
 
 export class ResponsePointDto {
   readonly id: number;
   readonly nickname?: string;
   readonly point: number;
 
-  constructor(user: Users) {
+  constructor(user: User) {
     this.id = user.id;
     this.nickname = user.nickname;
     this.point = user.point;

@@ -12,12 +12,12 @@ export class UserExperienceService {
   constructor(private prisma: PrismaService) {}
 
   async getUserExperience(id: number): Promise<ResponseExperienceDto> {
-    const userExperience = await this.prisma.users.findUnique({
+    const userExperience = await this.prisma.user.findUnique({
       where: { id },
     });
 
     if (!userExperience) {
-      throw new NotFoundException(`ID ${id} not found`);
+      throw new NotFoundException(`id ${id} not found`);
     }
     return new ResponseExperienceDto(userExperience);
   }
@@ -26,10 +26,10 @@ export class UserExperienceService {
     id: number,
     updateExperienceData: UpdateExperienceDto,
   ): Promise<ResponseExperienceDto> {
-    const user = await this.prisma.users.findUnique({ where: { id } });
+    const user = await this.prisma.user.findUnique({ where: { id } });
 
     if (!user) {
-      throw new NotFoundException(`ID ${id} not found`);
+      throw new NotFoundException(`id ${id} not found`);
     }
 
     const { userLevel, userExperience, experienceForNextLevel } =
@@ -40,7 +40,7 @@ export class UserExperienceService {
         updateExperienceData.experience,
       );
 
-    const updatedExperience = await this.prisma.users.update({
+    const updatedExperience = await this.prisma.user.update({
       where: { id },
       data: {
         level: userLevel,
