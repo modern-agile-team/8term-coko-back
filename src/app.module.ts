@@ -10,6 +10,8 @@ import { UsersModule } from './users/modules/users.module';
 import { PrismaService } from './prisma/prisma.service';
 import { QuizzesModule } from './quizzes/quizzes.module';
 import { SectionsModule } from './sections/sections.module';
+import { ProgressModule } from './progress/progress.module';
+import { PartsModule } from './parts/parts.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { SectionsModule } from './sections/sections.module';
     UserPointModule,
     UserExperienceModule,
     PrismaModule,
+    ProgressModule,
+    PartsModule,
     ItemsModule,
   ],
   controllers: [AppController],

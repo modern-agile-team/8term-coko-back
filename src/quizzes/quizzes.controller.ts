@@ -16,21 +16,21 @@ import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe
 
 @Controller('quizzes')
 export class QuizzesController {
-  constructor(private readonly questionsService: QuizzesService) {}
+  constructor(private readonly quizzesService: QuizzesService) {}
 
   @Post()
   create(@Body() quizData: CreateQuizDto) {
-    return this.questionsService.create(quizData);
+    return this.quizzesService.create(quizData);
   }
 
   @Get()
   getAll(@Query() query: QueryQuizDto) {
-    return this.questionsService.findAll(query);
+    return this.quizzesService.findAll(query);
   }
 
   @Get(':id')
   getOneBySectionPartId(@Param('id', PositiveIntPipe) id: number) {
-    return this.questionsService.findQuizById(id);
+    return this.quizzesService.findQuizById(id);
   }
 
   @Put(':id')
@@ -38,11 +38,11 @@ export class QuizzesController {
     @Param('id', PositiveIntPipe) id: number,
     @Body() quizData: UpdateQuizDto,
   ) {
-    return this.questionsService.update(id, quizData);
+    return this.quizzesService.update(id, quizData);
   }
 
   @Delete(':id')
   remove(@Param('id', PositiveIntPipe) id: number) {
-    return this.questionsService.remove(id);
+    return this.quizzesService.remove(id);
   }
 }
