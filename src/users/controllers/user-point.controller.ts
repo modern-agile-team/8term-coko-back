@@ -19,7 +19,7 @@ export class UserPointController {
 
   @Patch()
   @ApiUpdatePoint()
-  update(
+  updatePoint(
     @Param('id', PositiveIntPipe) userId: number,
     @Body() updatePointData: UpdatePointDto,
   ) {
