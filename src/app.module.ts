@@ -24,6 +24,6 @@ import { AuthModule } from './auth/auth.module';
     }),
     AuthModule,
   ],
-  providers: [AppService, PrismaService],
+  providers: [AppService],
 })
 export class AppModule {}
