@@ -24,6 +24,6 @@ import { PartsModule } from './parts/parts.module';
     PartsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService],
 })
 export class AppModule {}
