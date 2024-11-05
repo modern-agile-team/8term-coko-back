@@ -10,9 +10,12 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { ItemsService } from './items.service';
-import { BuyItemDto } from './dto/buy-item.dto';
-import { EquipItemDto } from './dto/equip-item.dto';
-import { UnequipItemDto } from './dto/unequip-item.dto';
+import {
+  BuyItemDto,
+  EquipItemDto,
+  ItemChangeStatusDto,
+  UnequipItemDto,
+} from './dto/item-changeStatus.dto';
 
 @Controller('items') // '/items'경로 요청 처리
 export class ItemsController {
@@ -27,7 +30,7 @@ export class ItemsController {
   // POST /items/buy 요청 처리
   @Post('buy')
   @HttpCode(204)
-  async buyItem(@Body() buyItemDto: BuyItemDto): Promise<void> {
+  async buyItem(@Body() buyItemDto: ItemChangeStatusDto): Promise<void> {
     const { userId, itemId } = buyItemDto;
     await this.itemsService.buyItem(userId, itemId);
   }
@@ -41,7 +44,7 @@ export class ItemsController {
   // POST /items/equip 요청 처리
   @Post('equip')
   @HttpCode(204)
-  async equipItem(@Body() equipItemDto: EquipItemDto) {
+  async equipItem(@Body() equipItemDto: ItemChangeStatusDto) {
     const { userId, itemId } = equipItemDto;
     return await this.itemsService.equipItem(userId, itemId);
   }
@@ -49,7 +52,7 @@ export class ItemsController {
   // POST /items/unequip 요청 처리
   @Post('unequip')
   @HttpCode(204)
-  async unequipItem(@Body() unequipItemDto: UnequipItemDto) {
+  async unequipItem(@Body() unequipItemDto: ItemChangeStatusDto) {
     const { userId, itemId } = unequipItemDto;
     return await this.itemsService.unequipItem(userId, itemId);
   }
