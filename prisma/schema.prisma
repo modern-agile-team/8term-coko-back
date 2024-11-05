@@ -95,18 +95,18 @@ model Items {
   name      String
   cost      Int
   image     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   userItems UserItems[] //1:N관계, Item와 userItem 연결
 }
 
 model UserItems {
   id         Int      @id @default(autoincrement())
-  userId     Int
-  itemId     Int
-  createdAt  DateTime @default(now())
-  isEquipped Boolean  @default(false)
+  userId     Int      @map("user_id")
+  itemId     Int      @map("item_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  isEquipped Boolean  @default(false) @map("is_equipped")
   quantity   Int      @default(1)
 
   users User  @relation(fields: [userId], references: [id], onDelete: Cascade)
