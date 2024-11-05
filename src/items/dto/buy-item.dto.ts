@@ -1,9 +1,9 @@
-import { IsNumber } from 'class-validator';
+import { IsInt, IsNumber } from 'class-validator';
 
 export class BuyItemDto {
-  @IsNumber()
+  @IsInt()
   userId: number;
 
-  @IsNumber()
+  @IsInt()
   itemId: number;
 }
