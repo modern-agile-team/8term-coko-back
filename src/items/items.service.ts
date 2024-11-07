@@ -1,5 +1,3 @@
-//service : 비즈니스 로직. 아이템 목록을 데이터베이스에서 가져오는 역할 -> 실제 데이터를 불러온다
-
 import {
   Injectable,
   BadRequestException,
@@ -8,13 +6,13 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service'; //PrismaService를 통해 db에서 아이템목록 가져온다.
 import { ItemChangeStatusDto } from './dto/item-changeStatus.dto';
 
-@Injectable() //클래스 : 의존성 주입 가능한 (다른 곳에서 이 클래스를 불러와서 사용할 수 있게 한다.)
+@Injectable() //클래스 : 의존성 주입 가능 (다른 곳에서 이 클래스를 불러와서 사용할 수 있게 한다)
 export class ItemsService {
   constructor(private readonly prisma: PrismaService) {}
 
   //모든 아이템 목록 조회 getAllItems
   getAllItems() {
-    return this.prisma.items.findMany(); //prisma를 통해 db에서 모든 아이템(항목) 조회 : findMany()
+    return this.prisma.item.findMany(); // findMany() : 모든 아이템(항목) 조회
   }
 
   //아이템 구매 buyItem
@@ -22,7 +20,7 @@ export class ItemsService {
     const { userId, itemId } = buyItemDto;
 
     //유저 아이템 유무 확인
-    const existingItem = await this.prisma.userItems.findFirst({
+    const existingItem = await this.prisma.userItem.findFirst({
       where: { userId, itemId },
     });
 
@@ -30,7 +28,7 @@ export class ItemsService {
       throw new BadRequestException('User already owns this item.');
     }
 
-    await this.prisma.userItems.create({
+    await this.prisma.userItem.create({
       data: {
         userId,
         itemId,
@@ -41,19 +39,19 @@ export class ItemsService {
 
   //특정 사용자 아이템 목록 조회 getUserItems
   getUserItems(userId: number) {
-    return this.prisma.userItems
+    return this.prisma.userItem
       .findMany({
         where: { userId },
         include: {
-          items: true, //연관 아이템 정보 조회
+          item: true, //연관 아이템 정보 조회
         },
       })
-      .then((userItems) => {
-        if (!userItems || userItems.length === 0) {
+      .then((userItem) => {
+        if (!userItem || userItem.length === 0) {
           throw new NotFoundException('No items found for this user.');
         }
-        return userItems.map((userItem) => ({
-          items: userItem.items,
+        return userItem.map((userItem) => ({
+          items: userItem.item,
           quantity: userItem.quantity,
           isEquipped: userItem.isEquipped,
         }));
@@ -63,7 +61,7 @@ export class ItemsService {
   //아이템 장착
   async equipItem(equipItemDto: ItemChangeStatusDto): Promise<void> {
     const { userId, itemId } = equipItemDto;
-    const userItem = await this.prisma.userItems.findFirst({
+    const userItem = await this.prisma.userItem.findFirst({
       where: { userId, itemId },
     });
 
@@ -74,7 +72,7 @@ export class ItemsService {
       throw new BadRequestException('Item is already equipped');
     }
 
-    await this.prisma.userItems.update({
+    await this.prisma.userItem.update({
       where: { id: userItem.id },
       data: { isEquipped: true },
     });
@@ -83,7 +81,7 @@ export class ItemsService {
   //아이템 장착 해제
   async unequipItem(unequipItemDto: ItemChangeStatusDto): Promise<void> {
     const { userId, itemId } = unequipItemDto;
-    const userItem = await this.prisma.userItems.findFirst({
+    const userItem = await this.prisma.userItem.findFirst({
       where: { userId, itemId },
     });
 
@@ -95,7 +93,7 @@ export class ItemsService {
       throw new BadRequestException('Item is already unequipped');
     }
 
-    await this.prisma.userItems.update({
+    await this.prisma.userItem.update({
       where: { id: userItem.id },
       data: { isEquipped: false },
     });
@@ -103,7 +101,7 @@ export class ItemsService {
 
   //특정 사용자의 특정 아이템 삭제
   async deleteUserItem(userId: number, itemId: number): Promise<void> {
-    const userItem = await this.prisma.userItems.findFirst({
+    const userItem = await this.prisma.userItem.findFirst({
       where: { userId, itemId },
     });
 
@@ -111,7 +109,7 @@ export class ItemsService {
       throw new NotFoundException('Item not found for this user');
     }
 
-    await this.prisma.userItems.delete({
+    await this.prisma.userItem.delete({
       where: { id: userItem.id },
     });
   }
