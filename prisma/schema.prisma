@@ -48,19 +48,19 @@ model Section {
 }
 
 model User {
-  id                     Int         @id @default(autoincrement())
-  createdAt              DateTime    @default(now()) @map("created_at")
-  updatedAt              DateTime    @updatedAt @map("updated_at")
-  nickname               String      @db.VarChar(50)
-  profileImage           String?     @map("profile_image")
-  maxHealthPoint         Int         @default(5) @map("max_health_point")
-  lastLogin              DateTime    @default(now()) @map("last_login")
-  level                  Int         @default(1)
-  experience             Int         @default(0)
-  experienceForNextLevel Int         @default(50) @map("experience_for_next_level")
-  point                  Int         @default(0)
+  id                     Int        @id @default(autoincrement())
+  createdAt              DateTime   @default(now()) @map("created_at")
+  updatedAt              DateTime   @updatedAt @map("updated_at")
+  nickname               String     @db.VarChar(50)
+  profileImage           String?    @map("profile_image")
+  maxHealthPoint         Int        @default(5) @map("max_health_point")
+  lastLogin              DateTime   @default(now()) @map("last_login")
+  level                  Int        @default(1)
+  experience             Int        @default(0)
+  experienceForNextLevel Int        @default(50) @map("experience_for_next_level")
+  point                  Int        @default(0)
   Progress               Progress[]
-  UserItems              UserItems[]
+  UserItems              UserItem[]
 
   @@map("users")
 }
@@ -90,7 +90,7 @@ model Part {
   @@map("parts")
 }
 
-model Items {
+model Item {
   id        Int      @id @default(autoincrement())
   name      String
   cost      Int
@@ -98,10 +98,12 @@ model Items {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  userItems UserItems[] //1:N관계, Item와 userItem 연결
+  userItems UserItem[] //1:N관계, Item와 userItem 연결
+
+  @@map("items")
 }
 
-model UserItems {
+model UserItem {
   id         Int      @id @default(autoincrement())
   userId     Int      @map("user_id")
   itemId     Int      @map("item_id")
@@ -109,9 +111,11 @@ model UserItems {
   isEquipped Boolean  @default(false) @map("is_equipped")
   quantity   Int      @default(1)
 
-  users User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  items Items @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
 
+  @@unique([userId, itemId])
   @@index([userId])
   @@index([itemId])
+  @@map("user_items")
 }

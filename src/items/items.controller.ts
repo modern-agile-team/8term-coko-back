@@ -31,8 +31,7 @@ export class ItemsController {
   @Post('buy')
   @HttpCode(204)
   async buyItem(@Body() buyItemDto: ItemChangeStatusDto): Promise<void> {
-    const { userId, itemId } = buyItemDto;
-    await this.itemsService.buyItem(userId, itemId);
+    await this.itemsService.buyItem(buyItemDto);
   }
 
   // GET /items/user/:userId 요청 처리
@@ -45,16 +44,14 @@ export class ItemsController {
   @Post('equip')
   @HttpCode(204)
   async equipItem(@Body() equipItemDto: ItemChangeStatusDto) {
-    const { userId, itemId } = equipItemDto;
-    return await this.itemsService.equipItem(userId, itemId);
+    return await this.itemsService.equipItem(equipItemDto);
   }
 
   // POST /items/unequip 요청 처리
   @Post('unequip')
   @HttpCode(204)
   async unequipItem(@Body() unequipItemDto: ItemChangeStatusDto) {
-    const { userId, itemId } = unequipItemDto;
-    return await this.itemsService.unequipItem(userId, itemId);
+    return await this.itemsService.unequipItem(unequipItemDto);
   }
 
   // DELETE /items/:userId/:itemId 요청 처리
