@@ -13,7 +13,6 @@ import { ItemsService } from './items.service';
 import {
   BuyItemDto,
   EquipItemDto,
-  ItemChangeStatusDto,
   UnequipItemDto,
 } from './dto/item-changeStatus.dto';
 
@@ -30,7 +29,7 @@ export class ItemsController {
   // POST /items/buy 요청 처리
   @Post('buy')
   @HttpCode(204)
-  async buyItem(@Body() buyItemDto: ItemChangeStatusDto): Promise<void> {
+  async buyItem(@Body() buyItemDto: BuyItemDto): Promise<void> {
     await this.itemsService.buyItem(buyItemDto);
   }
 
@@ -43,14 +42,14 @@ export class ItemsController {
   // POST /items/equip 요청 처리
   @Post('equip')
   @HttpCode(204)
-  async equipItem(@Body() equipItemDto: ItemChangeStatusDto) {
+  async equipItem(@Body() equipItemDto: EquipItemDto) {
     return await this.itemsService.equipItem(equipItemDto);
   }
 
   // POST /items/unequip 요청 처리
   @Post('unequip')
   @HttpCode(204)
-  async unequipItem(@Body() unequipItemDto: ItemChangeStatusDto) {
+  async unequipItem(@Body() unequipItemDto: UnequipItemDto) {
     return await this.itemsService.unequipItem(unequipItemDto);
   }
 
