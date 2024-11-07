@@ -259,6 +259,19 @@ export const ApiSections = {
           },
         },
       }),
+      ApiResponse({
+        status: 409,
+        description: 'section을 참조하고 있는 파트가 있어 삭제를 거부함',
+        content: {
+          JSON: {
+            example: {
+              message: '섹션을 참조하고 있는 파트가 있음',
+              error: 'Conflict',
+              statusCode: 409,
+            },
+          },
+        },
+      }),
     );
   },
 };
