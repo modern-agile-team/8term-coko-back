@@ -80,6 +80,19 @@ export const ApiQuizzes = {
           },
         },
       }),
+      ApiResponse({
+        status: 400,
+        description: '배열 값을 가지는 속성의 배열안 값이 string이 아님',
+        content: {
+          JSON: {
+            example: {
+              message: ['each value in answer must be a string'],
+              error: 'Bad Request',
+              statusCode: 400,
+            },
+          },
+        },
+      }),
     );
   },
   findAll: () => {

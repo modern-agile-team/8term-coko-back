@@ -53,6 +53,16 @@ export class PartsService {
       throw new NotFoundException();
     }
 
+    const quiz = await this.prisma.quiz.findMany({
+      where: {
+        partId: id,
+      },
+    });
+
+    if (quiz.length) {
+      throw new ConflictException('파트를 참조하고 있는 문제데이터가 있음');
+    }
+
     return this.prisma.part.delete({
       where: {
         id,
