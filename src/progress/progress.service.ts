@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProgressDto } from './dto/create-progress.dto';
 import { QueryProgressDto } from './dto/query-progress.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Quiz } from '@prisma/client';
 
 @Injectable()
 export class ProgressService {
