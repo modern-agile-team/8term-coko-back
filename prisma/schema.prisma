@@ -74,11 +74,11 @@ model User {
 }
 
 model Token {
-  id           Int     @id @default(autoincrement())
-  userId       Int     @map("user_id")
-  accessToken  String  @map("access_token")
-  refreshToken String? @map("refresh_token")
-  user         User    @relation(fields: [userId], references: [id])
+  id                 Int     @id @default(autoincrement())
+  userId             Int     @map("user_id")
+  socialAccessToken  String  @map("social_access_token")
+  socialRefreshToken String? @map("social_refresh_token")
+  user               User    @relation(fields: [userId], references: [id])
 
   @@map("token")
 }
