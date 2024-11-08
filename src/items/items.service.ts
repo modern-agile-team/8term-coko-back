@@ -19,6 +19,16 @@ export class ItemsService {
   async buyItem(buyItemDto: ItemChangeStatusDto): Promise<void> {
     const { userId, itemId } = buyItemDto;
 
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    const item = await this.prisma.item.findUnique({ where: { id: itemId } });
+    if (!item) {
+      throw new BadRequestException('Item not found');
+    }
+
     //유저 아이템 유무 확인
     const existingItem = await this.prisma.userItem.findFirst({
       where: { userId, itemId },
