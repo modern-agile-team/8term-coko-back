@@ -57,7 +57,7 @@ model Sections {
 model User {
   id                     Int      @id @default(autoincrement())
   provider               String   @db.VarChar(20)
-  providerId             Int      @unique @map("provider_id")
+  providerId             String   @unique @map("provider_id")
   name                   String   @db.VarChar(30)
   profileImage           String?  @map("profile_image")
   maxHealthPoint         Int      @default(5) @map("max_health_point")
@@ -75,7 +75,7 @@ model User {
 
 model Token {
   id                 Int     @id @default(autoincrement())
-  userId             Int     @map("user_id")
+  userId             Int     @unique @map("user_id")
   socialAccessToken  String  @map("social_access_token")
   socialRefreshToken String? @map("social_refresh_token")
   user               User    @relation(fields: [userId], references: [id])
