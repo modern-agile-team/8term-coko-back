@@ -84,12 +84,11 @@ export class ProgressService {
     option?: { isCorrect: boolean },
   ) {
     const { sectionId, partId } = query;
-    const isCorrect = option?.isCorrect;
 
     return this.prisma.progress.count({
       where: {
         userId,
-        ...(isCorrect && { isCorrect }),
+        ...option,
         quiz: {
           part: {
             ...(partId && { id: partId }),
