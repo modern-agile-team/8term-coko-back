@@ -4,7 +4,6 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateQuizDto {
   @ApiProperty({
-    required: true,
     description: '자연수 part id 입력',
     example: 1,
   })
@@ -13,7 +12,6 @@ export class CreateQuizDto {
   readonly partId: number;
 
   @ApiProperty({
-    required: true,
     description: '문제 설명란',
     example: '다음 보기를 보고 문제를 완성하세요',
   })
@@ -21,7 +19,6 @@ export class CreateQuizDto {
   readonly title: string;
 
   @ApiProperty({
-    required: true,
     description: '문제 메인 화면에 보여 줄 실제 문제 내용',
     example: 'const num : number = 6',
   })
@@ -29,7 +26,6 @@ export class CreateQuizDto {
   readonly question: string;
 
   @ApiProperty({
-    required: true,
     description:
       '객관식 문제 선택 문항 & 조합형 문제의 선택 단어들 & 그 외 선택사항이 없는 문제들은 빈 배열',
     example: ['const', 'num', ':number', '6'],
@@ -38,7 +34,6 @@ export class CreateQuizDto {
   readonly answerChoice: string[];
 
   @ApiProperty({
-    required: true,
     description:
       '실제 문제의 정답 & 조합형: 문제정답의 순서가 맞아야함 & 그 외 문제들은 인덱스 0번 배열값과 같아야함',
     example: ['const', 'num', ':number', '6'],
@@ -47,7 +42,6 @@ export class CreateQuizDto {
   readonly answer: string[];
 
   @ApiProperty({
-    required: true,
     description: `
       문제 유형 , 4가지가 있음 
       1. COMBINATION : 단어 조합형 문제

@@ -1,9 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsNumber, IsOptional, Min } from 'class-validator';
+import { IsInt, IsOptional, Min } from 'class-validator';
 
 export class QueryQuizDto {
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: '자연수 section id 입력',
     example: 1,
   })
@@ -13,7 +13,7 @@ export class QueryQuizDto {
   @Min(0)
   readonly sectionId?: number;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: '자연수 part id 입력',
     example: 1,
   })
