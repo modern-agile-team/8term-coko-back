@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -10,7 +11,7 @@ export class AuthService {
   ) {}
 
   async googleLogin(
-    user: any,
+    user: CreateUserDto,
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const { provider, providerId, email, name, socialAccessToken } = user;
 
