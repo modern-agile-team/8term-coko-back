@@ -30,8 +30,10 @@ export class ItemsService {
     }
 
     //유저 아이템 유무 확인
-    const existingItem = await this.prisma.userItem.findFirst({
-      where: { userId, itemId },
+    const existingItem = await this.prisma.userItem.findUnique({
+      where: {
+        userId_itemId: { userId, itemId },
+      },
     });
 
     if (existingItem) {
@@ -71,8 +73,13 @@ export class ItemsService {
   //아이템 장착
   async equipItem(equipItemDto: ItemChangeStatusDto): Promise<void> {
     const { userId, itemId } = equipItemDto;
-    const userItem = await this.prisma.userItem.findFirst({
-      where: { userId, itemId },
+    const userItem = await this.prisma.userItem.findUnique({
+      where: {
+        userId_itemId: {
+          userId,
+          itemId,
+        },
+      },
     });
 
     if (!userItem) {
@@ -91,8 +98,10 @@ export class ItemsService {
   //아이템 장착 해제
   async unequipItem(unequipItemDto: ItemChangeStatusDto): Promise<void> {
     const { userId, itemId } = unequipItemDto;
-    const userItem = await this.prisma.userItem.findFirst({
-      where: { userId, itemId },
+    const userItem = await this.prisma.userItem.findUnique({
+      where: {
+        userId_itemId: { userId, itemId },
+      },
     });
 
     if (!userItem) {
@@ -111,8 +120,13 @@ export class ItemsService {
 
   //특정 사용자의 특정 아이템 삭제
   async deleteUserItem(userId: number, itemId: number): Promise<void> {
-    const userItem = await this.prisma.userItem.findFirst({
-      where: { userId, itemId },
+    const userItem = await this.prisma.userItem.findUnique({
+      where: {
+        userId_itemId: {
+          userId,
+          itemId,
+        },
+      },
     });
 
     if (!userItem) {
