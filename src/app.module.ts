@@ -21,12 +21,11 @@ import { PartsModule } from './parts/parts.module';
     UsersModule,
     UserPointModule,
     UserExperienceModule,
-    PrismaModule,
     ProgressModule,
     PartsModule,
     ItemsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService],
 })
 export class AppModule {}
