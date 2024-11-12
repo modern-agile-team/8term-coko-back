@@ -51,23 +51,9 @@ export class ItemsService {
 
   //특정 사용자 아이템 목록 조회 getUserItems
   getUserItems(userId: number) {
-    return this.prisma.userItem
-      .findMany({
-        where: { userId },
-        include: {
-          item: true, //연관 아이템 정보 조회
-        },
-      })
-      .then((userItem) => {
-        if (!userItem || userItem.length === 0) {
-          throw new NotFoundException('No items found for this user.');
-        }
-        return userItem.map((userItem) => ({
-          items: userItem.item,
-          quantity: userItem.quantity,
-          isEquipped: userItem.isEquipped,
-        }));
-      });
+    return this.prisma.userItem.findMany({
+      where: { userId },
+    });
   }
 
   //아이템 장착
