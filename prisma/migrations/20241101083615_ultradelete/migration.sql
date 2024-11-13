@@ -65,11 +65,41 @@ CREATE TABLE "parts" (
     CONSTRAINT "parts_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Items" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "cost" INTEGER NOT NULL,
+    "image" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Items_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserItems" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "itemId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "isEquipped" BOOLEAN NOT NULL DEFAULT false,
+    "quantity" INTEGER NOT NULL DEFAULT 1,
+
+    CONSTRAINT "UserItems_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "sections_name_key" ON "sections"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "parts_name_key" ON "parts"("name");
+
+-- CreateIndex
+CREATE INDEX "UserItems_userId_idx" ON "UserItems"("userId");
+
+-- CreateIndex
+CREATE INDEX "UserItems_itemId_idx" ON "UserItems"("itemId");
 
 -- AddForeignKey
 ALTER TABLE "quizzes" ADD CONSTRAINT "quizzes_part_id_fkey" FOREIGN KEY ("part_id") REFERENCES "parts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -82,3 +112,9 @@ ALTER TABLE "progress" ADD CONSTRAINT "progress_quiz_id_fkey" FOREIGN KEY ("quiz
 
 -- AddForeignKey
 ALTER TABLE "parts" ADD CONSTRAINT "parts_section_id_fkey" FOREIGN KEY ("section_id") REFERENCES "sections"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserItems" ADD CONSTRAINT "UserItems_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserItems" ADD CONSTRAINT "UserItems_itemId_fkey" FOREIGN KEY ("itemId") REFERENCES "Items"("id") ON DELETE CASCADE ON UPDATE CASCADE;

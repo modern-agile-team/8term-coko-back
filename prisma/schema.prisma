@@ -60,6 +60,7 @@ model User {
   experienceForNextLevel Int        @default(50) @map("experience_for_next_level")
   point                  Int        @default(0)
   Progress               Progress[]
+  userItems              UserItem[]
 
   @@map("users")
 }
@@ -87,4 +88,33 @@ model Part {
   quiz      Quiz[]
 
   @@map("parts")
+}
+
+model Item {
+  id        Int      @id @default(autoincrement())
+  name      String
+  cost      Int
+  image     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userItems UserItem[] //1:N관계, Item와 userItem 연결
+
+  @@map("items")
+}
+
+model UserItem {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  itemId     Int      @map("item_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  isEquipped Boolean  @default(false) @map("is_equipped")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, itemId])
+  @@index([userId])
+  @@index([itemId])
+  @@map("user_items")
 }
