@@ -63,6 +63,44 @@ export class ProgressService {
     return part;
   }
 
+  private async countQuizBySectionIdOrPartId(query: QueryProgressDto) {
+    const { sectionId, partId } = query;
+
+    return this.prisma.quiz.count({
+      where: {
+        part: {
+          ...(partId && { id: partId }),
+          section: {
+            ...(sectionId && { id: sectionId }),
+          },
+        },
+      },
+    });
+  }
+
+  private async countUserProgressBySectionIdOrPartId(
+    userId: number,
+    query: QueryProgressDto,
+    option?: { isCorrect: boolean },
+  ) {
+    const { sectionId, partId } = query;
+
+    return this.prisma.progress.count({
+      where: {
+        userId,
+        ...option,
+        quiz: {
+          part: {
+            ...(partId && { id: partId }),
+            section: {
+              ...(sectionId && { id: sectionId }),
+            },
+          },
+        },
+      },
+    });
+  }
+
   async findAll(userId: number, query: QueryProgressDto) {
     const { sectionId, partId } = query;
 
@@ -76,19 +114,25 @@ export class ProgressService {
       await this.findPartById(partId);
     }
 
-    return this.prisma.progress.findMany({
-      where: {
-        userId,
-        quiz: {
-          part: {
-            ...(partId && { id: partId }),
-            section: {
-              ...(sectionId && { id: sectionId }),
-            },
-          },
-        },
-      },
-    });
+    const totalQuizCount = await this.countQuizBySectionIdOrPartId(query);
+
+    const totalUserProgressCount =
+      await this.countUserProgressBySectionIdOrPartId(userId, query);
+
+    const correctUserProgressCount =
+      await this.countUserProgressBySectionIdOrPartId(userId, query, {
+        isCorrect: true,
+      });
+
+    const inCorrectUserProgressCount =
+      totalUserProgressCount - correctUserProgressCount;
+
+    return {
+      totalQuizCount,
+      totalUserProgressCount,
+      correctUserProgressCount,
+      inCorrectUserProgressCount,
+    };
   }
 
   async createOrUpdate(
