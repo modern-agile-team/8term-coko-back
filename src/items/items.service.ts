@@ -44,7 +44,6 @@ export class ItemsService {
       data: {
         userId,
         itemId,
-        quantity: 1,
       },
     });
   }
