@@ -84,7 +84,11 @@ export class QuizzesService {
   }
 
   async update(id: number, data: UpdateQuizDto) {
+    const { partId } = data;
+
     await this.findQuizById(id);
+
+    await this.findPartById(partId);
 
     return this.prisma.quiz.update({
       where: {

@@ -81,6 +81,16 @@ export class SectionsService {
   async remove(id: number) {
     await this.findSectionById(id);
 
+    const part = await this.prisma.part.findMany({
+      where: {
+        sectionId: id,
+      },
+    });
+
+    if (part.length) {
+      throw new ConflictException('섹션을 참조하고 있는 파트가 있음');
+    }
+
     return this.prisma.section.delete({
       where: {
         id,
