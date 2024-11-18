@@ -39,6 +39,12 @@ export class QuizzesController {
     return this.quizzesService.findQuizById(id);
   }
 
+  //스웨거 만들기
+  @Get('users/:id/incorrect')
+  findAllProgressIncorrect(@Param('id', PositiveIntPipe) userId: number) {
+    return this.quizzesService.findAllProgressIncorrect(userId);
+  }
+
   @ApiQuizzes.update()
   @Put(':id')
   update(

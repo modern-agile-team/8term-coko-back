@@ -83,6 +83,27 @@ export class QuizzesService {
     return quiz;
   }
 
+  async findAllProgressIncorrect(userId: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    return this.prisma.quiz.findMany({
+      where: {
+        progress: {
+          some: {
+            isCorrect: false,
+            userId,
+          },
+        },
+      },
+    });
+  }
+
   async update(id: number, data: UpdateQuizDto) {
     const { partId } = data;
 
