@@ -279,6 +279,48 @@ export const ApiQuizzes = {
       }),
     );
   },
+  findAllProgressIncorrect: () => {
+    return applyDecorators(
+      ApiOperation({
+        summary: '유저가 틀렸던 문제 조회',
+      }),
+      ApiResponse({
+        status: 200,
+        description:
+          '유저 id 통해 진행도에서 틀렸던 문제를 확인 후 문제를 보냄',
+        content: {
+          JSON: {
+            example: [
+              {
+                id: 1,
+                partId: 1,
+                title: '다음 보기를 보고 문제를 완성하세요2',
+                question: 'const num : number = 6 ',
+                answer: ['6'],
+                answerChoice: ['const', 'num', ':number', '6'],
+                category: 'SHORT_ANSWER',
+                createdAt: '2024-11-18T07:23:23.956Z',
+                updatedAt: '2024-11-18T07:23:23.956Z',
+              },
+            ],
+          },
+        },
+      }),
+      ApiResponse({
+        status: 404,
+        description: '존재하지 않는 유저 id',
+        content: {
+          JSON: {
+            example: {
+              message: '존재하지 않는 유저',
+              error: 'Not Found',
+              statusCode: 404,
+            },
+          },
+        },
+      }),
+    );
+  },
   update: () => {
     return applyDecorators(
       ApiOperation({

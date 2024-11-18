@@ -89,7 +89,7 @@ export class QuizzesService {
     });
 
     if (!user) {
-      throw new NotFoundException();
+      throw new NotFoundException('존재하지 않는 유저');
     }
 
     return this.prisma.quiz.findMany({
