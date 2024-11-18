@@ -59,8 +59,6 @@ export class SectionsService {
       throw new NotFoundException();
     }
 
-    console.log(section);
-
     return section;
   }
 
