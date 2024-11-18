@@ -41,8 +41,11 @@ export class QuizzesController {
 
   @ApiQuizzes.findAllProgressIncorrect()
   @Get('users/:id/incorrect')
-  findAllProgressIncorrect(@Param('id', PositiveIntPipe) userId: number) {
-    return this.quizzesService.findAllProgressIncorrect(userId);
+  findAllProgressIncorrect(
+    @Param('id', PositiveIntPipe) userId: number,
+    @Query() query: QueryQuizDto,
+  ) {
+    return this.quizzesService.findAllProgressIncorrect(userId, query);
   }
 
   @ApiQuizzes.update()

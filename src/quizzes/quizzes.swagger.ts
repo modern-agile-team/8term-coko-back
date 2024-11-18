@@ -319,6 +319,44 @@ export const ApiQuizzes = {
           },
         },
       }),
+      ApiResponse({
+        status: 404,
+        description: '쿼리 sectionId 또는 partId를 찾을 수 없음',
+        content: {
+          JSON: {
+            example: {
+              message: 'Not Found',
+              statusCode: 404,
+            },
+          },
+        },
+      }),
+      ApiResponse({
+        status: 404,
+        description: '쿼리 sectionId 또는 partId가 양수가 아님',
+        content: {
+          JSON: {
+            example: {
+              message: ['sectionId must not be less than 0'],
+              error: 'Bad Request',
+              statusCode: 400,
+            },
+          },
+        },
+      }),
+      ApiResponse({
+        status: 404,
+        description: '쿼리 sectionId 또는 partId가 정수가 아님',
+        content: {
+          JSON: {
+            example: {
+              message: ['sectionId must be an integer number'],
+              error: 'Bad Request',
+              statusCode: 400,
+            },
+          },
+        },
+      }),
     );
   },
   update: () => {

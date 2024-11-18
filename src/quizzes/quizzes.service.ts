@@ -83,7 +83,17 @@ export class QuizzesService {
     return quiz;
   }
 
-  async findAllProgressIncorrect(userId: number) {
+  async findAllProgressIncorrect(userId: number, query: QueryQuizDto) {
+    const { sectionId, partId } = query;
+
+    if (sectionId) {
+      await this.findSectionById(sectionId);
+    }
+
+    if (partId) {
+      await this.findPartById(partId);
+    }
+
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
     });
@@ -98,6 +108,12 @@ export class QuizzesService {
           some: {
             isCorrect: false,
             userId,
+          },
+        },
+        part: {
+          ...(partId && { id: partId }),
+          section: {
+            ...(sectionId && { id: sectionId }),
           },
         },
       },
