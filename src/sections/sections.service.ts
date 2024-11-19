@@ -51,9 +51,8 @@ export class SectionsService {
 
   async findOne(id: number) {
     const section = await this.prisma.section.findUnique({
-      where: {
-        id,
-      },
+      where: { id },
+      include: { part: true },
     });
 
     if (!section) {

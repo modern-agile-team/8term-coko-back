@@ -94,7 +94,8 @@ export const ApiSections = {
       }),
       ApiResponse({
         status: 200,
-        description: '특정 section의 id param값을 통해 id, nmae 값을 조회',
+        description:
+          '특정 section의 id param값을 통해 id, nmae 값을 조회 또한 id를 참조하는 part객체들을 배열로 보냄',
         content: {
           JSON: {
             example: {
@@ -102,6 +103,22 @@ export const ApiSections = {
               name: 'function',
               createdAt: '2024-11-04T10:42:17.052Z',
               updatedAt: '2024-11-04T10:42:17.052Z',
+              part: [
+                {
+                  id: 1,
+                  sectionId: 1,
+                  name: 'string',
+                  createdAt: '2024-11-18T06:50:00.122Z',
+                  updatedAt: '2024-11-18T06:50:00.122Z',
+                },
+                {
+                  id: 2,
+                  sectionId: 1,
+                  name: 'number',
+                  createdAt: '2024-11-18T06:50:07.072Z',
+                  updatedAt: '2024-11-18T06:50:07.072Z',
+                },
+              ],
             },
           },
         },
