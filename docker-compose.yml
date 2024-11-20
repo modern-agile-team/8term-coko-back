@@ -1,12 +1,24 @@
+# services:
+#   postgres:
+#     image: postgres:15
+#     restart: always
+#     volumes:
+#       - ./postgres-data:/var/lib/postgresql/data
+#     ports:
+#       - '5432:5432'
+#     environment:
+#       POSTGRES_USER: postgres
+#       POSTGRES_PASSWORD: postgres
+#       POSTGRES_DB: postgres
+
 services:
-  postgres:
-    image: postgres:15
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
     restart: always
-    volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+    container_name: github-actions-auto
     ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
+      - '3000:3000'
+    env_file:
+      - ./.env

@@ -29,9 +29,9 @@ CREATE TABLE "sections" (
 -- CreateTable
 CREATE TABLE "users" (
     "id" SERIAL NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
-    "nickname" VARCHAR(50) NOT NULL,
+    "provider" VARCHAR(20) NOT NULL,
+    "provider_id" TEXT NOT NULL,
+    "name" VARCHAR(30) NOT NULL,
     "profile_image" TEXT,
     "max_health_point" INTEGER NOT NULL DEFAULT 5,
     "last_login" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -39,6 +39,8 @@ CREATE TABLE "users" (
     "experience" INTEGER NOT NULL DEFAULT 0,
     "experience_for_next_level" INTEGER NOT NULL DEFAULT 50,
     "point" INTEGER NOT NULL DEFAULT 0,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
@@ -65,11 +67,27 @@ CREATE TABLE "parts" (
     CONSTRAINT "parts_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "token" (
+    "id" SERIAL NOT NULL,
+    "user_id" INTEGER NOT NULL,
+    "social_access_token" TEXT NOT NULL,
+    "social_refresh_token" TEXT,
+
+    CONSTRAINT "token_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "sections_name_key" ON "sections"("name");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "users_provider_id_key" ON "users"("provider_id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "parts_name_key" ON "parts"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "token_user_id_key" ON "token"("user_id");
 
 -- AddForeignKey
 ALTER TABLE "quizzes" ADD CONSTRAINT "quizzes_part_id_fkey" FOREIGN KEY ("part_id") REFERENCES "parts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -82,3 +100,6 @@ ALTER TABLE "progress" ADD CONSTRAINT "progress_quiz_id_fkey" FOREIGN KEY ("quiz
 
 -- AddForeignKey
 ALTER TABLE "parts" ADD CONSTRAINT "parts_section_id_fkey" FOREIGN KEY ("section_id") REFERENCES "sections"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "token" ADD CONSTRAINT "token_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
