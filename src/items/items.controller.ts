@@ -15,7 +15,10 @@ import {
   EquipItemDto,
   UnequipItemDto,
 } from './dto/item-changeStatus.dto';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { ApiItems } from './items.swagger';
 
+@ApiTags('Items')
 @Controller('items') // '/items'경로 요청 처리
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
