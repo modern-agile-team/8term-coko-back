@@ -18,11 +18,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # github repository에서 checkout
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       # docker build 수행
       - name: Set up docker buildx
         id: buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
       - name: Cache docker layers
         uses: actions/cache@v3
         with:
