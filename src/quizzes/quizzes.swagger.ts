@@ -332,7 +332,7 @@ export const ApiQuizzes = {
         },
       }),
       ApiResponse({
-        status: 404,
+        status: 400,
         description: '쿼리 sectionId 또는 partId가 양수가 아님',
         content: {
           JSON: {
@@ -345,7 +345,7 @@ export const ApiQuizzes = {
         },
       }),
       ApiResponse({
-        status: 404,
+        status: 400,
         description: '쿼리 sectionId 또는 partId가 정수가 아님',
         content: {
           JSON: {
