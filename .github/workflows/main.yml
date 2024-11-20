@@ -36,7 +36,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ github.actor == 'gwgw123' && secrests.gwgw123_GHCR_TOKEN }}
+          password: ${{ github.actor == 'gwgw123' && secrets.gwgw123_GHCR_TOKEN }}
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
