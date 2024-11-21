@@ -32,11 +32,11 @@ export const ApiItems = {
       }),
       ApiResponse({
         status: 204,
-        description: 'user가 item을 성공적으로 구매함',
+        description: '## user가 item을 성공적으로 구매함',
       }),
       ApiResponse({
         status: 400,
-        description: '잘못된 userId 또는 itemId',
+        description: '## 잘못된 userId 또는 itemId',
       }),
     );
   },
