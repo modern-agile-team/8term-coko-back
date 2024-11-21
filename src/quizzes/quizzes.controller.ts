@@ -13,26 +13,42 @@ import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
 import { QueryQuizDto } from './dto/query-quiz.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
+import { ApiTags } from '@nestjs/swagger';
+import { ApiQuizzes } from './quizzes.swagger';
 
+@ApiTags('quizzes')
 @Controller('quizzes')
 export class QuizzesController {
   constructor(private readonly quizzesService: QuizzesService) {}
 
+  @ApiQuizzes.create()
   @Post()
   create(@Body() quizData: CreateQuizDto) {
     return this.quizzesService.create(quizData);
   }
 
+  @ApiQuizzes.findAll()
   @Get()
-  getAll(@Query() query: QueryQuizDto) {
+  findAll(@Query() query: QueryQuizDto) {
     return this.quizzesService.findAll(query);
   }
 
+  @ApiQuizzes.findOne()
   @Get(':id')
-  getOneBySectionPartId(@Param('id', PositiveIntPipe) id: number) {
+  findOne(@Param('id', PositiveIntPipe) id: number) {
     return this.quizzesService.findQuizById(id);
   }
 
+  @ApiQuizzes.findAllProgressIncorrect()
+  @Get('users/:id/incorrect')
+  findAllProgressIncorrect(
+    @Param('id', PositiveIntPipe) userId: number,
+    @Query() query: QueryQuizDto,
+  ) {
+    return this.quizzesService.findAllProgressIncorrect(userId, query);
+  }
+
+  @ApiQuizzes.update()
   @Put(':id')
   update(
     @Param('id', PositiveIntPipe) id: number,
@@ -41,6 +57,7 @@ export class QuizzesController {
     return this.quizzesService.update(id, quizData);
   }
 
+  @ApiQuizzes.remove()
   @Delete(':id')
   remove(@Param('id', PositiveIntPipe) id: number) {
     return this.quizzesService.remove(id);
