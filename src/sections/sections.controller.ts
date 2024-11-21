@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  HttpCode,
 } from '@nestjs/common';
 import { SectionsService } from './sections.service';
 import { CreateSectionDto } from './dto/create-section.dto';
@@ -21,39 +22,42 @@ import { SectionDto } from './dto/section.dto';
 export class SectionsController {
   constructor(private readonly sectionsService: SectionsService) {}
 
-  @ApiSections.create()
-  @Post()
-  create(@Body() body: CreateSectionDto) {
-    return this.sectionsService.create(body);
-  }
-
   @ApiSections.findAll()
   @Get()
-  findAll() {
+  async findAll(): Promise<Section[]> {
     return this.sectionsService.findAll();
   }
 
   @ApiSections.findOne()
   @Get(':id')
-  findOne(@Param('id', PositiveIntPipe) id: number) {
+  async findOne(@Param('id', PositiveIntPipe) id: number) {
     const sectionDto = new SectionDto(id);
     return this.sectionsService.findOne(sectionDto);
   }
 
+  @ApiSections.create()
+  @Post()
+  @HttpCode(204)
+  async create(@Body() body: CreateSectionDto): Promise<void> {
+    await this.sectionsService.create(body);
+  }
+
   @ApiSections.update()
   @Patch(':id')
-  update(
+  @HttpCode(204)
+  async update(
     @Param('id', PositiveIntPipe) id: number,
     @Body() body: UpdateSectionDto,
-  ) {
+  ): Promise<void> {
     const sectionDto = new SectionDto(id, body);
-    return this.sectionsService.update(sectionDto);
+    await this.sectionsService.update(sectionDto);
   }
 
   @ApiSections.remove()
   @Delete(':id')
-  remove(@Param('id', PositiveIntPipe) id: number) {
+  @HttpCode(204)
+  async remove(@Param('id', PositiveIntPipe) id: number): Promise<void> {
     const sectionDto = new SectionDto(id);
-    return this.sectionsService.remove(sectionDto);
+    await this.sectionsService.remove(sectionDto);
   }
 }

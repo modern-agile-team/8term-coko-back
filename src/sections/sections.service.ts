@@ -4,28 +4,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateSectionDto } from './dto/create-section.dto';
-import { UpdateSectionDto } from './dto/update-section.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { SectionsRepository } from './sections.repository';
 import { SectionDto } from './dto/section.dto';
 
 @Injectable()
 export class SectionsService {
-  constructor(
-    private readonly sectionsRepository: SectionsRepository,
-    private readonly prisma: PrismaService,
-  ) {}
-
-  async create(CreateSectionDto: CreateSectionDto) {
-    const section =
-      await this.sectionsRepository.findOneSectionByName(CreateSectionDto);
-
-    if (section) {
-      throw new ConflictException();
-    }
-
-    return this.sectionsRepository.createSection(CreateSectionDto);
-  }
+  constructor(private readonly sectionsRepository: SectionsRepository) {}
 
   async findAll() {
     return this.sectionsRepository.findAllSections();
@@ -33,7 +17,7 @@ export class SectionsService {
 
   async findOne(sectionDto: SectionDto) {
     const section =
-      await this.sectionsRepository.findOneSectionById(sectionDto);
+      await this.sectionsRepository.findSectionWithPartsById(sectionDto);
 
     if (!section) {
       throw new NotFoundException();
@@ -42,18 +26,18 @@ export class SectionsService {
     return section;
   }
 
-  async update(sectionDto: SectionDto) {
+  async create(CreateSectionDto: CreateSectionDto): Promise<void> {
     const section =
-      await this.sectionsRepository.findOneSectionById(sectionDto);
+      await this.sectionsRepository.findOneSectionByName(CreateSectionDto);
 
-    if (!section) {
-      throw new NotFoundException();
+    if (section) {
+      throw new ConflictException();
     }
 
-    return this.sectionsRepository.updateSectionById(sectionDto);
+    await this.sectionsRepository.createSection(CreateSectionDto);
   }
 
-  async remove(sectionDto: SectionDto) {
+  async update(sectionDto: SectionDto): Promise<void> {
     const section =
       await this.sectionsRepository.findOneSectionById(sectionDto);
 
@@ -61,17 +45,24 @@ export class SectionsService {
       throw new NotFoundException();
     }
 
-    //추후 변경
-    const part = await this.prisma.part.findFirst({
-      where: {
-        sectionId: sectionDto.id,
-      },
-    });
+    await this.sectionsRepository.updateSectionById(sectionDto);
+  }
+
+  async remove(sectionDto: SectionDto): Promise<void> {
+    const section =
+      await this.sectionsRepository.findOneSectionById(sectionDto);
+
+    if (!section) {
+      throw new NotFoundException();
+    }
+
+    const part =
+      await this.sectionsRepository.findOnePartBySectionId(sectionDto);
 
     if (part) {
       throw new ConflictException('섹션을 참조하고 있는 파트가 있음');
     }
 
-    return this.sectionsRepository.deleteSectionById(sectionDto);
+    await this.sectionsRepository.deleteSectionById(sectionDto);
   }
 }
