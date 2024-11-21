@@ -13,6 +13,8 @@ import { UpdateSectionDto } from './dto/update-section.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiSections } from './sections.swagger';
+import { Section } from '@prisma/client';
+import { SectionDto } from './dto/section.dto';
 
 @ApiTags('sections')
 @Controller('sections')
@@ -21,8 +23,8 @@ export class SectionsController {
 
   @ApiSections.create()
   @Post()
-  create(@Body() sectionData: CreateSectionDto) {
-    return this.sectionsService.create(sectionData);
+  create(@Body() body: CreateSectionDto) {
+    return this.sectionsService.create(body);
   }
 
   @ApiSections.findAll()
@@ -34,21 +36,24 @@ export class SectionsController {
   @ApiSections.findOne()
   @Get(':id')
   findOne(@Param('id', PositiveIntPipe) id: number) {
-    return this.sectionsService.findOne(id);
+    const sectionDto = new SectionDto(id);
+    return this.sectionsService.findOne(sectionDto);
   }
 
   @ApiSections.update()
   @Patch(':id')
   update(
     @Param('id', PositiveIntPipe) id: number,
-    @Body() sectionData: UpdateSectionDto,
+    @Body() body: UpdateSectionDto,
   ) {
-    return this.sectionsService.update(id, sectionData);
+    const sectionDto = new SectionDto(id, body);
+    return this.sectionsService.update(sectionDto);
   }
 
   @ApiSections.remove()
   @Delete(':id')
   remove(@Param('id', PositiveIntPipe) id: number) {
-    return this.sectionsService.remove(id);
+    const sectionDto = new SectionDto(id);
+    return this.sectionsService.remove(sectionDto);
   }
 }
