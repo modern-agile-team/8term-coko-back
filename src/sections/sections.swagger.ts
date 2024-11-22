@@ -1,5 +1,9 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { CreateSectionDto } from './dto/create-section.dto';
+import { ReqSectionDto } from './dto/req-section.dto';
+import { ResSectionWithPartDto } from './dto/res-section-with-part.dto';
+import { UpdateSectionDto } from './dto/update-section.dto';
 
 export const ApiSections = {
   create: () => {
@@ -7,19 +11,13 @@ export const ApiSections = {
       ApiOperation({
         summary: 'section 생성',
       }),
+      ApiBody({
+        description: '섹션 생성에 필요한 정보',
+        type: CreateSectionDto,
+      }),
       ApiResponse({
-        status: 201,
+        status: 204,
         description: 'sections가 성공적으로 생성됨',
-        content: {
-          JSON: {
-            example: {
-              id: 2,
-              name: 'JSON',
-              createdAt: '2024-11-04T10:42:17.052Z',
-              updatedAt: '2024-11-04T10:42:17.052Z',
-            },
-          },
-        },
       }),
       ApiResponse({
         status: 400,
@@ -60,6 +58,8 @@ export const ApiSections = {
       ApiResponse({
         status: 200,
         description: 'section의 전체 id , name 을 조회함',
+        type: ReqSectionDto,
+        isArray: true,
         content: {
           JSON: {
             example: [
@@ -96,6 +96,7 @@ export const ApiSections = {
         status: 200,
         description:
           '특정 section의 id param값을 통해 id, nmae 값을 조회 또한 id를 참조하는 part객체들을 배열로 보냄',
+        type: ResSectionWithPartDto,
         content: {
           JSON: {
             example: {
@@ -167,19 +168,13 @@ export const ApiSections = {
       ApiOperation({
         summary: 'section 단일 속성 수정',
       }),
+      ApiBody({
+        description: '섹션 생성에 필요한 정보',
+        type: UpdateSectionDto,
+      }),
       ApiResponse({
-        status: 200,
+        status: 204,
         description: '특정 section의 id param값을 통해 nmae 값을 수정',
-        content: {
-          JSON: {
-            example: {
-              id: 3,
-              name: 'typeof',
-              createdAt: '2024-11-04T10:52:46.252Z',
-              updatedAt: '2024-11-04T11:22:33.138Z',
-            },
-          },
-        },
       }),
       ApiResponse({
         status: 404,
@@ -226,18 +221,8 @@ export const ApiSections = {
         summary: 'section 단일 삭제',
       }),
       ApiResponse({
-        status: 200,
+        status: 204,
         description: '특정 section의 id param값을 통해 section 삭제',
-        content: {
-          JSON: {
-            example: {
-              id: 3,
-              name: 'typeof',
-              createdAt: '2024-11-04T10:52:46.252Z',
-              updatedAt: '2024-11-04T11:22:33.138Z',
-            },
-          },
-        },
       }),
       ApiResponse({
         status: 404,
