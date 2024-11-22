@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
@@ -8,6 +9,7 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private prisma: PrismaService,
+    private configservice: ConfigService,
   ) {}
 
   async googleLogin(
@@ -38,7 +40,9 @@ export class AuthService {
   private createJWT(userId: number, userEmail: string) {
     const payload = { userId, userEmail };
     const accessToken = this.jwtService.sign(payload);
-    const refreshToken = this.jwtService.sign(payload, { expiresIn: '30d' });
+    const refreshToken = this.jwtService.sign(payload, {
+      expiresIn: this.configservice.get<string>('REFRESH_EXPIRATION_TIME'),
+    });
 
     return { accessToken, refreshToken };
   }
