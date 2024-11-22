@@ -5,17 +5,20 @@ import {
 } from '@nestjs/common';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { SectionsRepository } from './sections.repository';
-import { SectionDto } from './dto/section.dto';
+import { ReqSectionDto } from './dto/req-section.dto';
+import { ResSectionDto } from './dto/res-section.dto';
+import { ResSectionWithPartDto } from './dto/res-section-with-part.dto';
 
 @Injectable()
 export class SectionsService {
   constructor(private readonly sectionsRepository: SectionsRepository) {}
 
   async findAll() {
-    return this.sectionsRepository.findAllSections();
+    const sections = await this.sectionsRepository.findAllSections();
+    return ResSectionDto.fromArray(sections);
   }
 
-  async findOne(sectionDto: SectionDto) {
+  async findOne(sectionDto: ReqSectionDto) {
     const section =
       await this.sectionsRepository.findSectionWithPartsById(sectionDto);
 
@@ -23,7 +26,7 @@ export class SectionsService {
       throw new NotFoundException();
     }
 
-    return section;
+    return ResSectionWithPartDto.from(section);
   }
 
   async create(CreateSectionDto: CreateSectionDto): Promise<void> {
@@ -37,7 +40,7 @@ export class SectionsService {
     await this.sectionsRepository.createSection(CreateSectionDto);
   }
 
-  async update(sectionDto: SectionDto): Promise<void> {
+  async update(sectionDto: ReqSectionDto): Promise<void> {
     const section =
       await this.sectionsRepository.findOneSectionById(sectionDto);
 
@@ -48,7 +51,7 @@ export class SectionsService {
     await this.sectionsRepository.updateSectionById(sectionDto);
   }
 
-  async remove(sectionDto: SectionDto): Promise<void> {
+  async remove(sectionDto: ReqSectionDto): Promise<void> {
     const section =
       await this.sectionsRepository.findOneSectionById(sectionDto);
 
