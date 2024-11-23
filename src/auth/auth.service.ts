@@ -17,23 +17,19 @@ export class AuthService {
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const { provider, providerId, email, name, socialAccessToken } = user;
 
-    //유저정보가 있다면
-    const userInfo = await this.prisma.user.findUnique({
+    let userInfo = await this.prisma.user.findUnique({
       where: { providerId },
     });
-    if (userInfo) {
-      await this.saveSocialToken(socialAccessToken, userInfo.id);
-
-      return this.createJWT(userInfo.id, email);
-    }
 
     //유저정보가 없다면
-    const createdUserId = await this.prisma.user.create({
-      data: { provider, providerId, name },
-    });
-    await this.saveSocialToken(socialAccessToken, createdUserId.id);
+    if (!userInfo) {
+      userInfo = await this.prisma.user.create({
+        data: { provider, providerId, name },
+      });
+    }
+    await this.saveSocialToken(socialAccessToken, userInfo.id);
 
-    return this.createJWT(createdUserId.id, email);
+    return this.createJWT(userInfo.id, email);
   }
 
   //jwt 발급
