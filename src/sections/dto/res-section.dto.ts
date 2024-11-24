@@ -1,5 +1,3 @@
-import { Section } from '@prisma/client';
-
 export class ResSectionDto {
   readonly id: number;
   readonly name: string;
@@ -13,11 +11,11 @@ export class ResSectionDto {
     this.updatedAt = section.updatedAt;
   }
 
-  static from(section: Section) {
+  static from(section: ResSectionDto) {
     return new ResSectionDto(section);
   }
 
-  static fromArray(sections: Section[]) {
+  static fromArray(sections: ResSectionDto[]) {
     return sections.map((section) => new ResSectionDto(section));
   }
 }

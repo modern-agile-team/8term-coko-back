@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  HttpCode,
+} from '@nestjs/common';
 import { PartsService } from './parts.service';
 import { CreatePartDto } from './dto/create-part.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
@@ -12,8 +20,9 @@ export class PartsController {
 
   @ApiParts.create()
   @Post()
-  create(@Body() partData: CreatePartDto) {
-    return this.partsService.create(partData);
+  @HttpCode(204)
+  async create(@Body() createPartDto: CreatePartDto): Promise<void> {
+    await this.partsService.create(createPartDto);
   }
 
   @ApiParts.findAll()
@@ -24,7 +33,8 @@ export class PartsController {
 
   @ApiParts.remove()
   @Delete(':id')
-  remove(@Param('id', PositiveIntPipe) id: number) {
-    return this.partsService.remove(id);
+  @HttpCode(204)
+  async remove(@Param('id', PositiveIntPipe) id: number): Promise<void> {
+    await this.partsService.remove(id);
   }
 }
