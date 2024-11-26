@@ -2,7 +2,7 @@ import { User } from '@prisma/client';
 
 export class ResponseUserDto {
   readonly id: number;
-  readonly nickname: string;
+  readonly name: string;
   readonly profileImage: string;
   readonly maxHealthPoint: number;
   readonly level: number;
@@ -12,7 +12,7 @@ export class ResponseUserDto {
 
   constructor(user: User) {
     this.id = user.id;
-    this.nickname = user.nickname;
+    this.name = user.name;
     this.profileImage = user.profileImage;
     this.maxHealthPoint = user.maxHealthPoint;
     this.level = user.level;
