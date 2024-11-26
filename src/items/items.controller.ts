@@ -18,7 +18,7 @@ import {
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { ApiItems } from './items.swagger';
 
-@ApiTags('Items')
+@ApiTags('items')
 @Controller('items') // '/items'경로 요청 처리
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
@@ -46,14 +46,14 @@ export class ItemsController {
   @Post('equip')
   @HttpCode(204)
   async equipItem(@Body() equipItemDto: EquipItemDto) {
-    return await this.itemsService.equipItem(equipItemDto);
+    await this.itemsService.equipItem(equipItemDto);
   }
 
   // POST /items/unequip 요청 처리
   @Post('unequip')
   @HttpCode(204)
   async unequipItem(@Body() unequipItemDto: UnequipItemDto) {
-    return await this.itemsService.unequipItem(unequipItemDto);
+    await this.itemsService.unequipItem(unequipItemDto);
   }
 
   // DELETE /items/:userId/:itemId 요청 처리
@@ -63,6 +63,6 @@ export class ItemsController {
     @Param('userId') userId: number,
     @Param('itemId') itemId: number,
   ) {
-    return await this.itemsService.deleteUserItem(userId, itemId);
+    await this.itemsService.deleteUserItem(userId, itemId);
   }
 }
