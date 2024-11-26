@@ -58,7 +58,7 @@ export class UserExperienceService {
     updateExperience: number,
   ) {
     userExperience += updateExperience;
-    if (userExperience >= experienceForNextLevel) {
+    while (userExperience >= experienceForNextLevel) {
       userLevel += LEVEL_UP;
       userExperience -= experienceForNextLevel;
       experienceForNextLevel = Math.floor(
