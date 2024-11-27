@@ -9,7 +9,7 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private prisma: PrismaService,
-    private configservice: ConfigService,
+    private configService: ConfigService,
   ) {}
 
   async googleLogin(
@@ -37,7 +37,7 @@ export class AuthService {
     const payload = { userId, userEmail };
     const accessToken = this.jwtService.sign(payload);
     const refreshToken = this.jwtService.sign(payload, {
-      expiresIn: this.configservice.get<string>('REFRESH_EXPIRATION_TIME'),
+      expiresIn: this.configService.get<string>('REFRESH_EXPIRATION_TIME'),
     });
 
     return { accessToken, refreshToken };

@@ -5,11 +5,11 @@ import { Strategy, VerifyCallback } from 'passport-google-oauth20';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
-  constructor(private configservice: ConfigService) {
+  constructor(private configService: ConfigService) {
     super({
-      clientID: configservice.get<string>('GOOGLE_CLIENT_ID'),
-      clientSecret: configservice.get<string>('GOOGLE_CLIENT_SECRET'),
-      callbackURL: configservice.get<string>('GOOGLE_CALLBACK_URL'),
+      clientID: configService.get<string>('GOOGLE_CLIENT_ID'),
+      clientSecret: configService.get<string>('GOOGLE_CLIENT_SECRET'),
+      callbackURL: configService.get<string>('GOOGLE_CALLBACK_URL'),
       scope: ['email', 'profile'],
     });
   }

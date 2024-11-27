@@ -12,6 +12,7 @@ import { PartsModule } from './parts/parts.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
+import { JwtServiceService } from './auth/services/jwt-service.service';
 
 @Module({
   imports: [
@@ -30,6 +31,6 @@ import { AppController } from './app.controller';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, JwtServiceService],
 })
 export class AppModule {}
