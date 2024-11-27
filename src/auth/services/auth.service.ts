@@ -3,13 +3,14 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
+import { TokenService } from './token.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private jwtService: JwtService,
     private prisma: PrismaService,
-    private configService: ConfigService,
+    // private configService: ConfigService,
+    private tokenService: TokenService,
   ) {}
 
   async googleLogin(
@@ -27,20 +28,10 @@ export class AuthService {
         data: { provider, providerId, name },
       });
     }
+
     await this.saveSocialToken(socialAccessToken, userInfo.id);
 
-    return this.createJWT(userInfo.id, email);
-  }
-
-  //jwt 발급
-  private createJWT(userId: number, userEmail: string) {
-    const payload = { userId, userEmail };
-    const accessToken = this.jwtService.sign(payload);
-    const refreshToken = this.jwtService.sign(payload, {
-      expiresIn: this.configService.get<string>('REFRESH_EXPIRATION_TIME'),
-    });
-
-    return { accessToken, refreshToken };
+    return this.tokenService.createJWT(userInfo.id, email);
   }
 
   //소셜토큰저장
