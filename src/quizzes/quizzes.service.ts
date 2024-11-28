@@ -83,6 +83,43 @@ export class QuizzesService {
     return quiz;
   }
 
+  async findAllProgressIncorrect(userId: number, query: QueryQuizDto) {
+    const { sectionId, partId } = query;
+
+    if (sectionId) {
+      await this.findSectionById(sectionId);
+    }
+
+    if (partId) {
+      await this.findPartById(partId);
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('존재하지 않는 유저');
+    }
+
+    return this.prisma.quiz.findMany({
+      where: {
+        progress: {
+          some: {
+            isCorrect: false,
+            userId,
+          },
+        },
+        part: {
+          ...(partId && { id: partId }),
+          section: {
+            ...(sectionId && { id: sectionId }),
+          },
+        },
+      },
+    });
+  }
+
   async update(id: number, data: UpdateQuizDto) {
     const { partId } = data;
 

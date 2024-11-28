@@ -6,18 +6,15 @@ import {
   Get,
   Param,
   Patch,
-  Post,
   UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
-import { CreateUserDto } from '../dtos/create-user.dto';
 import { ResponseUserDto } from '../dtos/response-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiGetAllUsers } from '../swagger-dacorator/get-all-users-decorators';
 import { ApiGetUser } from '../swagger-dacorator/get-user-decorators';
 import { ApiUpdateUser } from '../swagger-dacorator/patch-user-decorators';
-import { ApiCreateUser } from '../swagger-dacorator/post-user-decorators';
 import { ApiDeleteUser } from '../swagger-dacorator/delete-user-decorators';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 
@@ -39,12 +36,6 @@ export class UsersController {
     return this.usersService.getUser(userId);
   }
 
-  @ApiCreateUser()
-  @Post()
-  createUser(@Body() createUserData: CreateUserDto): Promise<ResponseUserDto> {
-    return this.usersService.createUser(createUserData);
-  }
-
   @ApiUpdateUser()
   @Patch(':id')
   updateUser(
@@ -59,5 +50,10 @@ export class UsersController {
   remove(@Param('id', PositiveIntPipe) userId: number) {
     this.usersService.deleteUser(userId);
     return { statusCode: 204, message: 'No Content' };
+  }
+
+  @Get(':id/token')
+  getUserToken(@Param('id', PositiveIntPipe) userId: number) {
+    return this.usersService.getUserToken(userId);
   }
 }
