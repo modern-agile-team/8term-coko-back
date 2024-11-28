@@ -36,7 +36,10 @@ async function bootstrap() {
     }),
   );
 
-  app.enableCors();
+  app.enableCors({
+    origin: ['http://localhost:3000', 'https://cokoedu.com'],
+    credentials: true,
+  });
 
   await app.listen(3000);
 }
