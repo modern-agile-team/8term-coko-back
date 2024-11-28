@@ -6,7 +6,7 @@ export const ApiItems = {
     return applyDecorators(
       ApiOperation({
         summary: '모든 items 조회',
-        description: '존재하는 모든 items 조회합니다.',
+        description: '존재하는 모든 아이템을 조회합니다.',
       }),
       ApiResponse({
         status: 200,
