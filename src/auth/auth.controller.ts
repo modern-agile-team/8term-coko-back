@@ -26,6 +26,7 @@ export class AuthController {
     res.cookie('jwt', jwtToken, {
       httpOnly: true,
       secure: false,
+      sameSite: 'none',
       maxAge: 3600000,
     });
 
