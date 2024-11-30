@@ -9,7 +9,7 @@ on:
 env:
   DOCKER_IMAGE: ghcr.io/${{ github.actor }}/github-actions-auto
   VERSION: ${{ github.sha }}
-  NAME: go_cicd
+  NAME: back
 
 jobs:
   # 빌드 Job
@@ -63,4 +63,4 @@ jobs:
           docker stop ${{ env.NAME }} || true
           docker rm ${{ env.NAME }} || true
           docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
-          docker run --env-file /home/ubuntu/.env -d -p 3000:3000 --name go_cicd --restart always ${{ env.DOCKER_IMAGE }}:latest
+          docker run --env-file /home/ubuntu/.env -d -p 3000:3000 --name back --restart always ${{ env.DOCKER_IMAGE }}:latest
