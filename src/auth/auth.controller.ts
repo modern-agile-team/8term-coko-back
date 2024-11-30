@@ -30,6 +30,6 @@ export class AuthController {
       maxAge: 3600000,
     });
 
-    res.redirect('http://localhost:3000');
+    res.redirect('http://localhost:3000/learn');
   }
 }
