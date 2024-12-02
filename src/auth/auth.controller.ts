@@ -26,11 +26,11 @@ export class AuthController {
     res.cookie('jwt', jwtToken, {
       httpOnly: true,
       secure: true,
-      domain: 'cokoedu.com',
+      // domain: 'cokoedu.com',
       sameSite: 'none',
       maxAge: 3600000,
     });
 
-    res.redirect('https://cokoedu.com/learn');
+    res.redirect('https://localhost:3000/learn');
   }
 }
