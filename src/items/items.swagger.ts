@@ -48,6 +48,15 @@ export const ApiItems = {
       ApiResponse({
         status: 400,
         description: '잘못된 userId 또는 itemId, 혹은 다른 유효성 오류',
+        content: {
+          JSON: {
+            example: {
+              message: 'Validation failed',
+              error: 'Bad request',
+              statusCode: 400,
+            },
+          },
+        },
       }),
     );
   },
@@ -74,6 +83,15 @@ export const ApiItems = {
       ApiResponse({
         status: 400,
         description: '잘못된 요청 값 (userId 또는 itemId 오류)',
+        content: {
+          JSON: {
+            example: {
+              message: 'Validation failed',
+              error: 'Bad Request',
+              statusCode: 400,
+            },
+          },
+        },
       }),
     );
   },
@@ -100,6 +118,15 @@ export const ApiItems = {
       ApiResponse({
         status: 400,
         description: '잘못된 요청 값(userId 또는 itemId 오류)',
+        content: {
+          JSON: {
+            example: {
+              message: 'Validation failed',
+              error: 'Bad Request',
+              statusCode: 400,
+            },
+          },
+        },
       }),
     );
   },
@@ -117,6 +144,15 @@ export const ApiItems = {
       ApiResponse({
         status: 400,
         description: 'user 또는 item이 존재하지 않음',
+        content: {
+          JSON: {
+            example: {
+              message: 'Validation failed',
+              error: 'Bad Request',
+              statusCode: 400,
+            },
+          },
+        },
       }),
     );
   },
@@ -156,6 +192,15 @@ export const ApiItems = {
       ApiResponse({
         status: 404,
         description: '해당 user가 존재하지 않음',
+        content: {
+          JSON: {
+            example: {
+              message: 'not found',
+              error: 'Not Found',
+              statusCode: 404,
+            },
+          },
+        },
       }),
     );
   },
