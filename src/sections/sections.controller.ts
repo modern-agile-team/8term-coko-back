@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { SectionsService } from './sections.service';
 import { CreateSectionDto } from './dto/create-section.dto';
-import { UpdateSectionDto } from './dto/update-section.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiSections } from './sections.swagger';
@@ -46,7 +45,7 @@ export class SectionsController {
   @HttpCode(204)
   async update(
     @Param('id', PositiveIntPipe) id: number,
-    @Body() body: UpdateSectionDto,
+    @Body() body: CreateSectionDto,
   ): Promise<void> {
     const sectionDto = ReqSectionDto.from(id, body);
     await this.sectionsService.update(sectionDto);

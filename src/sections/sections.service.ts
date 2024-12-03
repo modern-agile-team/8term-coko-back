@@ -6,7 +6,6 @@ import {
 import { CreateSectionDto } from './dto/create-section.dto';
 import { SectionsRepository } from './sections.repository';
 import { ReqSectionDto } from './dto/req-section.dto';
-import { ResSectionDto } from './dto/res-section.dto';
 import { ResSectionWithPartDto } from './dto/res-section-with-part.dto';
 
 @Injectable()
@@ -15,7 +14,7 @@ export class SectionsService {
 
   async findAll() {
     const sections = await this.sectionsRepository.findAllSections();
-    return ResSectionDto.fromArray(sections);
+    return ResSectionWithPartDto.fromArray(sections);
   }
 
   async findOne(sectionDto: ReqSectionDto) {
@@ -26,10 +25,12 @@ export class SectionsService {
       throw new NotFoundException();
     }
 
-    return ResSectionWithPartDto.from(section);
+    return new ResSectionWithPartDto(section);
   }
 
-  async create(CreateSectionDto: CreateSectionDto): Promise<void> {
+  async create(
+    CreateSectionDto: CreateSectionDto,
+  ): Promise<ResSectionWithPartDto> {
     const section =
       await this.sectionsRepository.findOneSectionByName(CreateSectionDto);
 
@@ -37,10 +38,12 @@ export class SectionsService {
       throw new ConflictException();
     }
 
-    return this.sectionsRepository.createSection(CreateSectionDto);
+    const newSection =
+      await this.sectionsRepository.createSection(CreateSectionDto);
+    return new ResSectionWithPartDto(newSection);
   }
 
-  async update(sectionDto: ReqSectionDto): Promise<void> {
+  async update(sectionDto: ReqSectionDto): Promise<ResSectionWithPartDto> {
     const section =
       await this.sectionsRepository.findOneSectionById(sectionDto);
 
@@ -48,10 +51,12 @@ export class SectionsService {
       throw new NotFoundException();
     }
 
-    return this.sectionsRepository.updateSectionById(sectionDto);
+    const updateSection =
+      await this.sectionsRepository.updateSectionById(sectionDto);
+    return new ResSectionWithPartDto(updateSection);
   }
 
-  async remove(sectionDto: ReqSectionDto): Promise<void> {
+  async remove(sectionDto: ReqSectionDto): Promise<ResSectionWithPartDto> {
     const section =
       await this.sectionsRepository.findOneSectionById(sectionDto);
 
@@ -66,6 +71,8 @@ export class SectionsService {
       throw new ConflictException('섹션을 참조하고 있는 파트가 있음');
     }
 
-    return this.sectionsRepository.deleteSectionById(sectionDto);
+    const deleteSction =
+      await this.sectionsRepository.deleteSectionById(sectionDto);
+    return new ResSectionWithPartDto(deleteSction);
   }
 }

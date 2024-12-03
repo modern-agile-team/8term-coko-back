@@ -5,18 +5,14 @@ export class ResSectionWithPartDto {
   readonly name: string;
   readonly createdAt: Date;
   readonly updatedAt: Date;
-  readonly part: Part[];
+  readonly part?: Part[];
 
-  constructor(SectionWithPart: ResSectionWithPartDto) {
-    this.id = SectionWithPart.id;
-    this.name = SectionWithPart.name;
-    this.createdAt = SectionWithPart.createdAt;
-    this.updatedAt = SectionWithPart.updatedAt;
-    this.part = SectionWithPart.part;
-  }
-
-  static from(section: ResSectionWithPartDto): ResSectionWithPartDto {
-    return new ResSectionWithPartDto(section);
+  constructor({ id, name, createdAt, updatedAt, part }: ResSectionWithPartDto) {
+    this.id = id;
+    this.name = name;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+    this.part = part;
   }
 
   static fromArray(sections: ResSectionWithPartDto[]): ResSectionWithPartDto[] {
