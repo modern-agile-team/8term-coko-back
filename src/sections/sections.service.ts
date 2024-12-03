@@ -37,7 +37,7 @@ export class SectionsService {
       throw new ConflictException();
     }
 
-    await this.sectionsRepository.createSection(CreateSectionDto);
+    return this.sectionsRepository.createSection(CreateSectionDto);
   }
 
   async update(sectionDto: ReqSectionDto): Promise<void> {
@@ -48,7 +48,7 @@ export class SectionsService {
       throw new NotFoundException();
     }
 
-    await this.sectionsRepository.updateSectionById(sectionDto);
+    return this.sectionsRepository.updateSectionById(sectionDto);
   }
 
   async remove(sectionDto: ReqSectionDto): Promise<void> {
@@ -66,6 +66,6 @@ export class SectionsService {
       throw new ConflictException('섹션을 참조하고 있는 파트가 있음');
     }
 
-    await this.sectionsRepository.deleteSectionById(sectionDto);
+    return this.sectionsRepository.deleteSectionById(sectionDto);
   }
 }
