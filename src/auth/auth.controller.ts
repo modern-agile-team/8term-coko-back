@@ -23,14 +23,16 @@ export class AuthController {
   googleLogin(@User() user: any, @Res() res: Response) {
     const jwtToken = this.authService.googleLogin(user);
 
+    // 쿠키와 리다이렉트의 설정은 클라이언트가 원하는 곳으로 지정해준다.
+    // res.cookie 의 domain부분과 res.redirect의 url부분의 도메인을 일치시켜야 한다.
     res.cookie('jwt', jwtToken, {
       httpOnly: true,
       secure: true,
-      domain: 'localhost',
+      domain: 'cokoedu.com',
       sameSite: 'none',
       maxAge: 3600000,
     });
 
-    res.redirect('https://localhost:3000/learn');
+    res.redirect('https://cokoedu.com/learn');
   }
 }
