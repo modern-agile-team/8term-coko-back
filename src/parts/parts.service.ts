@@ -5,10 +5,16 @@ import {
 } from '@nestjs/common';
 import { CreatePartDto } from './dto/create-part.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { PartsRepository } from './parts.repository';
+import { SectionsRepository } from 'src/sections/sections.repository';
 
 @Injectable()
 export class PartsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly partsRepository: PartsRepository,
+    private readonly sectionsRepository: SectionsRepository,
+  ) {}
 
   async create(data: CreatePartDto) {
     //요기
