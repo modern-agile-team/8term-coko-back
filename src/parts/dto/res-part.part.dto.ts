@@ -12,10 +12,6 @@ export class ResPartDto {
     this.name = name;
   }
 
-  static from(part: ResPartDto) {
-    return new ResPartDto(part);
-  }
-
   static fromArray(parts: ResPartDto[]) {
     return parts.map((part) => new ResPartDto(part));
   }

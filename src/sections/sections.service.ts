@@ -29,10 +29,10 @@ export class SectionsService {
   }
 
   async create(
-    CreateSectionDto: CreateSectionDto,
+    createSectionDto: CreateSectionDto,
   ): Promise<ResSectionWithPartDto> {
     const section =
-      await this.sectionsRepository.findOneSectionByName(CreateSectionDto);
+      await this.sectionsRepository.findOneSectionByName(createSectionDto);
 
     if (section) {
       throw new ConflictException();
@@ -71,8 +71,8 @@ export class SectionsService {
       throw new ConflictException('섹션을 참조하고 있는 파트가 있음');
     }
 
-    const deleteSction =
+    const deleteSctionInfo =
       await this.sectionsRepository.deleteSectionById(sectionDto);
-    return new ResSectionWithPartDto(deleteSction);
+    return new ResSectionWithPartDto(deleteSctionInfo);
   }
 }
