@@ -67,9 +67,9 @@ jobs:
       - name: Update DOCKER_IMAGE in .env file
         run: |
           if grep -q '^IMAGE_NAME=' /home/ubuntu/.env; then
-            sed -i 's|^IMAGE_NAME=.*|IMAGE_NAME=${{ env.DOCKER_IMAGE }}|' /home/ubuntu/.env
+            sed -i 's|^IMAGE_NAME=.*|IMAGE_NAME=${{ env.DOCKER_IMAGE }}:latest|' /home/ubuntu/.env
           else
-            echo "IMAGE_NAME=${{ env.DOCKER_IMAGE }}" >> /home/ubuntu/.env
+            echo "IMAGE_NAME=${{ env.DOCKER_IMAGE }}:latest" >> /home/ubuntu/.env
           fi
 
       # Docker Compose를 사용한 서비스 배포
