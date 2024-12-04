@@ -66,10 +66,10 @@ jobs:
       # 앱 이미지 이름 업데이트
       - name: Update DOCKER_IMAGE in .env file
         run: |
-          if grep -q '^DOCKER_IMAGE=' /home/ubuntu/.env; then
-            sed -i 's|^DOCKER_IMAGE=.*|DOCKER_IMAGE=${{ env.DOCKER_IMAGE }}|' /home/ubuntu/.env
+          if grep -q '^IMAGE_NAME=' /home/ubuntu/.env; then
+            sed -i 's|^IMAGE_NAME=.*|IMAGE_NAME=${{ env.DOCKER_IMAGE }}|' /home/ubuntu/.env
           else
-            echo "DOCKER_IMAGE=${{ env.DOCKER_IMAGE }}" >> /home/ubuntu/.env
+            echo "IMAGE_NAME=${{ env.DOCKER_IMAGE }}" >> /home/ubuntu/.env
           fi
 
       # Docker Compose를 사용한 서비스 배포
