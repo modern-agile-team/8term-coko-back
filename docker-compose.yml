@@ -13,7 +13,7 @@
 
 services:
   back:
-    image: '${IMAGE_NAME}'
+    image: ${IMAGE_NAME}
     expose:
       - '3000' # 컨테이너 포트만 열어줌 호스트는 X = 컨테이너 끼리만 접근 가능
     networks:
