@@ -13,6 +13,7 @@ async function bootstrap() {
     .addTag('users', 'users 관련 API')
     .addTag('point', 'point 관련 API')
     .addTag('experience', 'experience 관련 API')
+    .addTag('items', 'items 관련 API')
     .setTermsOfService('https://modern-agile-official-client.vercel.app/') // 설명 링크 첨부하면 됨
     .setContact(
       '백엔드 팀',
