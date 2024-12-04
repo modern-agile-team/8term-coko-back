@@ -29,10 +29,12 @@ export class AuthController {
       httpOnly: true,
       secure: true,
       domain: 'cokoedu.com',
+      // domain: 'localhost',
       sameSite: 'none',
       maxAge: 3600000,
     });
 
     res.redirect('https://cokoedu.com/learn');
+    // res.redirect('http://localhost:3000/learn');
   }
 }

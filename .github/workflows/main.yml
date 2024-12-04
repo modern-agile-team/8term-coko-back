@@ -23,6 +23,7 @@ jobs:
       - name: Set up docker buildx
         id: buildx
         uses: docker/setup-buildx-action@v2
+
       - name: Cache docker layers
         uses: actions/cache@v3
         with:
@@ -30,6 +31,7 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ env.VERSION }}
           restore-keys: |
             ${{ runner.os }}-buildx-
+
       # GitHub 컨테이너 레지스트리에 로그인 후 빌드 & 푸시
       - name: Login to ghcr
         uses: docker/login-action@v1
@@ -37,6 +39,8 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GHCR_TOKEN }}
+
+      # Build 및 push
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
@@ -51,16 +55,26 @@ jobs:
     name: Deploy
     runs-on: [self-hosted, label-go] # AWS ./configure에서 사용할 label명
     steps:
+      # GHCR 로그인
       - name: Login to ghcr
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}t
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GHCR_TOKEN }}
-      # 3000 -> 80 포트로 수행하도록 지정
+
+          - name: Update DOCKER_IMAGE in .env file
+      # 앱 이미지 이름 업데이트
+      - name: Update DOCKER_IMAGE in .env file
+        run: |
+          if grep -q '^DOCKER_IMAGE=' /home/ubuntu/.env; then
+            sed -i 's/^DOCKER_IMAGE=.*/DOCKER_IMAGE=${{ env.DOCKER_IMAGE }}/' /home/ubuntu/.env
+          else
+            echo "DOCKER_IMAGE=${{ env.DOCKER_IMAGE }}" >> /home/ubuntu/.env
+          fi
+
+      # Docker Compose를 사용한 서비스 배포
       - name: Docker run
         run: |
-          docker stop ${{ env.NAME }} || true
-          docker rm ${{ env.NAME }} || true
-          docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
-          docker run --env-file /home/ubuntu/.env -d -p 3000:3000 --name back --restart always ${{ env.DOCKER_IMAGE }}:latest
+          docker compose -f /home/ubuntu/docker-compose.yml down
+          docker compose -f /home/ubuntu/docker-compose.yml up -d --pull always

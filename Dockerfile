@@ -1,19 +1,12 @@
-# FROM node:20-alpine
-# WORKDIR /coko
-# COPY ./package*.json ./
-# RUN npm install
-# COPY ./ ./
-# RUN npx prisma generate
-# CMD ["npm","run","start:dev"]/
+FROM node:20-alpine as build
 
-FROM node:20-alpine
-RUN mkdir -p /app
 WORKDIR /app
-COPY . .
-RUN rm package-lock.json || true
+COPY package.json package-lock.json ./
 RUN npm install
-# 컨테이너가 실행될 때 애플리케이션이 외부에서 접근할 수 있도록 환경 변수와 포트를 설정합니다.
+
+COPY . .
+# 컨테이너가 실행될 때 애플리케이션이 외부에서 접근할 수 있도록 환경 변수와 포트를 설정
+# 여기서의 포트는 실제 기능은 없음. 이런 포트를 사용하는 것을 알려주는 용도
 ENV HOST=0.0.0.0
 EXPOSE 3000
-# 컨테이너 시작 시 애플리케이션을 실행하는 기본 명령어를 설정합니다.
 CMD [ "npm", "run", "start" ]
