@@ -34,7 +34,6 @@ export class ItemsService {
         throw new BadRequestException('Insufficient points to buy this item');
       }
 
-      //유저 아이템 유무 확인
       const existingItem = await prisma.userItem.findUnique({
         where: {
           userId_itemId: { userId, itemId },
