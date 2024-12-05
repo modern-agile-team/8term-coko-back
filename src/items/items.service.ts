@@ -29,6 +29,10 @@ export class ItemsService {
       throw new BadRequestException('Item not found');
     }
 
+    if (user.point < item.cost) {
+      throw new BadRequestException('Insufficient points to buy this item');
+    }
+
     //유저 아이템 유무 확인
     const existingItem = await this.prisma.userItem.findUnique({
       where: {
