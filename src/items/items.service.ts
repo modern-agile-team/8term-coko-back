@@ -44,6 +44,11 @@ export class ItemsService {
       throw new BadRequestException('User already owns this item.');
     }
 
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { point: { decrement: item.cost } },
+    });
+
     await this.prisma.userItem.create({
       data: {
         userId,
