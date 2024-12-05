@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service'; //PrismaService를 통해 db에서 아이템목록 가져온다.
-import { ItemChangeStatusDto } from './dto/item-changeStatus.dto';
+import { BuyItemDto, ItemChangeStatusDto } from './dto/item-changeStatus.dto';
 
 @Injectable() //클래스 : 의존성 주입 가능 (다른 곳에서 이 클래스를 불러와서 사용할 수 있게 한다)
 export class ItemsService {
@@ -16,7 +16,7 @@ export class ItemsService {
   }
 
   //아이템 구매 buyItem
-  async buyItem(buyItemDto: ItemChangeStatusDto): Promise<void> {
+  async buyItem(buyItemDto: BuyItemDto): Promise<void> {
     const { userId, itemId } = buyItemDto;
 
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
