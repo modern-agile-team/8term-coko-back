@@ -8,8 +8,4 @@ export class ReqSectionDto {
     this.id = id;
     this.name = body?.name;
   }
-
-  static from(id: number, body?: CreateSectionDto) {
-    return new ReqSectionDto(id, body);
-  }
 }

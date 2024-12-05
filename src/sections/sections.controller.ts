@@ -29,7 +29,7 @@ export class SectionsController {
   @ApiSections.findOne()
   @Get(':id')
   async findOne(@Param('id', PositiveIntPipe) id: number) {
-    const sectionDto = ReqSectionDto.from(id);
+    const sectionDto = new ReqSectionDto(id);
     return this.sectionsService.findOne(sectionDto);
   }
 
@@ -47,7 +47,7 @@ export class SectionsController {
     @Param('id', PositiveIntPipe) id: number,
     @Body() body: CreateSectionDto,
   ): Promise<void> {
-    const sectionDto = ReqSectionDto.from(id, body);
+    const sectionDto = new ReqSectionDto(id, body);
     await this.sectionsService.update(sectionDto);
   }
 
@@ -55,7 +55,7 @@ export class SectionsController {
   @Delete(':id')
   @HttpCode(204)
   async remove(@Param('id', PositiveIntPipe) id: number): Promise<void> {
-    const sectionDto = ReqSectionDto.from(id);
+    const sectionDto = new ReqSectionDto(id);
     await this.sectionsService.remove(sectionDto);
   }
 }
