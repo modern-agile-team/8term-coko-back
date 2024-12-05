@@ -8,5 +8,6 @@ import { SectionsRepository } from 'src/sections/sections.repository';
   imports: [SectionsRepository],
   controllers: [PartsController],
   providers: [PartsService, PartsRepository],
+  exports: [PartsRepository],
 })
 export class PartsModule {}

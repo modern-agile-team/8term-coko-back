@@ -3,10 +3,14 @@ import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { QueryQuizDto } from './dto/query-quiz.dto';
+import { QuizzesRepository } from './quizzes.repository';
 
 @Injectable()
 export class QuizzesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly quizzesRepository: QuizzesRepository,
+  ) {}
 
   //
   private async findSectionById(id: number) {
