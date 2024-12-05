@@ -19,41 +19,43 @@ export class ItemsService {
   async buyItem(buyItemDto: BuyItemDto): Promise<void> {
     const { userId, itemId } = buyItemDto;
 
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw new BadRequestException('User not found');
-    }
+    await this.prisma.$transaction(async (prisma) => {
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
 
-    const item = await this.prisma.item.findUnique({ where: { id: itemId } });
-    if (!item) {
-      throw new BadRequestException('Item not found');
-    }
+      const item = await prisma.item.findUnique({ where: { id: itemId } });
+      if (!item) {
+        throw new NotFoundException('Item not found');
+      }
 
-    if (user.point < item.cost) {
-      throw new BadRequestException('Insufficient points to buy this item');
-    }
+      if (user.point < item.cost) {
+        throw new BadRequestException('Insufficient points to buy this item');
+      }
 
-    //유저 아이템 유무 확인
-    const existingItem = await this.prisma.userItem.findUnique({
-      where: {
-        userId_itemId: { userId, itemId },
-      },
-    });
+      //유저 아이템 유무 확인
+      const existingItem = await prisma.userItem.findUnique({
+        where: {
+          userId_itemId: { userId, itemId },
+        },
+      });
 
-    if (existingItem) {
-      throw new BadRequestException('User already owns this item.');
-    }
+      if (existingItem) {
+        throw new BadRequestException('User already owns this item.');
+      }
 
-    await this.prisma.user.update({
-      where: { id: userId },
-      data: { point: { decrement: item.cost } },
-    });
+      await prisma.user.update({
+        where: { id: userId },
+        data: { point: { decrement: item.cost } },
+      });
 
-    await this.prisma.userItem.create({
-      data: {
-        userId,
-        itemId,
-      },
+      await prisma.userItem.create({
+        data: {
+          userId,
+          itemId,
+        },
+      });
     });
   }
 
