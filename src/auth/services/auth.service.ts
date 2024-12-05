@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { TokenService } from './token.service';
@@ -9,7 +7,6 @@ import { TokenService } from './token.service';
 export class AuthService {
   constructor(
     private prisma: PrismaService,
-    // private configService: ConfigService,
     private tokenService: TokenService,
   ) {}
 

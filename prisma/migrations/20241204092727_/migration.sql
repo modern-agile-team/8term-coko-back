@@ -1,32 +1,49 @@
-/*
-  Warnings:
+-- CreateEnum
+CREATE TYPE "Category" AS ENUM ('COMBINATION', 'MULTIPLE_CHOICE', 'OX_SELECTOR', 'SHORT_ANSWER');
 
-  - You are about to drop the column `part` on the `quizzes` table. All the data in the column will be lost.
-  - You are about to drop the column `section_id` on the `quizzes` table. All the data in the column will be lost.
-  - You are about to drop the column `nickname` on the `users` table. All the data in the column will be lost.
-  - A unique constraint covering the columns `[provider_id]` on the table `users` will be added. If there are existing duplicate values, this will fail.
-  - Added the required column `part_id` to the `quizzes` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `name` to the `users` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `provider` to the `users` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `provider_id` to the `users` table without a default value. This is not possible if the table is not empty.
+-- CreateTable
+CREATE TABLE "quizzes" (
+    "id" SERIAL NOT NULL,
+    "part_id" INTEGER NOT NULL,
+    "title" VARCHAR(255) NOT NULL,
+    "question" VARCHAR(1000) NOT NULL,
+    "answer" TEXT[],
+    "answer_choice" TEXT[],
+    "category" "Category" NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
-*/
--- DropForeignKey
-ALTER TABLE "quizzes" DROP CONSTRAINT "quizzes_section_id_fkey";
+    CONSTRAINT "quizzes_pkey" PRIMARY KEY ("id")
+);
 
--- AlterTable
-ALTER TABLE "quizzes" DROP COLUMN "part",
-DROP COLUMN "section_id",
-ADD COLUMN     "part_id" INTEGER NOT NULL;
+-- CreateTable
+CREATE TABLE "sections" (
+    "id" SERIAL NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
--- AlterTable
-ALTER TABLE "users" DROP COLUMN "nickname",
-ADD COLUMN     "name" VARCHAR(30) NOT NULL,
-ADD COLUMN     "provider" VARCHAR(20) NOT NULL,
-ADD COLUMN     "provider_id" TEXT NOT NULL;
+    CONSTRAINT "sections_pkey" PRIMARY KEY ("id")
+);
 
--- DropEnum
-DROP TYPE "Part";
+-- CreateTable
+CREATE TABLE "users" (
+    "id" SERIAL NOT NULL,
+    "provider" VARCHAR(20) NOT NULL,
+    "provider_id" TEXT NOT NULL,
+    "name" VARCHAR(30) NOT NULL,
+    "profile_image" TEXT,
+    "max_health_point" INTEGER NOT NULL DEFAULT 5,
+    "last_login" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "level" INTEGER NOT NULL DEFAULT 1,
+    "experience" INTEGER NOT NULL DEFAULT 0,
+    "experience_for_next_level" INTEGER NOT NULL DEFAULT 50,
+    "point" INTEGER NOT NULL DEFAULT 0,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "progress" (
@@ -84,6 +101,12 @@ CREATE TABLE "token" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "sections_name_key" ON "sections"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_provider_id_key" ON "users"("provider_id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "parts_name_key" ON "parts"("name");
 
 -- CreateIndex
@@ -97,9 +120,6 @@ CREATE UNIQUE INDEX "user_items_user_id_item_id_key" ON "user_items"("user_id", 
 
 -- CreateIndex
 CREATE UNIQUE INDEX "token_user_id_key" ON "token"("user_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "users_provider_id_key" ON "users"("provider_id");
 
 -- AddForeignKey
 ALTER TABLE "quizzes" ADD CONSTRAINT "quizzes_part_id_fkey" FOREIGN KEY ("part_id") REFERENCES "parts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
