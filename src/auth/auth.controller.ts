@@ -1,4 +1,4 @@
-import { Controller, Get, Redirect, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/common/decorators/get-user.decorator';
 import { AuthService } from './auth.service';
@@ -28,13 +28,11 @@ export class AuthController {
     res.cookie('jwt', jwtToken, {
       httpOnly: true,
       secure: true,
-      domain: 'cokoedu.com',
-      // domain: 'localhost',
+      domain: this.configService.get<string>('COOKIE_DOMAIN'),
       sameSite: 'none',
-      maxAge: 3600000,
+      maxAge: this.configService.get<number>('COOKIE_EXPIRATION'),
     });
 
-    res.redirect('https://cokoedu.com/learn');
-    // res.redirect('http://localhost:3000/learn');
+    res.redirect(this.configService.get<string>('CLIENT_MAIN_PAGE_URL'));
   }
 }
