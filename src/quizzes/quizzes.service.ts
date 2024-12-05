@@ -8,6 +8,7 @@ import { QueryQuizDto } from './dto/query-quiz.dto';
 export class QuizzesService {
   constructor(private prisma: PrismaService) {}
 
+  //
   private async findSectionById(id: number) {
     const section = await this.prisma.section.findUnique({
       where: {
@@ -21,7 +22,9 @@ export class QuizzesService {
 
     return section;
   }
+  //
 
+  //
   private async findPartById(id: number) {
     const part = await this.prisma.part.findUnique({
       where: {
@@ -35,28 +38,38 @@ export class QuizzesService {
 
     return part;
   }
+  //
 
   async create(data: CreateQuizDto) {
+    //
     const { partId } = data;
 
     await this.findPartById(partId);
+    //
 
+    //
     return this.prisma.quiz.create({
       data,
     });
+    //
   }
 
   async findAll(query: QueryQuizDto) {
     const { sectionId, partId } = query;
 
+    //
     if (sectionId) {
       await this.findSectionById(sectionId);
     }
+    //
 
+    //
     if (partId) {
       await this.findPartById(partId);
     }
+    //
 
+    //
     return this.prisma.quiz.findMany({
       where: {
         part: {
@@ -67,14 +80,17 @@ export class QuizzesService {
         },
       },
     });
+    //
   }
 
   async findQuizById(id: number) {
+    //
     const quiz = await this.prisma.quiz.findUnique({
       where: {
         id,
       },
     });
+    //
 
     if (!quiz) {
       throw new NotFoundException();
@@ -84,6 +100,7 @@ export class QuizzesService {
   }
 
   async findAllProgressIncorrect(userId: number, query: QueryQuizDto) {
+    //
     const { sectionId, partId } = query;
 
     if (sectionId) {
@@ -93,15 +110,19 @@ export class QuizzesService {
     if (partId) {
       await this.findPartById(partId);
     }
+    //
 
+    //
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
     });
+    //
 
     if (!user) {
       throw new NotFoundException('존재하지 않는 유저');
     }
 
+    //
     return this.prisma.quiz.findMany({
       where: {
         progress: {
@@ -118,30 +139,39 @@ export class QuizzesService {
         },
       },
     });
+    //
   }
 
   async update(id: number, data: UpdateQuizDto) {
     const { partId } = data;
 
+    //
     await this.findQuizById(id);
 
     await this.findPartById(partId);
+    //
 
+    //
     return this.prisma.quiz.update({
       where: {
         id,
       },
       data,
     });
+    //
   }
 
   async remove(id: number) {
+    //
     await this.findQuizById(id);
+    //
 
+    //
     return this.prisma.quiz.delete({
       where: {
         id,
       },
     });
+    //
   }
 }
