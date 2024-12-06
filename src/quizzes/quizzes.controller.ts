@@ -23,21 +23,21 @@ import { ResQuizDto } from './dto/res-quiz.dto';
 export class QuizzesController {
   constructor(private readonly quizzesService: QuizzesService) {}
 
-  @ApiQuizzes.findAll()
+  @ApiQuizzes.getQuizzes()
   @Get()
   async getQuizzes(@Query() query: QueryQuizDto) {
     const quizzes = await this.quizzesService.findAll(query);
     return ResQuizDto.fromArray(quizzes);
   }
 
-  @ApiQuizzes.findOne()
+  @ApiQuizzes.getQuiz()
   @Get(':id')
   async getQuiz(@Param('id', PositiveIntPipe) id: number) {
     const quiz = await this.quizzesService.getQuiz(id);
     return new ResQuizDto(quiz);
   }
 
-  @ApiQuizzes.findAllProgressIncorrect()
+  @ApiQuizzes.getQuizzesProgressIncorrect()
   @Get('users/:id/incorrect')
   async getQuizzesProgressIncorrect(
     @Param('id', PositiveIntPipe) userId: number,
@@ -50,14 +50,14 @@ export class QuizzesController {
     return ResQuizDto.fromArray(quizzes);
   }
 
-  @ApiQuizzes.create()
+  @ApiQuizzes.createQuiz()
   @Post()
   @HttpCode(204)
   async createQuiz(@Body() body: CreateQuizDto) {
     await this.quizzesService.create(body);
   }
 
-  @ApiQuizzes.update()
+  @ApiQuizzes.updateQuiz()
   @Put(':id')
   @HttpCode(204)
   async updateQuiz(
@@ -67,7 +67,7 @@ export class QuizzesController {
     await this.quizzesService.update(id, body);
   }
 
-  @ApiQuizzes.remove()
+  @ApiQuizzes.deleteQuiz()
   @Delete(':id')
   @HttpCode(204)
   async deleteQuiz(@Param('id', PositiveIntPipe) id: number) {

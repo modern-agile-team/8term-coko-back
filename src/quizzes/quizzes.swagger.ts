@@ -2,29 +2,14 @@ import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 export const ApiQuizzes = {
-  create: () => {
+  createQuiz: () => {
     return applyDecorators(
       ApiOperation({
         summary: '문제 생성',
       }),
       ApiResponse({
-        status: 201,
+        status: 204,
         description: '새 문제가 성공적으로 생성됨',
-        content: {
-          JSON: {
-            example: {
-              id: 4,
-              partId: 1,
-              title: '다음 보기를 보고 문제를 완성하세요',
-              question: 'const num : number = 6 ',
-              answer: [':number'],
-              answerChoice: ['const', 'num', ':number', '6'],
-              category: 'SHORT_ANSWER',
-              createdAt: '2024-11-04T05:13:12.363Z',
-              updatedAt: '2024-11-04T05:13:12.363Z',
-            },
-          },
-        },
       }),
       ApiResponse({
         status: 404,
@@ -95,7 +80,7 @@ export const ApiQuizzes = {
       }),
     );
   },
-  findAll: () => {
+  getQuizzes: () => {
     return applyDecorators(
       ApiOperation({
         summary: '문제 전체 조회 & 쿼리를 사용한 부분 조회',
@@ -227,7 +212,7 @@ export const ApiQuizzes = {
       }),
     );
   },
-  findOne: () => {
+  getQuiz: () => {
     return applyDecorators(
       ApiOperation({
         summary: '문제 단일 조회',
@@ -279,7 +264,7 @@ export const ApiQuizzes = {
       }),
     );
   },
-  findAllProgressIncorrect: () => {
+  getQuizzesProgressIncorrect: () => {
     return applyDecorators(
       ApiOperation({
         summary: '유저가 틀렸던 문제 조회',
@@ -359,29 +344,14 @@ export const ApiQuizzes = {
       }),
     );
   },
-  update: () => {
+  updateQuiz: () => {
     return applyDecorators(
       ApiOperation({
         summary: '단일 문제 수정',
       }),
       ApiResponse({
-        status: 200,
+        status: 204,
         description: '문제의 id param값을 통해 단일 문제 수정',
-        content: {
-          JSON: {
-            example: {
-              id: 1,
-              partId: 1,
-              title: '예상출력을 작성하세요',
-              question: 'function add(a , b){ return a+b}',
-              answer: ['5'],
-              answerChoice: ['function', 'add(a, b)'],
-              category: 'MULTIPLE_CHOICE',
-              createdAt: '2024-10-31T08:31:11.300Z',
-              updatedAt: '2024-11-06T08:34:23.658Z',
-            },
-          },
-        },
       }),
       ApiResponse({
         status: 404,
@@ -426,29 +396,14 @@ export const ApiQuizzes = {
       }),
     );
   },
-  remove: () => {
+  deleteQuiz: () => {
     return applyDecorators(
       ApiOperation({
         summary: '단일 문제 삭제',
       }),
       ApiResponse({
-        status: 200,
+        status: 204,
         description: '문제의 id param값을 통해 단일 문제 삭제',
-        content: {
-          JSON: {
-            example: {
-              id: 1,
-              partId: 1,
-              title: '예상출력을 작성하세요',
-              question: 'function add(a , b){ return a+b}',
-              answer: ['5'],
-              answerChoice: ['function', 'add(a, b)'],
-              category: 'MULTIPLE_CHOICE',
-              createdAt: '2024-10-31T08:31:11.300Z',
-              updatedAt: '2024-11-06T08:38:53.958Z',
-            },
-          },
-        },
       }),
       ApiResponse({
         status: 404,
