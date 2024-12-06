@@ -2,12 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
+import { Quiz } from './entities/quizzes.entity';
 
 @Injectable()
 export class QuizzesRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAllQuizByQuery(sectionId: number, partId: number) {
+  async findAllQuizByQuery(sectionId: number, partId: number): Promise<Quiz[]> {
     return this.prisma.quiz.findMany({
       where: {
         part: {
@@ -24,7 +25,7 @@ export class QuizzesRepository {
     userId: number,
     sectionId: number,
     partId: number,
-  ) {
+  ): Promise<Quiz[]> {
     return this.prisma.quiz.findMany({
       where: {
         progress: {
@@ -43,26 +44,26 @@ export class QuizzesRepository {
     });
   }
 
-  async findOneById(id: number) {
+  async findOneById(id: number): Promise<Quiz> {
     return this.prisma.quiz.findUnique({
       where: { id },
     });
   }
 
-  async createQuiz(data: CreateQuizDto) {
+  async createQuiz(data: CreateQuizDto): Promise<Quiz> {
     return this.prisma.quiz.create({
       data,
     });
   }
 
-  async updateQuizById(id: number, data: UpdateQuizDto) {
+  async updateQuizById(id: number, data: UpdateQuizDto): Promise<Quiz> {
     return this.prisma.quiz.update({
       where: { id },
       data,
     });
   }
 
-  async deleteQuizById(id: number) {
+  async deleteQuizById(id: number): Promise<Quiz> {
     return this.prisma.quiz.delete({
       where: { id },
     });

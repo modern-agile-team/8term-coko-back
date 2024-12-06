@@ -6,6 +6,7 @@ import { QueryQuizDto } from './dto/query-quiz.dto';
 import { QuizzesRepository } from './quizzes.repository';
 import { SectionsRepository } from 'src/sections/sections.repository';
 import { PartsRepository } from 'src/parts/parts.repository';
+import { Quiz } from './entities/quizzes.entity';
 
 @Injectable()
 export class QuizzesService {
@@ -36,7 +37,7 @@ export class QuizzesService {
     return part;
   }
 
-  async findAll(query: QueryQuizDto) {
+  async findAll(query: QueryQuizDto): Promise<Quiz[]> {
     const { sectionId, partId } = query;
 
     if (sectionId) {
@@ -50,7 +51,7 @@ export class QuizzesService {
     return this.quizzesRepository.findAllQuizByQuery(sectionId, partId);
   }
 
-  async getQuiz(id: number) {
+  async getQuiz(id: number): Promise<Quiz> {
     const quiz = await this.quizzesRepository.findOneById(id);
 
     if (!quiz) {
@@ -60,7 +61,10 @@ export class QuizzesService {
     return quiz;
   }
 
-  async findAllProgressIncorrect(userId: number, query: QueryQuizDto) {
+  async findAllProgressIncorrect(
+    userId: number,
+    query: QueryQuizDto,
+  ): Promise<Quiz[]> {
     const { sectionId, partId } = query;
 
     if (sectionId) {
@@ -71,7 +75,7 @@ export class QuizzesService {
       await this.findPartById(partId);
     }
 
-    //
+    // 이 부분은 수정사항
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
     });
@@ -88,11 +92,11 @@ export class QuizzesService {
     );
   }
 
-  async create(body: CreateQuizDto) {
+  async create(body: CreateQuizDto): Promise<Quiz> {
     return this.quizzesRepository.createQuiz(body);
   }
 
-  async update(id: number, data: UpdateQuizDto) {
+  async update(id: number, data: UpdateQuizDto): Promise<Quiz> {
     const { partId } = data;
 
     await this.getQuiz(id);
@@ -102,7 +106,7 @@ export class QuizzesService {
     return this.quizzesRepository.updateQuizById(id, data);
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<Quiz> {
     await this.getQuiz(id);
 
     return this.quizzesRepository.deleteQuizById(id);

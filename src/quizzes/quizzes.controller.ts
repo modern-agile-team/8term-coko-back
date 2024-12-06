@@ -25,14 +25,14 @@ export class QuizzesController {
 
   @ApiQuizzes.getQuizzes()
   @Get()
-  async getQuizzes(@Query() query: QueryQuizDto) {
+  async getQuizzes(@Query() query: QueryQuizDto): Promise<ResQuizDto[]> {
     const quizzes = await this.quizzesService.findAll(query);
     return ResQuizDto.fromArray(quizzes);
   }
 
   @ApiQuizzes.getQuiz()
   @Get(':id')
-  async getQuiz(@Param('id', PositiveIntPipe) id: number) {
+  async getQuiz(@Param('id', PositiveIntPipe) id: number): Promise<ResQuizDto> {
     const quiz = await this.quizzesService.getQuiz(id);
     return new ResQuizDto(quiz);
   }
@@ -42,7 +42,7 @@ export class QuizzesController {
   async getQuizzesProgressIncorrect(
     @Param('id', PositiveIntPipe) userId: number,
     @Query() query: QueryQuizDto,
-  ) {
+  ): Promise<ResQuizDto[]> {
     const quizzes = await this.quizzesService.findAllProgressIncorrect(
       userId,
       query,
@@ -53,7 +53,7 @@ export class QuizzesController {
   @ApiQuizzes.createQuiz()
   @Post()
   @HttpCode(204)
-  async createQuiz(@Body() body: CreateQuizDto) {
+  async createQuiz(@Body() body: CreateQuizDto): Promise<void> {
     await this.quizzesService.create(body);
   }
 
@@ -63,14 +63,14 @@ export class QuizzesController {
   async updateQuiz(
     @Param('id', PositiveIntPipe) id: number,
     @Body() body: UpdateQuizDto,
-  ) {
+  ): Promise<void> {
     await this.quizzesService.update(id, body);
   }
 
   @ApiQuizzes.deleteQuiz()
   @Delete(':id')
   @HttpCode(204)
-  async deleteQuiz(@Param('id', PositiveIntPipe) id: number) {
+  async deleteQuiz(@Param('id', PositiveIntPipe) id: number): Promise<void> {
     await this.quizzesService.remove(id);
   }
 }
