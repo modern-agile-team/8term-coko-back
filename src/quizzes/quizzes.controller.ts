@@ -7,6 +7,7 @@ import {
   Delete,
   Put,
   Query,
+  HttpCode,
 } from '@nestjs/common';
 import { QuizzesService } from './quizzes.service';
 import { CreateQuizDto } from './dto/create-quiz.dto';
@@ -15,6 +16,7 @@ import { QueryQuizDto } from './dto/query-quiz.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiQuizzes } from './quizzes.swagger';
+import { ResQuizDto } from './dto/res-quiz.dto';
 
 @ApiTags('quizzes')
 @Controller('quizzes')
@@ -23,43 +25,52 @@ export class QuizzesController {
 
   @ApiQuizzes.findAll()
   @Get()
-  findAll(@Query() query: QueryQuizDto) {
-    return this.quizzesService.findAll(query);
+  async getQuizzes(@Query() query: QueryQuizDto) {
+    const quizzes = await this.quizzesService.findAll(query);
+    return ResQuizDto.fromArray(quizzes);
   }
 
   @ApiQuizzes.findOne()
   @Get(':id')
-  getQuiz(@Param('id', PositiveIntPipe) id: number) {
-    return this.quizzesService.getQuiz(id);
+  async getQuiz(@Param('id', PositiveIntPipe) id: number) {
+    const quiz = await this.quizzesService.getQuiz(id);
+    return new ResQuizDto(quiz);
   }
 
   @ApiQuizzes.findAllProgressIncorrect()
   @Get('users/:id/incorrect')
-  getQuizsProgressIncorrect(
+  async getQuizzesProgressIncorrect(
     @Param('id', PositiveIntPipe) userId: number,
     @Query() query: QueryQuizDto,
   ) {
-    return this.quizzesService.findAllProgressIncorrect(userId, query);
+    const quizzes = await this.quizzesService.findAllProgressIncorrect(
+      userId,
+      query,
+    );
+    return ResQuizDto.fromArray(quizzes);
   }
 
   @ApiQuizzes.create()
   @Post()
-  create(@Body() body: CreateQuizDto) {
-    return this.quizzesService.create(body);
+  @HttpCode(204)
+  async createQuiz(@Body() body: CreateQuizDto) {
+    await this.quizzesService.create(body);
   }
 
   @ApiQuizzes.update()
   @Put(':id')
-  update(
+  @HttpCode(204)
+  async updateQuiz(
     @Param('id', PositiveIntPipe) id: number,
     @Body() body: UpdateQuizDto,
   ) {
-    return this.quizzesService.update(id, body);
+    await this.quizzesService.update(id, body);
   }
 
   @ApiQuizzes.remove()
   @Delete(':id')
-  remove(@Param('id', PositiveIntPipe) id: number) {
-    return this.quizzesService.remove(id);
+  @HttpCode(204)
+  async deleteQuiz(@Param('id', PositiveIntPipe) id: number) {
+    await this.quizzesService.remove(id);
   }
 }
