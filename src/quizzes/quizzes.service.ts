@@ -4,21 +4,20 @@ import { UpdateQuizDto } from './dto/update-quiz.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { QueryQuizDto } from './dto/query-quiz.dto';
 import { QuizzesRepository } from './quizzes.repository';
+import { SectionsRepository } from 'src/sections/sections.repository';
+import { PartsRepository } from 'src/parts/parts.repository';
 
 @Injectable()
 export class QuizzesService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly sectionsRepository: SectionsRepository,
+    private readonly partsRepository: PartsRepository,
     private readonly quizzesRepository: QuizzesRepository,
   ) {}
 
-  //
   private async findSectionById(id: number) {
-    const section = await this.prisma.section.findUnique({
-      where: {
-        id,
-      },
-    });
+    const section = await this.sectionsRepository.findOneSectionById({ id });
 
     if (!section) {
       throw new NotFoundException();
@@ -26,15 +25,9 @@ export class QuizzesService {
 
     return section;
   }
-  //
 
-  //
   private async findPartById(id: number) {
-    const part = await this.prisma.part.findUnique({
-      where: {
-        id,
-      },
-    });
+    const part = await this.partsRepository.findOnePartById({ id });
 
     if (!part) {
       throw new NotFoundException();
@@ -42,59 +35,23 @@ export class QuizzesService {
 
     return part;
   }
-  //
-
-  async create(data: CreateQuizDto) {
-    //
-    const { partId } = data;
-
-    await this.findPartById(partId);
-    //
-
-    //
-    return this.prisma.quiz.create({
-      data,
-    });
-    //
-  }
 
   async findAll(query: QueryQuizDto) {
     const { sectionId, partId } = query;
 
-    //
     if (sectionId) {
       await this.findSectionById(sectionId);
     }
-    //
 
-    //
     if (partId) {
       await this.findPartById(partId);
     }
-    //
 
-    //
-    return this.prisma.quiz.findMany({
-      where: {
-        part: {
-          ...(partId && { id: partId }),
-          section: {
-            ...(sectionId && { id: sectionId }),
-          },
-        },
-      },
-    });
-    //
+    return this.quizzesRepository.findAllQuizByQuery(sectionId, partId);
   }
 
-  async findQuizById(id: number) {
-    //
-    const quiz = await this.prisma.quiz.findUnique({
-      where: {
-        id,
-      },
-    });
-    //
+  async getQuiz(id: number) {
+    const quiz = await this.quizzesRepository.findOneById(id);
 
     if (!quiz) {
       throw new NotFoundException();
@@ -104,7 +61,6 @@ export class QuizzesService {
   }
 
   async findAllProgressIncorrect(userId: number, query: QueryQuizDto) {
-    //
     const { sectionId, partId } = query;
 
     if (sectionId) {
@@ -114,7 +70,6 @@ export class QuizzesService {
     if (partId) {
       await this.findPartById(partId);
     }
-    //
 
     //
     const user = await this.prisma.user.findUnique({
@@ -126,56 +81,30 @@ export class QuizzesService {
       throw new NotFoundException('존재하지 않는 유저');
     }
 
-    //
-    return this.prisma.quiz.findMany({
-      where: {
-        progress: {
-          some: {
-            isCorrect: false,
-            userId,
-          },
-        },
-        part: {
-          ...(partId && { id: partId }),
-          section: {
-            ...(sectionId && { id: sectionId }),
-          },
-        },
-      },
-    });
-    //
+    return this.quizzesRepository.findAllIncorrectProgressByQuery(
+      userId,
+      sectionId,
+      partId,
+    );
+  }
+
+  async create(body: CreateQuizDto) {
+    return this.quizzesRepository.createQuiz(body);
   }
 
   async update(id: number, data: UpdateQuizDto) {
     const { partId } = data;
 
-    //
-    await this.findQuizById(id);
+    await this.getQuiz(id);
 
     await this.findPartById(partId);
-    //
 
-    //
-    return this.prisma.quiz.update({
-      where: {
-        id,
-      },
-      data,
-    });
-    //
+    return this.quizzesRepository.updateQuizById(id, data);
   }
 
   async remove(id: number) {
-    //
-    await this.findQuizById(id);
-    //
+    await this.getQuiz(id);
 
-    //
-    return this.prisma.quiz.delete({
-      where: {
-        id,
-      },
-    });
-    //
+    return this.quizzesRepository.deleteQuizById(id);
   }
 }

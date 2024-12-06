@@ -14,6 +14,7 @@ export class SectionsService {
 
   async findAll() {
     const sections = await this.sectionsRepository.findAllSections();
+
     return ResSectionWithPartDto.fromArray(sections);
   }
 
@@ -71,8 +72,8 @@ export class SectionsService {
       throw new ConflictException('섹션을 참조하고 있는 파트가 있음');
     }
 
-    const deleteSctionInfo =
+    const deleteSectionInfo =
       await this.sectionsRepository.deleteSectionById(sectionDto);
-    return new ResSectionWithPartDto(deleteSctionInfo);
+    return new ResSectionWithPartDto(deleteSectionInfo);
   }
 }

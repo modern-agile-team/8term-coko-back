@@ -15,7 +15,6 @@ import { QueryQuizDto } from './dto/query-quiz.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiQuizzes } from './quizzes.swagger';
-import { ReqQuizDto } from './dto/req-quiz.dto';
 
 @ApiTags('quizzes')
 @Controller('quizzes')
@@ -30,14 +29,13 @@ export class QuizzesController {
 
   @ApiQuizzes.findOne()
   @Get(':id')
-  findOne(@Param('id', PositiveIntPipe) id: number) {
-    const quizDto = new ReqQuizDto(id);
-    return this.quizzesService.findQuizById(quizDto);
+  getQuiz(@Param('id', PositiveIntPipe) id: number) {
+    return this.quizzesService.getQuiz(id);
   }
 
   @ApiQuizzes.findAllProgressIncorrect()
   @Get('users/:id/incorrect')
-  findAllProgressIncorrect(
+  getQuizsProgressIncorrect(
     @Param('id', PositiveIntPipe) userId: number,
     @Query() query: QueryQuizDto,
   ) {
@@ -46,24 +44,22 @@ export class QuizzesController {
 
   @ApiQuizzes.create()
   @Post()
-  create(@Body() createQuizDto: CreateQuizDto) {
-    return this.quizzesService.create(createQuizDto);
+  create(@Body() body: CreateQuizDto) {
+    return this.quizzesService.create(body);
   }
 
   @ApiQuizzes.update()
   @Put(':id')
   update(
     @Param('id', PositiveIntPipe) id: number,
-    @Body() updateQuizDto: UpdateQuizDto,
+    @Body() body: UpdateQuizDto,
   ) {
-    const quizDto = new ReqQuizDto(id, updateQuizDto);
-    return this.quizzesService.update(quizDto);
+    return this.quizzesService.update(id, body);
   }
 
   @ApiQuizzes.remove()
   @Delete(':id')
   remove(@Param('id', PositiveIntPipe) id: number) {
-    const quizDto = new ReqQuizDto(id);
-    return this.quizzesService.remove(quizDto);
+    return this.quizzesService.remove(id);
   }
 }
