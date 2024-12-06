@@ -4,9 +4,11 @@ import { QuizzesController } from './quizzes.controller';
 import { QuizzesRepository } from './quizzes.repository';
 import { SectionsRepository } from 'src/sections/sections.repository';
 import { PartsRepository } from 'src/parts/parts.repository';
+import { SectionsModule } from 'src/sections/sections.module';
+import { PartsModule } from 'src/parts/parts.module';
 
 @Module({
-  imports: [SectionsRepository, PartsRepository],
+  imports: [SectionsModule, PartsModule],
   controllers: [QuizzesController],
   providers: [QuizzesService, QuizzesRepository],
   exports: [QuizzesRepository],

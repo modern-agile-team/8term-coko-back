@@ -1,6 +1,3 @@
-import { CreatePartDto } from './create-part.dto';
-import { UpdatePartDto } from './update-part.dto';
-
 export class ResPartDto {
   readonly id: number;
   readonly sectionId: number;

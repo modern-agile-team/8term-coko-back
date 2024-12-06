@@ -3,7 +3,6 @@ import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { ReqSectionDto } from './dto/req-section.dto';
 import { ResSectionWithPartDto } from './dto/res-section-with-part.dto';
-import { UpdateSectionDto } from './dto/update-section.dto';
 
 export const ApiSections = {
   create: () => {
@@ -170,7 +169,7 @@ export const ApiSections = {
       }),
       ApiBody({
         description: '섹션 생성에 필요한 정보',
-        type: UpdateSectionDto,
+        type: CreateSectionDto,
       }),
       ApiResponse({
         status: 204,
