@@ -13,9 +13,13 @@ export class TokenService {
 
   async createJWT(userId: number, userEmail: string) {
     const payload = { userId, userEmail };
-    const accessToken = this.jwtService.sign(payload);
+    const accessToken = this.jwtService.sign(payload, {
+      secret: this.configService.get<string>('ACCESS_SECRET'),
+      expiresIn: this.configService.get<number>('ACCESS_EXPIRATION_TIME'),
+    });
     const refreshToken = this.jwtService.sign(payload, {
-      expiresIn: this.configService.get<string>('REFRESH_EXPIRATION_TIME'),
+      secret: this.configService.get<string>('REFRESH_SECRET'),
+      expiresIn: this.configService.get<number>('REFRESH_EXPIRATION_TIME'),
     });
 
     return { accessToken, refreshToken };
