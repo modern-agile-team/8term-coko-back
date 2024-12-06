@@ -1,7 +1,9 @@
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ResPartDto } from './dto/res-part.part.dto';
 import { CreatePartDto } from './dto/create-part.dto';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class PartsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
