@@ -3,12 +3,15 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
 import { Quiz } from './entities/quizzes.entity';
+import { QueryQuizDto } from './dto/query-quiz.dto';
 
 @Injectable()
 export class QuizzesRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAllQuizByQuery(sectionId: number, partId: number): Promise<Quiz[]> {
+  async findAllQuizByQuery(query: QueryQuizDto): Promise<Quiz[]> {
+    const { sectionId, partId } = query;
+
     return this.prisma.quiz.findMany({
       where: {
         part: {
@@ -23,9 +26,10 @@ export class QuizzesRepository {
 
   async findAllIncorrectProgressByQuery(
     userId: number,
-    sectionId: number,
-    partId: number,
+    query: QueryQuizDto,
   ): Promise<Quiz[]> {
+    const { sectionId, partId } = query;
+
     return this.prisma.quiz.findMany({
       where: {
         progress: {

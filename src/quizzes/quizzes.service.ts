@@ -48,7 +48,7 @@ export class QuizzesService {
       await this.findPartById(partId);
     }
 
-    return this.quizzesRepository.findAllQuizByQuery(sectionId, partId);
+    return this.quizzesRepository.findAllQuizByQuery(query);
   }
 
   async getQuiz(id: number): Promise<Quiz> {
@@ -87,8 +87,7 @@ export class QuizzesService {
 
     return this.quizzesRepository.findAllIncorrectProgressByQuery(
       userId,
-      sectionId,
-      partId,
+      query,
     );
   }
 
