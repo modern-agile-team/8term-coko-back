@@ -6,6 +6,6 @@ import { SectionsRepository } from './sections.repository';
 @Module({
   controllers: [SectionsController],
   providers: [SectionsService, SectionsRepository],
-  exports: [SectionsRepository],
+  exports: [SectionsService, SectionsRepository],
 })
 export class SectionsModule {}

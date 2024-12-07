@@ -3,12 +3,18 @@ import { CreateProgressDto } from './dto/create-progress.dto';
 import { QueryProgressDto } from './dto/query-progress.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProgressRepository } from './progress.repository';
+import { QuizzesService } from 'src/quizzes/quizzes.service';
+import { PartsService } from 'src/parts/parts.service';
+import { SectionsService } from 'src/sections/sections.service';
 
 @Injectable()
 export class ProgressService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly progressRepository: ProgressRepository,
+    private readonly quizzesService: QuizzesService,
+    private readonly partsService: PartsService,
+    private readonly sectionsService: SectionsService,
   ) {}
 
   //

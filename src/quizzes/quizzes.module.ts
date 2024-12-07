@@ -9,6 +9,6 @@ import { PartsModule } from 'src/parts/parts.module';
   imports: [SectionsModule, PartsModule],
   controllers: [QuizzesController],
   providers: [QuizzesService, QuizzesRepository],
-  exports: [QuizzesRepository],
+  exports: [QuizzesService, QuizzesRepository],
 })
 export class QuizzesModule {}
