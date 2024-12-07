@@ -2,11 +2,16 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProgressDto } from './dto/create-progress.dto';
 import { QueryProgressDto } from './dto/query-progress.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ProgressRepository } from './progress.repository';
 
 @Injectable()
 export class ProgressService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly progressRepository: ProgressRepository,
+  ) {}
 
+  //
   private async findUserById(id: number) {
     const user = await this.prisma.user.findUnique({
       where: {
@@ -20,7 +25,9 @@ export class ProgressService {
 
     return user.id;
   }
+  //
 
+  //
   private async findQuizById(id: number) {
     const quiz = await this.prisma.quiz.findUnique({
       where: {
@@ -34,7 +41,9 @@ export class ProgressService {
 
     return quiz;
   }
+  //
 
+  //
   private async findSectionById(id: number) {
     const section = await this.prisma.section.findUnique({
       where: {
@@ -48,7 +57,9 @@ export class ProgressService {
 
     return section;
   }
+  //
 
+  //
   private async findPartById(id: number) {
     const part = await this.prisma.part.findUnique({
       where: {
@@ -62,7 +73,9 @@ export class ProgressService {
 
     return part;
   }
+  //
 
+  //
   private async countQuizBySectionIdOrPartId(query: QueryProgressDto) {
     const { sectionId, partId } = query;
 
@@ -77,29 +90,7 @@ export class ProgressService {
       },
     });
   }
-
-  private async countUserProgressBySectionIdOrPartId(
-    userId: number,
-    query: QueryProgressDto,
-    option?: { isCorrect: boolean },
-  ) {
-    const { sectionId, partId } = query;
-
-    return this.prisma.progress.count({
-      where: {
-        userId,
-        ...option,
-        quiz: {
-          part: {
-            ...(partId && { id: partId }),
-            section: {
-              ...(sectionId && { id: sectionId }),
-            },
-          },
-        },
-      },
-    });
-  }
+  //
 
   async findAll(userId: number, query: QueryProgressDto) {
     const { sectionId, partId } = query;
@@ -117,10 +108,10 @@ export class ProgressService {
     const totalQuizCount = await this.countQuizBySectionIdOrPartId(query);
 
     const totalUserProgressCount =
-      await this.countUserProgressBySectionIdOrPartId(userId, query);
+      await this.progressRepository.countProgressByQuery(userId, query);
 
     const correctUserProgressCount =
-      await this.countUserProgressBySectionIdOrPartId(userId, query, {
+      await this.progressRepository.countProgressByQuery(userId, query, {
         isCorrect: true,
       });
 
@@ -138,29 +129,12 @@ export class ProgressService {
   async createOrUpdate(
     userId: number,
     quizId: number,
-    data: CreateProgressDto,
+    body: CreateProgressDto,
   ) {
     await this.findQuizById(quizId);
 
     await this.findUserById(userId);
 
-    return this.prisma.progress.upsert({
-      where: {
-        userId_quizId: {
-          userId,
-          quizId,
-        },
-      },
-      create: {
-        userId,
-        quizId,
-        ...data,
-      },
-      update: {
-        userId,
-        quizId,
-        ...data,
-      },
-    });
+    return this.progressRepository.upsertProgress(userId, quizId, body);
   }
 }
