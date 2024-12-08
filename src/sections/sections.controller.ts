@@ -13,7 +13,7 @@ import { CreateSectionDto } from './dto/create-section.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiSections } from './sections.swagger';
-import { ReqSectionDto } from './dto/req-section.dto';
+import { ResSectionWithPartDto } from './dto/res-section-with-part.dto';
 
 @ApiTags('sections')
 @Controller('sections')
@@ -29,8 +29,8 @@ export class SectionsController {
   @ApiSections.findOne()
   @Get(':id')
   async findOne(@Param('id', PositiveIntPipe) id: number) {
-    const sectionDto = new ReqSectionDto(id);
-    return this.sectionsService.findOne(sectionDto);
+    const sectionWithParts = await this.sectionsService.findOne(id);
+    return new ResSectionWithPartDto(sectionWithParts);
   }
 
   @ApiSections.create()
@@ -47,7 +47,6 @@ export class SectionsController {
     @Param('id', PositiveIntPipe) id: number,
     @Body() body: CreateSectionDto,
   ): Promise<void> {
-    const sectionDto = new ReqSectionDto(id, body);
     await this.sectionsService.update(sectionDto);
   }
 
@@ -55,7 +54,6 @@ export class SectionsController {
   @Delete(':id')
   @HttpCode(204)
   async remove(@Param('id', PositiveIntPipe) id: number): Promise<void> {
-    const sectionDto = new ReqSectionDto(id);
     await this.sectionsService.remove(sectionDto);
   }
 }
