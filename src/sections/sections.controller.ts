@@ -22,14 +22,16 @@ export class SectionsController {
 
   @ApiSections.findAll()
   @Get()
-  async findAll() {
+  async findAll(): Promise<ResSectionDto[]> {
     const sections = await this.sectionsService.findAll();
     return ResSectionDto.fromArray(sections);
   }
 
   @ApiSections.findOne()
   @Get(':id')
-  async findOne(@Param('id', PositiveIntPipe) id: number) {
+  async findOne(
+    @Param('id', PositiveIntPipe) id: number,
+  ): Promise<ResSectionDto> {
     const sectionWithParts = await this.sectionsService.findOneWithParts(id);
     return new ResSectionDto(sectionWithParts);
   }

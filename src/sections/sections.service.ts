@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { SectionsRepository } from './sections.repository';
-import { ResSectionDto } from './dto/res-section.dto';
 import { PartsRepository } from 'src/parts/parts.repository';
+import { Section } from './entities/section.entity';
 
 @Injectable()
 export class SectionsService {
@@ -19,7 +19,7 @@ export class SectionsService {
     return this.sectionsRepository.findAllSections();
   }
 
-  async findOne(id: number): Promise<ResSectionDto> {
+  async findOne(id: number): Promise<Section> {
     const section = await this.sectionsRepository.findOneSectionById(id);
 
     if (!section) {
@@ -29,7 +29,7 @@ export class SectionsService {
     return section;
   }
 
-  async findOneWithParts(id: number): Promise<ResSectionDto> {
+  async findOneWithParts(id: number): Promise<Section> {
     const sectionWithParts =
       await this.sectionsRepository.findSectionWithPartsById(id);
 
@@ -40,7 +40,7 @@ export class SectionsService {
     return sectionWithParts;
   }
 
-  async create(body: CreateSectionDto): Promise<ResSectionDto> {
+  async create(body: CreateSectionDto): Promise<Section> {
     const { name } = body;
     const section = await this.sectionsRepository.findOneSectionByName(name);
 
@@ -51,13 +51,13 @@ export class SectionsService {
     return this.sectionsRepository.createSection(body);
   }
 
-  async update(id: number, body: CreateSectionDto): Promise<ResSectionDto> {
+  async update(id: number, body: CreateSectionDto): Promise<Section> {
     await this.findOne(id);
 
     return this.sectionsRepository.updateSectionById(id, body);
   }
 
-  async remove(id: number): Promise<ResSectionDto> {
+  async remove(id: number): Promise<Section> {
     await this.findOne(id);
 
     const part = await this.partsRepository.findOnePartBySectionId(id);

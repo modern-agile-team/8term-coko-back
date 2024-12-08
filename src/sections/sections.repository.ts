@@ -1,36 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateSectionDto } from './dto/create-section.dto';
-import { ResSectionDto } from './dto/res-section.dto';
+import { Section } from './entities/section.entity';
 
 @Injectable()
 export class SectionsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAllSections(): Promise<ResSectionDto[]> {
+  async findAllSections(): Promise<Section[]> {
     return this.prisma.section.findMany();
   }
 
-  async findOneSectionById(id: number): Promise<ResSectionDto> {
+  async findOneSectionById(id: number): Promise<Section> {
     return this.prisma.section.findUnique({
       where: { id },
     });
   }
 
-  async findSectionWithPartsById(id: number): Promise<ResSectionDto> {
+  async findSectionWithPartsById(id: number): Promise<Section> {
     return this.prisma.section.findUnique({
       where: { id },
       include: { part: true },
     });
   }
 
-  async findOneSectionByName(name: string): Promise<ResSectionDto> {
+  async findOneSectionByName(name: string): Promise<Section> {
     return this.prisma.section.findUnique({
       where: { name },
     });
   }
 
-  async createSection(data: CreateSectionDto): Promise<ResSectionDto> {
+  async createSection(data: CreateSectionDto): Promise<Section> {
     return this.prisma.section.create({
       data,
     });
@@ -39,14 +39,14 @@ export class SectionsRepository {
   async updateSectionById(
     id: number,
     data: CreateSectionDto,
-  ): Promise<ResSectionDto> {
+  ): Promise<Section> {
     return this.prisma.section.update({
       where: { id },
       data,
     });
   }
 
-  async deleteSectionById(id: number): Promise<ResSectionDto> {
+  async deleteSectionById(id: number): Promise<Section> {
     return this.prisma.section.delete({
       where: { id },
     });
