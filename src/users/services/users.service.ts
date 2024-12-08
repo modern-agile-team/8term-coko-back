@@ -35,11 +35,18 @@ export class UsersService {
     return new ResponseUserDto(userResponse);
   }
 
-  async deleteUser(id: number): Promise<void> {
-    if (!(await this.prisma.user.findUnique({ where: { id } }))) {
+  async deleteUser(id: number): Promise<any> {
+    // 12/8 홍대경 : 건우야 코드 내가 수정했어.
+    // 토큰에 cascade 옵션을 줘서 토큰도 같이 삭제되게 했어.
+    // 컨트롤러랑 서비스 아주 약간 수정했으니까 나중에 확인해봐.
+
+    const user = await this.prisma.user.findUnique({ where: { id } });
+
+    if (!user) {
       throw new NotFoundException(`id ${id} not found`);
     }
-    await this.prisma.user.delete({ where: { id } });
+
+    return this.prisma.user.delete({ where: { id } });
   }
 
   async getUserToken(id: number): Promise<any> {
