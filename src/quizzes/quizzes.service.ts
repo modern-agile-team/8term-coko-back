@@ -18,7 +18,7 @@ export class QuizzesService {
   ) {}
 
   private async findSectionById(id: number) {
-    const section = await this.sectionsRepository.findOneSectionById({ id });
+    const section = await this.sectionsRepository.findOneSectionById(id);
 
     if (!section) {
       throw new NotFoundException();

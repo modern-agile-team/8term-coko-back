@@ -1,6 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-
+//스웨거에 이름유니크랑 파트참조 하는 문제 있다고 써야함
 export const ApiParts = {
   create: () => {
     return applyDecorators(
@@ -8,18 +8,8 @@ export const ApiParts = {
         summary: 'section 생성',
       }),
       ApiResponse({
-        status: 201,
+        status: 204,
         description: 'sections가 성공적으로 생성됨',
-        content: {
-          JSON: {
-            example: {
-              id: 2,
-              name: 'JSON',
-              createdAt: '2024-11-04T10:42:17.052Z',
-              updatedAt: '2024-11-04T10:42:17.052Z',
-            },
-          },
-        },
       }),
       ApiResponse({
         status: 400,

@@ -54,6 +54,12 @@ export class QuizzesRepository {
     });
   }
 
+  async findOneByPartId(partId: number): Promise<Quiz> {
+    return this.prisma.quiz.findFirst({
+      where: { partId },
+    });
+  }
+
   async createQuiz(data: CreateQuizDto): Promise<Quiz> {
     return this.prisma.quiz.create({
       data,

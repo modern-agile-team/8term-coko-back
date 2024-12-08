@@ -1,7 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateSectionDto } from './dto/create-section.dto';
-import { ReqSectionDto } from './dto/req-section.dto';
 import { ResSectionDto } from './dto/res-section.dto';
 
 export const ApiSections = {
@@ -57,7 +56,7 @@ export const ApiSections = {
       ApiResponse({
         status: 200,
         description: 'section의 전체 id , name 을 조회함',
-        type: ReqSectionDto,
+        type: ResSectionDto,
         isArray: true,
         content: {
           JSON: {

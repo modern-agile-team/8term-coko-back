@@ -17,7 +17,7 @@ export class PartsRepository {
     });
   }
 
-  async findOnePartByName({ name }): Promise<ResPartDto> {
+  async findOnePartByName(name: string): Promise<ResPartDto> {
     return this.prisma.part.findUnique({
       where: { name },
     });
@@ -35,7 +35,7 @@ export class PartsRepository {
     });
   }
 
-  async deletePartById({ id }): Promise<ResPartDto> {
+  async deletePartById(id: number): Promise<ResPartDto> {
     return this.prisma.part.delete({
       where: { id },
     });

@@ -4,41 +4,17 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreatePartDto } from './dto/create-part.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { PartsRepository } from './parts.repository';
-import { SectionsRepository } from 'src/sections/sections.repository';
-import { ResPartDto } from './dto/res-part.part.dto';
-import { ReqPartDto } from './dto/req-part.part.dto';
+import { SectionsService } from 'src/sections/sections.service';
+import { QuizzesRepository } from 'src/quizzes/quizzes.repository';
 
 @Injectable()
 export class PartsService {
   constructor(
-    private readonly prisma: PrismaService,
     private readonly partsRepository: PartsRepository,
-    private readonly sectionsRepository: SectionsRepository,
+    private readonly sectionsService: SectionsService,
+    private readonly quizzesRepository: QuizzesRepository,
   ) {}
-
-  async create(createPartDto: CreatePartDto) {
-    const { sectionId } = createPartDto;
-
-    const section = await this.sectionsRepository.findOneSectionById({
-      id: sectionId,
-    });
-
-    if (!section) {
-      throw new NotFoundException();
-    }
-
-    const part = await this.partsRepository.findOnePartByName(createPartDto);
-
-    if (part) {
-      throw new ConflictException(); //수정사항
-    }
-
-    const newPart = await this.partsRepository.createPartById(createPartDto);
-    return new ResPartDto(newPart);
-  }
-
   async findOne(id: number) {
     const part = await this.partsRepository.findOnePartById(id);
 
@@ -50,32 +26,36 @@ export class PartsService {
   }
 
   async findAll() {
-    const parts = await this.partsRepository.findAllPart();
-    return ResPartDto.fromArray(parts);
+    return this.partsRepository.findAllPart();
   }
 
-  async remove(partDto: ReqPartDto) {
-    const { id } = partDto;
+  async create(body: CreatePartDto) {
+    const { sectionId, name } = body;
 
+    await this.sectionsService.findOne(sectionId);
+
+    const part = await this.partsRepository.findOnePartByName(name);
+
+    if (part) {
+      throw new ConflictException('part의 이름은 유니크 해야합니다.');
+    }
+
+    return this.partsRepository.createPartById(body);
+  }
+
+  async remove(id: number) {
     const part = await this.partsRepository.findOnePartById(id);
 
     if (!part) {
-      throw new NotFoundException(); //수정사항
+      throw new NotFoundException();
     }
 
-    // 수정사항
-    const quiz = await this.prisma.quiz.findFirst({
-      where: {
-        partId: id,
-      },
-    });
-    //
+    const quiz = await this.quizzesRepository.findOneByPartId(id);
 
     if (quiz) {
       throw new ConflictException('파트를 참조하고 있는 문제데이터가 있음');
     }
 
-    const deletePartInfo = await this.partsRepository.deletePartById(partDto);
-    return new ResPartDto(deletePartInfo);
+    return this.partsRepository.deletePartById(id);
   }
 }
