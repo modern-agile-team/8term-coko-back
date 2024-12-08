@@ -39,6 +39,16 @@ export class PartsService {
     return new ResPartDto(newPart);
   }
 
+  async findOne(id: number) {
+    const part = await this.partsRepository.findOnePartById(id);
+
+    if (!part) {
+      throw new NotFoundException();
+    }
+
+    return part;
+  }
+
   async findAll() {
     const parts = await this.partsRepository.findAllPart();
     return ResPartDto.fromArray(parts);
@@ -47,7 +57,7 @@ export class PartsService {
   async remove(partDto: ReqPartDto) {
     const { id } = partDto;
 
-    const part = await this.partsRepository.findOnePartById(partDto);
+    const part = await this.partsRepository.findOnePartById(id);
 
     if (!part) {
       throw new NotFoundException(); //수정사항

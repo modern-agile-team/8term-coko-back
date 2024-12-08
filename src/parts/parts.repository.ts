@@ -11,7 +11,7 @@ export class PartsRepository {
     return this.prisma.part.findMany();
   }
 
-  async findOnePartById({ id }): Promise<ResPartDto> {
+  async findOnePartById(id: number): Promise<ResPartDto> {
     return this.prisma.part.findUnique({
       where: { id },
     });

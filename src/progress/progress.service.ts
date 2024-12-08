@@ -34,22 +34,6 @@ export class ProgressService {
   //
 
   //
-  private async findQuizById(id: number) {
-    const quiz = await this.prisma.quiz.findUnique({
-      where: {
-        id,
-      },
-    });
-
-    if (!quiz) {
-      throw new NotFoundException();
-    }
-
-    return quiz;
-  }
-  //
-
-  //
   private async findSectionById(id: number) {
     const section = await this.prisma.section.findUnique({
       where: {
@@ -62,22 +46,6 @@ export class ProgressService {
     }
 
     return section;
-  }
-  //
-
-  //
-  private async findPartById(id: number) {
-    const part = await this.prisma.part.findUnique({
-      where: {
-        id,
-      },
-    });
-
-    if (!part) {
-      throw new NotFoundException();
-    }
-
-    return part;
   }
   //
 
@@ -108,7 +76,7 @@ export class ProgressService {
     }
 
     if (partId) {
-      await this.findPartById(partId);
+      await this.partsService.findOne(partId);
     }
 
     const totalQuizCount = await this.countQuizBySectionIdOrPartId(query);
@@ -137,7 +105,7 @@ export class ProgressService {
     quizId: number,
     body: CreateProgressDto,
   ) {
-    await this.findQuizById(quizId);
+    await this.quizzesService.getQuiz(quizId);
 
     await this.findUserById(userId);
 

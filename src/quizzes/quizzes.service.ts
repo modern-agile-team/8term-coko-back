@@ -28,7 +28,7 @@ export class QuizzesService {
   }
 
   private async findPartById(id: number) {
-    const part = await this.partsRepository.findOnePartById({ id });
+    const part = await this.partsRepository.findOnePartById(id);
 
     if (!part) {
       throw new NotFoundException();
