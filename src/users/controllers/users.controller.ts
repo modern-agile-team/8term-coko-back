@@ -26,19 +26,19 @@ export class UsersController {
 
   @ApiGetAllUsers()
   @Get()
-  getAllUsers() {
+  async getAllUsers() {
     return this.usersService.getAllUsers();
   }
 
   @ApiGetUser()
   @Get(':id')
-  getUser(@Param('id', PositiveIntPipe) userId: number) {
+  async getUser(@Param('id', PositiveIntPipe) userId: number) {
     return this.usersService.getUser(userId);
   }
 
   @ApiUpdateUser()
   @Patch(':id')
-  updateUser(
+  async updateUser(
     @Param('id', PositiveIntPipe) userId: number,
     @Body() updateUserData: UpdateUserDto,
   ): Promise<ResponseUserDto> {
@@ -47,13 +47,13 @@ export class UsersController {
 
   @ApiDeleteUser()
   @Delete(':id')
-  remove(@Param('id', PositiveIntPipe) userId: number) {
-    this.usersService.deleteUser(userId);
+  async remove(@Param('id', PositiveIntPipe) userId: number) {
+    await this.usersService.deleteUser(userId);
     return { statusCode: 204, message: 'No Content' };
   }
 
   @Get(':id/token')
-  getUserToken(@Param('id', PositiveIntPipe) userId: number) {
+  async getUserToken(@Param('id', PositiveIntPipe) userId: number) {
     return this.usersService.getUserToken(userId);
   }
 }

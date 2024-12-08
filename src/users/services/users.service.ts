@@ -35,11 +35,14 @@ export class UsersService {
     return new ResponseUserDto(userResponse);
   }
 
-  async deleteUser(id: number): Promise<void> {
-    if (!(await this.prisma.user.findUnique({ where: { id } }))) {
+  async deleteUser(id: number): Promise<any> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+
+    if (!user) {
       throw new NotFoundException(`id ${id} not found`);
     }
-    await this.prisma.user.delete({ where: { id } });
+
+    return this.prisma.user.delete({ where: { id } });
   }
 
   async getUserToken(id: number): Promise<any> {
