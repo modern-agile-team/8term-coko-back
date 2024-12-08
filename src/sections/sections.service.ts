@@ -5,73 +5,66 @@ import {
 } from '@nestjs/common';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { SectionsRepository } from './sections.repository';
-import { ReqSectionDto } from './dto/req-section.dto';
 import { ResSectionDto } from './dto/res-section.dto';
+import { PartsRepository } from 'src/parts/parts.repository';
 
 @Injectable()
 export class SectionsService {
-  constructor(private readonly sectionsRepository: SectionsRepository) {}
+  constructor(
+    private readonly sectionsRepository: SectionsRepository,
+    private readonly partsRepository: PartsRepository,
+  ) {}
 
   async findAll() {
-    const sections = await this.sectionsRepository.findAllSections();
-
-    return ResSectionDto.fromArray(sections);
+    return this.sectionsRepository.findAllSections();
   }
 
-  async findOne(sectionDto: ReqSectionDto) {
-    const section =
-      await this.sectionsRepository.findSectionWithPartsById(sectionDto);
+  async findOne(id: number): Promise<ResSectionDto> {
+    const section = await this.sectionsRepository.findOneSectionById(id);
 
     if (!section) {
       throw new NotFoundException();
     }
 
-    return new ResSectionDto(section);
+    return section;
   }
 
-  async create(createSectionDto: CreateSectionDto): Promise<ResSectionDto> {
-    const section =
-      await this.sectionsRepository.findOneSectionByName(createSectionDto);
+  async findOneWithParts(id: number): Promise<ResSectionDto> {
+    const sectionWithParts =
+      await this.sectionsRepository.findSectionWithPartsById(id);
+
+    if (!sectionWithParts) {
+      throw new NotFoundException();
+    }
+
+    return sectionWithParts;
+  }
+
+  async create(body: CreateSectionDto): Promise<ResSectionDto> {
+    const section = await this.sectionsRepository.findOneSectionByName(body);
 
     if (section) {
       throw new ConflictException();
     }
 
-    const newSection =
-      await this.sectionsRepository.createSection(CreateSectionDto);
-    return new ResSectionDto(newSection);
+    return this.sectionsRepository.createSection(body);
   }
 
-  async update(sectionDto: ReqSectionDto): Promise<ResSectionDto> {
-    const section =
-      await this.sectionsRepository.findOneSectionById(sectionDto);
+  async update(id: number, body: CreateSectionDto): Promise<ResSectionDto> {
+    await this.findOne(id);
 
-    if (!section) {
-      throw new NotFoundException();
-    }
-
-    const updateSection =
-      await this.sectionsRepository.updateSectionById(sectionDto);
-    return new ResSectionDto(updateSection);
+    return this.sectionsRepository.updateSectionById(body);
   }
 
-  async remove(sectionDto: ReqSectionDto): Promise<ResSectionDto> {
-    const section =
-      await this.sectionsRepository.findOneSectionById(sectionDto);
+  async remove(id: number): Promise<ResSectionDto> {
+    await this.findOne(id);
 
-    if (!section) {
-      throw new NotFoundException();
-    }
-
-    const part =
-      await this.sectionsRepository.findOnePartBySectionId(sectionDto);
+    const part = await this.partsRepository.findOnePartBySectionId(id);
 
     if (part) {
       throw new ConflictException('섹션을 참조하고 있는 파트가 있음');
     }
 
-    const deleteSectionInfo =
-      await this.sectionsRepository.deleteSectionById(sectionDto);
-    return new ResSectionDto(deleteSectionInfo);
+    return this.sectionsRepository.deleteSectionById(id);
   }
 }

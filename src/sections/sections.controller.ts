@@ -30,7 +30,7 @@ export class SectionsController {
   @ApiSections.findOne()
   @Get(':id')
   async findOne(@Param('id', PositiveIntPipe) id: number) {
-    const sectionWithParts = await this.sectionsService.findOne(id);
+    const sectionWithParts = await this.sectionsService.findOneWithParts(id);
     return new ResSectionDto(sectionWithParts);
   }
 
