@@ -13,7 +13,7 @@ import { CreateSectionDto } from './dto/create-section.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiSections } from './sections.swagger';
-import { ResSectionWithPartDto } from './dto/res-section-with-part.dto';
+import { ResSectionDto } from './dto/res-section.dto';
 
 @ApiTags('sections')
 @Controller('sections')
@@ -23,14 +23,15 @@ export class SectionsController {
   @ApiSections.findAll()
   @Get()
   async findAll() {
-    return this.sectionsService.findAll();
+    const sections = await this.sectionsService.findAll();
+    return ResSectionDto.fromArray(sections);
   }
 
   @ApiSections.findOne()
   @Get(':id')
   async findOne(@Param('id', PositiveIntPipe) id: number) {
     const sectionWithParts = await this.sectionsService.findOne(id);
-    return new ResSectionWithPartDto(sectionWithParts);
+    return new ResSectionDto(sectionWithParts);
   }
 
   @ApiSections.create()
@@ -47,13 +48,13 @@ export class SectionsController {
     @Param('id', PositiveIntPipe) id: number,
     @Body() body: CreateSectionDto,
   ): Promise<void> {
-    await this.sectionsService.update(sectionDto);
+    await this.sectionsService.update(id, body);
   }
 
   @ApiSections.remove()
   @Delete(':id')
   @HttpCode(204)
   async remove(@Param('id', PositiveIntPipe) id: number): Promise<void> {
-    await this.sectionsService.remove(sectionDto);
+    await this.sectionsService.remove(id);
   }
 }

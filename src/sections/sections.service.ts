@@ -6,7 +6,7 @@ import {
 import { CreateSectionDto } from './dto/create-section.dto';
 import { SectionsRepository } from './sections.repository';
 import { ReqSectionDto } from './dto/req-section.dto';
-import { ResSectionWithPartDto } from './dto/res-section-with-part.dto';
+import { ResSectionDto } from './dto/res-section.dto';
 
 @Injectable()
 export class SectionsService {
@@ -15,7 +15,7 @@ export class SectionsService {
   async findAll() {
     const sections = await this.sectionsRepository.findAllSections();
 
-    return ResSectionWithPartDto.fromArray(sections);
+    return ResSectionDto.fromArray(sections);
   }
 
   async findOne(sectionDto: ReqSectionDto) {
@@ -26,12 +26,10 @@ export class SectionsService {
       throw new NotFoundException();
     }
 
-    return new ResSectionWithPartDto(section);
+    return new ResSectionDto(section);
   }
 
-  async create(
-    createSectionDto: CreateSectionDto,
-  ): Promise<ResSectionWithPartDto> {
+  async create(createSectionDto: CreateSectionDto): Promise<ResSectionDto> {
     const section =
       await this.sectionsRepository.findOneSectionByName(createSectionDto);
 
@@ -41,10 +39,10 @@ export class SectionsService {
 
     const newSection =
       await this.sectionsRepository.createSection(CreateSectionDto);
-    return new ResSectionWithPartDto(newSection);
+    return new ResSectionDto(newSection);
   }
 
-  async update(sectionDto: ReqSectionDto): Promise<ResSectionWithPartDto> {
+  async update(sectionDto: ReqSectionDto): Promise<ResSectionDto> {
     const section =
       await this.sectionsRepository.findOneSectionById(sectionDto);
 
@@ -54,10 +52,10 @@ export class SectionsService {
 
     const updateSection =
       await this.sectionsRepository.updateSectionById(sectionDto);
-    return new ResSectionWithPartDto(updateSection);
+    return new ResSectionDto(updateSection);
   }
 
-  async remove(sectionDto: ReqSectionDto): Promise<ResSectionWithPartDto> {
+  async remove(sectionDto: ReqSectionDto): Promise<ResSectionDto> {
     const section =
       await this.sectionsRepository.findOneSectionById(sectionDto);
 
@@ -74,6 +72,6 @@ export class SectionsService {
 
     const deleteSectionInfo =
       await this.sectionsRepository.deleteSectionById(sectionDto);
-    return new ResSectionWithPartDto(deleteSectionInfo);
+    return new ResSectionDto(deleteSectionInfo);
   }
 }

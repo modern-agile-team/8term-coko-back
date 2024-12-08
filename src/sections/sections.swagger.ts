@@ -2,7 +2,7 @@ import { applyDecorators } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { ReqSectionDto } from './dto/req-section.dto';
-import { ResSectionWithPartDto } from './dto/res-section-with-part.dto';
+import { ResSectionDto } from './dto/res-section.dto';
 
 export const ApiSections = {
   create: () => {
@@ -95,7 +95,7 @@ export const ApiSections = {
         status: 200,
         description:
           '특정 section의 id param값을 통해 id, nmae 값을 조회 또한 id를 참조하는 part객체들을 배열로 보냄',
-        type: ResSectionWithPartDto,
+        type: ResSectionDto,
         content: {
           JSON: {
             example: {
