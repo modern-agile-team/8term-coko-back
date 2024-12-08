@@ -41,7 +41,8 @@ export class SectionsService {
   }
 
   async create(body: CreateSectionDto): Promise<ResSectionDto> {
-    const section = await this.sectionsRepository.findOneSectionByName(body);
+    const { name } = body;
+    const section = await this.sectionsRepository.findOneSectionByName(name);
 
     if (section) {
       throw new ConflictException();
@@ -53,7 +54,7 @@ export class SectionsService {
   async update(id: number, body: CreateSectionDto): Promise<ResSectionDto> {
     await this.findOne(id);
 
-    return this.sectionsRepository.updateSectionById(body);
+    return this.sectionsRepository.updateSectionById(id, body);
   }
 
   async remove(id: number): Promise<ResSectionDto> {
