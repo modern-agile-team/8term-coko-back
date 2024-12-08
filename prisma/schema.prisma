@@ -127,7 +127,7 @@ model Token {
   userId             Int     @unique @map("user_id")
   socialAccessToken  String  @map("social_access_token")
   socialRefreshToken String? @map("social_refresh_token")
-  user               User    @relation(fields: [userId], references: [id])
+  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("token")
 }
