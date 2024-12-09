@@ -3,11 +3,13 @@ import { PartProgressService } from './part-progress.service';
 import { CreatePartProgressDto } from './dto/create-part-progress.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { ResPartProgressDto } from './dto/res-part-progress.dto';
+import { ApiPartProgress } from './part-progress.swagger';
 
 @Controller('users/:id/part-progress')
 export class PartProgressController {
   constructor(private readonly partProgressService: PartProgressService) {}
 
+  @ApiPartProgress.findAll()
   @Get()
   async findAll(
     @Param('id', PositiveIntPipe) userId: number,
@@ -16,6 +18,7 @@ export class PartProgressController {
     return ResPartProgressDto.fromArray(partProgress);
   }
 
+  @ApiPartProgress.createOrUpdate()
   @Put('parts/:partId')
   @HttpCode(204)
   async createOrUpdate(
