@@ -6,49 +6,57 @@ import {
   Patch,
   Param,
   Delete,
+  HttpCode,
 } from '@nestjs/common';
 import { SectionsService } from './sections.service';
 import { CreateSectionDto } from './dto/create-section.dto';
-import { UpdateSectionDto } from './dto/update-section.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiSections } from './sections.swagger';
+import { ResSectionDto } from './dto/res-section.dto';
 
 @ApiTags('sections')
 @Controller('sections')
 export class SectionsController {
   constructor(private readonly sectionsService: SectionsService) {}
 
-  @ApiSections.create()
-  @Post()
-  create(@Body() sectionData: CreateSectionDto) {
-    return this.sectionsService.create(sectionData);
-  }
-
   @ApiSections.findAll()
   @Get()
-  findAll() {
-    return this.sectionsService.findAll();
+  async findAll(): Promise<ResSectionDto[]> {
+    const sections = await this.sectionsService.findAll();
+    return ResSectionDto.fromArray(sections);
   }
 
   @ApiSections.findOne()
   @Get(':id')
-  findOne(@Param('id', PositiveIntPipe) id: number) {
-    return this.sectionsService.findOne(id);
+  async findOne(
+    @Param('id', PositiveIntPipe) id: number,
+  ): Promise<ResSectionDto> {
+    const sectionWithParts = await this.sectionsService.findOneWithParts(id);
+    return new ResSectionDto(sectionWithParts);
+  }
+
+  @ApiSections.create()
+  @Post()
+  @HttpCode(204)
+  async create(@Body() body: CreateSectionDto): Promise<void> {
+    await this.sectionsService.create(body);
   }
 
   @ApiSections.update()
   @Patch(':id')
-  update(
+  @HttpCode(204)
+  async update(
     @Param('id', PositiveIntPipe) id: number,
-    @Body() sectionData: UpdateSectionDto,
-  ) {
-    return this.sectionsService.update(id, sectionData);
+    @Body() body: CreateSectionDto,
+  ): Promise<void> {
+    await this.sectionsService.update(id, body);
   }
 
   @ApiSections.remove()
   @Delete(':id')
-  remove(@Param('id', PositiveIntPipe) id: number) {
-    return this.sectionsService.remove(id);
+  @HttpCode(204)
+  async remove(@Param('id', PositiveIntPipe) id: number): Promise<void> {
+    await this.sectionsService.remove(id);
   }
 }
