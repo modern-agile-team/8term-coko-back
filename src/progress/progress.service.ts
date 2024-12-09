@@ -7,6 +7,8 @@ import { QuizzesService } from 'src/quizzes/quizzes.service';
 import { PartsService } from 'src/parts/parts.service';
 import { SectionsService } from 'src/sections/sections.service';
 import { QuizzesRepository } from 'src/quizzes/quizzes.repository';
+import { ResProgressDto } from './dto/res-progress.dto';
+import { Progress } from './entities/progress.entity';
 
 @Injectable()
 export class ProgressService {
@@ -35,7 +37,10 @@ export class ProgressService {
   }
   //
 
-  async findAll(userId: number, query: QueryProgressDto) {
+  async findAll(
+    userId: number,
+    query: QueryProgressDto,
+  ): Promise<ResProgressDto> {
     const { sectionId, partId } = query;
 
     await this.findUserById(userId);
@@ -73,7 +78,7 @@ export class ProgressService {
     userId: number,
     quizId: number,
     body: CreateProgressDto,
-  ) {
+  ): Promise<Progress> {
     await this.quizzesService.findOne(quizId);
 
     await this.findUserById(userId);
