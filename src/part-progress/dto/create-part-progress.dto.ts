@@ -12,6 +12,7 @@ export class CreatePartProgressDto {
         4. COMPLETED
         `,
     example: 'LOCKED',
+    enum: PartStatus,
   })
   @IsEnum(PartStatus, { message: 'bad status value' })
   readonly status: PartStatus;

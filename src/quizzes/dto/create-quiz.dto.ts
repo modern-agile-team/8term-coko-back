@@ -50,6 +50,7 @@ export class CreateQuizDto {
       4. SHORT_ANSWER : 단답형 문제
     `,
     example: 'MULTIPLE_CHOICE',
+    enum: Category,
   })
   @IsEnum(Category, { message: 'bad category value' })
   readonly category: Category;
