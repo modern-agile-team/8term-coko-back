@@ -1,11 +1,18 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { CreateQuizDto } from './dto/create-quiz.dto';
+import { ResQuizDto } from './dto/res-quiz.dto';
+import { UpdateQuizDto } from './dto/update-quiz.dto';
 
 export const ApiQuizzes = {
   createQuiz: () => {
     return applyDecorators(
       ApiOperation({
         summary: '문제 생성',
+      }),
+      ApiBody({
+        description: '섹션 생성에 필요한 정보',
+        type: CreateQuizDto,
       }),
       ApiResponse({
         status: 204,
@@ -89,6 +96,8 @@ export const ApiQuizzes = {
         status: 200,
         description:
           '문제 전체속성을 조회함 & 쿼리를 사용해 특정 섹션과 파트 의 문제를 조회',
+        type: ResQuizDto,
+        isArray: true,
         content: {
           JSON: {
             example: [
@@ -220,6 +229,7 @@ export const ApiQuizzes = {
       ApiResponse({
         status: 200,
         description: '문제 id 통해 특정 한 문제를 조회',
+        type: ResQuizDto,
         content: {
           JSON: {
             example: {
@@ -273,6 +283,8 @@ export const ApiQuizzes = {
         status: 200,
         description:
           '유저 id 통해 진행도에서 틀렸던 문제를 확인 후 문제를 보냄',
+        type: ResQuizDto,
+        isArray: true,
         content: {
           JSON: {
             example: [
@@ -348,6 +360,10 @@ export const ApiQuizzes = {
     return applyDecorators(
       ApiOperation({
         summary: '단일 문제 수정',
+      }),
+      ApiBody({
+        description: '섹션 생성에 필요한 정보',
+        type: UpdateQuizDto,
       }),
       ApiResponse({
         status: 204,
