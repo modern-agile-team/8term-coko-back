@@ -1,6 +1,4 @@
-import { Category } from '@prisma/client';
-import { CreateQuizDto } from './create-quiz.dto';
-import { UpdateQuizDto } from './update-quiz.dto';
+import { Category } from '../entities/quizzes.entity';
 
 export class ResQuizDto {
   readonly id: number;
