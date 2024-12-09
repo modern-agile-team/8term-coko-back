@@ -1,6 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-//스웨거에 이름유니크랑 파트참조 하는 문제 있다고 써야함
+//스웨거에  파트참조 하는 문제 있다고 써야함
 export const ApiParts = {
   create: () => {
     return applyDecorators(
@@ -36,6 +36,19 @@ export const ApiParts = {
               ],
               error: 'Bad Request',
               statusCode: 400,
+            },
+          },
+        },
+      }),
+      ApiResponse({
+        status: 409,
+        description: 'part의 name속성은 유니크 입니다.',
+        content: {
+          JSON: {
+            example: {
+              message: 'part의 이름은 유니크 해야합니다.',
+              error: 'Conflict',
+              statusCode: 409,
             },
           },
         },
@@ -129,7 +142,7 @@ export const ApiParts = {
         content: {
           JSON: {
             example: {
-              message: '파트를 참조하고 있는 문제데이터가 있음',
+              message: '파트를 참조하고 있는 문제가 있음',
               error: 'Conflict',
               statusCode: 409,
             },

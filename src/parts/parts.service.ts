@@ -11,8 +11,8 @@ import { QuizzesRepository } from 'src/quizzes/quizzes.repository';
 @Injectable()
 export class PartsService {
   constructor(
-    private readonly partsRepository: PartsRepository,
     private readonly sectionsService: SectionsService,
+    private readonly partsRepository: PartsRepository,
     private readonly quizzesRepository: QuizzesRepository,
   ) {}
   async findOne(id: number) {
@@ -53,7 +53,7 @@ export class PartsService {
     const quiz = await this.quizzesRepository.findOneByPartId(id);
 
     if (quiz) {
-      throw new ConflictException('파트를 참조하고 있는 문제데이터가 있음');
+      throw new ConflictException('파트를 참조하고 있는 문제가 있음');
     }
 
     return this.partsRepository.deletePartById(id);

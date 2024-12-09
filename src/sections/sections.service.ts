@@ -63,7 +63,7 @@ export class SectionsService {
     const part = await this.partsRepository.findOnePartBySectionId(id);
 
     if (part) {
-      throw new ConflictException('섹션을 참조하고 있는 파트데이터가 있음');
+      throw new ConflictException('섹션을 참조하고 있는 파트가 있음');
     }
 
     return this.sectionsRepository.deleteSectionById(id);
