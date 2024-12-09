@@ -1,10 +1,19 @@
-import { Controller, Get, Body, Param, Query, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Param,
+  Query,
+  Put,
+  HttpCode,
+} from '@nestjs/common';
 import { ProgressService } from './progress.service';
 import { CreateProgressDto } from './dto/create-progress.dto';
 import { QueryProgressDto } from './dto/query-progress.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiProgress } from './progress.swagger';
+import { ResProgressDto } from './dto/res-progress.dto';
 
 @ApiTags('progress')
 @Controller('users/:id/progress')
@@ -13,20 +22,22 @@ export class ProgressController {
 
   @ApiProgress.findAll()
   @Get()
-  findAll(
+  async findAll(
     @Param('id', PositiveIntPipe) userId: number,
     @Query() query: QueryProgressDto,
   ) {
-    return this.progressService.findAll(userId, query);
+    const progress = await this.progressService.findAll(userId, query);
+    return new ResProgressDto(progress);
   }
 
   @ApiProgress.createOrUpdate()
   @Put('quizzes/:quizId')
-  createOrUpdate(
+  @HttpCode(204)
+  async createOrUpdate(
     @Param('id', PositiveIntPipe) userId: number,
     @Param('quizId', PositiveIntPipe) quizId: number,
     @Body() body: CreateProgressDto,
   ) {
-    return this.progressService.createOrUpdate(userId, quizId, body);
+    await this.progressService.createOrUpdate(userId, quizId, body);
   }
 }
