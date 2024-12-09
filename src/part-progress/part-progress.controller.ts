@@ -4,7 +4,9 @@ import { CreatePartProgressDto } from './dto/create-part-progress.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { ResPartProgressDto } from './dto/res-part-progress.dto';
 import { ApiPartProgress } from './part-progress.swagger';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('part-progress')
 @Controller('users/:id/part-progress')
 export class PartProgressController {
   constructor(private readonly partProgressService: PartProgressService) {}
