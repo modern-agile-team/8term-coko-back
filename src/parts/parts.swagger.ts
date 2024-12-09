@@ -1,6 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-//스웨거에  파트참조 하는 문제 있다고 써야함
+
 export const ApiParts = {
   create: () => {
     return applyDecorators(

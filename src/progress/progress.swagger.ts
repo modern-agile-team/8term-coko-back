@@ -7,6 +7,10 @@ export const ApiProgress = {
       ApiOperation({
         summary: '',
       }),
+      ApiResponse({
+        //status: 204,
+        //description: '새 문제가 성공적으로 생성됨',
+      }),
     );
   },
   createOrUpdate: () => {

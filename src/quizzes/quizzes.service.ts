@@ -71,17 +71,21 @@ export class QuizzesService {
   }
 
   async create(body: CreateQuizDto): Promise<Quiz> {
+    const { partId } = body;
+
+    await this.partsService.findOne(partId);
+
     return this.quizzesRepository.createQuiz(body);
   }
 
-  async update(id: number, data: UpdateQuizDto): Promise<Quiz> {
-    const { partId } = data;
+  async update(id: number, body: UpdateQuizDto): Promise<Quiz> {
+    const { partId } = body;
 
     await this.findOne(id);
 
     await this.partsService.findOne(partId);
 
-    return this.quizzesRepository.updateQuizById(id, data);
+    return this.quizzesRepository.updateQuizById(id, body);
   }
 
   async remove(id: number): Promise<Quiz> {
