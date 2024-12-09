@@ -1,30 +1,22 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { CreateQuizDto } from './dto/create-quiz.dto';
+import { ResQuizDto } from './dto/res-quiz.dto';
+import { UpdateQuizDto } from './dto/update-quiz.dto';
 
 export const ApiQuizzes = {
-  create: () => {
+  createQuiz: () => {
     return applyDecorators(
       ApiOperation({
         summary: '문제 생성',
       }),
+      ApiBody({
+        description: '섹션 생성에 필요한 정보',
+        type: CreateQuizDto,
+      }),
       ApiResponse({
-        status: 201,
+        status: 204,
         description: '새 문제가 성공적으로 생성됨',
-        content: {
-          JSON: {
-            example: {
-              id: 4,
-              partId: 1,
-              title: '다음 보기를 보고 문제를 완성하세요',
-              question: 'const num : number = 6 ',
-              answer: [':number'],
-              answerChoice: ['const', 'num', ':number', '6'],
-              category: 'SHORT_ANSWER',
-              createdAt: '2024-11-04T05:13:12.363Z',
-              updatedAt: '2024-11-04T05:13:12.363Z',
-            },
-          },
-        },
       }),
       ApiResponse({
         status: 404,
@@ -95,7 +87,7 @@ export const ApiQuizzes = {
       }),
     );
   },
-  findAll: () => {
+  getQuizzes: () => {
     return applyDecorators(
       ApiOperation({
         summary: '문제 전체 조회 & 쿼리를 사용한 부분 조회',
@@ -104,88 +96,8 @@ export const ApiQuizzes = {
         status: 200,
         description:
           '문제 전체속성을 조회함 & 쿼리를 사용해 특정 섹션과 파트 의 문제를 조회',
-        content: {
-          JSON: {
-            example: [
-              {
-                id: 10,
-                partId: 5,
-                title: '문제의 출력 결과는?',
-                question:
-                  'const a = 10;\nlet b = "안녕";\nconsole.log(`${a}는${b}`);',
-                answer: ['10는안녕'],
-                answerChoice: [],
-                category: 'SHORT_ANSWER',
-                createdAt: '2024-11-04T15:45:11.575Z',
-                updatedAt: '2024-11-06T04:29:35.281Z',
-              },
-              {
-                id: 9,
-                partId: 5,
-                title: 'O,X중 하나를 골라주세요',
-                question:
-                  '자바스크립트에서 const로 선언한 변수는 재할당이 불가능하다.',
-                answer: ['O'],
-                answerChoice: [],
-                category: 'OX_SELECTOR',
-                createdAt: '2024-11-01T11:13:34.722Z',
-                updatedAt: '2024-11-01T11:13:34.722Z',
-              },
-              {
-                id: 8,
-                partId: 5,
-                title: '빈칸을 채우시오',
-                question: '#empty# x = 5;',
-                answer: ['let'],
-                answerChoice: [
-                  'let',
-                  'defin',
-                  'function',
-                  'write',
-                  'int',
-                  'new',
-                ],
-                category: 'COMBINATION',
-                createdAt: '2024-11-01T11:12:43.352Z',
-                updatedAt: '2024-11-01T11:12:43.352Z',
-              },
-              {
-                id: 7,
-                partId: 5,
-                title: '다음 중 옳은것은?',
-                question:
-                  '자바스크립트에서 변수를 선언할 때 사용할 수 없는 키워드는 무엇인가요?',
-                answer: ['define'],
-                answerChoice: ['let', 'const', 'var', 'define'],
-                category: 'MULTIPLE_CHOICE',
-                createdAt: '2024-11-01T11:10:42.395Z',
-                updatedAt: '2024-11-01T11:10:42.395Z',
-              },
-              {
-                id: 6,
-                partId: 5,
-                title: '변수에 값을 넣는 방법으로 올바른 키워드를 고르시오',
-                question: 'let a ? 10',
-                answer: ['='],
-                answerChoice: ['=', '!', '@', '^'],
-                category: 'MULTIPLE_CHOICE',
-                createdAt: '2024-11-01T10:52:09.884Z',
-                updatedAt: '2024-11-01T10:54:23.096Z',
-              },
-              {
-                id: 5,
-                partId: 5,
-                title: '맞을까요?',
-                question: 'let 10 + a;',
-                answer: ['X'],
-                answerChoice: [],
-                category: 'OX_SELECTOR',
-                createdAt: '2024-11-01T10:49:26.457Z',
-                updatedAt: '2024-11-01T10:49:26.457Z',
-              },
-            ],
-          },
-        },
+        type: ResQuizDto,
+        isArray: true,
       }),
       ApiResponse({
         status: 404,
@@ -227,7 +139,7 @@ export const ApiQuizzes = {
       }),
     );
   },
-  findOne: () => {
+  getQuiz: () => {
     return applyDecorators(
       ApiOperation({
         summary: '문제 단일 조회',
@@ -235,6 +147,7 @@ export const ApiQuizzes = {
       ApiResponse({
         status: 200,
         description: '문제 id 통해 특정 한 문제를 조회',
+        type: ResQuizDto,
         content: {
           JSON: {
             example: {
@@ -279,7 +192,7 @@ export const ApiQuizzes = {
       }),
     );
   },
-  findAllProgressIncorrect: () => {
+  getQuizzesProgressIncorrect: () => {
     return applyDecorators(
       ApiOperation({
         summary: '유저가 틀렸던 문제 조회',
@@ -288,6 +201,8 @@ export const ApiQuizzes = {
         status: 200,
         description:
           '유저 id 통해 진행도에서 틀렸던 문제를 확인 후 문제를 보냄',
+        type: ResQuizDto,
+        isArray: true,
         content: {
           JSON: {
             example: [
@@ -332,7 +247,7 @@ export const ApiQuizzes = {
         },
       }),
       ApiResponse({
-        status: 404,
+        status: 400,
         description: '쿼리 sectionId 또는 partId가 양수가 아님',
         content: {
           JSON: {
@@ -345,7 +260,7 @@ export const ApiQuizzes = {
         },
       }),
       ApiResponse({
-        status: 404,
+        status: 400,
         description: '쿼리 sectionId 또는 partId가 정수가 아님',
         content: {
           JSON: {
@@ -359,29 +274,18 @@ export const ApiQuizzes = {
       }),
     );
   },
-  update: () => {
+  updateQuiz: () => {
     return applyDecorators(
       ApiOperation({
         summary: '단일 문제 수정',
       }),
+      ApiBody({
+        description: '섹션 생성에 필요한 정보',
+        type: UpdateQuizDto,
+      }),
       ApiResponse({
-        status: 200,
+        status: 204,
         description: '문제의 id param값을 통해 단일 문제 수정',
-        content: {
-          JSON: {
-            example: {
-              id: 1,
-              partId: 1,
-              title: '예상출력을 작성하세요',
-              question: 'function add(a , b){ return a+b}',
-              answer: ['5'],
-              answerChoice: ['function', 'add(a, b)'],
-              category: 'MULTIPLE_CHOICE',
-              createdAt: '2024-10-31T08:31:11.300Z',
-              updatedAt: '2024-11-06T08:34:23.658Z',
-            },
-          },
-        },
       }),
       ApiResponse({
         status: 404,
@@ -426,29 +330,14 @@ export const ApiQuizzes = {
       }),
     );
   },
-  remove: () => {
+  deleteQuiz: () => {
     return applyDecorators(
       ApiOperation({
         summary: '단일 문제 삭제',
       }),
       ApiResponse({
-        status: 200,
+        status: 204,
         description: '문제의 id param값을 통해 단일 문제 삭제',
-        content: {
-          JSON: {
-            example: {
-              id: 1,
-              partId: 1,
-              title: '예상출력을 작성하세요',
-              question: 'function add(a , b){ return a+b}',
-              answer: ['5'],
-              answerChoice: ['function', 'add(a, b)'],
-              category: 'MULTIPLE_CHOICE',
-              createdAt: '2024-10-31T08:31:11.300Z',
-              updatedAt: '2024-11-06T08:38:53.958Z',
-            },
-          },
-        },
       }),
       ApiResponse({
         status: 404,

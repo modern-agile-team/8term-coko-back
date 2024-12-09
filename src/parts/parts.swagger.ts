@@ -1,5 +1,7 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { CreatePartDto } from './dto/create-part.dto';
+import { ResPartDto } from './dto/res-part.part.dto';
 
 export const ApiParts = {
   create: () => {
@@ -7,19 +9,14 @@ export const ApiParts = {
       ApiOperation({
         summary: 'section 생성',
       }),
+      ApiBody({
+        description: '섹션 생성에 필요한 정보',
+        type: CreatePartDto,
+      }),
+
       ApiResponse({
-        status: 201,
+        status: 204,
         description: 'sections가 성공적으로 생성됨',
-        content: {
-          JSON: {
-            example: {
-              id: 2,
-              name: 'JSON',
-              createdAt: '2024-11-04T10:42:17.052Z',
-              updatedAt: '2024-11-04T10:42:17.052Z',
-            },
-          },
-        },
       }),
       ApiResponse({
         status: 400,
@@ -50,6 +47,19 @@ export const ApiParts = {
           },
         },
       }),
+      ApiResponse({
+        status: 409,
+        description: 'part의 name속성은 유니크 입니다.',
+        content: {
+          JSON: {
+            example: {
+              message: 'part의 이름은 유니크 해야합니다.',
+              error: 'Conflict',
+              statusCode: 409,
+            },
+          },
+        },
+      }),
     );
   },
   findAll: () => {
@@ -60,6 +70,8 @@ export const ApiParts = {
       ApiResponse({
         status: 200,
         description: '파트의 id, 상위섹션 id, 파트의 name을 전체 조회함',
+        type: ResPartDto,
+        isArray: true,
         content: {
           JSON: {
             example: [
@@ -82,19 +94,8 @@ export const ApiParts = {
         summary: '문제파트 단일 삭제',
       }),
       ApiResponse({
-        status: 200,
+        status: 204,
         description: '특정 파트의 id param값을 통해 단일 파트 삭제',
-        content: {
-          JSON: {
-            example: {
-              id: 1,
-              sectionId: 1,
-              name: 'argument',
-              createdAt: '2024-10-31T08:31:03.580Z',
-              updatedAt: '2024-10-31T08:31:03.580Z',
-            },
-          },
-        },
       }),
       ApiResponse({
         status: 404,
@@ -139,7 +140,7 @@ export const ApiParts = {
         content: {
           JSON: {
             example: {
-              message: '파트를 참조하고 있는 문제데이터가 있음',
+              message: '파트를 참조하고 있는 문제가 있음',
               error: 'Conflict',
               statusCode: 409,
             },

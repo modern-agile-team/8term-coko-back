@@ -2,11 +2,26 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProgressDto } from './dto/create-progress.dto';
 import { QueryProgressDto } from './dto/query-progress.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ProgressRepository } from './progress.repository';
+import { QuizzesService } from 'src/quizzes/quizzes.service';
+import { PartsService } from 'src/parts/parts.service';
+import { SectionsService } from 'src/sections/sections.service';
+import { QuizzesRepository } from 'src/quizzes/quizzes.repository';
+import { ResProgressDto } from './dto/res-progress.dto';
+import { Progress } from './entities/progress.entity';
 
 @Injectable()
 export class ProgressService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly progressRepository: ProgressRepository,
+    private readonly sectionsService: SectionsService,
+    private readonly partsService: PartsService,
+    private readonly quizzesService: QuizzesService,
+    private readonly quizzesRepository: QuizzesRepository,
+  ) {}
 
+  // 추후 수정사항
   private async findUserById(id: number) {
     const user = await this.prisma.user.findUnique({
       where: {
@@ -18,109 +33,33 @@ export class ProgressService {
       throw new NotFoundException();
     }
 
-    return user.id;
+    return user;
   }
+  //
 
-  private async findQuizById(id: number) {
-    const quiz = await this.prisma.quiz.findUnique({
-      where: {
-        id,
-      },
-    });
-
-    if (!quiz) {
-      throw new NotFoundException();
-    }
-
-    return quiz;
-  }
-
-  private async findSectionById(id: number) {
-    const section = await this.prisma.section.findUnique({
-      where: {
-        id,
-      },
-    });
-
-    if (!section) {
-      throw new NotFoundException();
-    }
-
-    return section;
-  }
-
-  private async findPartById(id: number) {
-    const part = await this.prisma.part.findUnique({
-      where: {
-        id,
-      },
-    });
-
-    if (!part) {
-      throw new NotFoundException();
-    }
-
-    return part;
-  }
-
-  private async countQuizBySectionIdOrPartId(query: QueryProgressDto) {
-    const { sectionId, partId } = query;
-
-    return this.prisma.quiz.count({
-      where: {
-        part: {
-          ...(partId && { id: partId }),
-          section: {
-            ...(sectionId && { id: sectionId }),
-          },
-        },
-      },
-    });
-  }
-
-  private async countUserProgressBySectionIdOrPartId(
+  async findAll(
     userId: number,
     query: QueryProgressDto,
-    option?: { isCorrect: boolean },
-  ) {
-    const { sectionId, partId } = query;
-
-    return this.prisma.progress.count({
-      where: {
-        userId,
-        ...option,
-        quiz: {
-          part: {
-            ...(partId && { id: partId }),
-            section: {
-              ...(sectionId && { id: sectionId }),
-            },
-          },
-        },
-      },
-    });
-  }
-
-  async findAll(userId: number, query: QueryProgressDto) {
+  ): Promise<ResProgressDto> {
     const { sectionId, partId } = query;
 
     await this.findUserById(userId);
 
     if (sectionId) {
-      await this.findSectionById(sectionId);
+      await this.sectionsService.findOne(sectionId);
     }
 
     if (partId) {
-      await this.findPartById(partId);
+      await this.partsService.findOne(partId);
     }
 
-    const totalQuizCount = await this.countQuizBySectionIdOrPartId(query);
+    const totalQuizCount = await this.quizzesRepository.countQuizByQuery(query);
 
     const totalUserProgressCount =
-      await this.countUserProgressBySectionIdOrPartId(userId, query);
+      await this.progressRepository.countProgressByQuery(userId, query);
 
     const correctUserProgressCount =
-      await this.countUserProgressBySectionIdOrPartId(userId, query, {
+      await this.progressRepository.countProgressByQuery(userId, query, {
         isCorrect: true,
       });
 
@@ -138,29 +77,12 @@ export class ProgressService {
   async createOrUpdate(
     userId: number,
     quizId: number,
-    data: CreateProgressDto,
-  ) {
-    await this.findQuizById(quizId);
+    body: CreateProgressDto,
+  ): Promise<Progress> {
+    await this.quizzesService.findOne(quizId);
 
     await this.findUserById(userId);
 
-    return this.prisma.progress.upsert({
-      where: {
-        userId_quizId: {
-          userId,
-          quizId,
-        },
-      },
-      create: {
-        userId,
-        quizId,
-        ...data,
-      },
-      update: {
-        userId,
-        quizId,
-        ...data,
-      },
-    });
+    return this.progressRepository.upsertProgress(userId, quizId, body);
   }
 }
