@@ -20,13 +20,6 @@ export class UsersService {
     return new ResponseUserDto(userResponse);
   }
 
-  async createUser(createUserData: CreateUserDto): Promise<ResponseUserDto> {
-    const userResponse = await this.prisma.user.create({
-      data: createUserData,
-    });
-    return new ResponseUserDto(userResponse);
-  }
-
   async updateUser(
     id: number,
     updateUserData: UpdateUserDto,
@@ -42,10 +35,21 @@ export class UsersService {
     return new ResponseUserDto(userResponse);
   }
 
-  async deleteUser(id: number): Promise<void> {
-    if (!(await this.prisma.user.findUnique({ where: { id } }))) {
+  async deleteUser(id: number): Promise<any> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+
+    if (!user) {
       throw new NotFoundException(`id ${id} not found`);
     }
-    await this.prisma.user.delete({ where: { id } });
+
+    return this.prisma.user.delete({ where: { id } });
+  }
+
+  async getUserToken(id: number): Promise<any> {
+    const userTokenInfo = await this.prisma.token.findUnique({ where: { id } });
+    if (!userTokenInfo) {
+      throw new NotFoundException(`id ${id} not found`);
+    }
+    return userTokenInfo;
   }
 }
