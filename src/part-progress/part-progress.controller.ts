@@ -19,9 +19,10 @@ export class PartProgressController {
   @Put('parts/:partId')
   @HttpCode(204)
   async createOrUpdate(
+    @Param('id', PositiveIntPipe) userId: number,
     @Param('partId', PositiveIntPipe) partId: number,
     @Body() body: CreatePartProgressDto,
   ): Promise<void> {
-    await this.partProgressService.createOrUpdate(partId, body);
+    await this.partProgressService.createOrUpdate(userId, partId, body);
   }
 }
