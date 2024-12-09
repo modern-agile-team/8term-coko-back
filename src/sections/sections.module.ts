@@ -8,6 +8,6 @@ import { PartsModule } from 'src/parts/parts.module';
   imports: [PartsModule],
   controllers: [SectionsController],
   providers: [SectionsService, SectionsRepository],
-  exports: [SectionsService, SectionsRepository],
+  exports: [SectionsService, SectionsRepository, PartsModule],
 })
 export class SectionsModule {}
