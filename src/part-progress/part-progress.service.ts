@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePartProgressDto } from './dto/create-part-progress.dto';
-import { UpdatePartProgressDto } from './dto/update-part-progress.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PartProgressRepository } from './part-progress.repository';
 
@@ -22,7 +21,7 @@ export class PartProgressService {
     return `This action returns a #${id} partProgress`;
   }
 
-  update(id: number, updatePartProgressDto: UpdatePartProgressDto) {
+  update(id: number, updatePartProgressDto: CreatePartProgressDto) {
     return `This action updates a #${id} partProgress`;
   }
 
