@@ -21,7 +21,7 @@ export class PartsController {
 
   @ApiParts.findAll()
   @Get()
-  async findAll() {
+  async findAll(): Promise<ResPartDto[]> {
     const parts = await this.partsService.findAll();
     return ResPartDto.fromArray(parts);
   }

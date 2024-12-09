@@ -1,13 +1,13 @@
 interface SectionMedel {
-  name: string;
   id: number;
+  name: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export class Section implements SectionMedel {
-  name: string;
   id: number;
+  name: string;
   createdAt: Date;
   updatedAt: Date;
 }

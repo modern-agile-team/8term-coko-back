@@ -7,6 +7,7 @@ import { CreatePartDto } from './dto/create-part.dto';
 import { PartsRepository } from './parts.repository';
 import { SectionsService } from 'src/sections/sections.service';
 import { QuizzesRepository } from 'src/quizzes/quizzes.repository';
+import { Part } from './entities/part.entity';
 
 @Injectable()
 export class PartsService {
@@ -15,7 +16,7 @@ export class PartsService {
     private readonly partsRepository: PartsRepository,
     private readonly quizzesRepository: QuizzesRepository,
   ) {}
-  async findOne(id: number) {
+  async findOne(id: number): Promise<Part> {
     const part = await this.partsRepository.findOnePartById(id);
 
     if (!part) {
@@ -25,11 +26,11 @@ export class PartsService {
     return part;
   }
 
-  async findAll() {
+  async findAll(): Promise<Part[]> {
     return this.partsRepository.findAllPart();
   }
 
-  async create(body: CreatePartDto) {
+  async create(body: CreatePartDto): Promise<Part> {
     const { sectionId, name } = body;
 
     await this.sectionsService.findOne(sectionId);
@@ -43,7 +44,7 @@ export class PartsService {
     return this.partsRepository.createPartById(body);
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<Part> {
     const part = await this.partsRepository.findOnePartById(id);
 
     if (!part) {
