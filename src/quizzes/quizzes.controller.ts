@@ -33,7 +33,7 @@ export class QuizzesController {
   @ApiQuizzes.getQuiz()
   @Get(':id')
   async getQuiz(@Param('id', PositiveIntPipe) id: number): Promise<ResQuizDto> {
-    const quiz = await this.quizzesService.getQuiz(id);
+    const quiz = await this.quizzesService.findOne(id);
     return new ResQuizDto(quiz);
   }
 

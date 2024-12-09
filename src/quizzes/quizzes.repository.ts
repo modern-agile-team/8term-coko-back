@@ -60,6 +60,21 @@ export class QuizzesRepository {
     });
   }
 
+  async countQuizByQuery(query: QueryQuizDto): Promise<number> {
+    const { sectionId, partId } = query;
+
+    return this.prisma.quiz.count({
+      where: {
+        part: {
+          ...(partId && { id: partId }),
+          section: {
+            ...(sectionId && { id: sectionId }),
+          },
+        },
+      },
+    });
+  }
+
   async createQuiz(data: CreateQuizDto): Promise<Quiz> {
     return this.prisma.quiz.create({
       data,

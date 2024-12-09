@@ -6,18 +6,20 @@ import { ProgressRepository } from './progress.repository';
 import { QuizzesService } from 'src/quizzes/quizzes.service';
 import { PartsService } from 'src/parts/parts.service';
 import { SectionsService } from 'src/sections/sections.service';
+import { QuizzesRepository } from 'src/quizzes/quizzes.repository';
 
 @Injectable()
 export class ProgressService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly progressRepository: ProgressRepository,
-    private readonly quizzesService: QuizzesService,
-    private readonly partsService: PartsService,
     private readonly sectionsService: SectionsService,
+    private readonly partsService: PartsService,
+    private readonly quizzesService: QuizzesService,
+    private readonly quizzesRepository: QuizzesRepository,
   ) {}
 
-  //
+  // 추후 수정사항
   private async findUserById(id: number) {
     const user = await this.prisma.user.findUnique({
       where: {
@@ -29,40 +31,7 @@ export class ProgressService {
       throw new NotFoundException();
     }
 
-    return user.id;
-  }
-  //
-
-  //
-  private async findSectionById(id: number) {
-    const section = await this.prisma.section.findUnique({
-      where: {
-        id,
-      },
-    });
-
-    if (!section) {
-      throw new NotFoundException();
-    }
-
-    return section;
-  }
-  //
-
-  //
-  private async countQuizBySectionIdOrPartId(query: QueryProgressDto) {
-    const { sectionId, partId } = query;
-
-    return this.prisma.quiz.count({
-      where: {
-        part: {
-          ...(partId && { id: partId }),
-          section: {
-            ...(sectionId && { id: sectionId }),
-          },
-        },
-      },
-    });
+    return user;
   }
   //
 
@@ -72,14 +41,14 @@ export class ProgressService {
     await this.findUserById(userId);
 
     if (sectionId) {
-      await this.findSectionById(sectionId);
+      await this.sectionsService.findOne(sectionId);
     }
 
     if (partId) {
       await this.partsService.findOne(partId);
     }
 
-    const totalQuizCount = await this.countQuizBySectionIdOrPartId(query);
+    const totalQuizCount = await this.quizzesRepository.countQuizByQuery(query);
 
     const totalUserProgressCount =
       await this.progressRepository.countProgressByQuery(userId, query);
@@ -105,7 +74,7 @@ export class ProgressService {
     quizId: number,
     body: CreateProgressDto,
   ) {
-    await this.quizzesService.getQuiz(quizId);
+    await this.quizzesService.findOne(quizId);
 
     await this.findUserById(userId);
 
