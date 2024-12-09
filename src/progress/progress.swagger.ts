@@ -18,16 +18,6 @@ export const ApiProgress = {
         유저가 틀린 문제 수
         `,
         type: ResProgressDto,
-        content: {
-          JSON: {
-            example: {
-              totalQuizCount: 2,
-              totalUserProgressCount: 1,
-              correctUserProgressCount: 0,
-              inCorrectUserProgressCount: 1,
-            },
-          },
-        },
       }),
     );
   },
