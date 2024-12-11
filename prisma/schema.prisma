@@ -93,15 +93,27 @@ model Part {
   @@map("parts")
 }
 
-model Item {
-  id        Int      @id @default(autoincrement())
-  name      String
-  cost      Int
-  image     String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+model ItemCategory {
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(255)
 
-  userItems UserItem[] //1:N관계, Item와 userItem 연결
+  items Item[]
+
+  @@map("item_categories")
+}
+
+model Item {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique
+  price      Int
+  image      String
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  categoryId Int      @map("category_id")
+
+  category ItemCategory @relation(fields: [categoryId], references: [id])
+
+  userItems UserItem[]
 
   @@map("items")
 }
