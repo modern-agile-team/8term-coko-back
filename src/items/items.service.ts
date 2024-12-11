@@ -12,7 +12,7 @@ export class ItemsService {
 
   //모든 아이템 목록 조회 getAllItems
   getAllItems() {
-    return this.prisma.item.findMany(); // findMany() : 모든 아이템(항목) 조회
+    return this.prisma.item.findMany();
   }
 
   //아이템 구매 buyItem
@@ -30,7 +30,7 @@ export class ItemsService {
         throw new NotFoundException('Item not found');
       }
 
-      if (user.point < item.cost) {
+      if (user.point < item.price) {
         throw new BadRequestException('Insufficient points to buy this item');
       }
 
@@ -46,7 +46,7 @@ export class ItemsService {
 
       await prisma.user.update({
         where: { id: userId },
-        data: { point: { decrement: item.cost } },
+        data: { point: { decrement: item.price } },
       });
 
       await prisma.userItem.create({
