@@ -1,10 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
-import {
-  BuyItemDto,
-  EquipItemDto,
-  UnequipItemDto,
-} from './dto/item-changeStatus.dto';
+import { ItemChangeStatusDto } from './dto/item-changeStatus.dto';
 
 export const ApiItems = {
   getAllItems: () => {
@@ -31,6 +27,15 @@ export const ApiItems = {
       }),
     );
   },
+
+  addItem: () => {
+    return applyDecorators(
+      ApiOperation({
+        summary: '개발/테스트를 위한 아이템 추가',
+      }),
+    );
+  },
+
   buyItem: () => {
     return applyDecorators(
       ApiOperation({
@@ -39,7 +44,7 @@ export const ApiItems = {
       }),
       ApiBody({
         description: 'userId와 itemId를 포함한 요청 바디',
-        type: BuyItemDto,
+        type: ItemChangeStatusDto,
       }),
       ApiResponse({
         status: 204,
@@ -69,7 +74,7 @@ export const ApiItems = {
       }),
       ApiBody({
         description: 'userId와 itemId를 포함한 요청 바디',
-        type: EquipItemDto,
+        type: ItemChangeStatusDto,
       }),
       ApiResponse({
         status: 204,
@@ -99,7 +104,7 @@ export const ApiItems = {
       }),
       ApiBody({
         description: 'userId와 itemId를 포함한 요청 바디',
-        type: UnequipItemDto,
+        type: ItemChangeStatusDto,
       }),
       ApiResponse({
         status: 204,

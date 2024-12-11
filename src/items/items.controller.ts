@@ -10,11 +10,7 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { ItemsService } from './items.service';
-import {
-  BuyItemDto,
-  EquipItemDto,
-  UnequipItemDto,
-} from './dto/item-changeStatus.dto';
+import { ItemChangeStatusDto } from './dto/item-changeStatus.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiItems } from './items.swagger';
 
@@ -30,11 +26,19 @@ export class ItemsController {
     return await this.itemsService.getAllItems(); //service에서 아이템 목록을 받아서, 반환(return)
   }
 
+  // Post /items/add 요청 처리
+  @Post('add')
+  @HttpCode(201)
+  @ApiItems.addItem()
+  async addItem(@Body() addItemDto: ItemChangeStatusDto): Promise<void> {
+    await this.itemsService.addItem(addItemDto);
+  }
+
   // POST /items/buy 요청 처리
   @Post('buy')
   @HttpCode(204)
   @ApiItems.buyItem()
-  async buyItem(@Body() buyItemDto: BuyItemDto): Promise<void> {
+  async buyItem(@Body() buyItemDto: ItemChangeStatusDto): Promise<void> {
     await this.itemsService.buyItem(buyItemDto);
   }
 
@@ -49,7 +53,7 @@ export class ItemsController {
   @Post('equip')
   @HttpCode(204)
   @ApiItems.equipItem()
-  async equipItem(@Body() equipItemDto: EquipItemDto) {
+  async equipItem(@Body() equipItemDto: ItemChangeStatusDto) {
     await this.itemsService.equipItem(equipItemDto);
   }
 
@@ -57,7 +61,7 @@ export class ItemsController {
   @Post('unequip')
   @HttpCode(204)
   @ApiItems.unequipItem()
-  async unequipItem(@Body() unequipItemDto: UnequipItemDto) {
+  async unequipItem(@Body() unequipItemDto: ItemChangeStatusDto) {
     await this.itemsService.unequipItem(unequipItemDto);
   }
 

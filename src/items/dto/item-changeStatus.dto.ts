@@ -21,6 +21,7 @@ export class ItemChangeStatusDto {
   itemId: number;
 }
 
-export class EquipItemDto extends ItemChangeStatusDto {}
-export class UnequipItemDto extends ItemChangeStatusDto {}
-export class BuyItemDto extends ItemChangeStatusDto {}
+// export class EquipItemDto extends ItemChangeStatusDto {}
+// export class UnequipItemDto extends ItemChangeStatusDto {}
+// export class BuyItemDto extends ItemChangeStatusDto {}
+// export class AddItemDto extends ItemChangeStatusDto {}
