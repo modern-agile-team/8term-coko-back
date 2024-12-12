@@ -1,10 +1,10 @@
 import {
-  Injectable,
-  BadRequestException,
-  NotFoundException,
+  Injectable, //의존성 주입
+  BadRequestException, //잘못된 요청
+  NotFoundException, //찾을 수 없음
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service'; //PrismaService를 통해 db에서 아이템목록 가져온다.
-import { ItemChangeStatusDto } from './dto/item-changeStatus.dto';
+import { BuyItemDto, ItemChangeStatusDto } from './dto/item-changeStatus.dto';
 
 @Injectable() //클래스 : 의존성 주입 가능 (다른 곳에서 이 클래스를 불러와서 사용할 수 있게 한다)
 export class ItemsService {
@@ -15,6 +15,7 @@ export class ItemsService {
     return this.prisma.item.findMany();
   }
 
+  //아이템 추가 addItem (개발/테스트 용)
   async addItem(addItemDto: ItemChangeStatusDto): Promise<void> {
     const { userId, itemId } = addItemDto;
 
@@ -27,8 +28,8 @@ export class ItemsService {
   }
 
   //아이템 구매 buyItem
-  async buyItem(buyItemDto: ItemChangeStatusDto): Promise<void> {
-    const { userId, itemId } = buyItemDto;
+  async buyItem(buyItemDto: BuyItemDto): Promise<void> {
+    const { userId, itemIds } = buyItemDto;
 
     await this.prisma.$transaction(async (prisma) => {
       const user = await prisma.user.findUnique({ where: { id: userId } });
@@ -36,35 +37,48 @@ export class ItemsService {
         throw new NotFoundException('User not found');
       }
 
-      const item = await prisma.item.findUnique({ where: { id: itemId } });
-      if (!item) {
-        throw new NotFoundException('Item not found');
+      const items = await prisma.item.findMany({
+        where: { id: { in: itemIds } },
+      });
+
+      if (items.length !== itemIds.length) {
+        throw new NotFoundException('Some items are not found');
       }
 
-      if (user.point < item.price) {
-        throw new BadRequestException('Insufficient points to buy this item');
+      const totalPrice = items.reduce((sum, item) => sum + item.price, 0);
+
+      if (user.point < totalPrice) {
+        throw new BadRequestException('Insufficient points to buy these items');
       }
 
-      const existingItem = await prisma.userItem.findUnique({
+      //소유 여부 확인
+      const existingItems = await prisma.userItem.findMany({
         where: {
-          userId_itemId: { userId, itemId },
+          userId: userId,
+          itemId: { in: itemIds },
         },
       });
 
-      if (existingItem) {
-        throw new BadRequestException('User already owns this item.');
+      if (existingItems.length > 0) {
+        const ownedItemIds = existingItems.map((item) => item.itemId);
+        throw new BadRequestException(
+          `User already owns the following items: ${ownedItemIds.join(', ')}`,
+        );
       }
 
+      //포인트 차감
       await prisma.user.update({
         where: { id: userId },
-        data: { point: { decrement: item.price } },
+        data: { point: { decrement: totalPrice } },
       });
 
-      await prisma.userItem.create({
-        data: {
-          userId,
-          itemId,
-        },
+      const userItemsData = itemIds.map((itemId) => ({
+        userId,
+        itemId,
+      }));
+
+      await prisma.userItem.createMany({
+        data: userItemsData,
       });
     });
   }

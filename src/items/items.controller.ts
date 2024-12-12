@@ -8,7 +8,7 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { ItemsService } from './items.service';
-import { ItemChangeStatusDto } from './dto/item-changeStatus.dto';
+import { ItemChangeStatusDto, BuyItemDto } from './dto/item-changeStatus.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiItems } from './items.swagger';
 
@@ -36,7 +36,7 @@ export class ItemsController {
   @Post('buy')
   @HttpCode(204)
   @ApiItems.buyItem()
-  async buyItem(@Body() buyItemDto: ItemChangeStatusDto): Promise<void> {
+  async buyItem(@Body() buyItemDto: BuyItemDto): Promise<void> {
     await this.itemsService.buyItem(buyItemDto);
   }
 

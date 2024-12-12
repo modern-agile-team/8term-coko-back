@@ -27,8 +27,8 @@ export class BuyItemDto extends ItemChangeStatusDto {
     example: [1, 2, 3],
   })
   @IsArray()
-  @ArrayNotEmpty() //비어있는 배열 안된다
-  @IsInt({ each: true })
-  @Min(1, { each: true })
+  @ArrayNotEmpty() //비어있는 배열 있으면 안된다
+  @IsInt({ each: true }) //배열 내 각 요소(each) 정수
+  @Min(1, { each: true }) //배열 내 각 요소(each) 최소값
   itemIds: number[];
 }
