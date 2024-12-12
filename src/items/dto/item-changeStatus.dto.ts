@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, Min } from 'class-validator';
+import { IsArray, ArrayNotEmpty, IsInt, Min } from 'class-validator';
 
 export class ItemChangeStatusDto {
   @ApiProperty({
@@ -21,7 +21,14 @@ export class ItemChangeStatusDto {
   itemId: number;
 }
 
-// export class EquipItemDto extends ItemChangeStatusDto {}
-// export class UnequipItemDto extends ItemChangeStatusDto {}
-// export class BuyItemDto extends ItemChangeStatusDto {}
-// export class AddItemDto extends ItemChangeStatusDto {}
+export class BuyItemDto extends ItemChangeStatusDto {
+  @ApiProperty({
+    description: '아이템 ID 배열',
+    example: [1, 2, 3],
+  })
+  @IsArray()
+  @ArrayNotEmpty() //비어있는 배열 안된다
+  @IsInt({ each: true })
+  @Min(1, { each: true })
+  itemIds: number[];
+}
