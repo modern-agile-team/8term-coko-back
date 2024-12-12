@@ -1,5 +1,3 @@
-//controller : client로부터의 요청 처리. GET 요청 -> 서비스호출 -> 데이터반환
-
 import {
   Controller,
   Get,
@@ -28,7 +26,7 @@ export class ItemsController {
 
   // Post /items/add 요청 처리
   @Post('add')
-  @HttpCode(201)
+  @HttpCode(204)
   @ApiItems.addItem()
   async addItem(@Body() addItemDto: ItemChangeStatusDto): Promise<void> {
     await this.itemsService.addItem(addItemDto);
