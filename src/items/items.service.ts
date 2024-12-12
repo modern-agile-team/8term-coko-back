@@ -32,19 +32,23 @@ export class ItemsService {
     const { userId, itemIds } = buyItemDto;
 
     await this.prisma.$transaction(async (prisma) => {
+      //사용자 존재 여부 확인
       const user = await prisma.user.findUnique({ where: { id: userId } });
       if (!user) {
         throw new NotFoundException('User not found');
       }
 
+      //아이템 존재 확인
       const items = await prisma.item.findMany({
         where: { id: { in: itemIds } },
       });
 
       if (items.length !== itemIds.length) {
+        //아이템 수량 확인
         throw new NotFoundException('Some items are not found');
       }
 
+      //총 가격 계산
       const totalPrice = items.reduce((sum, item) => sum + item.price, 0);
 
       if (user.point < totalPrice) {
@@ -72,6 +76,7 @@ export class ItemsService {
         data: { point: { decrement: totalPrice } },
       });
 
+      //유저-아이템 관계 생성
       const userItemsData = itemIds.map((itemId) => ({
         userId,
         itemId,
