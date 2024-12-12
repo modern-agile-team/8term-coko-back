@@ -21,7 +21,16 @@ export class ItemChangeStatusDto {
   itemId: number;
 }
 
-export class BuyItemDto extends ItemChangeStatusDto {
+export class BuyItemDto {
+  @ApiProperty({
+    description: '사용자 ID',
+    example: 1,
+    minimum: 1,
+  })
+  @IsInt()
+  @Min(1)
+  userId: number;
+
   @ApiProperty({
     description: '아이템 ID 배열',
     example: [1, 2, 3],
