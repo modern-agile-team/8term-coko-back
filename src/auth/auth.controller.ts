@@ -53,4 +53,10 @@ export class AuthController {
 
     res.redirect(this.configService.get<string>('CLIENT_MAIN_PAGE_URL'));
   }
+
+  @Get('/test')
+  @UseGuards(AuthGuard('jwt'))
+  authTest(@Req() req: Request) {
+    console.log(req);
+  }
 }
