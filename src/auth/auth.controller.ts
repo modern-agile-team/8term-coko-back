@@ -1,4 +1,4 @@
-import { Controller, Get, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/common/decorators/get-user.decorator';
 import { ConfigService } from '@nestjs/config';
@@ -50,14 +50,6 @@ export class AuthController {
     for (const cookie of cookies) {
       res.cookie(cookie.name, cookie.value, cookie.options);
     }
-
-    // res.cookie('accessToken', accessToken, {
-    //   httpOnly: true,
-    //   secure: true,
-    //   domain: this.configService.get<string>('COOKIE_DOMAIN'),
-    //   sameSite: 'none',
-    //   maxAge: this.configService.get<number>('COOKIE_EXPIRATION'),
-    // });
 
     res.redirect(this.configService.get<string>('CLIENT_MAIN_PAGE_URL'));
   }

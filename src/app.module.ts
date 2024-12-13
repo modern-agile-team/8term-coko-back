@@ -9,7 +9,6 @@ import { SectionsModule } from './sections/sections.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
-import { TokenService } from './auth/services/token.service';
 
 @Module({
   imports: [

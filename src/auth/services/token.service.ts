@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class TokenService {
   constructor(
     private jwtService: JwtService,
-    private prisma: PrismaService,
     private configService: ConfigService,
   ) {}
 
