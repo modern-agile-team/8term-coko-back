@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
+import { Request } from 'express';
 import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
 import { UsersService } from 'src/users/services/users.service';
 
@@ -14,7 +15,11 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       // Secret 키 확인
       secretOrKey: configService.get<string>('ACCESS_SECRET'),
       // BearerToken타입으로 넘어오는 토큰을 확인하겠다
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        (request: Request) => {
+          return request?.cookies?.accessToken || null;
+        },
+      ]),
     });
   }
 

@@ -1,3 +1,4 @@
+import * as cookieParser from 'cookie-parser';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
@@ -41,6 +42,8 @@ async function bootstrap() {
     origin: ['.localhost:3000', '.cokoedu.com'],
     credentials: true,
   });
+
+  app.use(cookieParser());
 
   await app.listen(3000);
 }

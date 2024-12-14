@@ -4,6 +4,7 @@ import { User } from 'src/common/decorators/get-user.decorator';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import { AuthService } from './services/auth.service';
+import { UsersModule } from 'src/users/modules/users.module';
 
 @Controller('auth')
 export class AuthController {
@@ -54,9 +55,9 @@ export class AuthController {
     res.redirect(this.configService.get<string>('CLIENT_MAIN_PAGE_URL'));
   }
 
-  @Get('/test')
+  @Get('/verify')
   @UseGuards(AuthGuard('jwt'))
-  authTest(@Req() req: Request) {
-    console.log(req);
+  authTest(@User() user: any) {
+    return user;
   }
 }
