@@ -32,6 +32,19 @@ export const ApiItems = {
     return applyDecorators(
       ApiOperation({
         summary: '개발/테스트를 위한 아이템 추가',
+        description: '유저의 아이템을 추가합니다.',
+      }),
+      ApiResponse({
+        status: 200,
+        description: 'userId, itemId 성공적으로 추가함',
+        content: {
+          JSON: {
+            example: {
+              userId: 1,
+              itemId: 3,
+            },
+          },
+        },
       }),
     );
   },
