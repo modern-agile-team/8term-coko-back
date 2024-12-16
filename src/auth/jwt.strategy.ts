@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
+import * as jwt from 'jsonwebtoken';
 import { UsersService } from 'src/users/services/users.service';
 
 @Injectable()
@@ -14,28 +15,102 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     super({
       // Secret 키 확인
       secretOrKey: configService.get<string>('ACCESS_SECRET'),
-      // BearerToken타입으로 넘어오는 토큰을 확인하겠다
+      // access 토큰이 없다면 아래에서 401 반환
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
+          // ? 옵셔널 을 붙여준 이유는 request 나 cookies 에 값이 없을때
+          // 서버 종료를 방지하기 위함
           return request?.cookies?.accessToken || null;
         },
       ]),
+      passReqToCallback: true,
     });
   }
 
   // payload 인터페이스 만들어야함
-  async validate(payload, done: VerifiedCallback): Promise<any> {
+  async validate(
+    request: Request,
+    payload,
+    done: VerifiedCallback,
+  ): Promise<any> {
     const { userId } = payload;
 
-    // 따로 서비스를 만들지 않고 user서비스에서 getUser 메서드를 가져와 사용하는데
-    // 이렇게 사용해도 될지? -> 왜냐하면 getUser메서드에서 사용자가 없다면
-    // NotFoundException 을 던지기 때문에 아래 UnauthorizedException는 실행되지 않을 것이기 때문에..
-    const user = await this.usersService.getUser(userId);
+    // accessToken 검증
+    const user = await this.validateAccessToken(userId);
+    if (user) return done(null, user);
 
-    if (!user) {
-      throw new UnauthorizedException();
+    // accessToken이 검증되지 않았다면 refreshToken 검증
+    const newUser = await this.validateRefreshToken(request);
+    if (newUser) return done(null, newUser);
+
+    // 두개 다 검증되지 않았다며 에러
+    throw new UnauthorizedException('Invalid or expired tokens');
+  }
+
+  // accessToken 검증 함수
+  private async validateAccessToken(userId: number): Promise<any> {
+    try {
+      const user = await this.usersService.getUser(userId);
+
+      if (!user) {
+        throw new UnauthorizedException('User not found');
+      }
+      return user;
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        // 유효시간이 만료인 경우만
+        return null;
+      }
+      throw new UnauthorizedException('Invalid Access Token'); // 이외에 모두 error
+    }
+  }
+
+  // refreshToken 검증 함수
+  private async validateRefreshToken(request: Request): Promise<any> {
+    const refreshToken = request.cookies['refreshToken'];
+    if (!refreshToken) {
+      throw new UnauthorizedException('No Refresh Token provided');
     }
 
-    return done(null, user);
+    // refreshToken이 있다면 검증시작
+    try {
+      const refreshPayload: any = jwt.verify(
+        refreshToken,
+        this.configService.get<string>('REFRESH_SECRET'),
+      );
+
+      const newAccessToken = this.NewAccessToken(refreshPayload.userId);
+      this.setAccessTokenCookie(request, newAccessToken);
+      console.log(newAccessToken, 'newewnew');
+
+      const user = await this.usersService.getUser(refreshPayload.userId);
+      if (!user) {
+        throw new UnauthorizedException('User not found');
+      }
+
+      return user;
+    } catch (refreshError) {
+      throw new UnauthorizedException('Invalid Refresh Token');
+    }
+  }
+
+  // accessToken 재발급
+  private NewAccessToken(userId: string): string {
+    return jwt.sign(
+      { payload: userId },
+      this.configService.get<string>('ACCESS_SECRET'),
+      { expiresIn: this.configService.get<number>('ACCESS_EXPIRATION_TIME') },
+    );
+  }
+
+  // accessToken을 쿠키 헤더에 포함
+  private setAccessTokenCookie(request: Request, accessToken: string): void {
+    request.res?.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: true,
+      domain: this.configService.get<string>('COOKIE_DOMAIN'),
+      sameSite: 'none',
+      maxAge: this.configService.get<number>('COOKIE_EXPIRATION'),
+    });
   }
 }

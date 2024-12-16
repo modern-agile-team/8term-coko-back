@@ -44,7 +44,7 @@ export class AuthController {
       {
         name: 'refreshToken',
         value: refreshToken,
-        options: { ...cookieOptions },
+        options: { ...cookieOptions }, // path 추가 예정
       },
     ];
 
