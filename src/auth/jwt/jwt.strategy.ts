@@ -29,7 +29,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  // payload 인터페이스 만들어야함
   async validate(
     request: Request,
     payload: JwtDto,

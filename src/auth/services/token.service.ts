@@ -9,8 +9,8 @@ export class TokenService {
     private configService: ConfigService,
   ) {}
 
-  async createJWT(userId: number, userEmail: string) {
-    const payload = { userId, userEmail };
+  async createJWT(userId: number) {
+    const payload = { userId };
 
     const accessToken = this.jwtService.sign(payload, {
       secret: this.configService.get<string>('ACCESS_SECRET'),

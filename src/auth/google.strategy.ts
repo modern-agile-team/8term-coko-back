@@ -20,10 +20,9 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     profile: any,
     done: VerifyCallback,
   ): Promise<any> {
-    const { displayName, emails, photos, provider, id } = profile;
+    const { displayName, photos, provider, id } = profile;
 
     const user = {
-      email: emails[0].value,
       picture: photos[0].value,
       name: displayName,
       socialAccessToken: accessToken,

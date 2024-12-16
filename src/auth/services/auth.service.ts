@@ -13,7 +13,7 @@ export class AuthService {
   async googleLogin(
     user: CreateUserDto,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    const { provider, providerId, email, name, socialAccessToken } = user;
+    const { provider, providerId, name, socialAccessToken } = user;
 
     let userInfo = await this.prisma.user.findUnique({
       where: { providerId },
@@ -28,7 +28,7 @@ export class AuthService {
 
     await this.saveSocialToken(socialAccessToken, userInfo.id);
 
-    return this.tokenService.createJWT(userInfo.id, email);
+    return this.tokenService.createJWT(userInfo.id);
   }
 
   //소셜토큰저장
