@@ -24,6 +24,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         },
       ]),
       passReqToCallback: true,
+      ignoreExpiration: true, // 시간 만료된 토큰은 validate로 넘김
     });
   }
 
@@ -33,35 +34,27 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     payload,
     done: VerifiedCallback,
   ): Promise<any> {
-    const { userId } = payload;
+    const { userId, exp } = payload;
 
-    // accessToken 검증
-    const user = await this.validateAccessToken(userId);
-    if (user) return done(null, user);
+    // 유효시간이 만료되었다면 refeshToken 검증
+    if (exp * 1000 < Date.now()) {
+      const newUser = await this.validateRefreshToken(request);
+      if (newUser) return done(null, newUser);
 
-    // accessToken이 검증되지 않았다면 refreshToken 검증
-    const newUser = await this.validateRefreshToken(request);
-    if (newUser) return done(null, newUser);
+      throw new UnauthorizedException('Refresh Token invalid or expired');
+    }
 
-    // 두개 다 검증되지 않았다며 에러
-    throw new UnauthorizedException('Invalid or expired tokens');
-  }
-
-  // accessToken 검증 함수
-  private async validateAccessToken(userId: number): Promise<any> {
+    // 유효시간이 만료되지 않았다면
     try {
       const user = await this.usersService.getUser(userId);
 
       if (!user) {
         throw new UnauthorizedException('User not found');
       }
+
       return user;
     } catch (error) {
-      if (error.name === 'TokenExpiredError') {
-        // 유효시간이 만료인 경우만
-        return null;
-      }
-      throw new UnauthorizedException('Invalid Access Token'); // 이외에 모두 error
+      throw new UnauthorizedException(); // 이외에 모두 error
     }
   }
 

@@ -25,6 +25,7 @@ export class AuthController {
     const { accessToken, refreshToken } =
       await this.authService.googleLogin(user);
 
+    // *쿠키 설정 옵션 분리예정
     // 쿠키와 리다이렉트의 설정은 클라이언트가 원하는 곳으로 지정해준다.
     // res.cookie 의 domain부분과 res.redirect의 url부분의 도메인을 일치시켜야 한다.
     const cookieOptions = {
