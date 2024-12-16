@@ -5,6 +5,7 @@ import { Request } from 'express';
 import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
 import * as jwt from 'jsonwebtoken';
 import { UsersService } from 'src/users/services/users.service';
+import { JwtDto } from './jwt.dto';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -31,7 +32,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   // payload 인터페이스 만들어야함
   async validate(
     request: Request,
-    payload,
+    payload: JwtDto,
     done: VerifiedCallback,
   ): Promise<any> {
     const { userId, exp } = payload;
@@ -74,7 +75,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 
       const newAccessToken = this.NewAccessToken(refreshPayload.userId);
       this.setAccessTokenCookie(request, newAccessToken);
-      console.log(newAccessToken, 'newewnew');
 
       const user = await this.usersService.getUser(refreshPayload.userId);
       if (!user) {

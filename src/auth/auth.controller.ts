@@ -4,7 +4,6 @@ import { User } from 'src/common/decorators/get-user.decorator';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import { AuthService } from './services/auth.service';
-import { UsersModule } from 'src/users/modules/users.module';
 
 @Controller('auth')
 export class AuthController {
