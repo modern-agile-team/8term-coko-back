@@ -26,7 +26,7 @@ export class ItemsController {
 
   // Post /items/add 요청 처리
   @Post('add')
-  @HttpCode(204)
+  @HttpCode(201)
   @ApiItems.addItem()
   async addItem(@Body() addItemDto: ItemChangeStatusDto): Promise<void> {
     await this.itemsService.addItem(addItemDto);

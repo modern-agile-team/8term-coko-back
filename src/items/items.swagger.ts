@@ -35,7 +35,7 @@ export const ApiItems = {
         description: '유저의 아이템을 추가합니다.',
       }),
       ApiResponse({
-        status: 200,
+        status: 201,
         description: 'userId, itemId 성공적으로 추가함',
         content: {
           JSON: {
