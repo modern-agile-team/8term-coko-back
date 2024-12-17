@@ -7,9 +7,10 @@ import { AuthService } from './services/auth.service';
 import { TokenService } from './services/token.service';
 import { JwtStrategy } from './jwt/jwt.strategy';
 import { UsersModule } from 'src/users/modules/users.module';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
-  imports: [PassportModule, JwtModule, UsersModule],
+  imports: [PassportModule, JwtModule, UsersModule, RedisModule],
   providers: [AuthService, TokenService, GoogleStrategy, JwtStrategy],
   controllers: [AuthController],
 })
