@@ -24,23 +24,23 @@ export class ItemsController {
     return await this.itemsService.getAllItems(); //service에서 아이템 목록을 받아서, 반환(return)
   }
 
-  // Post /items/add 요청 처리
-  @Post('add')
+  // Post /items/dev 요청 처리 (개발환경에서만 실행되도록 한다)
+  @Post('dev')
   @HttpCode(201)
   @ApiItems.addItem()
   async addItem(@Body() addItemDto: ItemChangeStatusDto): Promise<void> {
     await this.itemsService.addItem(addItemDto);
   }
 
-  // POST /items/buy 요청 처리
-  @Post('buy')
+  // POST /items 요청 처리 (buy)
+  @Post()
   @HttpCode(204)
   @ApiItems.buyItem()
   async buyItem(@Body() buyItemDto: BuyItemDto): Promise<void> {
     await this.itemsService.buyItem(buyItemDto);
   }
 
-  // GET /items/user/:userId 요청 처리
+  // GET /users/:userId/items 요청 처리
   @Get('users/:userId')
   @ApiItems.getUserItems()
   async getUserItems(@Param('userId') userId: number) {
