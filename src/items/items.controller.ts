@@ -8,7 +8,7 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { ItemsService } from './items.service';
-import { ItemChangeStatusDto, BuyItemDto } from './dto/itemChangeStatus.dto';
+import { ItemChangeStatusDto, BuyItemDto } from './dto/change-item-status.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiItems } from './items.swagger';
 
