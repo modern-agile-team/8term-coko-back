@@ -1,6 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { ItemChangeStatusDto, BuyItemDto } from './dto/item-changeStatus.dto';
+import { ItemChangeStatusDto, BuyItemDto } from './dto/itemChangeStatus.dto';
 
 export const ApiItems = {
   getAllItems: () => {
