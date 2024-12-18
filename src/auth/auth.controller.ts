@@ -1,14 +1,16 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/common/decorators/get-user.decorator';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import { AuthService } from './services/auth.service';
+import { RedisService } from './redis/redis.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
+    private readonly redisService: RedisService,
     private readonly configService: ConfigService,
   ) {}
 
