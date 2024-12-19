@@ -1,3 +1,5 @@
+import { ValueOf } from 'src/common/util/type-utils';
+
 interface PartProgressModel {
   userId: number;
   partId: number;
@@ -6,14 +8,13 @@ interface PartProgressModel {
   updatedAt: Date;
 }
 
-export const PartStatus = {
+const PartStatusValues = {
   LOCKED: 'LOCKED',
   STARTED: 'STARTED',
   IN_PROGRESS: 'IN_PROGRESS',
   COMPLETED: 'COMPLETED',
 } as const;
-
-export type PartStatus = (typeof PartStatus)[keyof typeof PartStatus];
+export type PartStatus = ValueOf<typeof PartStatusValues>;
 
 export class PartProgress implements PartProgressModel {
   userId: number;
