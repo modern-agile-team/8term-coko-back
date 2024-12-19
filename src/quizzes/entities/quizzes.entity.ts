@@ -12,7 +12,7 @@ interface QuizModel {
   updatedAt: Date;
 }
 
-const CategoryValues = {
+export const CategoryValues = {
   COMBINATION: 'COMBINATION',
   MULTIPLE_CHOICE: 'MULTIPLE_CHOICE',
   OX_SELECTOR: 'OX_SELECTOR',

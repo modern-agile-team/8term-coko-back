@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PartStatus } from '../entities/part-progress.entity';
 import { IsEnum } from 'class-validator';
+import { CategoryValues } from 'src/quizzes/entities/quizzes.entity';
 
 export class CreatePartProgressDto {
   @ApiProperty({
@@ -12,8 +13,8 @@ export class CreatePartProgressDto {
         4. COMPLETED
         `,
     example: 'LOCKED',
-    enum: PartStatus,
+    enum: CategoryValues,
   })
-  @IsEnum(PartStatus, { message: 'bad status value' })
+  @IsEnum(CategoryValues, { message: 'bad status value' })
   readonly status: PartStatus;
 }

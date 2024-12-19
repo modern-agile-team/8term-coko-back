@@ -8,7 +8,7 @@ interface PartProgressModel {
   updatedAt: Date;
 }
 
-const PartStatusValues = {
+export const PartStatusValues = {
   LOCKED: 'LOCKED',
   STARTED: 'STARTED',
   IN_PROGRESS: 'IN_PROGRESS',

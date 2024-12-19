@@ -1,6 +1,6 @@
 import { IsEnum, IsInt, IsString, Min } from 'class-validator';
-import { Category } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
+import { Category, CategoryValues } from '../entities/quizzes.entity';
 
 export class CreateQuizDto {
   @ApiProperty({
@@ -50,8 +50,8 @@ export class CreateQuizDto {
       4. SHORT_ANSWER : 단답형 문제
     `,
     example: 'MULTIPLE_CHOICE',
-    enum: Category,
+    enum: CategoryValues,
   })
-  @IsEnum(Category, { message: 'bad category value' })
+  @IsEnum(CategoryValues, { message: 'bad category value' })
   readonly category: Category;
 }
