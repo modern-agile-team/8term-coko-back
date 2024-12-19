@@ -27,7 +27,7 @@ export const ApiProgress = {
         summary: '유저의 문제에 대한 진행도생성 또는 업데이트',
       }),
       ApiBody({
-        description: '섹션 생성에 필요한 정보',
+        description: '유저가 문제를 맞췄는지를 boolean값으로 넣기',
         type: CreateProgressDto,
       }),
       ApiResponse({

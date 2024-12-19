@@ -21,6 +21,13 @@ enum Category {
   SHORT_ANSWER
 }
 
+enum PartStatus {
+  LOCKED
+  STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
 model Quiz {
   id           Int        @id @default(autoincrement())
   partId       Int        @map("part_id")
@@ -48,22 +55,23 @@ model Section {
 }
 
 model User {
-  id                     Int        @id @default(autoincrement())
-  provider               String     @db.VarChar(20)
-  providerId             String     @unique @map("provider_id")
-  name                   String     @db.VarChar(30)
-  profileImage           String?    @map("profile_image")
-  maxHealthPoint         Int        @default(5) @map("max_health_point")
-  lastLogin              DateTime   @default(now()) @map("last_login")
-  level                  Int        @default(1)
-  experience             Int        @default(0)
-  experienceForNextLevel Int        @default(50) @map("experience_for_next_level")
-  point                  Int        @default(0)
-  createdAt              DateTime   @default(now()) @map("created_at")
-  updatedAt              DateTime   @updatedAt @map("updated_at")
+  id                     Int            @id @default(autoincrement())
+  provider               String         @db.VarChar(20)
+  providerId             String         @unique @map("provider_id")
+  name                   String         @db.VarChar(30)
+  profileImage           String?        @map("profile_image")
+  maxHealthPoint         Int            @default(5) @map("max_health_point")
+  lastLogin              DateTime       @default(now()) @map("last_login")
+  level                  Int            @default(1)
+  experience             Int            @default(0)
+  experienceForNextLevel Int            @default(50) @map("experience_for_next_level")
+  point                  Int            @default(0)
+  createdAt              DateTime       @default(now()) @map("created_at")
+  updatedAt              DateTime       @updatedAt @map("updated_at")
   Progress               Progress[]
   userItems              UserItem[]
   token                  Token[]
+  partProgress           PartProgress[]
 
   @@map("users")
 }
@@ -82,13 +90,14 @@ model Progress {
 }
 
 model Part {
-  id        Int      @id @default(autoincrement())
-  sectionId Int      @map("section_id")
-  name      String   @unique @db.VarChar(255)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  section   Section  @relation(fields: [sectionId], references: [id], onDelete: Restrict)
-  quiz      Quiz[]
+  id           Int            @id @default(autoincrement())
+  sectionId    Int            @map("section_id")
+  name         String         @unique @db.VarChar(255)
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+  section      Section        @relation(fields: [sectionId], references: [id], onDelete: Restrict)
+  quiz         Quiz[]
+  PartProgress PartProgress[]
 
   @@map("parts")
 }
@@ -130,4 +139,17 @@ model Token {
   user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("token")
+}
+
+model PartProgress {
+  userId    Int        @map("user_id")
+  partId    Int        @map("part_id")
+  status    PartStatus
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  part      Part       @relation(fields: [partId], references: [id], onDelete: Cascade)
+
+  @@id([userId, partId])
+  @@map("part_progress")
 }

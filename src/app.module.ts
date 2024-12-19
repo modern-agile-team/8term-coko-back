@@ -9,6 +9,7 @@ import { SectionsModule } from './sections/sections.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
+import { PartProgressModule } from './part-progress/part-progress.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AppController } from './app.controller';
       isGlobal: true,
     }),
     AuthModule,
+    PartProgressModule,
   ],
   controllers: [AppController],
   providers: [AppService],
