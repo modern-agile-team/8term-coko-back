@@ -1,3 +1,5 @@
+import { ValueOf } from 'src/common/util/type-utils';
+
 interface QuizModel {
   id: number;
   partId: number;
@@ -10,14 +12,13 @@ interface QuizModel {
   updatedAt: Date;
 }
 
-export const Category = {
+export const CategoryValues = {
   COMBINATION: 'COMBINATION',
   MULTIPLE_CHOICE: 'MULTIPLE_CHOICE',
   OX_SELECTOR: 'OX_SELECTOR',
   SHORT_ANSWER: 'SHORT_ANSWER',
 } as const;
-
-export type Category = (typeof Category)[keyof typeof Category];
+export type Category = ValueOf<typeof CategoryValues>;
 
 export class Quiz implements QuizModel {
   id: number;
