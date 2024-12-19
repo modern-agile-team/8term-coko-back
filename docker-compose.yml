@@ -22,12 +22,12 @@ services:
 
   redis:
     image: redis:7-alpine
+    command: redis-server /usr/local/etc/redis/redis.conf --requirepass $REDIS_PASSWORD
     volumes:
       - ./conf/redis.conf:/usr/local/etc/redis/redis.conf
       - redis_data:/data
     ports:
       - '6379:6379'
-    command: sh -c "sed -i 's/<REDIS_PASSWORD>/$REDIS_PASSWORD/' /usr/local/etc/redis/redis.conf && redis-server /usr/local/etc/redis/redis.conf"
     env_file:
       - .env
     networks:

@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
-import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
+import { ExtractJwt, Strategy } from 'passport-jwt';
 import * as jwt from 'jsonwebtoken';
 import { UsersService } from 'src/users/services/users.service';
 import { RedisService } from '../redis/redis.service';
@@ -23,9 +23,10 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         },
       ]),
       // 키를 넣어주지 않음으로 자동 검증 비활성화 -> validate에서 검증
-      secretOrKey: null,
+      secretOrKey: configService.get<string>('ACCESS_SECRET'),
       // validate 메서드로 request 객체 전달
       passReqToCallback: true,
+      ignoreExpiration: true,
     });
   }
 
