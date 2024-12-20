@@ -30,15 +30,11 @@ export class JwtGuard implements CanActivate {
         throw new UnauthorizedException('No Access Token provided');
       }
 
-      console.log(accessToken);
-
       // access 토큰 변조, 만료를 검사
       const payload = jwt.verify(
         accessToken,
         this.configService.get<string>('ACCESS_SECRET'),
       ) as any;
-
-      console.log(payload);
 
       const { userId } = payload;
       const user = await this.usersService.getUser(userId);

@@ -21,7 +21,7 @@ services:
       - backend # 'backend' 네트워크 사용
 
   redis:
-    image: redis:7-alpine
+    image: redis:7.2.6
     command: redis-server /usr/local/etc/redis/redis.conf --requirepass $REDIS_PASSWORD
     volumes:
       - ./conf/redis.conf:/usr/local/etc/redis/redis.conf

@@ -13,6 +13,10 @@ import * as redisStore from 'cache-manager-redis-store';
         port: configService.get<number>('REDIS_PORT'),
         password: configService.get<string>('REDIS_PASSWORD'),
         ttl: configService.get<number>('REDIS_EXPIRATION_TIME'),
+        serializer: {
+          serialize: (value) => value, // 데이터를 그대로 저장
+          deserialize: (value) => value, // 데이터를 그대로 반환
+        },
       }),
       inject: [ConfigService],
     }),
