@@ -28,7 +28,11 @@ async function bootstrap() {
     .addServer('http://localhost:3000', 'develop')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api', app, document, {
+    swaggerOptions: {
+      persistAuthorization: true, // Swagger UI에서 인증 정보를 유지
+    },
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
