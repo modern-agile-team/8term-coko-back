@@ -1,102 +1,98 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PassportStrategy } from '@nestjs/passport';
-import { Request } from 'express';
-import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
-import * as jwt from 'jsonwebtoken';
 import { UsersService } from 'src/users/services/users.service';
 import { RedisService } from '../redis/redis.service';
+import * as jwt from 'jsonwebtoken';
+import { Request } from 'express';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class JwtGuard implements CanActivate {
   constructor(
     private configService: ConfigService,
     private usersService: UsersService,
     private redisService: RedisService,
-  ) {
-    super({
-      jwtFromRequest: ExtractJwt.fromExtractors([
-        (request: Request) => {
-          // ? 옵셔널 을 붙여준 이유는 request 나 cookies 에 값이 없을때
-          // null 을 반환하여 서버 종료를 방지하기 위함
-          return request?.cookies?.accessToken || null;
-        },
-      ]),
-      // 키를 넣어주지 않음으로 자동 검증 비활성화 -> validate에서 검증
-      secretOrKey: configService.get<string>('ACCESS_SECRET'),
-      // validate 메서드로 request 객체 전달
-      passReqToCallback: true,
-    });
-  }
+  ) {}
 
-  async validate(request: Request): Promise<any> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest<Request>();
+
     const accessToken = request?.cookies?.accessToken;
     const refreshToken = request?.cookies?.refreshToken;
 
-    // accessToken 검증 단계
     try {
-      // 토큰이 있는지 검사
+      // access 토큰이 있는지 검사
       if (!accessToken) {
         throw new UnauthorizedException('No Access Token provided');
       }
 
-      // 토큰 변조, 만료를 검사
+      console.log(accessToken);
+
+      // access 토큰 변조, 만료를 검사
       const payload = jwt.verify(
         accessToken,
         this.configService.get<string>('ACCESS_SECRET'),
       ) as any;
 
+      console.log(payload);
+
       const { userId } = payload;
       const user = await this.usersService.getUser(userId);
 
-      return user;
+      // 요청객체 user에 user 정보를 담음음
+      request['user'] = user;
 
-      // refreshToken 검증 시작작
+      // access 토큰이 잘 있다면 반환가능
+      return true;
     } catch (error) {
-      // 토큰이 있는지 검사
-      if (!refreshToken)
+      // refresh 토큰이 있는지 검사
+      if (!refreshToken) {
         throw new UnauthorizedException('No Refresh Token provided');
+      }
 
       try {
-        // refreshToken 검증
-        const refreshPayload = jwt.verify(
-          refreshToken,
-          this.configService.get<string>('REFRESH_SECRET'),
+        // refresh 토큰 변조, 만료를 검사
+        const payload = jwt.verify(
+          accessToken,
+          this.configService.get<string>('ACCESS_SECRET'),
         ) as any;
 
-        const { userId } = refreshPayload;
+        const { userId } = payload;
 
-        // redis에서 refreshToken 이 있는지 검사
+        // redis에 해당 refresh 토큰 있는지 확인인
         const redisRefreshToken = await this.redisService.get(userId);
         if (!redisRefreshToken || redisRefreshToken !== refreshToken) {
           throw new UnauthorizedException('Invalid Refresh Token');
         }
 
-        // accessToken 재발급 및 쿠키에 담기기
+        // access 토큰 재발급 및 쿠키에 담기
         const newAccessToken = this.NewAccessToken(userId);
         this.setAccessTokenCookie(request, newAccessToken);
 
-        // user 정보가져오기
         const user = await this.usersService.getUser(userId);
         if (!user) throw new UnauthorizedException('User not found');
 
-        return user;
+        request['user'] = user;
+        return true;
       } catch (refreshError) {
         throw new UnauthorizedException('Invalid or Expired Refresh Token');
       }
     }
   }
-
-  // accessToken 재발급
+  // access 토큰 재발급
   private NewAccessToken(userId: string): string {
     return jwt.sign(
-      { payload: userId },
+      { userId },
       this.configService.get<string>('ACCESS_SECRET'),
       { expiresIn: this.configService.get<number>('ACCESS_EXPIRATION_TIME') },
     );
   }
 
-  // accessToken을 쿠키 헤더에 포함
+  // Access 토큰을 쿠키에 설정
   private setAccessTokenCookie(request: Request, accessToken: string): void {
     request.res?.cookie('accessToken', accessToken, {
       httpOnly: true,

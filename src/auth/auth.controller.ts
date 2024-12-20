@@ -5,12 +5,12 @@ import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import { AuthService } from './services/auth.service';
 import { RedisService } from './redis/redis.service';
+import { JwtGuard } from './jwt/jwt.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly redisService: RedisService,
     private readonly configService: ConfigService,
   ) {}
 
@@ -58,7 +58,8 @@ export class AuthController {
   }
 
   @Get('/verify')
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(JwtGuard)
   authTest(@User() user: any) {
     return user;
   }
