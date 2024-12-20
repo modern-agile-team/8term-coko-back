@@ -10,7 +10,7 @@ export class ResSectionDto {
   readonly name: string;
 
   @ApiProperty({ type: [ResPartDto], example: [] })
-  readonly part?: Part[];
+  readonly part?: ResPartDto[];
 
   constructor({ id, name, part }: ResSectionDto) {
     this.id = id;

@@ -36,6 +36,17 @@ export class SectionsController {
     return new ResSectionDto(sectionWithParts);
   }
 
+  //@ApiSections.findOne()
+  @Get(':id/users/:userId/part-status')
+  async findOneWithStatus(
+    @Param('userId', PositiveIntPipe) userId: number,
+    @Param('id', PositiveIntPipe) id: number,
+  ) {
+    const sectionWithParts =
+      await this.sectionsService.findOneWithPartsAndStatus(userId, id);
+    return new ResSectionDto(sectionWithParts);
+  }
+
   @ApiSections.create()
   @Post()
   @HttpCode(204)
