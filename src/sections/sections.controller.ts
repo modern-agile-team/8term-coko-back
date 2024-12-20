@@ -36,7 +36,7 @@ export class SectionsController {
     return new ResSectionDto(sectionWithParts);
   }
 
-  //@ApiSections.findOne()
+  @ApiSections.findOneWithStatus()
   @Get(':id/users/:userId/part-status')
   async findOneWithStatus(
     @Param('userId', PositiveIntPipe) userId: number,
