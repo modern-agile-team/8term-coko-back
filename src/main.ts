@@ -25,7 +25,7 @@ async function bootstrap() {
       'MIT',
       'https://github.com/git/git-scm.com/blob/gh-pages/MIT-LICENSE.txt',
     )
-    .addServer('http://localhost:3000', 'develop')
+    .addServer('https://api.cokoedu.com', 'develop')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document, {
@@ -43,7 +43,7 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: ['http://localhost:3000', '.cokoedu.com', '.api.cokoedu.com'],
+    origin: ['.localhost:3000', '.cokoedu.com'],
     credentials: true,
   });
 
