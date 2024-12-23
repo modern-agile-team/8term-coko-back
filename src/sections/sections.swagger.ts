@@ -175,7 +175,6 @@ export const ApiSections = {
         status: 200,
         description:
           '특정 section의 id param값을 통해 id, nmae 값을 조회 또한 id를 참조하는 part객체들을 배열로 보냄',
-        type: ResSectionDto,
         content: {
           JSON: {
             example: {
