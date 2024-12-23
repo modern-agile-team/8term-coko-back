@@ -4,7 +4,6 @@ import { User } from 'src/common/decorators/get-user.decorator';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import { AuthService } from './services/auth.service';
-import { RedisService } from './redis/redis.service';
 import { JwtGuard } from './jwt/jwt.guard';
 
 @Controller('auth')
@@ -12,7 +11,6 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
-    private readonly redisService: RedisService,
   ) {}
 
   // Google 로그인 시작

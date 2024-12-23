@@ -53,7 +53,7 @@ export class JwtGuard implements CanActivate {
       try {
         // refresh 토큰 변조, 만료를 검사
         const payload = jwt.verify(
-          accessToken,
+          refreshToken,
           this.configService.get<string>('REFRESH_SECRET'),
         ) as any;
 
