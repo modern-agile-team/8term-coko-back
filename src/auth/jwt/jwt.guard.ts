@@ -67,7 +67,7 @@ export class JwtGuard implements CanActivate {
 
         // access 토큰 재발급 및 쿠키에 담기
         const newAccessToken = this.NewAccessToken(userId);
-        this.setAccessTokenCookie(request, newAccessToken);
+        this.setAccessTokenCookie(context, newAccessToken);
 
         const user = await this.usersService.getUser(userId);
         if (!user) throw new UnauthorizedException('User not found');
@@ -89,8 +89,12 @@ export class JwtGuard implements CanActivate {
   }
 
   // access 토큰을 쿠키에 설정
-  private setAccessTokenCookie(request: Request, accessToken: string): void {
-    request.res?.cookie('accessToken', accessToken, {
+  private setAccessTokenCookie(
+    context: ExecutionContext,
+    accessToken: string,
+  ): void {
+    const response = context.switchToHttp().getResponse();
+    response.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: true,
       domain: this.configService.get<string>('COOKIE_DOMAIN'),
