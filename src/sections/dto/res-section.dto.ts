@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ResPartDto } from 'src/parts/dto/res-part.part.dto';
-import { Part } from 'src/parts/entities/part.entity';
 
 export class ResSectionDto {
   @ApiProperty({ example: 1 })
@@ -10,7 +9,7 @@ export class ResSectionDto {
   readonly name: string;
 
   @ApiProperty({ type: [ResPartDto], example: [] })
-  readonly part?: Part[];
+  readonly part?: ResPartDto[];
 
   constructor({ id, name, part }: ResSectionDto) {
     this.id = id;

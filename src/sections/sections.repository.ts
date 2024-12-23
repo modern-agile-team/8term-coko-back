@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { Section } from './entities/section.entity';
+import { ResSectionDto } from './dto/res-section.dto';
 
 @Injectable()
 export class SectionsRepository {
@@ -17,10 +18,26 @@ export class SectionsRepository {
     });
   }
 
-  async findSectionWithPartsById(id: number): Promise<Section> {
+  async findSectionWithPartsById(id: number): Promise<ResSectionDto> {
     return this.prisma.section.findUnique({
       where: { id },
       include: { part: true },
+    });
+  }
+
+  async findSectionWithPartStatus(userId: number, id: number) {
+    return this.prisma.section.findUnique({
+      where: { id },
+      include: {
+        part: {
+          include: {
+            PartProgress: {
+              where: { userId },
+              select: { status: true },
+            },
+          },
+        },
+      },
     });
   }
 
