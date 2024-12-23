@@ -1,5 +1,7 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { CreateSectionDto } from './dto/create-section.dto';
+import { ResSectionDto } from './dto/res-section.dto';
 
 export const ApiSections = {
   create: () => {
@@ -7,19 +9,13 @@ export const ApiSections = {
       ApiOperation({
         summary: 'section 생성',
       }),
+      ApiBody({
+        description: '섹션 생성에 필요한 정보',
+        type: CreateSectionDto,
+      }),
       ApiResponse({
-        status: 201,
+        status: 204,
         description: 'sections가 성공적으로 생성됨',
-        content: {
-          JSON: {
-            example: {
-              id: 2,
-              name: 'JSON',
-              createdAt: '2024-11-04T10:42:17.052Z',
-              updatedAt: '2024-11-04T10:42:17.052Z',
-            },
-          },
-        },
       }),
       ApiResponse({
         status: 400,
@@ -60,6 +56,8 @@ export const ApiSections = {
       ApiResponse({
         status: 200,
         description: 'section의 전체 id , name 을 조회함',
+        type: ResSectionDto,
+        isArray: true,
         content: {
           JSON: {
             example: [
@@ -96,6 +94,7 @@ export const ApiSections = {
         status: 200,
         description:
           '특정 section의 id param값을 통해 id, nmae 값을 조회 또한 id를 참조하는 part객체들을 배열로 보냄',
+        type: ResSectionDto,
         content: {
           JSON: {
             example: {
@@ -162,24 +161,63 @@ export const ApiSections = {
       }),
     );
   },
+  findOneWithStatus: () => {
+    return applyDecorators(
+      ApiOperation({
+        description: `
+          section id와 유저 id로 조회
+          1. 단일 section 정보 
+          2. 관련 part들의 정보 
+          3. part내부에 진행도와 관련된 status항목을 추가함
+          4. status값이 없으면 유저가 그 파트에 대한 진행도 사항이 undefind인 오류 상황임`,
+      }),
+      ApiResponse({
+        status: 200,
+        description:
+          '특정 section의 id param값을 통해 id, nmae 값을 조회 또한 id를 참조하는 part객체들을 배열로 보냄',
+        content: {
+          JSON: {
+            example: {
+              id: 1,
+              name: '변수',
+              part: [
+                {
+                  id: 1,
+                  sectionId: 1,
+                  name: '변수명',
+                  status: 'LOCKED',
+                },
+                {
+                  id: 2,
+                  sectionId: 1,
+                  name: 'const',
+                  status: 'LOCKED',
+                },
+                {
+                  id: 3,
+                  sectionId: 1,
+                  name: 'let',
+                  status: 'LOCKED',
+                },
+              ],
+            },
+          },
+        },
+      }),
+    );
+  },
   update: () => {
     return applyDecorators(
       ApiOperation({
         summary: 'section 단일 속성 수정',
       }),
+      ApiBody({
+        description: '섹션 생성에 필요한 정보',
+        type: CreateSectionDto,
+      }),
       ApiResponse({
-        status: 200,
+        status: 204,
         description: '특정 section의 id param값을 통해 nmae 값을 수정',
-        content: {
-          JSON: {
-            example: {
-              id: 3,
-              name: 'typeof',
-              createdAt: '2024-11-04T10:52:46.252Z',
-              updatedAt: '2024-11-04T11:22:33.138Z',
-            },
-          },
-        },
       }),
       ApiResponse({
         status: 404,
@@ -226,18 +264,8 @@ export const ApiSections = {
         summary: 'section 단일 삭제',
       }),
       ApiResponse({
-        status: 200,
+        status: 204,
         description: '특정 section의 id param값을 통해 section 삭제',
-        content: {
-          JSON: {
-            example: {
-              id: 3,
-              name: 'typeof',
-              createdAt: '2024-11-04T10:52:46.252Z',
-              updatedAt: '2024-11-04T11:22:33.138Z',
-            },
-          },
-        },
       }),
       ApiResponse({
         status: 404,
