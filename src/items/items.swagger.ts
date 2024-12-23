@@ -17,7 +17,7 @@ export const ApiItems = {
             example: {
               id: 2,
               name: 'blue-hat',
-              cost: 2000,
+              price: 2000,
               image: '2',
               createdAt: '2024-11-05T10:30:15.000Z',
               updatedAt: '2024-11-05T10:40:15.000Z',
