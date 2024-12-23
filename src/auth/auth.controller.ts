@@ -21,7 +21,7 @@ export class AuthController {
   // Google 로그인 콜백 처리
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  async googleLogin(@User() user: any, @Res() res: Response) {
+  async googleLogin(@User() user: any, @Res() response: Response) {
     const { accessToken, refreshToken } =
       await this.authService.googleLogin(user);
 
@@ -50,10 +50,10 @@ export class AuthController {
     ];
 
     for (const cookie of cookies) {
-      res.cookie(cookie.name, cookie.value, cookie.options);
+      response.cookie(cookie.name, cookie.value, cookie.options);
     }
 
-    res.redirect(this.configService.get<string>('CLIENT_MAIN_PAGE_URL'));
+    response.redirect(this.configService.get<string>('CLIENT_MAIN_PAGE_URL'));
   }
 
   @Get('/verify')

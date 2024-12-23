@@ -8,7 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { UsersService } from 'src/users/services/users.service';
 import { RedisService } from '../redis/redis.service';
 import * as jwt from 'jsonwebtoken';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 @Injectable()
 export class JwtGuard implements CanActivate {
@@ -20,6 +20,7 @@ export class JwtGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
+    const response = context.switchToHttp().getResponse<Response>();
 
     const accessToken = request?.cookies?.accessToken;
     const refreshToken = request?.cookies?.refreshToken;
@@ -67,7 +68,7 @@ export class JwtGuard implements CanActivate {
 
         // access 토큰 재발급 및 쿠키에 담기
         const newAccessToken = this.NewAccessToken(userId);
-        this.setAccessTokenCookie(context, newAccessToken);
+        this.setAccessTokenCookie(response, newAccessToken);
 
         const user = await this.usersService.getUser(userId);
         if (!user) throw new UnauthorizedException('User not found');
@@ -89,11 +90,7 @@ export class JwtGuard implements CanActivate {
   }
 
   // access 토큰을 쿠키에 설정
-  private setAccessTokenCookie(
-    context: ExecutionContext,
-    accessToken: string,
-  ): void {
-    const response = context.switchToHttp().getResponse();
+  private setAccessTokenCookie(response: Response, accessToken: string): void {
     response.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: true,
