@@ -29,11 +29,18 @@ export class PartsRepository {
     });
   }
 
-  // async createPartById(data: CreatePartDto): Promise<Part> {
-  //   return this.prisma.part.create({
-  //     data,
-  //   });
-  // }
+  async findPartMaxOrder(): Promise<number> {
+    const result = await this.prisma.part.aggregate({
+      _max: { order: true },
+    });
+    return result._max.order ?? 0;
+  }
+
+  async createPartById(data): Promise<Part> {
+    return this.prisma.part.create({
+      data,
+    });
+  }
 
   async deletePartById(id: number): Promise<Part> {
     return this.prisma.part.delete({
