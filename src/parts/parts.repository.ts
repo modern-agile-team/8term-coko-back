@@ -29,11 +29,11 @@ export class PartsRepository {
     });
   }
 
-  async createPartById(data: CreatePartDto): Promise<Part> {
-    return this.prisma.part.create({
-      data,
-    });
-  }
+  // async createPartById(data: CreatePartDto): Promise<Part> {
+  //   return this.prisma.part.create({
+  //     data,
+  //   });
+  // }
 
   async deletePartById(id: number): Promise<Part> {
     return this.prisma.part.delete({

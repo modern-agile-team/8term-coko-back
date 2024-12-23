@@ -26,12 +26,12 @@ export class PartsController {
     return ResPartDto.fromArray(parts);
   }
 
-  @ApiParts.create()
-  @Post()
-  @HttpCode(204)
-  async create(@Body() createPartDto: CreatePartDto): Promise<void> {
-    await this.partsService.create(createPartDto);
-  }
+  // @ApiParts.create()
+  // @Post()
+  // @HttpCode(204)
+  // async create(@Body() createPartDto: CreatePartDto): Promise<void> {
+  //   await this.partsService.create(createPartDto);
+  // }
 
   @ApiParts.remove()
   @Delete(':id')

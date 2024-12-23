@@ -48,7 +48,10 @@ export class SectionsService {
       throw new ConflictException();
     }
 
-    return this.sectionsRepository.createSection(body);
+    const maxOrder = await this.sectionsRepository.findSectionMaxOrder();
+    const newOrder = maxOrder + 1;
+
+    return this.sectionsRepository.createSection({ ...body, order: newOrder });
   }
 
   async update(id: number, body: CreateSectionDto): Promise<Section> {

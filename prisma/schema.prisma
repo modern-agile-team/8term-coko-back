@@ -47,6 +47,7 @@ model Quiz {
 model Section {
   id        Int      @id @default(autoincrement())
   name      String   @unique @db.VarChar(255)
+  order     Int      @unique
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   part      Part[]
@@ -93,6 +94,7 @@ model Part {
   id           Int            @id @default(autoincrement())
   sectionId    Int            @map("section_id")
   name         String         @unique @db.VarChar(255)
+  order        Int            @unique
   createdAt    DateTime       @default(now()) @map("created_at")
   updatedAt    DateTime       @updatedAt @map("updated_at")
   section      Section        @relation(fields: [sectionId], references: [id], onDelete: Restrict)

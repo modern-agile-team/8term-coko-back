@@ -30,7 +30,14 @@ export class SectionsRepository {
     });
   }
 
-  async createSection(data: CreateSectionDto): Promise<Section> {
+  async findSectionMaxOrder(): Promise<number> {
+    const result = await this.prisma.section.aggregate({
+      _max: { order: true },
+    });
+    return result._max.order ?? 0;
+  }
+
+  async createSection(data): Promise<Section> {
     return this.prisma.section.create({
       data,
     });

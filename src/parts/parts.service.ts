@@ -30,19 +30,19 @@ export class PartsService {
     return this.partsRepository.findAllPart();
   }
 
-  async create(body: CreatePartDto): Promise<Part> {
-    const { sectionId, name } = body;
+  // async create(body: CreatePartDto): Promise<Part> {
+  //   const { sectionId, name } = body;
 
-    await this.sectionsService.findOne(sectionId);
+  //   await this.sectionsService.findOne(sectionId);
 
-    const part = await this.partsRepository.findOnePartByName(name);
+  //   const part = await this.partsRepository.findOnePartByName(name);
 
-    if (part) {
-      throw new ConflictException('part의 이름은 유니크 해야합니다.');
-    }
+  //   if (part) {
+  //     throw new ConflictException('part의 이름은 유니크 해야합니다.');
+  //   }
 
-    return this.partsRepository.createPartById(body);
-  }
+  //   return this.partsRepository.createPartById(body);
+  // }
 
   async remove(id: number): Promise<Part> {
     const part = await this.partsRepository.findOnePartById(id);
