@@ -1,4 +1,4 @@
-import { Controller, Get, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/common/decorators/get-user.decorator';
 import { ConfigService } from '@nestjs/config';
@@ -12,6 +12,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
+    private readonly redisService: RedisService,
   ) {}
 
   // Google 로그인 시작
@@ -60,7 +61,7 @@ export class AuthController {
   @Get('/verify')
   // @UseGuards(AuthGuard('jwt'))
   @UseGuards(JwtGuard)
-  authTest(@User() user: any) {
+  tokenVerify(@User() user: any) {
     return user;
   }
 }

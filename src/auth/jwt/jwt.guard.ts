@@ -54,7 +54,7 @@ export class JwtGuard implements CanActivate {
         // refresh 토큰 변조, 만료를 검사
         const payload = jwt.verify(
           accessToken,
-          this.configService.get<string>('ACCESS_SECRET'),
+          this.configService.get<string>('REFRESH_SECRET'),
         ) as any;
 
         const { userId } = payload;
@@ -88,7 +88,7 @@ export class JwtGuard implements CanActivate {
     );
   }
 
-  // Access 토큰을 쿠키에 설정
+  // access 토큰을 쿠키에 설정
   private setAccessTokenCookie(request: Request, accessToken: string): void {
     request.res?.cookie('accessToken', accessToken, {
       httpOnly: true,
