@@ -7,6 +7,7 @@ import { CreateSectionDto } from './dto/create-section.dto';
 import { SectionsRepository } from './sections.repository';
 import { PartsRepository } from 'src/parts/parts.repository';
 import { Section } from './entities/section.entity';
+import { ResSectionDto } from './dto/res-section.dto';
 
 @Injectable()
 export class SectionsService {
@@ -29,7 +30,7 @@ export class SectionsService {
     return section;
   }
 
-  async findOneWithParts(id: number): Promise<Section> {
+  async findOneWithParts(id: number): Promise<ResSectionDto> {
     const sectionWithParts =
       await this.sectionsRepository.findSectionWithPartsById(id);
 
@@ -38,6 +39,31 @@ export class SectionsService {
     }
 
     return sectionWithParts;
+  }
+
+  async findOneWithPartsAndStatus(
+    userId: number,
+    id: number,
+  ): Promise<ResSectionDto> {
+    const { part, ...section } =
+      await this.sectionsRepository.findSectionWithPartStatus(userId, id);
+
+    if (!section) {
+      throw new NotFoundException();
+    }
+
+    // ropository에서 받은 값 중 part를 정리하는 코드
+    const newParts = part.map(
+      ({ PartProgress, createdAt, updatedAt, ...orders }) => ({
+        ...orders,
+        status: PartProgress[0]?.status,
+      }),
+    );
+
+    return {
+      ...section,
+      part: newParts,
+    };
   }
 
   async create(body: CreateSectionDto): Promise<Section> {
