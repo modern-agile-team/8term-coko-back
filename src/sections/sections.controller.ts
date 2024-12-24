@@ -55,7 +55,7 @@ export class SectionsController {
     await this.sectionsService.create(body);
   }
 
-  //@ApiSections.updateAll()
+  @ApiSections.updateAll()
   @Patch(':id')
   @HttpCode(204)
   async updateAll(
@@ -65,7 +65,7 @@ export class SectionsController {
     await this.sectionsService.updateAll(id, body);
   }
 
-  //@ApiSections.updateOrder()
+  @ApiSections.updateOrder()
   @Patch(':id/order')
   @HttpCode(204)
   async updateOrder(
