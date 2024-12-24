@@ -23,7 +23,9 @@ export class SectionsRepository {
   async findSectionWithPartsById(id: number): Promise<ResSectionDto> {
     return this.prisma.section.findUnique({
       where: { id },
-      include: { part: true },
+      include: {
+        part: { orderBy: { order: 'asc' } },
+      },
     });
   }
 
