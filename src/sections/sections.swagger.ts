@@ -2,6 +2,7 @@ import { applyDecorators } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { ResSectionDto } from './dto/res-section.dto';
+import { UpdateSectionOrderDto } from './dto/update-section-order.dto';
 
 export const ApiSections = {
   create: () => {
@@ -206,7 +207,7 @@ export const ApiSections = {
       }),
     );
   },
-  update: () => {
+  updateAll: () => {
     return applyDecorators(
       ApiOperation({
         summary: 'section 단일 속성 수정',
@@ -218,6 +219,60 @@ export const ApiSections = {
       ApiResponse({
         status: 204,
         description: '특정 section의 id param값을 통해 nmae 값을 수정',
+      }),
+      ApiResponse({
+        status: 404,
+        description: 'section의 id 값을 찾을 수 없음',
+        content: {
+          JSON: {
+            example: {
+              message: 'Not Found',
+              statusCode: 404,
+            },
+          },
+        },
+      }),
+      ApiResponse({
+        status: 400,
+        description: 'section의 id 값이 양수가 아님',
+        content: {
+          JSON: {
+            example: {
+              message: 'Bad Request',
+              statusCode: 400,
+            },
+          },
+        },
+      }),
+      ApiResponse({
+        status: 400,
+        description: 'section의 id 값이 정수가 아님',
+        content: {
+          JSON: {
+            example: {
+              message: 'Validation failed (numeric string is expected)',
+              error: 'Bad Request',
+              statusCode: 400,
+            },
+          },
+        },
+      }),
+    );
+  },
+  updateOrder: () => {
+    return applyDecorators(
+      ApiOperation({
+        summary: 'section 순서 변경',
+      }),
+      ApiBody({
+        description: '섹션 순서 수정에 필요한 정보',
+        type: UpdateSectionOrderDto,
+      }),
+      ApiResponse({
+        status: 204,
+        description:
+          'order 값이 변경됨, 변경된 순서에 따라서 다른 section의 order도 업데이트 됨',
+        type: ResSectionDto,
       }),
       ApiResponse({
         status: 404,

@@ -11,10 +11,14 @@ export class ResPartDto {
   @ApiProperty({ example: 'const' })
   readonly name: string;
 
-  constructor({ id, sectionId, name }: Part) {
+  @ApiProperty({ example: 2 })
+  readonly order: number;
+
+  constructor({ id, sectionId, name, order }: Part) {
     this.id = id;
     this.sectionId = sectionId;
     this.name = name;
+    this.order = order;
   }
 
   static fromArray(parts: Part[]): ResPartDto[] {
