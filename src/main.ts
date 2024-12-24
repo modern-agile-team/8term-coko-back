@@ -45,6 +45,9 @@ async function bootstrap() {
   app.enableCors({
     origin: ['.localhost:3000', 'https://cokoedu.com'],
     credentials: true,
+    methods: 'GET,HEAD,OPTIONS,POST,PUT',
+    allowedHeaders:
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization',
   });
 
   app.use(cookieParser());
