@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   HttpCode,
+  Patch,
 } from '@nestjs/common';
 import { PartsService } from './parts.service';
 import { CreatePartDto } from './dto/create-part.dto';
@@ -35,7 +36,7 @@ export class PartsController {
   }
 
   //@ApiParts.updateAll()
-  @Post()
+  @Patch(':id')
   @HttpCode(204)
   async updateAll(
     @Param('id', PositiveIntPipe) id: number,
@@ -45,7 +46,7 @@ export class PartsController {
   }
 
   //@ApiParts.updateOrder()
-  @Post()
+  @Patch(':id/order')
   @HttpCode(204)
   async updateOrder(
     @Param('id', PositiveIntPipe) id: number,
