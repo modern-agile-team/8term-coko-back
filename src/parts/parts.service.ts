@@ -38,7 +38,7 @@ export class PartsService {
       throw new NotFoundException('요청한 id 가 없습니다.');
     }
 
-    if (newOrder >= parts.length) {
+    if (newOrder > parts.length) {
       throw new BadRequestException('order 값이 너무 큽니다.');
     }
 
