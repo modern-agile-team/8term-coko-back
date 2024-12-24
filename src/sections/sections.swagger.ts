@@ -265,7 +265,7 @@ export const ApiSections = {
         summary: 'section 순서 변경',
       }),
       ApiBody({
-        description: '섹션 생성에 필요한 정보',
+        description: '섹션 순서 수정에 필요한 정보',
         type: UpdateSectionOrderDto,
       }),
       ApiResponse({
