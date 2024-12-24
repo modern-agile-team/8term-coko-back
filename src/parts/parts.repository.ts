@@ -8,7 +8,9 @@ export class PartsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAllPart(): Promise<Part[]> {
-    return this.prisma.part.findMany();
+    return this.prisma.part.findMany({
+      orderBy: { order: 'asc' },
+    });
   }
 
   async findOnePartById(id: number): Promise<Part> {
@@ -38,6 +40,13 @@ export class PartsRepository {
 
   async createPartById(data): Promise<Part> {
     return this.prisma.part.create({
+      data,
+    });
+  }
+
+  async updateSectionById(id: number, data: CreatePartDto) {
+    return this.prisma.part.update({
+      where: { id },
       data,
     });
   }

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -8,14 +9,62 @@ import { PartsRepository } from './parts.repository';
 import { SectionsService } from 'src/sections/sections.service';
 import { QuizzesRepository } from 'src/quizzes/quizzes.repository';
 import { Part } from './entities/part.entity';
+import { UpdatePartOrderDto } from './dto/update-part-order.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class PartsService {
   constructor(
+    private readonly prisma: PrismaService,
     private readonly sectionsService: SectionsService,
     private readonly partsRepository: PartsRepository,
     private readonly quizzesRepository: QuizzesRepository,
   ) {}
+  /**
+   * 파트 ID 배열을 재배열합니다.
+   * @param movingId - 이동하려는 파트 ID
+   * @param newOrder - 새로운 순서
+   * @returns 재배열된 파트 ID 배열
+   */
+  private async reorderPartIds(
+    movingId: number,
+    newOrder: number,
+  ): Promise<number[]> {
+    const parts = await this.partsRepository.findAllPart();
+    const partIds = parts.map((part) => part.id);
+    const currentIndex = partIds.indexOf(movingId);
+
+    if (currentIndex === -1) {
+      throw new NotFoundException('요청한 id 가 없습니다.');
+    }
+
+    if (newOrder >= parts.length) {
+      throw new BadRequestException('order 값이 너무 큽니다.');
+    }
+
+    partIds.splice(currentIndex, 1);
+    partIds.splice(newOrder - 1, 0, movingId);
+
+    return partIds;
+  }
+
+  /**
+   * 파트 ID 배열을 기반으로 파트 순서를 데이터베이스에 업데이트합니다.
+   * @param partIds - 재배열된 파트 ID 배열
+   * @todo 이것 또 섹션처럼 비즈니스 로직인거 같은데 또 데이터베이스 관련 로직이라
+   * repository로 보낼지 말지 고민 입니다.
+   */
+  private async updatePartOrders(partIds: number[]): Promise<void> {
+    await this.prisma.$transaction(
+      partIds.map((id, index) =>
+        this.prisma.part.update({
+          where: { id },
+          data: { order: index + 1 },
+        }),
+      ),
+    );
+  }
+
   async findOne(id: number): Promise<Part> {
     const part = await this.partsRepository.findOnePartById(id);
 
@@ -47,12 +96,31 @@ export class PartsService {
     return this.partsRepository.createPartById({ ...body, order: newOrder });
   }
 
-  async remove(id: number): Promise<Part> {
-    const part = await this.partsRepository.findOnePartById(id);
+  async updateAll(id: number, body: CreatePartDto): Promise<Part> {
+    await this.findOne(id);
+    return this.partsRepository.updateSectionById(id, body);
+  }
 
-    if (!part) {
-      throw new NotFoundException();
+  async updateOrder(id: number, body: UpdatePartOrderDto): Promise<Part> {
+    const part = await this.findOne(id);
+
+    // 기존 순서와 변경할 순서가 같다면 그대로 반환
+    if (part.order === body.order) {
+      return part;
     }
+
+    // 섹션 순서 재배치를 위한 처리
+    const updatedSectionIds = await this.reorderPartIds(id, body.order);
+
+    // 데이터베이스의 섹션 순서를 업데이트
+    await this.updatePartOrders(updatedSectionIds);
+
+    // 변경된 섹션 반환
+    return this.partsRepository.findOnePartById(id);
+  }
+
+  async remove(id: number): Promise<Part> {
+    await this.findOne(id);
 
     const quiz = await this.quizzesRepository.findOneByPartId(id);
 

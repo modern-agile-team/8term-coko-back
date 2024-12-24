@@ -13,6 +13,7 @@ import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe
 import { ApiTags } from '@nestjs/swagger';
 import { ApiParts } from './parts.swagger';
 import { ResPartDto } from './dto/res-part.part.dto';
+import { UpdatePartOrderDto } from './dto/update-part-order.dto';
 
 @ApiTags('parts')
 @Controller('parts')
@@ -31,6 +32,26 @@ export class PartsController {
   @HttpCode(204)
   async create(@Body() createPartDto: CreatePartDto): Promise<void> {
     await this.partsService.create(createPartDto);
+  }
+
+  //@ApiParts.updateAll()
+  @Post()
+  @HttpCode(204)
+  async updateAll(
+    @Param('id', PositiveIntPipe) id: number,
+    @Body() body: CreatePartDto,
+  ): Promise<void> {
+    await this.partsService.updateAll(id, body);
+  }
+
+  //@ApiParts.updateOrder()
+  @Post()
+  @HttpCode(204)
+  async updateOrder(
+    @Param('id', PositiveIntPipe) id: number,
+    @Body() body: UpdatePartOrderDto,
+  ): Promise<void> {
+    await this.partsService.updateOrder(id, body);
   }
 
   @ApiParts.remove()
