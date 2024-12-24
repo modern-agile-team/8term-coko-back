@@ -9,7 +9,9 @@ export class SectionsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAllSections(): Promise<Section[]> {
-    return this.prisma.section.findMany();
+    return this.prisma.section.findMany({
+      orderBy: { order: 'asc' },
+    });
   }
 
   async findOneSectionById(id: number): Promise<Section> {

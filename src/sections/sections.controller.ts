@@ -14,6 +14,7 @@ import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe
 import { ApiTags } from '@nestjs/swagger';
 import { ApiSections } from './sections.swagger';
 import { ResSectionDto } from './dto/res-section.dto';
+import { UpdateSectionOrderDto } from './dto/update-section-order.dto';
 
 @ApiTags('sections')
 @Controller('sections')
@@ -54,14 +55,24 @@ export class SectionsController {
     await this.sectionsService.create(body);
   }
 
-  @ApiSections.update()
+  //@ApiSections.updateAll()
   @Patch(':id')
   @HttpCode(204)
-  async update(
+  async updateAll(
     @Param('id', PositiveIntPipe) id: number,
     @Body() body: CreateSectionDto,
   ): Promise<void> {
-    await this.sectionsService.update(id, body);
+    await this.sectionsService.updateAll(id, body);
+  }
+
+  //@ApiSections.updateOrder()
+  @Patch(':id/order')
+  @HttpCode(204)
+  async updateOrder(
+    @Param('id', PositiveIntPipe) id: number,
+    @Body() body: UpdateSectionOrderDto,
+  ): Promise<void> {
+    await this.sectionsService.updateOrder(id, body);
   }
 
   @ApiSections.remove()
