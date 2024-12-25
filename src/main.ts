@@ -43,7 +43,11 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: ['https://localhost:3000', 'https://cokoedu.com'],
+    origin: [
+      'https://localhost:3000',
+      'https://cokoedu.com',
+      'https://admin.cokoedu.com',
+    ],
     credentials: true,
     methods: 'GET,HEAD,POST,PUT,PATCH',
     allowedHeaders:
