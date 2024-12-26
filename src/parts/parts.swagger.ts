@@ -2,6 +2,7 @@ import { applyDecorators } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreatePartDto } from './dto/create-part.dto';
 import { ResPartDto } from './dto/res-part.part.dto';
+import { UpdatePartOrderDto } from './dto/update-part-order.dto';
 
 export const ApiParts = {
   create: () => {
@@ -83,6 +84,113 @@ export const ApiParts = {
                 updatedAt: '2024-10-31T08:31:03.580Z',
               },
             ],
+          },
+        },
+      }),
+    );
+  },
+  updateAll: () => {
+    return applyDecorators(
+      ApiOperation({
+        summary: 'part 단일 속성 수정',
+      }),
+      ApiBody({
+        description: '파트 생성에 필요한 정보',
+        type: CreatePartDto,
+      }),
+      ApiResponse({
+        status: 204,
+        description:
+          '특정 파트의 id param값을 통해 nmae 값과 참조 섹션 id를 수정',
+      }),
+      ApiResponse({
+        status: 404,
+        description: '파트의 id 값을 찾을 수 없음',
+        content: {
+          JSON: {
+            example: {
+              message: 'Not Found',
+              statusCode: 404,
+            },
+          },
+        },
+      }),
+      ApiResponse({
+        status: 400,
+        description: '파트의 id 값이 양수가 아님',
+        content: {
+          JSON: {
+            example: {
+              message: 'Bad Request',
+              statusCode: 400,
+            },
+          },
+        },
+      }),
+      ApiResponse({
+        status: 400,
+        description: '파트의 id 값이 정수가 아님',
+        content: {
+          JSON: {
+            example: {
+              message: 'Validation failed (numeric string is expected)',
+              error: 'Bad Request',
+              statusCode: 400,
+            },
+          },
+        },
+      }),
+    );
+  },
+  updateOrder: () => {
+    return applyDecorators(
+      ApiOperation({
+        summary: 'part의 순서 변경',
+      }),
+      ApiBody({
+        description: '파트 수정에 필요한 order 정보',
+        type: UpdatePartOrderDto,
+      }),
+      ApiResponse({
+        status: 204,
+        description:
+          'order 값이 변경됨, 변경된 순서에 따라서 다른 파트 order도 업데이트 됨',
+        type: ResPartDto,
+      }),
+      ApiResponse({
+        status: 404,
+        description: '파트이 id 값을 찾을 수 없음',
+        content: {
+          JSON: {
+            example: {
+              message: 'Not Found',
+              statusCode: 404,
+            },
+          },
+        },
+      }),
+      ApiResponse({
+        status: 400,
+        description: '파트의 id 값이 양수가 아님',
+        content: {
+          JSON: {
+            example: {
+              message: 'Bad Request',
+              statusCode: 400,
+            },
+          },
+        },
+      }),
+      ApiResponse({
+        status: 400,
+        description: '파트의 id 값이 정수가 아님',
+        content: {
+          JSON: {
+            example: {
+              message: 'Validation failed (numeric string is expected)',
+              error: 'Bad Request',
+              statusCode: 400,
+            },
           },
         },
       }),

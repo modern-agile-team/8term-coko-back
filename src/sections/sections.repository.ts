@@ -9,7 +9,9 @@ export class SectionsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAllSections(): Promise<Section[]> {
-    return this.prisma.section.findMany();
+    return this.prisma.section.findMany({
+      orderBy: { order: 'asc' },
+    });
   }
 
   async findOneSectionById(id: number): Promise<Section> {
@@ -21,7 +23,9 @@ export class SectionsRepository {
   async findSectionWithPartsById(id: number): Promise<ResSectionDto> {
     return this.prisma.section.findUnique({
       where: { id },
-      include: { part: true },
+      include: {
+        part: { orderBy: { order: 'asc' } },
+      },
     });
   }
 
@@ -47,7 +51,14 @@ export class SectionsRepository {
     });
   }
 
-  async createSection(data: CreateSectionDto): Promise<Section> {
+  async findSectionMaxOrder(): Promise<number> {
+    const result = await this.prisma.section.aggregate({
+      _max: { order: true },
+    });
+    return result._max.order ?? 0;
+  }
+
+  async createSection(data): Promise<Section> {
     return this.prisma.section.create({
       data,
     });
