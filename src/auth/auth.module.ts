@@ -9,10 +9,18 @@ import { JwtStrategy } from './jwt/jwt.strategy';
 import { UsersModule } from 'src/users/modules/users.module';
 import { RedisModule } from './redis/redis.module';
 import { JwtGuard } from './jwt/jwt.guard';
+import { CookieService } from './services/cookie.service';
 
 @Module({
   imports: [PassportModule, JwtModule, UsersModule, RedisModule],
-  providers: [AuthService, TokenService, GoogleStrategy, JwtStrategy, JwtGuard],
+  providers: [
+    AuthService,
+    TokenService,
+    CookieService,
+    GoogleStrategy,
+    JwtStrategy,
+    JwtGuard,
+  ],
   controllers: [AuthController],
 })
 export class AuthModule {}

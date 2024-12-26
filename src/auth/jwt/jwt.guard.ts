@@ -7,6 +7,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from 'src/users/services/users.service';
 import { RedisService } from '../redis/redis.service';
+import { TokenService } from '../services/token.service';
 import * as jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
 
@@ -15,6 +16,7 @@ export class JwtGuard implements CanActivate {
   constructor(
     private configService: ConfigService,
     private usersService: UsersService,
+    private tokenService: TokenService,
     private redisService: RedisService,
   ) {}
 
@@ -67,7 +69,8 @@ export class JwtGuard implements CanActivate {
         }
 
         // access 토큰 재발급 및 쿠키에 담기
-        const newAccessToken = this.NewAccessToken(userId);
+        const newAccessToken =
+          await this.tokenService.createAccessToken(userId);
         this.setAccessTokenCookie(response, newAccessToken);
 
         const user = await this.usersService.getUser(userId);
@@ -79,14 +82,6 @@ export class JwtGuard implements CanActivate {
         throw new UnauthorizedException('Invalid or Expired Refresh Token');
       }
     }
-  }
-  // access 토큰 재발급
-  private NewAccessToken(userId: string): string {
-    return jwt.sign(
-      { userId },
-      this.configService.get<string>('ACCESS_SECRET'),
-      { expiresIn: this.configService.get<number>('ACCESS_EXPIRATION_TIME') },
-    );
   }
 
   // access 토큰을 쿠키에 설정
