@@ -49,7 +49,7 @@ async function bootstrap() {
       'https://admin.cokoedu.com',
     ],
     credentials: true,
-    methods: 'GET,HEAD,POST,PUT,PATCH',
+    methods: 'GET,POST,PUT,PATCH,DELETE',
     allowedHeaders:
       'Origin, X-Requested-With, Content-Type, Accept, Authorization',
   });
