@@ -4,8 +4,9 @@ import { User } from 'src/common/decorators/get-user.decorator';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import { AuthService } from './services/auth.service';
-import { JwtGuard } from './jwt/jwt.guard';
+import { JwtGuard } from './guard/jwt.guard';
 import { CookieService } from './services/cookie.service';
+import { LogoutGuard } from './guard/logout.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -23,16 +24,17 @@ export class AuthController {
   // Google 로그인 콜백 처리
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  async googleLogin(@User() user: any, @Res() response: Response) {
+  async googleLogin(@User() user: any, @Res() res: Response) {
     const { accessToken, refreshToken } =
       await this.authService.googleLogin(user);
 
-    await this.cookieService.cookieResponse(
-      response,
-      accessToken,
-      refreshToken,
-    );
+    await this.cookieService.cookieResponse(res, accessToken, refreshToken);
   }
+
+  // 로그아웃 처리
+  @Post('/logout')
+  @UseGuards(LogoutGuard)
+  async logout() {}
 
   @Get('/verify')
   @UseGuards(JwtGuard)

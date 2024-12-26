@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { RedisService } from '../redis/redis.service';
+import { Response } from 'express';
 
 @Injectable()
 export class CookieService {
   constructor(private configService: ConfigService) {}
 
   async cookieResponse(
-    response: any,
+    res: Response,
     accessToken: string,
     refreshToken: string,
   ) {
@@ -34,12 +36,17 @@ export class CookieService {
       },
     ];
 
-    // 쿠키 설정정
+    // 쿠키 설정
     for (const cookie of cookies) {
-      response.cookie(cookie.name, cookie.value, cookie.options);
+      res.cookie(cookie.name, cookie.value, cookie.options);
     }
 
-    // 메인페이지로 리다이렉트
-    response.redirect(this.configService.get<string>('CLIENT_MAIN_PAGE_URL'));
+    // 메인페이지로 리다이렉트 // 필요시 분리 가능
+    res.redirect(this.configService.get<string>('CLIENT_MAIN_PAGE_URL'));
+  }
+
+  async deleteCookie(res: Response) {
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
   }
 }
