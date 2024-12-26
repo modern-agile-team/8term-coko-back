@@ -28,7 +28,12 @@ export class AuthService {
 
     await this.saveSocialToken(socialAccessToken, userInfo.id);
 
-    return this.tokenService.createJWT(userInfo.id);
+    const accessToken = await this.tokenService.createAccessToken(userInfo.id);
+    const refreshToken = await this.tokenService.createRefreshToken(
+      userInfo.id,
+    );
+
+    return { accessToken, refreshToken };
   }
 
   //소셜토큰저장

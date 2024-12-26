@@ -11,13 +11,19 @@ export class TokenService {
     private redisService: RedisService,
   ) {}
 
-  async createJWT(userId: number) {
+  async createAccessToken(userId: number): Promise<string> {
     const payload = { userId };
 
     const accessToken = this.jwtService.sign(payload, {
       secret: this.configService.get<string>('ACCESS_SECRET'),
       expiresIn: this.configService.get<number>('ACCESS_EXPIRATION_TIME'),
     });
+
+    return accessToken;
+  }
+
+  async createRefreshToken(userId: number): Promise<string> {
+    const payload = { userId };
 
     const refreshToken = this.jwtService.sign(payload, {
       secret: this.configService.get<string>('REFRESH_SECRET'),
@@ -26,6 +32,6 @@ export class TokenService {
 
     this.redisService.set(String(userId), refreshToken);
 
-    return { accessToken, refreshToken };
+    return refreshToken;
   }
 }

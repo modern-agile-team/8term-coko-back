@@ -56,8 +56,8 @@ export class AuthController {
     response.redirect(this.configService.get<string>('CLIENT_MAIN_PAGE_URL'));
   }
 
+  @Post('/logout')
   @Get('/verify')
-  // @UseGuards(AuthGuard('jwt'))
   @UseGuards(JwtGuard)
   tokenVerify(@User() user: any) {
     return user;
