@@ -35,7 +35,7 @@ export class PartsController {
     await this.partsService.create(createPartDto);
   }
 
-  //@ApiParts.updateAll()
+  @ApiParts.updateAll()
   @Patch(':id')
   @HttpCode(204)
   async updateAll(
@@ -45,7 +45,7 @@ export class PartsController {
     await this.partsService.updateAll(id, body);
   }
 
-  //@ApiParts.updateOrder()
+  @ApiParts.updateOrder()
   @Patch(':id/order')
   @HttpCode(204)
   async updateOrder(
