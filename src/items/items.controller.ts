@@ -25,15 +25,15 @@ export class ItemsController {
   }
 
   // Post /items/dev 요청 처리 (개발환경에서만 실행되도록 한다)
-  @Post('dev')
+  @Post()
   @HttpCode(201)
   @ApiItems.addItem()
   async addItem(@Body() addItemDto: ItemChangeStatusDto): Promise<void> {
     await this.itemsService.addItem(addItemDto);
   }
 
-  // POST /items 요청 처리 (buy)
-  @Post()
+  // POST /users/:userId/items/:itemId 요청 처리
+  @Post('users/:userId/items/:itemId')
   @HttpCode(204)
   @ApiItems.buyItem()
   async buyItem(@Body() buyItemDto: BuyItemDto): Promise<void> {

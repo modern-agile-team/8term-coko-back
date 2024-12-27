@@ -1,5 +1,5 @@
 import {
-  Injectable, //의존성 주입
+  Injectable,
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common';
