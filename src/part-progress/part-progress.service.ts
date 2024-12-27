@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePartProgressDto } from './dto/create-part-progress.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PartProgressRepository } from './part-progress.repository';
@@ -8,11 +13,13 @@ import {
   PartStatus,
   PartStatusValues,
 } from './entities/part-progress.entity';
+import { Part } from 'src/parts/entities/part.entity';
 
 @Injectable()
 export class PartProgressService {
   constructor(
     private readonly prisma: PrismaService,
+    @Inject(forwardRef(() => PartsService))
     private readonly partsService: PartsService,
     private readonly partProgressRepository: PartProgressRepository,
   ) {}
@@ -54,12 +61,10 @@ export class PartProgressService {
     return this.partProgressRepository.upsertPartProgress(userId, partId, body);
   }
 
-  async createAllDefault(userId: number) {
-    await this.findUserById(userId);
-
+  async createAllDefaultByUserId(userId: number) {
     const parts = await this.partsService.findAll();
 
-    const insertParts = parts.map((part) => {
+    const insertProgress = parts.map((part) => {
       let defaultStatus: PartStatus;
 
       if (part.order === 1) {
@@ -75,8 +80,32 @@ export class PartProgressService {
       };
     });
 
-    return this.partProgressRepository.createAllDefaultPartProgressByUserId(
-      insertParts,
+    return this.partProgressRepository.createAllDefaultPartProgress(
+      insertProgress,
+    );
+  }
+
+  async createAllDefaultByPart(part: Part) {
+    const users = await this.prisma.user.findMany();
+
+    const insertProgress = users.map((user) => {
+      let defaultStatus: PartStatus;
+
+      if (part.order === 1) {
+        defaultStatus = PartStatusValues.STARTED;
+      } else {
+        defaultStatus = PartStatusValues.LOCKED;
+      }
+
+      return {
+        userId: user.id,
+        partId: part.id,
+        status: defaultStatus,
+      };
+    });
+
+    return this.partProgressRepository.createAllDefaultPartProgress(
+      insertProgress,
     );
   }
 }

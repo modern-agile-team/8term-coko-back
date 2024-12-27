@@ -11,6 +11,7 @@ import { QuizzesRepository } from 'src/quizzes/quizzes.repository';
 import { Part } from './entities/part.entity';
 import { UpdatePartOrderDto } from './dto/update-part-order.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { PartProgressService } from 'src/part-progress/part-progress.service';
 
 @Injectable()
 export class PartsService {
@@ -19,6 +20,7 @@ export class PartsService {
     private readonly sectionsService: SectionsService,
     private readonly partsRepository: PartsRepository,
     private readonly quizzesRepository: QuizzesRepository,
+    private readonly partProgressService: PartProgressService,
   ) {}
   /**
    * 파트 ID 배열을 재배열합니다.
@@ -91,9 +93,16 @@ export class PartsService {
     }
 
     const maxOrder = await this.partsRepository.findPartMaxOrder();
-    const newOrder = maxOrder + 1;
 
-    return this.partsRepository.createPartById({ ...body, order: newOrder });
+    const newPart = await this.partsRepository.createPartById({
+      ...body,
+      order: maxOrder + 1,
+    });
+
+    //파트 생성시 모든 유저에게 디폴트 파트진행도 생성
+    await this.partProgressService.createAllDefaultByPart(newPart);
+
+    return newPart;
   }
 
   async updateAll(id: number, body: CreatePartDto): Promise<Part> {

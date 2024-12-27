@@ -30,7 +30,7 @@ export class AuthService {
       });
 
       //유저 생성시 모든 디폴트 part-progress 생성
-      await this.partProgressService.createAllDefault(userInfo.id);
+      await this.partProgressService.createAllDefaultByUserId(userInfo.id);
     }
     await this.saveSocialToken(socialAccessToken, userInfo.id);
 

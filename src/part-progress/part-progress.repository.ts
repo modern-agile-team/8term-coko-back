@@ -27,7 +27,7 @@ export class PartProgressRepository {
   }
 
   //잊지말고 리턴형 추가
-  async createAllDefaultPartProgressByUserId(data: ResPartProgressDto[]) {
+  async createAllDefaultPartProgress(data: ResPartProgressDto[]) {
     return this.prisma.partProgress.createMany({
       data,
     });
