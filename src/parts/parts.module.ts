@@ -14,6 +14,6 @@ import { PartProgressModule } from 'src/part-progress/part-progress.module';
   ],
   controllers: [PartsController],
   providers: [PartsService, PartsRepository],
-  exports: [PartsService, PartsRepository, QuizzesModule],
+  exports: [PartsService, PartsRepository, QuizzesModule, PartProgressModule],
 })
 export class PartsModule {}
