@@ -11,6 +11,22 @@ export class UsersService {
     return this.prisma.user.findMany();
   }
 
+  async createUser(
+    provider: string,
+    providerId: string,
+    name: string,
+  ): Promise<ResponseUserDto> {
+    const userResponse = await this.prisma.user.create({
+      data: { provider, providerId, name },
+    });
+
+    if (!userResponse) {
+      throw new NotFoundException();
+    }
+
+    return userResponse;
+  }
+
   async getUser(id: number): Promise<ResponseUserDto> {
     const userResponse = await this.prisma.user.findUnique({ where: { id } });
     if (!userResponse) {

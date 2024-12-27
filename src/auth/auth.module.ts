@@ -12,7 +12,7 @@ import { CookieService } from './services/cookie.service';
 import { LogoutGuard } from './guard/logout.guard';
 
 @Module({
-  imports: [PassportModule, JwtModule, UsersModule, RedisModule],
+  imports: [PassportModule, JwtModule, RedisModule, UsersModule],
   providers: [
     AuthService,
     TokenService,

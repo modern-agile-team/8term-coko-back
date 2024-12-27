@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { TokenService } from './token.service';
+import { UsersService } from 'src/users/services/users.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
     private tokenService: TokenService,
+    private userService: UsersService,
   ) {}
 
   async googleLogin(
@@ -21,9 +23,7 @@ export class AuthService {
 
     //유저정보가 없다면
     if (!userInfo) {
-      userInfo = await this.prisma.user.create({
-        data: { provider, providerId, name },
-      });
+      userInfo = await this.userService.createUser(provider, providerId, name);
     }
 
     await this.saveSocialToken(socialAccessToken, userInfo.id);
