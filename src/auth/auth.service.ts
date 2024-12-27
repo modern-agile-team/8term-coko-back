@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { PartProgressService } from 'src/part-progress/part-progress.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 
@@ -10,6 +11,7 @@ export class AuthService {
     private jwtService: JwtService,
     private prisma: PrismaService,
     private configservice: ConfigService,
+    private partProgressService: PartProgressService,
   ) {}
 
   async googleLogin(
@@ -26,6 +28,9 @@ export class AuthService {
       userInfo = await this.prisma.user.create({
         data: { provider, providerId, name },
       });
+
+      //유저 생성시 모든 디폴트 part-progress 생성
+      await this.partProgressService.createAllDefault(userInfo.id);
     }
     await this.saveSocialToken(socialAccessToken, userInfo.id);
 

@@ -14,5 +14,6 @@ import { QuizzesModule } from 'src/quizzes/quizzes.module';
   ],
   controllers: [PartProgressController],
   providers: [PartProgressService, PartProgressRepository],
+  exports: [PartProgressService],
 })
 export class PartProgressModule {}

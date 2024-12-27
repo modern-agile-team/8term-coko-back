@@ -16,4 +16,8 @@ export class CreatePartProgressDto {
   })
   @IsEnum(PartStatusValues, { message: 'bad status value' })
   readonly status: PartStatus;
+
+  constructor(status: PartStatus) {
+    this.status = status;
+  }
 }

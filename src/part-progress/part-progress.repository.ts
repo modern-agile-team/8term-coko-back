@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePartProgressDto } from './dto/create-part-progress.dto';
 import { PartProgress } from './entities/part-progress.entity';
+import { ResPartProgressDto } from './dto/res-part-progress.dto';
 
 @Injectable()
 export class PartProgressRepository {
@@ -22,6 +23,13 @@ export class PartProgressRepository {
       where: { userId_partId: { userId, partId } },
       create: { userId, partId, ...body },
       update: { userId, partId, ...body },
+    });
+  }
+
+  //잊지말고 리턴형 추가
+  async createAllDefaultPartProgressByUserId(data: ResPartProgressDto[]) {
+    return this.prisma.partProgress.createMany({
+      data,
     });
   }
 }
