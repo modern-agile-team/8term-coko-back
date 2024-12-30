@@ -8,12 +8,9 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/common/decorators/get-user.decorator';
-import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import { AuthService } from './services/auth.service';
-import { JwtGuard } from './guard/jwt.guard';
 import { CookieService } from './services/cookie.service';
-import { LogoutGuard } from './guard/logout.guard';
 import { TokenService } from './services/token.service';
 import { RedisService } from './redis/redis.service';
 
@@ -41,11 +38,6 @@ export class AuthController {
     await this.cookieService.cookieResponse(res, accessToken, refreshToken);
   }
 
-  // 로그아웃 처리
-  // @Post('logout')
-  // @UseGuards(LogoutGuard)
-  // async logout() {}
-
   // 로그아웃
   @Post('logout')
   @HttpCode(204)
@@ -56,14 +48,8 @@ export class AuthController {
   }
 
   // jwt 검증 요청
-  // @Get('verify')
-  // @UseGuards(JwtGuard)
-  // async verifyToken(@User() user: any) {
-  //   return user;
-  // }
-
-  // jwt 검증 요청
   @Get('verify')
+  @HttpCode(200)
   @UseGuards(AuthGuard('accessTokenStrategy'))
   async verifyToken(@User() user: any) {
     return user;
@@ -71,6 +57,7 @@ export class AuthController {
 
   // refreshToken을 검증하고 accessToken을 재발급
   @Get('verifyRefreshToken')
+  @HttpCode(201)
   @UseGuards(AuthGuard('refreshTokenStrategy'))
   async verifyRefresh(@User() user: any, @Res() res: Response) {
     // access 토큰 재발급
