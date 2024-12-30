@@ -9,9 +9,9 @@ import { RedisService } from '../redis/redis.service';
 
 // accessToken 전략
 @Injectable()
-export class AccessStrategy extends PassportStrategy(
+export class AccessTokenStrategy extends PassportStrategy(
   Strategy,
-  'accessTokenStrategy',
+  'accessToken',
 ) {
   constructor(
     private configService: ConfigService,
@@ -35,15 +35,16 @@ export class AccessStrategy extends PassportStrategy(
   }
 
   async validate(payload: any): Promise<any> {
-    return this.userService.getUser(payload.userId);
+    const user = await this.userService.getUser(payload.userId);
+    return user;
   }
 }
 
 // refreshToken 전략
 @Injectable()
-export class RefreshStrategy extends PassportStrategy(
+export class RefreshTokenStrategy extends PassportStrategy(
   Strategy,
-  'refreshTokenStrategy',
+  'refreshToken',
 ) {
   constructor(
     private configService: ConfigService,
@@ -83,6 +84,6 @@ export class RefreshStrategy extends PassportStrategy(
       throw new UnauthorizedException('Invalid Refresh Token');
     }
 
-    return this.userService.getUser(payload.userId);
+    return await this.userService.getUser(payload.userId);
   }
 }

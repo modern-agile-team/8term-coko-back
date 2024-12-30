@@ -7,9 +7,8 @@ import { AuthService } from './services/auth.service';
 import { TokenService } from './services/token.service';
 import { UsersModule } from 'src/users/modules/users.module';
 import { RedisModule } from './redis/redis.module';
-import { JwtGuard } from './guard/jwt.guard';
 import { CookieService } from './services/cookie.service';
-import { LogoutGuard } from './guard/logout.guard';
+import { AccessTokenStrategy, RefreshTokenStrategy } from './jwt/jwt.startegy';
 
 @Module({
   imports: [PassportModule, JwtModule, RedisModule, UsersModule],
@@ -18,8 +17,8 @@ import { LogoutGuard } from './guard/logout.guard';
     TokenService,
     CookieService,
     GoogleStrategy,
-    JwtGuard,
-    LogoutGuard,
+    AccessTokenStrategy,
+    RefreshTokenStrategy,
   ],
   controllers: [AuthController],
 })

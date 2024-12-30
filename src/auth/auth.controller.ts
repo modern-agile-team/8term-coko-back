@@ -41,7 +41,7 @@ export class AuthController {
   // 로그아웃
   @Post('logout')
   @HttpCode(204)
-  @UseGuards(AuthGuard('accessTokenStrategy'))
+  @UseGuards(AuthGuard('accessToken'))
   async logout(@User() user: any, @Res() res: Response) {
     await this.redisService.del(user.id);
     await this.cookieService.deleteCookie(res);
@@ -50,15 +50,15 @@ export class AuthController {
   // jwt 검증 요청
   @Get('verify')
   @HttpCode(200)
-  @UseGuards(AuthGuard('accessTokenStrategy'))
+  @UseGuards(AuthGuard('accessToken'))
   async verifyToken(@User() user: any) {
     return user;
   }
 
   // refreshToken을 검증하고 accessToken을 재발급
-  @Get('verifyRefreshToken')
+  @Get('verify-refreshToken')
   @HttpCode(201)
-  @UseGuards(AuthGuard('refreshTokenStrategy'))
+  @UseGuards(AuthGuard('refreshToken'))
   async verifyRefresh(@User() user: any, @Res() res: Response) {
     // access 토큰 재발급
     const newAccessToken = await this.tokenService.createAccessToken(user.id);
