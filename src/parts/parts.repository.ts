@@ -31,8 +31,9 @@ export class PartsRepository {
     });
   }
 
-  async findPartMaxOrder(): Promise<number> {
+  async findPartMaxOrderBySectionId(sectionId: number): Promise<number> {
     const result = await this.prisma.part.aggregate({
+      where: { sectionId },
       _max: { order: true },
     });
     return result._max.order ?? 0;

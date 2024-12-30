@@ -90,7 +90,8 @@ export class PartsService {
       throw new ConflictException('part의 이름은 유니크 해야합니다.');
     }
 
-    const maxOrder = await this.partsRepository.findPartMaxOrder();
+    const maxOrder =
+      await this.partsRepository.findPartMaxOrderBySectionId(sectionId);
     const newOrder = maxOrder + 1;
 
     return this.partsRepository.createPartById({ ...body, order: newOrder });
