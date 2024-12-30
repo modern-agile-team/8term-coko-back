@@ -17,10 +17,10 @@ export class AuthService {
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const { provider, providerId, name, socialAccessToken } = user;
 
-    // 유저 정보 조회 및 생성성
+    // 유저 정보 조회 및 생성
     const userInfo = await this.findOrCreateUser(provider, providerId, name);
 
-    // 소셜 토큰 저장장
+    // 소셜 토큰 저장
     await this.saveSocialToken(socialAccessToken, userInfo.id);
 
     const accessToken = await this.tokenService.createAccessToken(userInfo.id);
@@ -31,6 +31,7 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
+  // 조회한 유저정보가 없다면 생성하느 메서드
   private async findOrCreateUser(
     provider: string,
     providerId: string,
