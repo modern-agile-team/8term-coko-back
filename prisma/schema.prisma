@@ -67,6 +67,7 @@ model User {
   experience             Int            @default(0)
   experienceForNextLevel Int            @default(50) @map("experience_for_next_level")
   point                  Int            @default(0)
+  role                   Boolean        @default(false)
   createdAt              DateTime       @default(now()) @map("created_at")
   updatedAt              DateTime       @updatedAt @map("updated_at")
   Progress               Progress[]

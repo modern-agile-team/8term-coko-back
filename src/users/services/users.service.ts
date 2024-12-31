@@ -69,4 +69,18 @@ export class UsersService {
     }
     return userTokenInfo;
   }
+
+  // admin 권한 검증 api
+  async verifyAdmin(id: number): Promise<any> {
+    const userInfo = await this.prisma.user.findUnique({ where: { id } });
+    if (!userInfo) {
+      throw new NotFoundException(`userId ${id} not found`);
+    }
+
+    if (userInfo.role !== false) {
+      return false;
+    }
+
+    return true;
+  }
 }

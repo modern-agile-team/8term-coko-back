@@ -13,6 +13,7 @@ import { AuthService } from './services/auth.service';
 import { CookieService } from './services/cookie.service';
 import { TokenService } from './services/token.service';
 import { RedisService } from './redis/redis.service';
+import { UsersService } from 'src/users/services/users.service';
 
 @Controller('auth')
 export class AuthController {
@@ -21,6 +22,7 @@ export class AuthController {
     private readonly cookieService: CookieService,
     private readonly tokenService: TokenService,
     private readonly redisService: RedisService,
+    private readonly userService: UsersService,
   ) {}
 
   // Google 로그인 시작
@@ -66,5 +68,15 @@ export class AuthController {
     await this.cookieService.setAccessTokenCookie(res, newAccessToken);
 
     return user;
+  }
+
+  // admin 권한 확인
+  @Get('admin')
+  @HttpCode(200)
+  @UseGuards(AuthGuard('accessToken'))
+  async verifyAdmin(@User() user: any): Promise<boolean> {
+    const role = await this.userService.verifyAdmin(user.id);
+
+    return role;
   }
 }
