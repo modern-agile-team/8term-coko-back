@@ -14,9 +14,9 @@ import { CookieService } from '../services/cookie.service';
 @Injectable()
 export class LogoutGuard implements CanActivate {
   constructor(
-    private redisService: RedisService,
-    private cookieService: CookieService,
-    private configService: ConfigService,
+    private readonly redisService: RedisService,
+    private readonly cookieService: CookieService,
+    private readonly configService: ConfigService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

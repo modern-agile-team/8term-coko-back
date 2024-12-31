@@ -6,9 +6,9 @@ import { RedisService } from '../redis/redis.service';
 @Injectable()
 export class TokenService {
   constructor(
-    private configService: ConfigService,
-    private jwtService: JwtService,
-    private redisService: RedisService,
+    private readonly configService: ConfigService,
+    private readonly jwtService: JwtService,
+    private readonly redisService: RedisService,
   ) {}
 
   // 액세스 토큰 생성

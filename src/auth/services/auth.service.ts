@@ -7,9 +7,9 @@ import { UsersService } from 'src/users/services/users.service';
 @Injectable()
 export class AuthService {
   constructor(
-    private prisma: PrismaService,
-    private tokenService: TokenService,
-    private userService: UsersService,
+    private readonly prisma: PrismaService,
+    private readonly tokenService: TokenService,
+    private readonly userService: UsersService,
   ) {}
 
   async googleLogin(

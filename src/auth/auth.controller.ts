@@ -51,7 +51,7 @@ export class AuthController {
   @Get('verify')
   @HttpCode(200)
   @UseGuards(AuthGuard('accessToken'))
-  async verifyToken(@User() user: any) {
+  async verifyToken(@User() user: any): Promise<any> {
     return user;
   }
 
@@ -59,7 +59,7 @@ export class AuthController {
   @Get('verify-refreshToken')
   @HttpCode(201)
   @UseGuards(AuthGuard('refreshToken'))
-  async verifyRefresh(@User() user: any, @Res() res: Response) {
+  async verifyRefresh(@User() user: any, @Res() res: Response): Promise<any> {
     // access 토큰 재발급
     const newAccessToken = await this.tokenService.createAccessToken(user.id);
     // 쿠키에 엑세스토큰 저장

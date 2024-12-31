@@ -14,8 +14,8 @@ export class AccessTokenStrategy extends PassportStrategy(
   'accessToken',
 ) {
   constructor(
-    private configService: ConfigService,
-    private userService: UsersService,
+    private readonly configService: ConfigService,
+    private readonly userService: UsersService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([

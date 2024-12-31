@@ -14,10 +14,10 @@ import { Request, Response } from 'express';
 @Injectable()
 export class JwtGuard implements CanActivate {
   constructor(
-    private configService: ConfigService,
-    private usersService: UsersService,
-    private tokenService: TokenService,
-    private redisService: RedisService,
+    private readonly configService: ConfigService,
+    private readonly usersService: UsersService,
+    private readonly tokenService: TokenService,
+    private readonly redisService: RedisService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

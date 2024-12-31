@@ -5,7 +5,7 @@ import { UpdateUserDto } from '../dtos/update-user.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   getAllUsers(): Promise<ResponseUserDto[]> {
     return this.prisma.user.findMany();

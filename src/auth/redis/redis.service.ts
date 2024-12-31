@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
 export class RedisService {
   constructor(
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
-    private configService: ConfigService,
+    private readonly configService: ConfigService,
   ) {}
 
   async get(key: string): Promise<any> {
