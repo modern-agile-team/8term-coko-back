@@ -13,6 +13,13 @@ export class PartsRepository {
     });
   }
 
+  async findAllPartBySectionId(sectionId: number): Promise<Part[]> {
+    return this.prisma.part.findMany({
+      where: { sectionId },
+      orderBy: { order: 'asc' },
+    });
+  }
+
   async findOnePartById(id: number): Promise<Part> {
     return this.prisma.part.findUnique({
       where: { id },
@@ -31,8 +38,9 @@ export class PartsRepository {
     });
   }
 
-  async findPartMaxOrder(): Promise<number> {
+  async findPartMaxOrderBySectionId(sectionId: number): Promise<number> {
     const result = await this.prisma.part.aggregate({
+      where: { sectionId },
       _max: { order: true },
     });
     return result._max.order ?? 0;
