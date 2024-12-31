@@ -10,9 +10,9 @@ import * as redisStore from 'cache-manager-redis-store';
       useFactory: async (configService: ConfigService) => ({
         store: redisStore,
         host: configService.get<string>('REDIS_HOST'),
-        port: configService.get<number>('REDIS_PORT'),
+        port: Number(configService.get<string>('REDIS_PORT')),
         password: configService.get<string>('REDIS_PASSWORD'),
-        ttl: Number(configService.get<number>('REDIS_EXPIRATION_TIME')),
+        ttl: Number(configService.get<string>('REDIS_EXPIRATION_TIME')),
       }),
       inject: [ConfigService],
     }),
