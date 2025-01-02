@@ -20,7 +20,6 @@ export class PartsService {
     private readonly sectionsService: SectionsService,
     private readonly partsRepository: PartsRepository,
     private readonly quizzesRepository: QuizzesRepository,
-    private readonly partProgressService: PartProgressService,
   ) {}
   /**
    * 파트 ID 배열을 재배열합니다.
@@ -98,10 +97,6 @@ export class PartsService {
       ...body,
       order: maxOrder + 1,
     });
-
-    //파트 생성시 모든 유저에게 디폴트 파트진행도 생성
-    // 이 부분을 제거하고 트랜젝션에 직접적으로 partProgress 디폴드를 생성할 거임
-    await this.partProgressService.createAllDefaultByPart(newPart);
 
     return newPart;
   }
