@@ -131,13 +131,11 @@ export class PartsService {
     const defaultPartProgress = await this.createDefaultPartProgress(newOrder);
 
     // 각 값들로 트랜젝션 돌리기
-    return this.partsRepository.createPartWithPartProgress({
-      ...body,
-      order: newOrder,
-      PartProgress: {
-        create: defaultPartProgress,
-      },
-    });
+    return this.partsRepository.createPartWithPartProgress(
+      body,
+      newOrder,
+      defaultPartProgress,
+    );
   }
 
   async updateAll(id: number, body: CreatePartDto): Promise<Part> {
