@@ -11,7 +11,6 @@ import { QuizzesRepository } from 'src/quizzes/quizzes.repository';
 import { Part } from './entities/part.entity';
 import { UpdatePartOrderDto } from './dto/update-part-order.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { PartProgressService } from 'src/part-progress/part-progress.service';
 import {
   PartStatus,
   PartStatusValues,

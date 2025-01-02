@@ -1,25 +1,14 @@
-import {
-  forwardRef,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePartProgressDto } from './dto/create-part-progress.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PartProgressRepository } from './part-progress.repository';
 import { PartsService } from 'src/parts/parts.service';
-import {
-  PartProgress,
-  PartStatus,
-  PartStatusValues,
-} from './entities/part-progress.entity';
-import { Part } from 'src/parts/entities/part.entity';
+import { PartProgress } from './entities/part-progress.entity';
 
 @Injectable()
 export class PartProgressService {
   constructor(
     private readonly prisma: PrismaService,
-    @Inject(forwardRef(() => PartsService))
     private readonly partsService: PartsService,
     private readonly partProgressRepository: PartProgressRepository,
   ) {}

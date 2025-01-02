@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePartProgressDto } from './dto/create-part-progress.dto';
 import { PartProgress } from './entities/part-progress.entity';
-import { ResPartProgressDto } from './dto/res-part-progress.dto';
 
 @Injectable()
 export class PartProgressRepository {
