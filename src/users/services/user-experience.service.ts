@@ -9,7 +9,7 @@ import {
 
 @Injectable()
 export class UserExperienceService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async getUserExperience(id: number): Promise<ResponseExperienceDto> {
     const userExperience = await this.prisma.user.findUnique({
