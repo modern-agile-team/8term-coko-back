@@ -84,28 +84,4 @@ export class PartProgressService {
       insertProgress,
     );
   }
-
-  async createAllDefaultByPart(part: Part) {
-    const users = await this.prisma.user.findMany();
-
-    const insertProgress = users.map((user) => {
-      let defaultStatus: PartStatus;
-
-      if (part.order === 1) {
-        defaultStatus = PartStatusValues.STARTED;
-      } else {
-        defaultStatus = PartStatusValues.LOCKED;
-      }
-
-      return {
-        userId: user.id,
-        partId: part.id,
-        status: defaultStatus,
-      };
-    });
-
-    return this.partProgressRepository.createAllDefaultPartProgress(
-      insertProgress,
-    );
-  }
 }

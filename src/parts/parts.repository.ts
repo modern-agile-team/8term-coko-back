@@ -31,14 +31,20 @@ export class PartsRepository {
     });
   }
 
-  async findPartMaxOrder(): Promise<number> {
+  /**
+   *
+   * @param sectionId - 섹션 아이디 별 파트 개수를 검색
+   * @returns order를 리턴합니다. 파트가 하나도 없으면 0을 리턴
+   */
+  async aggregateBySectionId(sectionId: number): Promise<number> {
     const result = await this.prisma.part.aggregate({
+      where: { sectionId },
       _max: { order: true },
     });
     return result._max.order ?? 0;
   }
 
-  async createPartById(data): Promise<Part> {
+  async createPartWithPartProgress(data): Promise<Part> {
     return this.prisma.part.create({
       data,
     });
