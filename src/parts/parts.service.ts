@@ -100,6 +100,7 @@ export class PartsService {
     });
 
     //파트 생성시 모든 유저에게 디폴트 파트진행도 생성
+    // 이 부분을 제거하고 트랜젝션에 직접적으로 partProgress 디폴드를 생성할 거임
     await this.partProgressService.createAllDefaultByPart(newPart);
 
     return newPart;
@@ -118,11 +119,11 @@ export class PartsService {
       return part;
     }
 
-    // 섹션 순서 재배치를 위한 처리
-    const updatedSectionIds = await this.reorderPartIds(id, body.order);
+    // 파트 순서 재배치를 위한 처리
+    const updatedPartIds = await this.reorderPartIds(id, body.order);
 
-    // 데이터베이스의 섹션 순서를 업데이트
-    await this.updatePartOrders(updatedSectionIds);
+    // 데이터베이스의 파트 순서를 업데이트
+    await this.updatePartOrders(updatedPartIds);
 
     // 변경된 섹션 반환
     return this.partsRepository.findOnePartById(id);
