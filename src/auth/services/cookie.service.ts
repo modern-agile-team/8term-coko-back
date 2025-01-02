@@ -49,9 +49,6 @@ export class CookieService {
 
     // refreshToken 쿠키 설정
     await this.setRefreshTokenCookie(res, refreshToken);
-
-    // 메인페이지로 리다이렉트
-    res.redirect(this.configService.get<string>('CLIENT_MAIN_PAGE_URL'));
   }
 
   // 쿠키 삭제 (로그아웃시)

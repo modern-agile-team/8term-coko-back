@@ -14,10 +14,12 @@ import { CookieService } from './services/cookie.service';
 import { TokenService } from './services/token.service';
 import { RedisService } from './redis/redis.service';
 import { UsersService } from 'src/users/services/users.service';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
   constructor(
+    private readonly configService: ConfigService,
     private readonly authService: AuthService,
     private readonly cookieService: CookieService,
     private readonly tokenService: TokenService,
@@ -38,6 +40,9 @@ export class AuthController {
       await this.authService.googleLogin(user);
 
     await this.cookieService.cookieResponse(res, accessToken, refreshToken);
+
+    // 메인페이지로 리다이렉트
+    res.redirect(this.configService.get<string>('CLIENT_MAIN_PAGE_URL'));
   }
 
   // 로그아웃
