@@ -14,6 +14,7 @@ export class ResponseUserDto {
   readonly lastLogin: Date;
   readonly createdAt: Date;
   readonly updatedAt: Date;
+  readonly role: Boolean;
 
   constructor(user: User) {
     this.id = user.id;
@@ -29,5 +30,6 @@ export class ResponseUserDto {
     this.lastLogin = user.lastLogin;
     this.createdAt = user.createdAt;
     this.updatedAt = user.createdAt;
+    this.role = user.role;
   }
 }

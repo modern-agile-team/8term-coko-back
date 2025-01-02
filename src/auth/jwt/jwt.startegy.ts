@@ -1,7 +1,6 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import * as jwt from 'jsonwebtoken';
 import { UsersService } from 'src/users/services/users.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -37,6 +36,7 @@ export class AccessTokenStrategy extends PassportStrategy(
 
   async validate(request: Request, payload: any): Promise<any> {
     const user = await this.userService.getUser(payload.userId);
+
     return user;
   }
 }
