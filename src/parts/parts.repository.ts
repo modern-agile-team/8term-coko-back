@@ -13,6 +13,13 @@ export class PartsRepository {
     });
   }
 
+  async findAllPartBySectionId(sectionId: number): Promise<Part[]> {
+    return this.prisma.part.findMany({
+      where: { sectionId },
+      orderBy: { order: 'asc' },
+    });
+  }
+
   async findOnePartById(id: number): Promise<Part> {
     return this.prisma.part.findUnique({
       where: { id },

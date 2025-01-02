@@ -1,3 +1,4 @@
+import * as cookieParser from 'cookie-parser';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
@@ -24,10 +25,14 @@ async function bootstrap() {
       'MIT',
       'https://github.com/git/git-scm.com/blob/gh-pages/MIT-LICENSE.txt',
     )
-    .addServer('http://localhost:3000/', 'develop')
+    .addServer('https://api.cokoedu.com', 'develop')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api', app, document, {
+    swaggerOptions: {
+      persistAuthorization: true, // Swagger UI에서 인증 정보를 유지
+    },
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -38,9 +43,18 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: ['http://localhost:3000', '.cokoedu.com'],
+    origin: [
+      'https://localhost:3000',
+      'https://cokoedu.com',
+      'https://admin.cokoedu.com',
+    ],
     credentials: true,
+    methods: 'GET,POST,PUT,PATCH,DELETE',
+    allowedHeaders:
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization',
   });
+
+  app.use(cookieParser());
 
   await app.listen(3000);
 }

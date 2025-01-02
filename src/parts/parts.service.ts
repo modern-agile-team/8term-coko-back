@@ -32,10 +32,12 @@ export class PartsService {
    * @returns 재배열된 파트 ID 배열
    */
   private async reorderPartIds(
-    movingId: number,
+    { id, sectionId }: Part,
     newOrder: number,
   ): Promise<number[]> {
-    const parts = await this.partsRepository.findAllPart();
+    const movingId = id;
+
+    const parts = await this.partsRepository.findAllPartBySectionId(sectionId);
     const partIds = parts.map((part) => part.id);
     const currentIndex = partIds.indexOf(movingId);
 
@@ -152,7 +154,7 @@ export class PartsService {
     }
 
     // 파트 순서 재배치를 위한 처리
-    const updatedPartIds = await this.reorderPartIds(id, body.order);
+    const updatedPartIds = await this.reorderPartIds(part, body.order);
 
     // 데이터베이스의 파트 순서를 업데이트
     await this.updatePartOrders(updatedPartIds);

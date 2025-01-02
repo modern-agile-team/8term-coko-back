@@ -1,15 +1,26 @@
-import { Controller, Get, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/common/decorators/get-user.decorator';
-import { AuthService } from './auth.service';
-import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
+import { AuthService } from './services/auth.service';
+import { CookieService } from './services/cookie.service';
+import { TokenService } from './services/token.service';
+import { RedisService } from './redis/redis.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly configService: ConfigService,
+    private readonly cookieService: CookieService,
+    private readonly tokenService: TokenService,
+    private readonly redisService: RedisService,
   ) {}
 
   // Google 로그인 시작
@@ -21,18 +32,39 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   async googleLogin(@User() user: any, @Res() res: Response) {
-    const jwtToken = await this.authService.googleLogin(user);
+    const { accessToken, refreshToken } =
+      await this.authService.googleLogin(user);
 
-    // 쿠키와 리다이렉트의 설정은 클라이언트가 원하는 곳으로 지정해준다.
-    // res.cookie 의 domain부분과 res.redirect의 url부분의 도메인을 일치시켜야 한다.
-    res.cookie('jwt', jwtToken, {
-      httpOnly: true,
-      secure: true,
-      domain: this.configService.get<string>('COOKIE_DOMAIN'),
-      sameSite: 'none',
-      maxAge: this.configService.get<number>('COOKIE_EXPIRATION'),
-    });
+    await this.cookieService.cookieResponse(res, accessToken, refreshToken);
+  }
 
-    res.redirect(this.configService.get<string>('CLIENT_MAIN_PAGE_URL'));
+  // 로그아웃
+  @Post('logout')
+  @HttpCode(204)
+  @UseGuards(AuthGuard('accessToken'))
+  async logout(@User() user: any, @Res() res: Response) {
+    await this.redisService.del(user.id);
+    await this.cookieService.deleteCookie(res);
+  }
+
+  // jwt 검증 요청
+  @Get('verify')
+  @HttpCode(200)
+  @UseGuards(AuthGuard('accessToken'))
+  async verifyToken(@User() user: any): Promise<any> {
+    return user;
+  }
+
+  // refreshToken을 검증하고 accessToken을 재발급
+  @Get('new-accessToken')
+  @HttpCode(201)
+  @UseGuards(AuthGuard('refreshToken'))
+  async verifyRefresh(@User() user: any, @Res() res: Response): Promise<any> {
+    // access 토큰 재발급
+    const newAccessToken = await this.tokenService.createAccessToken(user.id);
+    // 쿠키에 엑세스토큰 저장
+    await this.cookieService.setAccessTokenCookie(res, newAccessToken);
+
+    return user;
   }
 }

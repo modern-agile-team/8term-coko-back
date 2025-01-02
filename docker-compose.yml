@@ -14,9 +14,22 @@
 services:
   back:
     image: ${IMAGE_NAME}
-    env_file: /path/to/your/.env
+    env_file: .env
     expose:
       - '3000' # 컨테이너 포트만 열어줌 호스트는 X = 컨테이너 끼리만 접근 가능
+    networks:
+      - backend # 'backend' 네트워크 사용
+
+  redis:
+    image: redis:7.2.6
+    command: redis-server /usr/local/etc/redis/redis.conf --requirepass $REDIS_PASSWORD
+    volumes:
+      - ./conf/redis.conf:/usr/local/etc/redis/redis.conf
+      - redis_data:/data
+    ports:
+      - '6379:6379'
+    env_file:
+      - .env
     networks:
       - backend # 'backend' 네트워크 사용
 
@@ -47,3 +60,6 @@ services:
 networks:
   backend:
     driver: bridge
+
+volumes:
+  redis_data:

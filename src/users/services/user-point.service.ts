@@ -9,7 +9,7 @@ import { ResponsePointDto } from '../dtos/response-point.dto';
 
 @Injectable()
 export class UserPointService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async getUserPoint(id: number): Promise<ResponsePointDto> {
     const userPoint = await this.prisma.user.findUnique({
