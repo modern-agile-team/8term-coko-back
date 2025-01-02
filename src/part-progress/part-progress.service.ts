@@ -60,28 +60,4 @@ export class PartProgressService {
 
     return this.partProgressRepository.upsertPartProgress(userId, partId, body);
   }
-
-  async createAllDefaultByUserId(userId: number) {
-    const parts = await this.partsService.findAll();
-
-    const insertProgress = parts.map((part) => {
-      let defaultStatus: PartStatus;
-
-      if (part.order === 1) {
-        defaultStatus = PartStatusValues.STARTED;
-      } else {
-        defaultStatus = PartStatusValues.LOCKED;
-      }
-
-      return {
-        userId,
-        partId: part.id,
-        status: defaultStatus,
-      };
-    });
-
-    return this.partProgressRepository.createAllDefaultPartProgress(
-      insertProgress,
-    );
-  }
 }
