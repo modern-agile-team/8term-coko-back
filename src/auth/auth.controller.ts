@@ -58,7 +58,7 @@ export class AuthController {
   }
 
   // refreshToken을 검증하고 accessToken을 재발급
-  @Get('verify-refreshToken')
+  @Get('new-accessToken')
   @HttpCode(201)
   @UseGuards(AuthGuard('refreshToken'))
   async verifyRefresh(@User() user: any, @Res() res: Response): Promise<any> {

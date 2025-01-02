@@ -19,7 +19,7 @@ export class TokenService {
       const accessToken = this.jwtService.sign(payload, {
         secret: this.configService.get<string>('ACCESS_SECRET'),
         expiresIn: Number(
-          this.configService.get<number>('ACCESS_EXPIRATION_TIME'),
+          this.configService.get<string>('ACCESS_EXPIRATION_TIME'),
         ),
       });
       return accessToken;
@@ -35,7 +35,7 @@ export class TokenService {
       const refreshToken = this.jwtService.sign(payload, {
         secret: this.configService.get<string>('REFRESH_SECRET'),
         expiresIn: Number(
-          this.configService.get<number>('REFRESH_EXPIRATION_TIME'),
+          this.configService.get<string>('REFRESH_EXPIRATION_TIME'),
         ),
       });
       this.redisService.set(String(userId), refreshToken);

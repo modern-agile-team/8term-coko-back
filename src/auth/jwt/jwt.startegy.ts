@@ -26,6 +26,7 @@ export class AccessTokenStrategy extends PassportStrategy(
         },
       ]),
       // 시크릿키로 검증
+
       secretOrKey: configService.get<string>('ACCESS_SECRET'),
       // validate 메서드로 request 객체 전달
       passReqToCallback: true,
@@ -34,7 +35,7 @@ export class AccessTokenStrategy extends PassportStrategy(
     });
   }
 
-  async validate(payload: any): Promise<any> {
+  async validate(request: Request, payload: any): Promise<any> {
     const user = await this.userService.getUser(payload.userId);
     return user;
   }
@@ -68,7 +69,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
     });
   }
 
-  async validate(payload: any, request: Request): Promise<any> {
+  async validate(request: Request, payload: any): Promise<any> {
     const refreshToken = request?.cookies?.refreshToken;
     if (!refreshToken) {
       throw new UnauthorizedException('No Refresh Token provided');

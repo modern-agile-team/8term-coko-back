@@ -16,7 +16,7 @@ export class CookieService {
       domain: this.configService.get<string>('COOKIE_DOMAIN'),
       sameSite: 'none' as 'none', // none 타입으로 지정해줘야 함.
       maxAge: Number(
-        this.configService.get<number>('ACCESS_COOKIE_EXPIRATION_TIME'),
+        this.configService.get<string>('ACCESS_COOKIE_EXPIRATION_TIME'),
       ),
       path: '/',
     };
@@ -31,7 +31,7 @@ export class CookieService {
       domain: this.configService.get<string>('COOKIE_DOMAIN'),
       sameSite: 'none' as 'none',
       maxAge: Number(
-        this.configService.get<number>('REFRESH_COOKIE_EXPIRATION_TIME'),
+        this.configService.get<string>('REFRESH_COOKIE_EXPIRATION_TIME'),
       ),
       path: '/', // refreshToken은 특정 경로로 제한 가능
     };
