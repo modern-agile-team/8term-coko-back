@@ -34,9 +34,9 @@ export class AdminGuard implements CanActivate {
       const { userId } = payload;
       const user = await this.userService.getUser(userId);
 
-      if (user.role === true) {
-        return true;
-      }
+      // if (user.role === true) {
+      //   return true;
+      // }
 
       throw new ForbiddenException('User does not have admin privileges');
     } catch (accessError) {

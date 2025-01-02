@@ -74,14 +74,4 @@ export class AuthController {
 
     return user;
   }
-
-  // admin 권한 확인
-  @Get('admin')
-  @HttpCode(200)
-  @UseGuards(AuthGuard('accessToken'))
-  async verifyAdmin(@User() user: any): Promise<boolean> {
-    const role = await this.userService.verifyAdmin(user.id);
-
-    return role;
-  }
 }
