@@ -104,13 +104,24 @@ model Part {
   @@map("parts")
 }
 
-model ItemCategory {
+model ItemMainCategory {
   id   Int    @id @default(autoincrement())
   name String @unique @db.VarChar(255)
 
   items Item[]
 
-  @@map("item_categories")
+  @@map("item_main_categories")
+}
+
+model ItemSubCategory {
+  id             Int              @id @default(autoincrement())
+  name           String           @unique @db.VarChar(255)
+  mainCategoryId Int              @map("main_category_id")
+  mainCat        ItemMainCategory @relation(fields: [mainCategoryId], references: [id])
+
+  items Item[]
+
+  @@map("item_sub_categories")
 }
 
 model Item {
