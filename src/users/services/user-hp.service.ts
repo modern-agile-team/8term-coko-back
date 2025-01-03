@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { UserHpRepository } from '../repositories/user-hp.repository';
+import { UpdateHpDto } from '../dtos/update-hp.dto';
 
 @Injectable()
 export class UserHpService {
@@ -9,7 +9,7 @@ export class UserHpService {
   async findUserHpByUserId(userId: number) {
     return this.userHpRepository.findUserHpByUserId(userId);
   }
-  async updateUserHpByUserId(userId: number, body: any) {
+  async updateUserHpByUserId(userId: number, body: UpdateHpDto) {
     return this.userHpRepository.updateUserHpByUserId(userId, body);
   }
 }
