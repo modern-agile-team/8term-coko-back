@@ -42,14 +42,14 @@ export class UsersService {
     // 유저 생성시 디폴트 파트 진행도를 생성
     const defaulPartProgress = await this.createDefaultPartProgress();
 
+    // 유저 생성시 기본 유저 생명력 생성
     const userResponse = await this.prisma.user.create({
       data: {
         provider,
         providerId,
         name,
-        partProgress: {
-          create: defaulPartProgress,
-        },
+        partProgress: { create: defaulPartProgress },
+        userHp: { create: {} },
       },
     });
 
