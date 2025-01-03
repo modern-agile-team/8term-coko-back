@@ -52,6 +52,8 @@ export class AuthController {
   async logout(@User() user: any, @Res() res: Response) {
     await this.redisService.del(user.id);
     await this.cookieService.deleteCookie(res);
+
+    res.status(204).send();
   }
 
   // jwt 검증 요청
