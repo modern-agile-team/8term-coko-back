@@ -4,18 +4,18 @@ import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe
 import { UserHpService } from '../services/user-hp.service';
 
 @ApiTags('hp')
-@Controller('users/:id/user-hp')
+@Controller('users/:userId/user-hp')
 export class UserHpController {
   constructor(private readonly userHpService: UserHpService) {}
 
   @Get()
-  getUserHp(@Param('id', PositiveIntPipe) userId: number) {
+  async getUserHp(@Param('userId', PositiveIntPipe) userId: number) {
     return this.userHpService.findUserHpByUserId(userId);
   }
 
   @Patch()
-  updateUserHp(
-    @Param('id', PositiveIntPipe) userId: number,
+  async updateUserHp(
+    @Param('userId', PositiveIntPipe) userId: number,
     @Body() body: any,
   ) {
     return this.userHpService.updateUserHpByUserId(userId, body);

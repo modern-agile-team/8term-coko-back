@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UserHpRepository } from '../repositories/user-hp.repository';
 
 @Injectable()
 export class UserHpService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly userHpRepository: UserHpRepository) {}
 
   async findUserHpByUserId(userId: number) {
-    return;
+    return this.userHpRepository.findUserHpByUserId(userId);
   }
   async updateUserHpByUserId(userId: number, body: any) {
-    return;
+    return this.userHpRepository.updateUserHpByUserId(userId, body);
   }
 }
