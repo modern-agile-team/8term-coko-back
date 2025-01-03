@@ -12,16 +12,6 @@ export class CreateUserDto {
 
   @ApiProperty({
     type: String,
-    description: '유저 프로필 이미지지',
-    example:
-      'https://lh3.googleusercontent.com/a/ACg8ocK6wP1234RJfzG7BqWeqwerMuxJuIbBhmoYA7gus-EsM=s96-c',
-  })
-  @IsOptional()
-  @IsString()
-  readonly picture?: string;
-
-  @ApiProperty({
-    type: String,
     description: '유저 닉네임',
     example: 'gwgw99',
     minimum: 2,
