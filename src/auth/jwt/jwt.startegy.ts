@@ -75,7 +75,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
       throw new UnauthorizedException('No Refresh Token provided');
     }
 
-    const redisRefreshToken = await this.redisService.get(payload.id);
+    const redisRefreshToken = await this.redisService.get(payload.userId);
     if (!redisRefreshToken) {
       throw new UnauthorizedException('Refresh Token not found in Redis');
     }

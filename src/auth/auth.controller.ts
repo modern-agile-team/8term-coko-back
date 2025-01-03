@@ -74,6 +74,8 @@ export class AuthController {
     // 쿠키에 엑세스토큰 저장
     await this.cookieService.setAccessTokenCookie(res, newAccessToken);
 
+    res.status(201).send();
+
     return user;
   }
 }
