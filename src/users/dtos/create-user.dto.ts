@@ -37,7 +37,7 @@ export class CreateUserDto {
       'ya29.a0AeDClZDZpzSfkfMpmn2qwerJsfaM5JZ0IbvupkAnLDHnwEFL3KtN8Iw7uMrzBdhCkSMDv0DNq9WSmWBBKbE0jzq-9r5g8TJYBhnlELNzzNl7R0A7uADJ5ECZ6WIrUZ3QHWxW7_qqA-OBh6OvHqwerU1gIskGHHvSSpBmaCgYKAaASARESFQ',
   })
   @IsString()
-  socialAccessToken: string;
+  readonly socialAccessToken: string;
 
   @ApiProperty({
     type: String,
@@ -47,7 +47,7 @@ export class CreateUserDto {
   })
   @IsString()
   @IsOptional()
-  socialRefeshToken?: string;
+  readonly socialRefeshToken?: string;
 
   @ApiProperty({
     type: String,
