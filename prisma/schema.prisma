@@ -60,9 +60,6 @@ model User {
   provider               String         @db.VarChar(20)
   providerId             String         @unique @map("provider_id")
   name                   String         @db.VarChar(30)
-  profileImage           String?        @map("profile_image")
-  maxHealthPoint         Int            @default(5) @map("max_health_point")
-  lastLogin              DateTime       @default(now()) @map("last_login")
   level                  Int            @default(1)
   experience             Int            @default(0)
   experienceForNextLevel Int            @default(50) @map("experience_for_next_level")
@@ -154,4 +151,13 @@ model PartProgress {
 
   @@id([userId, partId])
   @@map("part_progress")
+}
+
+model UserHp {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique @map("user_id")
+  hp        Int      @default(5)
+  hpStorage Int      @default(5) @map("hp_storage")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 }
