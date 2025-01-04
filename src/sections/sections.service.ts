@@ -94,6 +94,8 @@ export class SectionsService {
     userId: number,
     id: number,
   ): Promise<ResSectionDto> {
+    await this.findOne(id);
+
     const { part, ...section } =
       await this.sectionsRepository.findSectionWithPartStatus(userId, id);
 
