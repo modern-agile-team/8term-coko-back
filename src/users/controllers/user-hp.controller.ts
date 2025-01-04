@@ -1,24 +1,24 @@
-import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
+import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { UserHpService } from '../services/user-hp.service';
 import { UpdateHpDto } from '../dtos/update-hp.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { User } from 'src/common/decorators/get-user.decorator';
 
-@ApiTags('hp')
-@Controller('users/:userId/user-hp')
+@ApiTags('user-hp')
+@Controller('userss/user-hp')
 export class UserHpController {
   constructor(private readonly userHpService: UserHpService) {}
 
   @Get()
-  async getUserHp(@Param('userId', PositiveIntPipe) userId: number) {
-    return this.userHpService.findUserHpByUserId(userId);
+  @UseGuards(AuthGuard('accessToken'))
+  async getUserHp(@User() user: any) {
+    return this.userHpService.findUserHpByUserId(user.id);
   }
 
   @Patch()
-  async updateUserHp(
-    @Param('userId', PositiveIntPipe) userId: number,
-    @Body() body: UpdateHpDto,
-  ) {
-    return this.userHpService.updateUserHpByUserId(userId, body);
+  @UseGuards(AuthGuard('accessToken'))
+  async updateUserHp(@User() user: any, @Body() body: UpdateHpDto) {
+    return this.userHpService.updateUserHpByUserId(user.id, body);
   }
 }
