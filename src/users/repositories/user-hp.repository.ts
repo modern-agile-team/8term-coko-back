@@ -12,6 +12,7 @@ export class UserHpRepository {
       where: { userId },
     });
   }
+
   async updateUserHpByUserId(
     userId: number,
     data: UpdateHpDto,
