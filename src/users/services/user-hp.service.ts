@@ -12,7 +12,7 @@ import { HP_FULL_RECHARGE_TIME } from '../constants/user-experience.constant';
 export class UserHpService {
   constructor(private readonly userHpRepository: UserHpRepository) {}
 
-  private async checkRefillTime({ updatedAt }: UserHp) {
+  private checkRefillTime({ updatedAt }: UserHp): boolean {
     const lastUpdated = new Date(updatedAt);
     const now = new Date();
     const timeDiff = now.getTime() - lastUpdated.getTime();
@@ -32,7 +32,7 @@ export class UserHpService {
     }
 
     // 생명력을 가득 채워야하는지 체크
-    const chackRechargeHp = await this.checkRefillTime(userHp);
+    const chackRechargeHp = this.checkRefillTime(userHp);
 
     // 채워야 하면
     if (chackRechargeHp) {
