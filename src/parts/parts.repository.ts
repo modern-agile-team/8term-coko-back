@@ -2,6 +2,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePartDto } from './dto/create-part.dto';
 import { Injectable } from '@nestjs/common';
 import { Part } from './entities/part.entity';
+import { PartStatus } from 'src/part-progress/entities/part-progress.entity';
 
 @Injectable()
 export class PartsRepository {
@@ -38,7 +39,12 @@ export class PartsRepository {
     });
   }
 
-  async findPartMaxOrderBySectionId(sectionId: number): Promise<number> {
+  /**
+   *
+   * @param sectionId - 섹션 아이디 별 파트 개수를 검색
+   * @returns order를 리턴합니다. 파트가 하나도 없으면 0을 리턴
+   */
+  async aggregateBySectionId(sectionId: number): Promise<number> {
     const result = await this.prisma.part.aggregate({
       where: { sectionId },
       _max: { order: true },
@@ -46,9 +52,19 @@ export class PartsRepository {
     return result._max.order ?? 0;
   }
 
-  async createPartById(data): Promise<Part> {
+  async createPartWithPartProgress(
+    body: CreatePartDto,
+    order: number,
+    defaultPartProgress: { userId: number; status: PartStatus }[],
+  ): Promise<Part> {
     return this.prisma.part.create({
-      data,
+      data: {
+        ...body,
+        order,
+        PartProgress: {
+          create: defaultPartProgress,
+        },
+      },
     });
   }
 

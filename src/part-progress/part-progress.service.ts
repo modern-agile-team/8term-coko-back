@@ -12,7 +12,11 @@ export class PartProgressService {
     private readonly partsService: PartsService,
     private readonly partProgressRepository: PartProgressRepository,
   ) {}
-  // 추후 수정사항
+  /**
+   * @todo 추후에 유저서비스에서 연결하는 코드로 변경하기
+   * @param id
+   * @returns
+   */
   private async findUserById(id: number) {
     const user = await this.prisma.user.findUnique({
       where: {

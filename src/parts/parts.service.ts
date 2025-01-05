@@ -11,6 +11,10 @@ import { QuizzesRepository } from 'src/quizzes/quizzes.repository';
 import { Part } from './entities/part.entity';
 import { UpdatePartOrderDto } from './dto/update-part-order.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import {
+  PartStatus,
+  PartStatusValues,
+} from 'src/part-progress/entities/part-progress.entity';
 
 @Injectable()
 export class PartsService {
@@ -67,6 +71,30 @@ export class PartsService {
     );
   }
 
+  /**
+   * 기본적으로 파트 생성시 모든 유저에게 생성된 파트의 진행도를 넣어 줍니다.
+   * 지금은 매우 적은 유저가 있을꺼라 생각해서 그냥 다 불러오는데
+   * 언젠가 수많은 유저가 생성되면 해당로직을 고쳐야합니다.
+   */
+  private async createDefaultPartProgress(order: number) {
+    const users = await this.prisma.user.findMany();
+
+    return users.map((user) => {
+      let defaultStatus: PartStatus;
+
+      if (order === 1) {
+        defaultStatus = PartStatusValues.STARTED;
+      } else {
+        defaultStatus = PartStatusValues.LOCKED;
+      }
+
+      return {
+        userId: user.id,
+        status: defaultStatus,
+      };
+    });
+  }
+
   async findOne(id: number): Promise<Part> {
     const part = await this.partsRepository.findOnePartById(id);
 
@@ -92,11 +120,21 @@ export class PartsService {
       throw new ConflictException('part의 이름은 유니크 해야합니다.');
     }
 
-    const maxOrder =
-      await this.partsRepository.findPartMaxOrderBySectionId(sectionId);
+    // 관련 섹션의 순서를 찾아보기
+    const maxOrder = await this.partsRepository.aggregateBySectionId(sectionId);
+
+    // 새로운 순서
     const newOrder = maxOrder + 1;
 
-    return this.partsRepository.createPartById({ ...body, order: newOrder });
+    // 파트 순서를 보고 모든유저에게 디폴트 진행도 값을 설정
+    const defaultPartProgress = await this.createDefaultPartProgress(newOrder);
+
+    // 각 값들로 트랜젝션 돌리기
+    return this.partsRepository.createPartWithPartProgress(
+      body,
+      newOrder,
+      defaultPartProgress,
+    );
   }
 
   async updateAll(id: number, body: CreatePartDto): Promise<Part> {
@@ -112,11 +150,11 @@ export class PartsService {
       return part;
     }
 
-    // 섹션 순서 재배치를 위한 처리
-    const updatedSectionIds = await this.reorderPartIds(part, body.order);
+    // 파트 순서 재배치를 위한 처리
+    const updatedPartIds = await this.reorderPartIds(part, body.order);
 
-    // 데이터베이스의 섹션 순서를 업데이트
-    await this.updatePartOrders(updatedSectionIds);
+    // 데이터베이스의 파트 순서를 업데이트
+    await this.updatePartOrders(updatedPartIds);
 
     // 변경된 섹션 반환
     return this.partsRepository.findOnePartById(id);
