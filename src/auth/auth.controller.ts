@@ -34,8 +34,12 @@ export class AuthController {
 
   // Google 로그인 콜백 처리
   @Get('google/callback')
+  @HttpCode(302)
   @UseGuards(AuthGuard('google'))
-  async googleLogin(@User() user: any, @Res() res: Response) {
+  async googleLogin(
+    @User() user: any,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const { accessToken, refreshToken } =
       await this.authService.googleLogin(user);
 
@@ -49,11 +53,9 @@ export class AuthController {
   @Post('logout')
   @HttpCode(204)
   @UseGuards(AuthGuard('accessToken'))
-  async logout(@User() user: any, @Res() res: Response) {
+  async logout(@User() user: any, @Res({ passthrough: true }) res: Response) {
     await this.redisService.del(user.id);
     await this.cookieService.deleteCookie(res);
-
-    res.status(204).send();
   }
 
   // jwt 검증 요청
@@ -68,13 +70,14 @@ export class AuthController {
   @Get('new-accessToken')
   @HttpCode(201)
   @UseGuards(AuthGuard('refreshToken'))
-  async verifyRefresh(@User() user: any, @Res() res: Response): Promise<any> {
+  async verifyRefresh(
+    @User() user: any,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<any> {
     // access 토큰 재발급
     const newAccessToken = await this.tokenService.createAccessToken(user.id);
     // 쿠키에 엑세스토큰 저장
     await this.cookieService.setAccessTokenCookie(res, newAccessToken);
-
-    res.status(201).send();
 
     return user;
   }

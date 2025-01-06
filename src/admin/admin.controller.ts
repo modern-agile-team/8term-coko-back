@@ -20,11 +20,9 @@ export class AdminController {
   @Post('login')
   async loginAdmin(
     @Body() loginAdminInfo: LoginAdminDto,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
   ) {
     const accessToken = await this.adminsService.loginAdmin(loginAdminInfo);
     await this.cookieService.setAdminAccessTokenCookie(res, accessToken);
-
-    res.status(200).send();
   }
 }
