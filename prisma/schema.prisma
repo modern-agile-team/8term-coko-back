@@ -125,7 +125,7 @@ model ItemSubCategory {
 
 model Item {
   id             Int              @id @default(autoincrement())
-  name           String           @unique
+  name           String           @unique @db.VarChar(255)
   price          Int
   image          String
   mainCategoryId Int              @map("main_category_id")
