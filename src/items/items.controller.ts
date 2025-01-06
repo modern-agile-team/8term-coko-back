@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Param,
-  Body,
-  Delete,
-  HttpCode,
-} from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, HttpCode } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { ItemChangeStatusDto, BuyItemDto } from './dto/change-item-status.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -45,21 +37,5 @@ export class ItemsController {
   @ApiItems.getUserItems()
   async getUserItems(@Param('userId') userId: number) {
     return await this.itemsService.getUserItems(userId);
-  }
-
-  // POST /items/equip 요청 처리
-  @Post('equip')
-  @HttpCode(204)
-  @ApiItems.equipItem()
-  async equipItem(@Body() equipItemDto: ItemChangeStatusDto) {
-    await this.itemsService.equipItem(equipItemDto);
-  }
-
-  // POST /items/unequip 요청 처리
-  @Post('unequip')
-  @HttpCode(204)
-  @ApiItems.unequipItem()
-  async unequipItem(@Body() unequipItemDto: ItemChangeStatusDto) {
-    await this.itemsService.unequipItem(unequipItemDto);
   }
 }
