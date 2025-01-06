@@ -7,12 +7,14 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { LoginAdminDto } from './login-admin.dto';
 import { AdminsRepository } from './admin.repository';
+import { TokenService } from 'src/auth/services/token.service';
 
 @Injectable()
 export class AdminsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly adminsRepository: AdminsRepository,
+    private readonly tokenService: TokenService,
   ) {}
 
   /**
@@ -25,19 +27,21 @@ export class AdminsService {
     const { email, password } = loginAdminInfo;
 
     const userInfo = await this.adminsRepository.findOne(email);
-
     if (!userInfo) {
       throw new NotFoundException('Please check your email.');
     }
 
     // 비밀번호 복호화
     const isMatch = await this.comparePasswords(password, userInfo.password);
-
     if (!isMatch) {
       throw new UnauthorizedException('Password does not match.');
     }
 
-    return true;
+    const accessToken = await this.tokenService.createAdminAccessToken('admin');
+
+    console.log(accessToken);
+
+    return accessToken;
   }
 
   /**

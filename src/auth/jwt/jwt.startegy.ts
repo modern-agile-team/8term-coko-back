@@ -35,8 +35,10 @@ export class AccessTokenStrategy extends PassportStrategy(
   }
 
   async validate(request: Request, payload: any): Promise<any> {
+    console.log('validate 하기 전');
     const user = await this.userService.getUser(payload.userId);
 
+    console.log('validate 한 후 ');
     return user;
   }
 }
@@ -86,5 +88,38 @@ export class RefreshTokenStrategy extends PassportStrategy(
     }
 
     return await this.userService.getUser(payload.userId);
+  }
+}
+
+// adminAccessToken 전략
+@Injectable()
+export class AdminAccessTokenStrategy extends PassportStrategy(
+  Strategy,
+  'adminAccessToken',
+) {
+  constructor(private readonly configService: ConfigService) {
+    super({
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        (request: Request) => {
+          // ? 옵셔널 을 붙여준 이유는 request 나 cookies 에 값이 없을때
+          // null 을 반환하여 서버 종료를 방지하기 위함
+          return request?.cookies?.accessToken || null;
+        },
+      ]),
+      // 시크릿키로 검증
+
+      secretOrKey: configService.get<string>('ACCESS_SECRET'),
+      // validate 메서드로 request 객체 전달
+      passReqToCallback: true,
+      // 만료된 토큰도 검증
+      ignoreExpiration: false,
+    });
+  }
+
+  async validate(request: Request, payload: any): Promise<any> {
+    if (payload.role !== 'admin') {
+      throw new UnauthorizedException('Invalid Access Token');
+    }
+    return { isAdmin: true };
   }
 }

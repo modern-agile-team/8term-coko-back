@@ -47,4 +47,21 @@ export class TokenService {
       );
     }
   }
+
+  // 액세스 토큰 생성
+  async createAdminAccessToken(role: string): Promise<string> {
+    const payload = { role };
+
+    try {
+      const accessToken = this.jwtService.sign(payload, {
+        secret: this.configService.get<string>('ACCESS_SECRET'),
+        expiresIn: Number(
+          this.configService.get<string>('ACCESS_EXPIRATION_TIME'),
+        ),
+      });
+      return accessToken;
+    } catch (accessError) {
+      throw new InternalServerErrorException('Failed to create access token.');
+    }
+  }
 }

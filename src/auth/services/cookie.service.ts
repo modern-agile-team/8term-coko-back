@@ -63,4 +63,19 @@ export class CookieService {
     res.clearCookie('accessToken', deleteCookieOptions);
     res.clearCookie('refreshToken', deleteCookieOptions);
   }
+
+  // adminAccessToken 쿠키 설정
+  async setAdminAccessTokenCookie(res: Response, accessToken: string) {
+    const accessTokenCookieOptions = {
+      httpOnly: true,
+      secure: true,
+      domain: this.configService.get<string>('ADMIN_COOKIE_DOMAIN'),
+      sameSite: 'none' as 'none', // none 타입으로 지정해줘야 함.
+      maxAge: Number(
+        this.configService.get<string>('ACCESS_COOKIE_EXPIRATION_TIME'),
+      ),
+      path: '/',
+    };
+    res.cookie('accessToken', accessToken, accessTokenCookieOptions);
+  }
 }

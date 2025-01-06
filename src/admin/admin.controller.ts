@@ -1,18 +1,30 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
 import { LoginAdminDto } from './login-admin.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AdminsService } from './admin.service';
 import { ApiAdmins } from './admin.swagger';
+import { CookieService } from 'src/auth/services/cookie.service';
+import { Response } from 'express';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('admins')
 @Controller('admins')
 export class AdminController {
-  constructor(private readonly adminsService: AdminsService) {}
+  constructor(
+    private readonly adminsService: AdminsService,
+    private readonly cookieService: CookieService,
+  ) {}
 
   // admin 로그인
   @ApiAdmins.LoginAdmin()
   @Post('login')
-  async loginAdmin(@Body() loginAdminInfo: LoginAdminDto) {
-    return await this.adminsService.loginAdmin(loginAdminInfo);
+  async loginAdmin(
+    @Body() loginAdminInfo: LoginAdminDto,
+    @Res() res: Response,
+  ) {
+    const accessToken = await this.adminsService.loginAdmin(loginAdminInfo);
+    await this.cookieService.setAdminAccessTokenCookie(res, accessToken);
+
+    res.status(200).send();
   }
 }
