@@ -5,11 +5,15 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
-import { LoginAdminDto } from '../dtos/login-admin.dto';
+import { LoginAdminDto } from './login-admin.dto';
+import { AdminsRepository } from './admin.repository';
 
 @Injectable()
-export class AdminService {
-  constructor(private readonly prisma: PrismaService) {}
+export class AdminsService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly adminsRepository: AdminsRepository,
+  ) {}
 
   /**
    * admin 로그인 메서드
@@ -20,9 +24,7 @@ export class AdminService {
   async loginAdmin(loginAdminInfo: LoginAdminDto) {
     const { email, password } = loginAdminInfo;
 
-    const userInfo = await this.prisma.adminUser.findUnique({
-      where: { email },
-    });
+    const userInfo = await this.adminsRepository.findOne(email);
 
     if (!userInfo) {
       throw new NotFoundException('Please check your email.');
