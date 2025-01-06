@@ -62,15 +62,4 @@ export class ItemsController {
   async unequipItem(@Body() unequipItemDto: ItemChangeStatusDto) {
     await this.itemsService.unequipItem(unequipItemDto);
   }
-
-  // DELETE /items/:userId/:itemId 요청 처리
-  @Delete('users/:userId/:itemId')
-  @HttpCode(204)
-  @ApiItems.deleteUserItem()
-  async deleteUserItem(
-    @Param('userId') userId: number,
-    @Param('itemId') itemId: number,
-  ) {
-    await this.itemsService.deleteUserItem(userId, itemId);
-  }
 }
