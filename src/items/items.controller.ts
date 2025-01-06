@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Param, Body, HttpCode } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Body,
+  HttpCode,
+  Query,
+} from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { ItemChangeStatusDto, BuyItemDto } from './dto/change-item-status.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -9,11 +17,14 @@ import { ApiItems } from './items.swagger';
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
 
-  // GET /items 요청 처리
+  // GET /items : 전체 아이템 조회 + 필터링 추가(maincategory, subcategory : 카테고리의 아이템 조회)
   @Get()
-  @ApiItems.getAllItems()
-  async getAllItems() {
-    return await this.itemsService.getAllItems(); //service에서 아이템 목록을 받아서, 반환(return)
+  @ApiItems.getItems()
+  async getItems(
+    @Query('maincategory') mainCategoryId?: number,
+    @Query('subcategory') subCategoryId?: number,
+  ) {
+    return await this.itemsService.getItems(mainCategoryId, subCategoryId);
   }
 
   // Post /items/dev 요청 처리 (개발환경에서만 실행되도록 한다)

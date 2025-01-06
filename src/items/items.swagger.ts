@@ -3,7 +3,7 @@ import { ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { ItemChangeStatusDto, BuyItemDto } from './dto/change-item-status.dto';
 
 export const ApiItems = {
-  getAllItems: () => {
+  getItems: () => {
     return applyDecorators(
       ApiOperation({
         summary: '모든 items 조회',

@@ -10,8 +10,8 @@ import { BuyItemDto, ItemChangeStatusDto } from './dto/change-item-status.dto';
 export class ItemsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  //모든 아이템 목록 조회 getAllItems
-  getAllItems() {
+  //전체 아이템 조회 + 필터링 getItems
+  getItems(mainCategoryId?: number, subCategoryId?: number) {
     return this.prisma.item.findMany();
   }
 
