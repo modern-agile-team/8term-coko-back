@@ -18,4 +18,15 @@ export class UserItemsService {
     }
     return userItems;
   }
+
+  async buyItem(userId: number, itemId: number) {
+    const userItem = await this.prisma.userItem.create({
+      data: {
+        userId,
+        itemId,
+      },
+    });
+
+    return userItem;
+  }
 }
