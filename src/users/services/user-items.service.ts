@@ -13,7 +13,7 @@ export class UserItemsService {
       },
     });
 
-    if (userItems.length === 0) {
+    if (!userItems || userItems.length === 0) {
       throw new NotFoundException('User items not found');
     }
     return userItems;
