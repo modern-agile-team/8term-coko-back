@@ -4,7 +4,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { BuyItemDto } from '../dto/buy-item.dto';
+import { BuyItemDto } from '../dtos/buy-item.dto';
 
 @Injectable()
 export class UserItemsService {
