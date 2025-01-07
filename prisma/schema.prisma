@@ -174,5 +174,5 @@ model AdminUser {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map("admin_user")
+  @@map("admin_users")
 }
