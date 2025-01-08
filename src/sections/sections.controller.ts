@@ -29,22 +29,23 @@ export class SectionsController {
   }
 
   @ApiSections.findOne()
-  @Get(':id')
+  @Get(':sectionId')
   async findOne(
-    @Param('id', PositiveIntPipe) id: number,
+    @Param('sectionId', PositiveIntPipe) sectionId: number,
   ): Promise<ResSectionDto> {
-    const sectionWithParts = await this.sectionsService.findOneWithParts(id);
+    const sectionWithParts =
+      await this.sectionsService.findOneWithParts(sectionId);
     return new ResSectionDto(sectionWithParts);
   }
 
   @ApiSections.findOneWithStatus()
-  @Get(':id/users/:userId/part-status')
+  @Get(':sectionId/users/:userId/part-status')
   async findOneWithStatus(
     @Param('userId', PositiveIntPipe) userId: number,
-    @Param('id', PositiveIntPipe) id: number,
+    @Param('sectionId', PositiveIntPipe) sectionId: number,
   ) {
     const sectionWithParts =
-      await this.sectionsService.findOneWithPartsAndStatus(userId, id);
+      await this.sectionsService.findOneWithPartsAndStatus(userId, sectionId);
     return new ResSectionDto(sectionWithParts);
   }
 
@@ -56,29 +57,31 @@ export class SectionsController {
   }
 
   @ApiSections.updateAll()
-  @Patch(':id')
+  @Patch(':sectionId')
   @HttpCode(204)
   async updateAll(
-    @Param('id', PositiveIntPipe) id: number,
+    @Param('sectionId', PositiveIntPipe) sectionId: number,
     @Body() body: CreateSectionDto,
   ): Promise<void> {
-    await this.sectionsService.updateAll(id, body);
+    await this.sectionsService.updateAll(sectionId, body);
   }
 
   @ApiSections.updateOrder()
-  @Patch(':id/order')
+  @Patch(':sectionId/order')
   @HttpCode(204)
   async updateOrder(
-    @Param('id', PositiveIntPipe) id: number,
+    @Param('sectionId', PositiveIntPipe) sectionId: number,
     @Body() body: UpdateSectionOrderDto,
   ): Promise<void> {
-    await this.sectionsService.updateOrder(id, body);
+    await this.sectionsService.updateOrder(sectionId, body);
   }
 
   @ApiSections.remove()
-  @Delete(':id')
+  @Delete(':sectionId')
   @HttpCode(204)
-  async remove(@Param('id', PositiveIntPipe) id: number): Promise<void> {
-    await this.sectionsService.remove(id);
+  async remove(
+    @Param('sectionId', PositiveIntPipe) sectionId: number,
+  ): Promise<void> {
+    await this.sectionsService.remove(sectionId);
   }
 }
