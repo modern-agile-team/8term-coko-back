@@ -7,6 +7,7 @@ import {
   Delete,
   HttpCode,
   Patch,
+  UseGuards,
 } from '@nestjs/common';
 import { PartsService } from './parts.service';
 import { CreatePartDto } from './dto/create-part.dto';
@@ -15,6 +16,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { ApiParts } from './parts.swagger';
 import { ResPartDto } from './dto/res-part.part.dto';
 import { UpdatePartOrderDto } from './dto/update-part-order.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('parts')
 @Controller('parts')
@@ -31,6 +33,7 @@ export class PartsController {
   @ApiParts.create()
   @Post()
   @HttpCode(204)
+  @UseGuards(AuthGuard('adminAccessToken'))
   async create(@Body() createPartDto: CreatePartDto): Promise<void> {
     await this.partsService.create(createPartDto);
   }
@@ -38,6 +41,7 @@ export class PartsController {
   @ApiParts.updateAll()
   @Patch(':id')
   @HttpCode(204)
+  @UseGuards(AuthGuard('adminAccessToken'))
   async updateAll(
     @Param('id', PositiveIntPipe) id: number,
     @Body() body: CreatePartDto,
@@ -48,6 +52,7 @@ export class PartsController {
   @ApiParts.updateOrder()
   @Patch(':id/order')
   @HttpCode(204)
+  @UseGuards(AuthGuard('adminAccessToken'))
   async updateOrder(
     @Param('id', PositiveIntPipe) id: number,
     @Body() body: UpdatePartOrderDto,
@@ -58,6 +63,7 @@ export class PartsController {
   @ApiParts.remove()
   @Delete(':id')
   @HttpCode(204)
+  @UseGuards(AuthGuard('adminAccessToken'))
   async remove(@Param('id', PositiveIntPipe) id: number): Promise<void> {
     await this.partsService.remove(id);
   }

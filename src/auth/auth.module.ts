@@ -28,6 +28,11 @@ import { AdminGuard } from './guard/admin.guard';
     AdminGuard,
   ],
   controllers: [AuthController],
-  exports: [TokenService, CookieService],
+  exports: [
+    TokenService,
+    CookieService,
+    AccessTokenStrategy,
+    AdminAccessTokenStrategy,
+  ],
 })
 export class AuthModule {}

@@ -8,6 +8,7 @@ import {
   Put,
   Query,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { QuizzesService } from './quizzes.service';
 import { CreateQuizDto } from './dto/create-quiz.dto';
@@ -17,6 +18,7 @@ import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe
 import { ApiTags } from '@nestjs/swagger';
 import { ApiQuizzes } from './quizzes.swagger';
 import { ResQuizDto } from './dto/res-quiz.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('quizzes')
 @Controller('quizzes')
@@ -53,6 +55,7 @@ export class QuizzesController {
   @ApiQuizzes.createQuiz()
   @Post()
   @HttpCode(204)
+  @UseGuards(AuthGuard('adminAccessToken'))
   async createQuiz(@Body() body: CreateQuizDto): Promise<void> {
     await this.quizzesService.create(body);
   }
@@ -60,6 +63,7 @@ export class QuizzesController {
   @ApiQuizzes.updateQuiz()
   @Put(':id')
   @HttpCode(204)
+  @UseGuards(AuthGuard('adminAccessToken'))
   async updateQuiz(
     @Param('id', PositiveIntPipe) id: number,
     @Body() body: UpdateQuizDto,
@@ -70,6 +74,7 @@ export class QuizzesController {
   @ApiQuizzes.deleteQuiz()
   @Delete(':id')
   @HttpCode(204)
+  @UseGuards(AuthGuard('adminAccessToken'))
   async deleteQuiz(@Param('id', PositiveIntPipe) id: number): Promise<void> {
     await this.quizzesService.remove(id);
   }
