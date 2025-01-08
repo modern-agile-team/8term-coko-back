@@ -108,7 +108,7 @@ export class AdminAccessTokenStrategy extends PassportStrategy(
       ]),
       // 시크릿키로 검증
 
-      secretOrKey: configService.get<string>('ACCESS_SECRET'),
+      secretOrKey: configService.get<string>('ADMIN_ACCESS_SECRET'),
       // validate 메서드로 request 객체 전달
       passReqToCallback: true,
       // 만료된 토큰도 검증

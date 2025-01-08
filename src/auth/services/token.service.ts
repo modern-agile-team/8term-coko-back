@@ -54,7 +54,7 @@ export class TokenService {
 
     try {
       const accessToken = this.jwtService.sign(payload, {
-        secret: this.configService.get<string>('ACCESS_SECRET'),
+        secret: this.configService.get<string>('ACCESS_ADMIN_SECRET'),
         expiresIn: Number(
           this.configService.get<string>('ACCESS_EXPIRATION_TIME'),
         ),
