@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { Section } from './entities/section.entity';
 import { SectionParts, SectionPartsPartProgress } from 'src/common/type/type';
+import { QuerySectionDto } from './dto/query-section.dto';
 
 @Injectable()
 export class SectionsRepository {
@@ -11,6 +12,16 @@ export class SectionsRepository {
   async findAllSections(): Promise<Section[]> {
     return this.prisma.section.findMany({
       orderBy: { order: 'asc' },
+    });
+  }
+
+  async findSectionsByCursorQuery(query: QuerySectionDto) {
+    const { cursor, pageSize = 1 } = query;
+
+    return this.prisma.section.findMany({
+      where: cursor ? { id: { gt: cursor } } : undefined,
+      orderBy: { order: 'asc' },
+      take: pageSize + 1, // 다음 페이지가 있는지 확인하기 위해 +1
     });
   }
 
