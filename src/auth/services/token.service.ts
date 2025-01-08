@@ -1,14 +1,12 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { RedisService } from '../redis/redis.service';
 
 @Injectable()
 export class TokenService {
   constructor(
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
-    private readonly redisService: RedisService,
   ) {}
 
   // 액세스 토큰 생성
@@ -38,7 +36,6 @@ export class TokenService {
           this.configService.get<string>('REFRESH_EXPIRATION_TIME'),
         ),
       });
-      this.redisService.set(String(userId), refreshToken);
 
       return refreshToken;
     } catch (refreshError) {

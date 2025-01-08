@@ -6,15 +6,16 @@ import {
   PartStatus,
   PartStatusValues,
 } from 'src/part-progress/entities/part-progress.entity';
+import { Part } from 'src/parts/entities/part.entity';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  private async createDefaultPartProgress() {
-    const parts = await this.prisma.part.findMany();
+  private async createDefaultPartProgress(txOrPrisma: any = this.prisma) {
+    const parts = await txOrPrisma.part.findMany();
 
-    return parts.map((part) => {
+    return parts.map((part: Part) => {
       let defaultStatus: PartStatus;
 
       if (part.order === 1) {
@@ -38,12 +39,13 @@ export class UsersService {
     provider: string,
     providerId: string,
     name: string,
+    txOrPrisma: any = this.prisma,
   ): Promise<ResponseUserDto> {
     // 유저 생성시 디폴트 파트 진행도를 생성
-    const defaulPartProgress = await this.createDefaultPartProgress();
+    const defaulPartProgress = await this.createDefaultPartProgress(txOrPrisma);
 
     // 유저 생성시 기본 유저 생명력 생성
-    const userResponse = await this.prisma.user.create({
+    const userResponse = await txOrPrisma.user.create({
       data: {
         provider,
         providerId,
