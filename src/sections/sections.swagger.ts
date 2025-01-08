@@ -86,7 +86,7 @@ export const ApiSections = {
       }),
     );
   },
-  findOne: () => {
+  findOneWithParts: () => {
     return applyDecorators(
       ApiOperation({
         summary: 'section 단일 조회',

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ResPartDto } from 'src/parts/dto/res-part.part.dto';
+import { Section } from '../entities/section.entity';
 
 export class ResSectionDto {
   @ApiProperty({ example: 1 })
@@ -11,17 +11,13 @@ export class ResSectionDto {
   @ApiProperty({ example: 1 })
   readonly order: number;
 
-  @ApiProperty({ type: [ResPartDto], example: [] })
-  readonly part?: ResPartDto[];
-
-  constructor({ id, name, order, part }: ResSectionDto) {
-    this.id = id;
-    this.name = name;
-    this.order = order;
-    this.part = part;
+  constructor(section: Section) {
+    this.id = section.id;
+    this.name = section.name;
+    this.order = section.order;
   }
 
-  static fromArray(sections: ResSectionDto[]): ResSectionDto[] {
+  static fromArray(sections: Section[]): ResSectionDto[] {
     return sections.map((section) => new ResSectionDto(section));
   }
 }

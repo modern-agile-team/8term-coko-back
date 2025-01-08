@@ -8,9 +8,9 @@ import { CreateSectionDto } from './dto/create-section.dto';
 import { SectionsRepository } from './sections.repository';
 import { PartsRepository } from 'src/parts/parts.repository';
 import { Section } from './entities/section.entity';
-import { ResSectionDto } from './dto/res-section.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateSectionOrderDto } from './dto/update-section-order.dto';
+import { SectionParts } from 'src/common/type/type';
 
 @Injectable()
 export class SectionsService {
@@ -79,7 +79,7 @@ export class SectionsService {
     return section;
   }
 
-  async findOneWithParts(id: number): Promise<ResSectionDto> {
+  async findOneWithParts(id: number): Promise<SectionParts> {
     const sectionWithParts =
       await this.sectionsRepository.findSectionWithPartsById(id);
 
@@ -93,7 +93,7 @@ export class SectionsService {
   async findOneWithPartsAndStatus(
     userId: number,
     id: number,
-  ): Promise<ResSectionDto> {
+  ): Promise<SectionParts> {
     await this.findOne(id);
 
     const { part, ...section } =
@@ -104,12 +104,10 @@ export class SectionsService {
     }
 
     // ropository에서 받은 값 중 part를 정리하는 코드
-    const newParts = part.map(
-      ({ PartProgress, createdAt, updatedAt, ...orders }) => ({
-        ...orders,
-        status: PartProgress[0]?.status,
-      }),
-    );
+    const newParts = part.map(({ PartProgress, ...orders }) => ({
+      ...orders,
+      status: PartProgress[0]?.status,
+    }));
 
     return {
       ...section,

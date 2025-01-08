@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { Section } from './entities/section.entity';
-import { ResSectionDto } from './dto/res-section.dto';
+import { SectionParts, SectionPartsPartProgress } from 'src/common/type/type';
 
 @Injectable()
 export class SectionsRepository {
@@ -20,7 +20,7 @@ export class SectionsRepository {
     });
   }
 
-  async findSectionWithPartsById(id: number): Promise<ResSectionDto> {
+  async findSectionWithPartsById(id: number): Promise<SectionParts> {
     return this.prisma.section.findUnique({
       where: { id },
       include: {
@@ -29,7 +29,10 @@ export class SectionsRepository {
     });
   }
 
-  async findSectionWithPartStatus(userId: number, id: number) {
+  async findSectionWithPartStatus(
+    userId: number,
+    id: number,
+  ): Promise<SectionPartsPartProgress> {
     return this.prisma.section.findUnique({
       where: { id },
       include: {
@@ -58,10 +61,10 @@ export class SectionsRepository {
     return result._max.order ?? 0;
   }
 
-  async createSection(data): Promise<Section> {
-    return this.prisma.section.create({
-      data,
-    });
+  async createSection(
+    data: CreateSectionDto & { order: number },
+  ): Promise<Section> {
+    return this.prisma.section.create({ data });
   }
 
   async updateSectionById(

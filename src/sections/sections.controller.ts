@@ -15,6 +15,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { ApiSections } from './sections.swagger';
 import { ResSectionDto } from './dto/res-section.dto';
 import { UpdateSectionOrderDto } from './dto/update-section-order.dto';
+import { ResSectionPartsDto } from './dto/res-section-parts.dto';
 
 @ApiTags('sections')
 @Controller('sections')
@@ -28,14 +29,14 @@ export class SectionsController {
     return ResSectionDto.fromArray(sections);
   }
 
-  @ApiSections.findOne()
-  @Get(':sectionId')
-  async findOne(
+  @ApiSections.findOneWithParts()
+  @Get(':sectionId/parts')
+  async findOneWithParts(
     @Param('sectionId', PositiveIntPipe) sectionId: number,
   ): Promise<ResSectionDto> {
     const sectionWithParts =
       await this.sectionsService.findOneWithParts(sectionId);
-    return new ResSectionDto(sectionWithParts);
+    return new ResSectionPartsDto(sectionWithParts);
   }
 
   @ApiSections.findOneWithStatus()
@@ -44,9 +45,9 @@ export class SectionsController {
     @Param('userId', PositiveIntPipe) userId: number,
     @Param('sectionId', PositiveIntPipe) sectionId: number,
   ) {
-    const sectionWithParts =
+    const sectionWithPartsStatus =
       await this.sectionsService.findOneWithPartsAndStatus(userId, sectionId);
-    return new ResSectionDto(sectionWithParts);
+    return new ResSectionPartsDto(sectionWithPartsStatus);
   }
 
   @ApiSections.create()
