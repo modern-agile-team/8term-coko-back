@@ -8,7 +8,7 @@ export class PaginationService {
   ): { data: T[]; nextCursor: number | null; hasNextPage: boolean } {
     const hasNextPage = items.length > pageSize;
     const data = hasNextPage ? items.slice(0, -1) : items; // 마지막 데이터 제거
-    const nextCursor = hasNextPage ? data[data.length - 1].order : null; // 반드시 order 사용
+    const nextCursor = hasNextPage ? data[data.length - 1].order : null;
 
     return {
       data,
