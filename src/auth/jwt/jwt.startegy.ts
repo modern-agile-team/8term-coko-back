@@ -35,10 +35,7 @@ export class AccessTokenStrategy extends PassportStrategy(
   }
 
   async validate(request: Request, payload: any): Promise<any> {
-    console.log('validate 하기 전');
     const user = await this.userService.getUser(payload.userId);
-
-    console.log('validate 한 후 ');
     return user;
   }
 }
