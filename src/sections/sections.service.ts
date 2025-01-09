@@ -11,12 +11,15 @@ import { Section } from './entities/section.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateSectionOrderDto } from './dto/update-section-order.dto';
 import { SectionParts } from 'src/common/type/type';
+import { PaginationService } from 'src/pagination/pagination.service';
+import { QuerySectionDto } from './dto/query-section.dto';
 
 @Injectable()
 export class SectionsService {
   constructor(
     private readonly sectionsRepository: SectionsRepository,
     private readonly partsRepository: PartsRepository,
+    private readonly paginationService: PaginationService,
     private readonly prisma: PrismaService,
   ) {}
 
@@ -67,6 +70,19 @@ export class SectionsService {
 
   async findAll() {
     return this.sectionsRepository.findAllSections();
+  }
+
+  async findAllWithParts(query: QuerySectionDto) {
+    const { cursor, pageSize = 10 } = query;
+
+    // 1. 데이터베이스에서 데이터 가져오기
+    const sections = await this.sectionsRepository.findSectionsByCursor(
+      pageSize,
+      cursor,
+    );
+
+    // 2. 페이지네이션 처리
+    return this.paginationService.paginate(sections, pageSize);
   }
 
   async findOne(id: number): Promise<Section> {

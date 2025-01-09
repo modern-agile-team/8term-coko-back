@@ -3,7 +3,6 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { Section } from './entities/section.entity';
 import { SectionParts, SectionPartsPartProgress } from 'src/common/type/type';
-import { QuerySectionDto } from './dto/query-section.dto';
 
 @Injectable()
 export class SectionsRepository {
@@ -15,13 +14,11 @@ export class SectionsRepository {
     });
   }
 
-  async findSectionsByCursorQuery(query: QuerySectionDto) {
-    const { cursor, pageSize = 1 } = query;
-
+  async findSectionsByCursor(pageSize: number, cursor?: number) {
     return this.prisma.section.findMany({
-      where: cursor ? { id: { gt: cursor } } : undefined,
-      orderBy: { order: 'asc' },
-      take: pageSize + 1, // 다음 페이지가 있는지 확인하기 위해 +1
+      where: cursor ? { order: { gt: cursor } } : undefined, // order 기준으로 필터링
+      orderBy: { order: 'asc' }, // 반드시 order 기준으로 정렬
+      take: pageSize + 1, // 다음 페이지 확인을 위해 추가로 1개 더 가져옴
     });
   }
 

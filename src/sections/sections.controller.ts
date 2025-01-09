@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { SectionsService } from './sections.service';
 import { CreateSectionDto } from './dto/create-section.dto';
@@ -16,6 +17,7 @@ import { ApiSections } from './sections.swagger';
 import { ResSectionDto } from './dto/res-section.dto';
 import { UpdateSectionOrderDto } from './dto/update-section-order.dto';
 import { ResSectionPartsDto } from './dto/res-section-parts.dto';
+import { QuerySectionDto } from './dto/query-section.dto';
 
 @ApiTags('sections')
 @Controller('sections')
@@ -27,6 +29,12 @@ export class SectionsController {
   async findAll(): Promise<ResSectionDto[]> {
     const sections = await this.sectionsService.findAll();
     return ResSectionDto.fromArray(sections);
+  }
+
+  //@ApiSections.findAllWithParts()
+  @Get('parts')
+  async findAllWithParts(@Query() query: QuerySectionDto) {
+    return await this.sectionsService.findAllWithParts(query);
   }
 
   @ApiSections.findOneWithParts()
