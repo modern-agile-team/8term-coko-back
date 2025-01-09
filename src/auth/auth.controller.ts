@@ -58,7 +58,7 @@ export class AuthController {
     await this.cookieService.deleteCookie(res);
   }
 
-  // jwt 검증 요청
+  // accessToken 검증 요청
   @Get('verify')
   @HttpCode(200)
   @UseGuards(AuthGuard('accessToken'))
