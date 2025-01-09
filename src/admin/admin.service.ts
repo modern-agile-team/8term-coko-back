@@ -39,8 +39,6 @@ export class AdminsService {
 
     const accessToken = await this.tokenService.createAdminAccessToken('admin');
 
-    console.log(accessToken);
-
     return accessToken;
   }
 
