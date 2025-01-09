@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { LoginAdminDto } from './login-admin.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AdminsService } from './admin.service';
@@ -6,6 +14,7 @@ import { ApiAdmins } from './admin.swagger';
 import { CookieService } from 'src/auth/services/cookie.service';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
+import { User } from 'src/common/decorators/get-user.decorator';
 
 @ApiTags('admins')
 @Controller('admins')
@@ -18,6 +27,7 @@ export class AdminController {
   // admin 로그인
   @ApiAdmins.LoginAdmin()
   @Post('login')
+  @HttpCode(200)
   async loginAdmin(
     @Body() loginAdminInfo: LoginAdminDto,
     @Res({ passthrough: true }) res: Response,
@@ -25,4 +35,11 @@ export class AdminController {
     const accessToken = await this.adminsService.loginAdmin(loginAdminInfo);
     await this.cookieService.setAdminAccessTokenCookie(res, accessToken);
   }
+
+  // accessToken 검증 요청
+  @ApiAdmins.verifyAdmin()
+  @Get('verify')
+  @HttpCode(200)
+  @UseGuards(AuthGuard('adminAccessToken'))
+  async verifyToken() {}
 }

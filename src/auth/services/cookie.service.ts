@@ -33,7 +33,7 @@ export class CookieService {
       maxAge: Number(
         this.configService.get<string>('REFRESH_COOKIE_EXPIRATION_TIME'),
       ),
-      path: '/', // refreshToken은 특정 경로로 제한 가능
+      path: '/auth/new-accessToken', // refreshToken은 특정 경로로 제한
     };
     res.cookie('refreshToken', refreshToken, refreshTokenCookieOptions);
   }

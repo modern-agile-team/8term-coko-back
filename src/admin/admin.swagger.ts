@@ -13,4 +13,15 @@ export const ApiAdmins = {
       }),
     );
   },
+  verifyAdmin: () => {
+    return applyDecorators(
+      ApiOperation({
+        summary: 'admin 토큰 인증',
+      }),
+      ApiResponse({
+        status: 200,
+        description: `admin 토큰이 인증됨`,
+      }),
+    );
+  },
 };
