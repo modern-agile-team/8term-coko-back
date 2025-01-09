@@ -13,8 +13,9 @@ import { AuthService } from './services/auth.service';
 import { CookieService } from './services/cookie.service';
 import { TokenService } from './services/token.service';
 import { RedisService } from './redis/redis.service';
-import { UsersService } from 'src/users/services/users.service';
 import { ConfigService } from '@nestjs/config';
+import { GoogleUserDto } from './dtos/google-user.dto';
+import { UserInfo } from 'src/users/entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -24,7 +25,6 @@ export class AuthController {
     private readonly cookieService: CookieService,
     private readonly tokenService: TokenService,
     private readonly redisService: RedisService,
-    private readonly userService: UsersService,
   ) {}
 
   // Google 로그인 시작
@@ -37,7 +37,7 @@ export class AuthController {
   @HttpCode(302)
   @UseGuards(AuthGuard('google'))
   async googleLogin(
-    @User() user: any,
+    @User() user: GoogleUserDto,
     @Res({ passthrough: true }) res: Response,
   ) {
     const { accessToken, refreshToken } =
@@ -53,8 +53,11 @@ export class AuthController {
   @Post('logout')
   @HttpCode(204)
   @UseGuards(AuthGuard('accessToken'))
-  async logout(@User() user: any, @Res({ passthrough: true }) res: Response) {
-    await this.redisService.del(user.id);
+  async logout(
+    @User() user: UserInfo,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    await this.redisService.del(String(user.id));
     await this.cookieService.deleteCookie(res);
   }
 
@@ -62,7 +65,7 @@ export class AuthController {
   @Get('verify')
   @HttpCode(200)
   @UseGuards(AuthGuard('accessToken'))
-  async verifyToken(@User() user: any): Promise<any> {
+  async verifyToken(@User() user: UserInfo): Promise<any> {
     return user;
   }
 
@@ -71,7 +74,7 @@ export class AuthController {
   @HttpCode(201)
   @UseGuards(AuthGuard('refreshToken'))
   async verifyRefresh(
-    @User() user: any,
+    @User() user: UserInfo,
     @Res({ passthrough: true }) res: Response,
   ): Promise<any> {
     // access 토큰 재발급

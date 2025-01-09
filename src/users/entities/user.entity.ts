@@ -11,7 +11,7 @@ interface UserModel {
   updatedAt: Date;
 }
 
-export class User implements UserModel {
+export class UserInfo implements UserModel {
   id: number;
   provider: string;
   providerId: string;
