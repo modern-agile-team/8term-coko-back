@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { BuyItemDto } from '../dtos/buy-item.dto';
+import { EquipItemDto } from '../dtos/equip-item.dto';
 
 @Injectable()
 export class UserItemsService {
@@ -81,6 +82,31 @@ export class UserItemsService {
       await prisma.userItem.createMany({
         data: userItemsData,
       });
+    });
+  }
+
+  async updateItemEquipStatus(equipItemDto: EquipItemDto): Promise<void> {
+    const { userId, itemIds, isEquipped } = equipItemDto;
+
+    const userItems = await this.prisma.userItem.findMany({
+      //유저-아이템 조회
+      where: {
+        userId,
+        itemId: { in: itemIds }, //userId와 itemIds가 일치하는 것을 찾기
+      },
+    });
+
+    if (!userItems || userItems.length === 0) {
+      throw new NotFoundException('User item not found');
+    }
+
+    //유저-아이템 착용상태 업데이트
+    await this.prisma.userItem.updateMany({
+      where: {
+        userId,
+        itemId: { in: itemIds },
+      },
+      data: { isEquipped },
     });
   }
 }
