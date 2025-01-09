@@ -25,7 +25,8 @@ async function bootstrap() {
       'MIT',
       'https://github.com/git/git-scm.com/blob/gh-pages/MIT-LICENSE.txt',
     )
-    .addServer('https://api.cokoedu.com', 'develop')
+    .addServer('https://api.cokoedu.com', 'develop') // develop 서버
+    .addServer('http://localhost:3000', 'local') // 로컬 서버
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document, {

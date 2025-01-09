@@ -8,7 +8,12 @@ import { TokenService } from './services/token.service';
 import { UsersModule } from 'src/users/modules/users.module';
 import { RedisModule } from './redis/redis.module';
 import { CookieService } from './services/cookie.service';
-import { AccessTokenStrategy, RefreshTokenStrategy } from './jwt/jwt.startegy';
+import {
+  AccessTokenStrategy,
+  AdminAccessTokenStrategy,
+  RefreshTokenStrategy,
+} from './jwt/jwt.startegy';
+import { AdminGuard } from './guard/admin.guard';
 
 @Module({
   imports: [PassportModule, JwtModule, RedisModule, UsersModule],
@@ -19,7 +24,15 @@ import { AccessTokenStrategy, RefreshTokenStrategy } from './jwt/jwt.startegy';
     GoogleStrategy,
     AccessTokenStrategy,
     RefreshTokenStrategy,
+    AdminAccessTokenStrategy,
+    AdminGuard,
   ],
   controllers: [AuthController],
+  exports: [
+    TokenService,
+    CookieService,
+    AccessTokenStrategy,
+    AdminAccessTokenStrategy,
+  ],
 })
 export class AuthModule {}

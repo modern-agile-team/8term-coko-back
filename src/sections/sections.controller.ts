@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { SectionsService } from './sections.service';
 import { CreateSectionDto } from './dto/create-section.dto';
@@ -15,6 +16,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { ApiSections } from './sections.swagger';
 import { ResSectionDto } from './dto/res-section.dto';
 import { UpdateSectionOrderDto } from './dto/update-section-order.dto';
+import { AdminGuard } from 'src/auth/guard/admin.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('sections')
 @Controller('sections')
@@ -51,6 +54,7 @@ export class SectionsController {
   @ApiSections.create()
   @Post()
   @HttpCode(204)
+  @UseGuards(AuthGuard('adminAccessToken'))
   async create(@Body() body: CreateSectionDto): Promise<void> {
     await this.sectionsService.create(body);
   }
@@ -58,6 +62,7 @@ export class SectionsController {
   @ApiSections.updateAll()
   @Patch(':id')
   @HttpCode(204)
+  @UseGuards(AuthGuard('adminAccessToken'))
   async updateAll(
     @Param('id', PositiveIntPipe) id: number,
     @Body() body: CreateSectionDto,
@@ -68,6 +73,7 @@ export class SectionsController {
   @ApiSections.updateOrder()
   @Patch(':id/order')
   @HttpCode(204)
+  @UseGuards(AuthGuard('adminAccessToken'))
   async updateOrder(
     @Param('id', PositiveIntPipe) id: number,
     @Body() body: UpdateSectionOrderDto,
@@ -78,6 +84,7 @@ export class SectionsController {
   @ApiSections.remove()
   @Delete(':id')
   @HttpCode(204)
+  @UseGuards(AuthGuard('adminAccessToken'))
   async remove(@Param('id', PositiveIntPipe) id: number): Promise<void> {
     await this.sectionsService.remove(id);
   }
