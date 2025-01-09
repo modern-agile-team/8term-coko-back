@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Patch,
   Param,
   Body,
   ParseIntPipe,
@@ -9,6 +10,7 @@ import {
 import { UserItemsService } from '../services/user-items.service';
 import { ApiTags } from '@nestjs/swagger';
 import { BuyItemDto } from '../dtos/buy-item.dto';
+import { WearItemDto } from '../dtos/wear-item.dto';
 
 @ApiTags('user-items')
 @Controller('users/:userId/items')
@@ -27,5 +29,16 @@ export class UserItemsController {
   ) {
     buyItemDto.userId = userId;
     return await this.userItemsService.buyItem(buyItemDto);
+  }
+
+  @Patch(':itemId')
+  async updateItemWearStatus(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('itemId', ParseIntPipe) itemId: number,
+    @Body() wearItemDto: WearItemDto,
+  ) {
+    wearItemDto.userId = userId;
+    wearItemDto.itemId = itemId;
+    return await this.userItemsService.updateItemWearStatus(wearItemDto);
   }
 }
