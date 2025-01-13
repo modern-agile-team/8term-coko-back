@@ -27,3 +27,17 @@ export class ItemsService {
     return items;
   }
 }
+
+console.log('A');
+
+setTimeout(() => console.log('B'), 3000);
+
+console.log('C');
+
+function first() {
+  second();
+  console.log('1');
+}
+function second() {
+  console.log('2');
+}
