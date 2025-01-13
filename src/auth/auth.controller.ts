@@ -14,7 +14,7 @@ import { CookieService } from './services/cookie.service';
 import { TokenService } from './services/token.service';
 import { RedisService } from './redis/redis.service';
 import { ConfigService } from '@nestjs/config';
-import { GoogleUserDto } from './dtos/google-user.dto';
+import { GoogleUserDto } from './google/google-user.dto';
 import { UserInfo } from 'src/users/entities/user.entity';
 
 @Controller('auth')
@@ -52,7 +52,7 @@ export class AuthController {
   // 로그아웃
   @Post('logout')
   @HttpCode(204)
-  @UseGuards(AuthGuard('accessToken'))
+  @UseGuards(AuthGuard('accessTokens'))
   async logout(
     @User() user: UserInfo,
     @Res({ passthrough: true }) res: Response,

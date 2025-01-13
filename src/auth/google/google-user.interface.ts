@@ -1,4 +1,4 @@
-export interface GoogleUser {
+export interface GoogleUserInfo {
   name: string;
   socialAccessToken: string;
   socialRefreshToken: string | null;
