@@ -39,4 +39,6 @@ export class UserItemsController {
     equipItemDto.userId = userId;
     return await this.userItemsService.updateItemEquipStatus(equipItemDto);
   }
+
+  @Get()
 }
