@@ -5,21 +5,22 @@ import {
   Patch,
   Param,
   Body,
-  ParseIntPipe,
 } from '@nestjs/common';
 import { UserItemsService } from '../services/user-items.service';
-import { ApiTags } from '@nestjs/swagger';
 import { BuyItemDto } from '../dtos/buy-item.dto';
 import { EquipItemDto } from '../dtos/equip-item.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 
-@ApiTags('user-items')
+@ApiTags('items')
 @Controller('users/:userId/items')
 export class UserItemsController {
   constructor(private readonly userItemsService: UserItemsService) {}
 
+  //user의 아이템 목록 조회
   @Get()
-  async getUserItems(@Param('userId', ParseIntPipe) userId: number) {
-    return await this.userItemsService.getUserItems(userId);
+  getUserItems(@Param('userId', PositiveIntPipe) userId: number) {
+    return this.userItemsService.getUserItems(userId);
   }
 
   @Post(':itemId')

@@ -6,23 +6,24 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { BuyItemDto } from '../dtos/buy-item.dto';
 import { EquipItemDto } from '../dtos/equip-item.dto';
+import { ResponseItemDto } from '../dtos/response-item.dto';
 
 @Injectable()
 export class UserItemsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getUserItems(userId: number) {
+  async getUserItems(userId: number): Promise<ResponseItemDto> {
     const userItems = await this.prisma.userItem.findMany({
       where: { userId },
       include: {
-        item: true,
+        item: true, //userItem에 연결된 item 정보도 가져온다
       },
     });
 
     if (!userItems || userItems.length === 0) {
       throw new NotFoundException('User items not found');
     }
-    return userItems;
+    return new ResponseItemDto(userItems);
   }
 
   async buyItem(buyItemDto: BuyItemDto): Promise<void> {
