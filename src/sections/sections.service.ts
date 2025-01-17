@@ -13,6 +13,7 @@ import { UpdateSectionOrderDto } from './dto/update-section-order.dto';
 import { SectionParts } from 'src/common/type/type';
 import { PaginationService } from 'src/pagination/pagination.service';
 import { QuerySectionDto } from './dto/query-section.dto';
+import { PaginatedResult } from 'src/pagination/pagination.interface';
 
 @Injectable()
 export class SectionsService {
@@ -72,7 +73,9 @@ export class SectionsService {
     return this.sectionsRepository.findAllSections();
   }
 
-  async findAllWithParts(query: QuerySectionDto) {
+  async findAllWithParts(
+    query: QuerySectionDto,
+  ): Promise<PaginatedResult<Section>> {
     const { cursor, pageSize = 5 } = query;
 
     // 1. 데이터베이스에서 데이터 가져오기
