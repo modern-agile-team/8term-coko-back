@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ResPartDto } from 'src/parts/dto/res-part.part.dto';
 import { ResSectionDto } from './res-section.dto';
-import { Section } from '../entities/section.entity';
 import { EXAMPLE_PARTS } from 'src/parts/const/example-parts';
 import { SectionParts } from 'src/common/type/type';
 
@@ -11,7 +10,7 @@ export class ResSectionPartsDto extends ResSectionDto {
 
   constructor(sectionWithParts: SectionParts) {
     super(sectionWithParts);
-    this.parts = sectionWithParts.part;
+    this.parts = ResPartDto.fromArray(sectionWithParts.part);
   }
 
   static fromArray(sectionsWithParts: SectionParts[]): ResSectionPartsDto[] {

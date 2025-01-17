@@ -18,6 +18,7 @@ import { ResSectionDto } from './dto/res-section.dto';
 import { UpdateSectionOrderDto } from './dto/update-section-order.dto';
 import { ResSectionPartsDto } from './dto/res-section-parts.dto';
 import { QuerySectionDto } from './dto/query-section.dto';
+import { ResPaginationOfSectionPartsDto } from './dto/res-pagination-of-section-parts.dto';
 
 @ApiTags('sections')
 @Controller('sections')
@@ -31,10 +32,12 @@ export class SectionsController {
     return ResSectionDto.fromArray(sections);
   }
 
-  //@ApiSections.findAllWithParts()
+  //@ApiSections.findAllPaginatedSectionsWithParts()
   @Get('parts')
-  async findAllWithParts(@Query() query: QuerySectionDto) {
-    return await this.sectionsService.findAllWithParts(query);
+  async findAllPaginatedSectionsWithParts(@Query() query: QuerySectionDto) {
+    const PaginatedSectionWithParts =
+      await this.sectionsService.findAllWithParts(query);
+    return new ResPaginationOfSectionPartsDto(PaginatedSectionWithParts);
   }
 
   // @ApiSections.findOneWithParts()
@@ -52,7 +55,7 @@ export class SectionsController {
   async findOneWithStatus(
     @Param('userId', PositiveIntPipe) userId: number,
     @Param('sectionId', PositiveIntPipe) sectionId: number,
-  ) {
+  ): Promise<ResSectionPartsDto> {
     const sectionWithPartsStatus =
       await this.sectionsService.findOneWithPartsAndStatus(userId, sectionId);
     return new ResSectionPartsDto(sectionWithPartsStatus);

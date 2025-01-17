@@ -17,9 +17,12 @@ export class SectionsRepository {
   async findSectionsByCursor(
     pageSize: number,
     cursor?: number,
-  ): Promise<Section[]> {
+  ): Promise<SectionParts[]> {
     return this.prisma.section.findMany({
       where: cursor ? { order: { gt: cursor } } : undefined, // order 기준으로 필터링
+      include: {
+        part: { orderBy: { order: 'asc' } },
+      },
       orderBy: { order: 'asc' }, // 반드시 order 기준으로 정렬
       take: pageSize + 1, // 다음 페이지 확인을 위해 추가로 1개 더 가져옴
     });

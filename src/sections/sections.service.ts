@@ -75,7 +75,7 @@ export class SectionsService {
 
   async findAllWithParts(
     query: QuerySectionDto,
-  ): Promise<PaginatedResult<Section>> {
+  ): Promise<PaginatedResult<SectionParts>> {
     const { cursor, pageSize = 5 } = query;
 
     // 1. 데이터베이스에서 데이터 가져오기
