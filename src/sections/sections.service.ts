@@ -73,7 +73,7 @@ export class SectionsService {
   }
 
   async findAllWithParts(query: QuerySectionDto) {
-    const { cursor, pageSize = 10 } = query;
+    const { cursor, pageSize = 5 } = query;
 
     // 1. 데이터베이스에서 데이터 가져오기
     const sections = await this.sectionsRepository.findSectionsByCursor(
@@ -82,7 +82,7 @@ export class SectionsService {
     );
 
     // 2. 페이지네이션 처리
-    return this.paginationService.paginate(sections, pageSize);
+    return this.paginationService.paginateByOrder(sections, pageSize);
   }
 
   async findOne(id: number): Promise<Section> {

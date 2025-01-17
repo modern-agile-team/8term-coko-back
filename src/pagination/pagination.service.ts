@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class PaginationService {
-  paginate<T extends { order: number }>(
+  paginateByOrder<T extends { order: number }>(
     items: T[],
     pageSize: number,
   ): { data: T[]; nextCursor: number | null; hasNextPage: boolean } {

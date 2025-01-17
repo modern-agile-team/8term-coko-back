@@ -37,15 +37,15 @@ export class SectionsController {
     return await this.sectionsService.findAllWithParts(query);
   }
 
-  @ApiSections.findOneWithParts()
-  @Get(':sectionId/parts')
-  async findOneWithParts(
-    @Param('sectionId', PositiveIntPipe) sectionId: number,
-  ): Promise<ResSectionDto> {
-    const sectionWithParts =
-      await this.sectionsService.findOneWithParts(sectionId);
-    return new ResSectionPartsDto(sectionWithParts);
-  }
+  // @ApiSections.findOneWithParts()
+  // @Get(':sectionId/parts')
+  // async findOneWithParts(
+  //   @Param('sectionId', PositiveIntPipe) sectionId: number,
+  // ): Promise<ResSectionDto> {
+  //   const sectionWithParts =
+  //     await this.sectionsService.findOneWithParts(sectionId);
+  //   return new ResSectionPartsDto(sectionWithParts);
+  // }
 
   @ApiSections.findOneWithStatus()
   @Get(':sectionId/users/:userId/part-status')
