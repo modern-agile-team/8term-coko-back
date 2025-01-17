@@ -9,7 +9,7 @@ export class ResPaginationOfSectionPartsDto
   @ApiProperty({ type: [ResSectionPartsDto] })
   readonly data: ResSectionPartsDto[];
 
-  @ApiProperty({ type: 'number', nullable: true })
+  @ApiProperty({ type: 'number', nullable: true, example: 3 })
   readonly nextCursor: number | null;
 
   @ApiProperty()

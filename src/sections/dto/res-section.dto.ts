@@ -5,7 +5,7 @@ export class ResSectionDto {
   @ApiProperty({ example: 1 })
   readonly id: number;
 
-  @ApiProperty({ example: 2 })
+  @ApiProperty({ example: '변수' })
   readonly name: string;
 
   @ApiProperty({ example: 1 })

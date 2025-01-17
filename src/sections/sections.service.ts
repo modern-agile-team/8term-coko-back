@@ -14,6 +14,7 @@ import { SectionParts } from 'src/common/type/type';
 import { PaginationService } from 'src/pagination/pagination.service';
 import { QuerySectionDto } from './dto/query-section.dto';
 import { PaginatedResult } from 'src/pagination/pagination.interface';
+import { DEFALTE_PAGE_SIZE } from './const/section.const';
 
 @Injectable()
 export class SectionsService {
@@ -76,7 +77,7 @@ export class SectionsService {
   async findAllWithParts(
     query: QuerySectionDto,
   ): Promise<PaginatedResult<SectionParts>> {
-    const { cursor, pageSize = 5 } = query;
+    const { cursor, pageSize = DEFALTE_PAGE_SIZE } = query;
 
     // 1. 데이터베이스에서 데이터 가져오기
     const sections = await this.sectionsRepository.findSectionsByCursor(

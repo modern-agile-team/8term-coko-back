@@ -32,7 +32,7 @@ export class SectionsController {
     return ResSectionDto.fromArray(sections);
   }
 
-  //@ApiSections.findAllPaginatedSectionsWithParts()
+  @ApiSections.findAllPaginatedSectionsWithParts()
   @Get('parts')
   async findAllPaginatedSectionsWithParts(@Query() query: QuerySectionDto) {
     const PaginatedSectionWithParts =
