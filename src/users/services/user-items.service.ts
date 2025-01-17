@@ -23,7 +23,7 @@ export class UserItemsService {
     if (!userItems || userItems.length === 0) {
       throw new NotFoundException('User items not found');
     }
-    return new ResponseItemDto(userItems);
+    return userItems.map((userItem) => new ResponseItemDto(userItem));
   }
 
   async buyItem(buyItemDto: BuyItemDto): Promise<void> {

@@ -1,16 +1,10 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Patch,
-  Param,
-  Body,
-} from '@nestjs/common';
+import { Controller, Get, Post, Patch, Param, Body } from '@nestjs/common';
 import { UserItemsService } from '../services/user-items.service';
 import { BuyItemDto } from '../dtos/buy-item.dto';
 import { EquipItemDto } from '../dtos/equip-item.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
+import { ParseIntPipe } from '@nestjs/common';
 
 @ApiTags('items')
 @Controller('users/:userId/items')
@@ -40,6 +34,4 @@ export class UserItemsController {
     equipItemDto.userId = userId;
     return await this.userItemsService.updateItemEquipStatus(equipItemDto);
   }
-
-  @Get()
 }
