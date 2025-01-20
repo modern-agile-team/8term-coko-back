@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { SectionsService } from './sections.service';
 import { CreateSectionDto } from './dto/create-section.dto';
@@ -18,6 +19,8 @@ import { ResSectionDto } from './dto/res-section.dto';
 import { UpdateSectionOrderDto } from './dto/update-section-order.dto';
 import { QuerySectionDto } from './dto/query-section.dto';
 import { ResPaginationOfSectionPartsDto } from './dto/res-pagination-of-section-parts.dto';
+import { AdminGuard } from 'src/auth/guard/admin.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('sections')
 @Controller('sections')
@@ -42,6 +45,7 @@ export class SectionsController {
   @ApiSections.create()
   @Post()
   @HttpCode(204)
+  @UseGuards(AuthGuard('adminAccessToken'))
   async create(@Body() body: CreateSectionDto): Promise<void> {
     await this.sectionsService.create(body);
   }
@@ -49,6 +53,7 @@ export class SectionsController {
   @ApiSections.updateAll()
   @Patch(':sectionId')
   @HttpCode(204)
+  @UseGuards(AuthGuard('adminAccessToken'))
   async updateAll(
     @Param('sectionId', PositiveIntPipe) sectionId: number,
     @Body() body: CreateSectionDto,
@@ -59,6 +64,7 @@ export class SectionsController {
   @ApiSections.updateOrder()
   @Patch(':sectionId/order')
   @HttpCode(204)
+  @UseGuards(AuthGuard('adminAccessToken'))
   async updateOrder(
     @Param('sectionId', PositiveIntPipe) sectionId: number,
     @Body() body: UpdateSectionOrderDto,
@@ -69,6 +75,7 @@ export class SectionsController {
   @ApiSections.remove()
   @Delete(':sectionId')
   @HttpCode(204)
+  @UseGuards(AuthGuard('adminAccessToken'))
   async remove(
     @Param('sectionId', PositiveIntPipe) sectionId: number,
   ): Promise<void> {

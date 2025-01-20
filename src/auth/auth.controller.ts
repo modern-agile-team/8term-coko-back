@@ -13,14 +13,18 @@ import { AuthService } from './services/auth.service';
 import { CookieService } from './services/cookie.service';
 import { TokenService } from './services/token.service';
 import { RedisService } from './redis/redis.service';
+import { UsersService } from 'src/users/services/users.service';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
   constructor(
+    private readonly configService: ConfigService,
     private readonly authService: AuthService,
     private readonly cookieService: CookieService,
     private readonly tokenService: TokenService,
     private readonly redisService: RedisService,
+    private readonly userService: UsersService,
   ) {}
 
   // Google 로그인 시작
@@ -30,24 +34,31 @@ export class AuthController {
 
   // Google 로그인 콜백 처리
   @Get('google/callback')
+  @HttpCode(302)
   @UseGuards(AuthGuard('google'))
-  async googleLogin(@User() user: any, @Res() res: Response) {
+  async googleLogin(
+    @User() user: any,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const { accessToken, refreshToken } =
       await this.authService.googleLogin(user);
 
     await this.cookieService.cookieResponse(res, accessToken, refreshToken);
+
+    // 메인페이지로 리다이렉트
+    res.redirect(this.configService.get<string>('CLIENT_MAIN_PAGE_URL'));
   }
 
   // 로그아웃
   @Post('logout')
   @HttpCode(204)
   @UseGuards(AuthGuard('accessToken'))
-  async logout(@User() user: any, @Res() res: Response) {
+  async logout(@User() user: any, @Res({ passthrough: true }) res: Response) {
     await this.redisService.del(user.id);
     await this.cookieService.deleteCookie(res);
   }
 
-  // jwt 검증 요청
+  // accessToken 검증 요청
   @Get('verify')
   @HttpCode(200)
   @UseGuards(AuthGuard('accessToken'))
@@ -59,12 +70,13 @@ export class AuthController {
   @Get('new-accessToken')
   @HttpCode(201)
   @UseGuards(AuthGuard('refreshToken'))
-  async verifyRefresh(@User() user: any, @Res() res: Response): Promise<any> {
+  async verifyRefresh(
+    @User() user: any,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<any> {
     // access 토큰 재발급
     const newAccessToken = await this.tokenService.createAccessToken(user.id);
     // 쿠키에 엑세스토큰 저장
     await this.cookieService.setAccessTokenCookie(res, newAccessToken);
-
-    return user;
   }
 }

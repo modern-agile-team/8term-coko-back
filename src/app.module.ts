@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
 import { UsersCoreModule } from './users/modules/users-core.module';
+import { AdminModule } from './admin/admin.module';
 import { PaginationModule } from './pagination/pagination.module';
 
 @Module({
@@ -19,6 +20,7 @@ import { PaginationModule } from './pagination/pagination.module';
     UsersCoreModule,
     ItemsModule,
     AuthModule,
+    AdminModule,
     PaginationModule,
   ],
   controllers: [AppController],
