@@ -1,7 +1,7 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreatePartDto } from './dto/create-part.dto';
-import { ResPartDto } from './dto/res-part.part.dto';
+import { ResPartDto } from './dto/res-part.dto';
 import { UpdatePartOrderDto } from './dto/update-part-order.dto';
 
 export const ApiParts = {

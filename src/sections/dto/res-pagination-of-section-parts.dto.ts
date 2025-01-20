@@ -1,6 +1,6 @@
 import { PaginatedResult } from 'src/pagination/pagination.interface';
 import { ResSectionPartsDto } from './res-section-parts.dto';
-import { SectionParts } from 'src/common/type/type';
+import { SectionPartsStatus } from 'src/common/type/type';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ResPaginationOfSectionPartsDto
@@ -15,7 +15,7 @@ export class ResPaginationOfSectionPartsDto
   @ApiProperty()
   readonly hasNextPage: boolean;
 
-  constructor(paginatedResult: PaginatedResult<SectionParts>) {
+  constructor(paginatedResult: PaginatedResult<SectionPartsStatus>) {
     this.data = ResSectionPartsDto.fromArray(paginatedResult.data);
     this.nextCursor = paginatedResult.nextCursor;
     this.hasNextPage = paginatedResult.hasNextPage;

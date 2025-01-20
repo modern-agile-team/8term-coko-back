@@ -4,6 +4,10 @@ import { Section } from 'src/sections/entities/section.entity';
 
 export type SectionParts = Section & { part: Part[] };
 
+export type SectionPartsStatus = Section & {
+  part: (Part & { status: PartStatus })[];
+};
+
 export type SectionPartsPartProgress = Section & {
   part: (Part & { PartProgress: { status: PartStatus }[] })[];
 };

@@ -28,6 +28,29 @@ export class SectionsRepository {
     });
   }
 
+  async findSectionWithPartStatusByCursor(
+    userId: number,
+    pageSize: number,
+    cursor?: number,
+  ): Promise<SectionPartsPartProgress[]> {
+    return this.prisma.section.findMany({
+      where: cursor ? { order: { gt: cursor } } : undefined, // order 기준으로 필터링
+      include: {
+        part: {
+          orderBy: { order: 'asc' },
+          include: {
+            PartProgress: {
+              where: { userId },
+              select: { status: true },
+            },
+          },
+        },
+      },
+      orderBy: { order: 'asc' },
+      take: pageSize + 1, // 다음 페이지 확인을 위해 추가로 1개 더 가져옴
+    });
+  }
+
   async findOneSectionById(id: number): Promise<Section> {
     return this.prisma.section.findUnique({
       where: { id },
@@ -43,24 +66,24 @@ export class SectionsRepository {
     });
   }
 
-  async findSectionWithPartStatus(
-    userId: number,
-    id: number,
-  ): Promise<SectionPartsPartProgress> {
-    return this.prisma.section.findUnique({
-      where: { id },
-      include: {
-        part: {
-          include: {
-            PartProgress: {
-              where: { userId },
-              select: { status: true },
-            },
-          },
-        },
-      },
-    });
-  }
+  // async findSectionWithPartStatus(
+  //   userId: number,
+  //   id: number,
+  // ): Promise<SectionPartsPartProgress> {
+  //   return this.prisma.section.findUnique({
+  //     where: { id },
+  //     include: {
+  //       part: {
+  //         include: {
+  //           PartProgress: {
+  //             where: { userId },
+  //             select: { status: true },
+  //           },
+  //         },
+  //       },
+  //     },
+  //   });
+  // }
 
   async findOneSectionByName(name: string): Promise<Section> {
     return this.prisma.section.findUnique({
