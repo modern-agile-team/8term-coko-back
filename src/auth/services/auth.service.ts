@@ -1,9 +1,10 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { TokenService } from './token.service';
 import { UsersService } from 'src/users/services/users.service';
 import { RedisService } from '../redis/redis.service';
+import { PrismaClientOrTransaction } from 'src/prisma/prisma.type';
 
 @Injectable()
 export class AuthService {
@@ -52,7 +53,7 @@ export class AuthService {
     provider: string,
     providerId: string,
     name: string,
-    txOrPrisma: any = this.prisma,
+    txOrPrisma: PrismaClientOrTransaction = this.prisma,
   ) {
     // 기존 유저 정보 조회
     const existingUser = await txOrPrisma.user.findUnique({
@@ -74,7 +75,7 @@ export class AuthService {
   private saveSocialToken(
     socialAccessToken: string,
     userId: number,
-    txOrPrisma: any = this.prisma,
+    txOrPrisma: PrismaClientOrTransaction = this.prisma,
   ) {
     return txOrPrisma.token.upsert({
       where: { userId },

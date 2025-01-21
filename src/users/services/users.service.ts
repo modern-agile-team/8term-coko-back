@@ -7,6 +7,7 @@ import {
   PartStatusValues,
 } from 'src/part-progress/entities/part-progress.entity';
 import { Part } from 'src/parts/entities/part.entity';
+import { PrismaClientOrTransaction } from 'src/prisma/prisma.type';
 
 @Injectable()
 export class UsersService {
@@ -39,7 +40,7 @@ export class UsersService {
     provider: string,
     providerId: string,
     name: string,
-    txOrPrisma: any = this.prisma,
+    txOrPrisma: PrismaClientOrTransaction = this.prisma,
   ): Promise<ResponseUserDto> {
     // 유저 생성시 디폴트 파트 진행도를 생성
     const defaulPartProgress = await this.createDefaultPartProgress(txOrPrisma);
@@ -55,6 +56,7 @@ export class UsersService {
       },
     });
 
+    // 유저 생성 실패 시 예외 처리
     if (!userResponse) {
       throw new NotFoundException();
     }
