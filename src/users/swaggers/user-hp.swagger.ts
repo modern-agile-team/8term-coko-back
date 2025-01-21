@@ -1,11 +1,12 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { HP_FULL_RECHARGE_TIME } from '../constants/user-experience.constant';
 import { ResUserHpDto } from '../dtos/res-user-hp.dto';
 
 export const ApiUserHp = {
   getUserHp: () => {
     return applyDecorators(
+      ApiCookieAuth('accessToken'),
       ApiOperation({
         summary: '인증된 유저의 hp정보 조회',
         description: `
@@ -26,6 +27,7 @@ export const ApiUserHp = {
   },
   updateUserHp: () => {
     return applyDecorators(
+      ApiCookieAuth('accessToken'),
       ApiOperation({
         summary: '유저의 파트에 대한 진행도생성 또는 업데이트',
         description: `

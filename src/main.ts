@@ -27,6 +27,7 @@ async function bootstrap() {
     )
     .addServer('https://api.cokoedu.com', 'develop') // develop 서버
     .addServer('http://localhost:3000', 'local') // 로컬 서버
+    .addCookieAuth('accessToken')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document, {
