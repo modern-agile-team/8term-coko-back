@@ -45,9 +45,7 @@ export class AuthService {
     try {
       await this.redisService.set(String(userInfo.id), refreshToken);
     } catch (redisError) {
-      throw new InternalServerErrorException(
-        'Failed to store refresh token in Redis',
-      );
+      throw new InternalServerErrorException('Failed to store refresh token');
     }
 
     return { accessToken, refreshToken };

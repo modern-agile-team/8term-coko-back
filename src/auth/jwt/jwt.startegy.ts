@@ -81,7 +81,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
       String(payload.userId),
     );
     if (!redisRefreshToken) {
-      throw new UnauthorizedException('Refresh Token not found in Redis');
+      throw new UnauthorizedException('Refresh Token not found');
     }
 
     // 요청받은 토큰과 redis의 토큰이 같은지 검사

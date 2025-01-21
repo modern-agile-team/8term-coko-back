@@ -40,7 +40,7 @@ export class TokenService {
       return refreshToken;
     } catch (refreshError) {
       throw new InternalServerErrorException(
-        'Failed to create refresh token or Fail to save in redis',
+        'Failed to create refresh token or Fail to save',
       );
     }
   }
