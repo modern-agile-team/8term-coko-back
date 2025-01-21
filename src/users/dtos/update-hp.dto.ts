@@ -17,7 +17,6 @@ export class UpdateHpDto {
   readonly hp?: number;
 
   @ApiProperty({
-    required: true,
     description:
       '유저의 최대 생명력 수치, 디폴트 5이기 때문에 최소 5값을 가져야함',
     example: 5,
