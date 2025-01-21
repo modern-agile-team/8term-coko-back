@@ -13,52 +13,41 @@ export class TokenService {
   async createAccessToken(userId: number): Promise<string> {
     const payload = { userId };
 
-    try {
-      const accessToken = this.jwtService.sign(payload, {
-        secret: this.configService.get<string>('ACCESS_SECRET'),
-        expiresIn: Number(
-          this.configService.get<string>('ACCESS_EXPIRATION_TIME'),
-        ),
-      });
-      return accessToken;
-    } catch (accessError) {
-      throw new InternalServerErrorException('Failed to create access token.');
-    }
+    const accessToken = this.jwtService.sign(payload, {
+      secret: this.configService.get<string>('ACCESS_SECRET'),
+      expiresIn: Number(
+        this.configService.get<string>('ACCESS_EXPIRATION_TIME'),
+      ),
+    });
+
+    return accessToken;
   }
 
   // 리프레쉬 토큰 생성
   async createRefreshToken(userId: number): Promise<string> {
     const payload = { userId };
-    try {
-      const refreshToken = this.jwtService.sign(payload, {
-        secret: this.configService.get<string>('REFRESH_SECRET'),
-        expiresIn: Number(
-          this.configService.get<string>('REFRESH_EXPIRATION_TIME'),
-        ),
-      });
 
-      return refreshToken;
-    } catch (refreshError) {
-      throw new InternalServerErrorException(
-        'Failed to create refresh token or Fail to save',
-      );
-    }
+    const refreshToken = this.jwtService.sign(payload, {
+      secret: this.configService.get<string>('REFRESH_SECRET'),
+      expiresIn: Number(
+        this.configService.get<string>('REFRESH_EXPIRATION_TIME'),
+      ),
+    });
+
+    return refreshToken;
   }
 
   // 액세스 토큰 생성
   async createAdminAccessToken(role: string): Promise<string> {
     const payload = { role };
 
-    try {
-      const accessToken = this.jwtService.sign(payload, {
-        secret: this.configService.get<string>('ADMIN_ACCESS_SECRET'),
-        expiresIn: Number(
-          this.configService.get<string>('ACCESS_EXPIRATION_TIME'),
-        ),
-      });
-      return accessToken;
-    } catch (accessError) {
-      throw new InternalServerErrorException('Failed to create access token.');
-    }
+    const accessToken = this.jwtService.sign(payload, {
+      secret: this.configService.get<string>('ADMIN_ACCESS_SECRET'),
+      expiresIn: Number(
+        this.configService.get<string>('ACCESS_EXPIRATION_TIME'),
+      ),
+    });
+
+    return accessToken;
   }
 }

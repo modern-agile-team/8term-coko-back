@@ -42,11 +42,7 @@ export class AuthService {
     );
 
     // redis에 refresh 토큰 저장
-    try {
-      await this.redisService.set(String(userInfo.id), refreshToken);
-    } catch (redisError) {
-      throw new InternalServerErrorException('Failed to store refresh token');
-    }
+    await this.redisService.set(String(userInfo.id), refreshToken);
 
     return { accessToken, refreshToken };
   }
@@ -58,24 +54,20 @@ export class AuthService {
     name: string,
     txOrPrisma: any = this.prisma,
   ) {
-    try {
-      // 기존 유저 정보 조회
-      const existingUser = await txOrPrisma.user.findUnique({
-        where: { providerId },
-      });
+    // 기존 유저 정보 조회
+    const existingUser = await txOrPrisma.user.findUnique({
+      where: { providerId },
+    });
 
-      if (existingUser) return existingUser;
+    if (existingUser) return existingUser;
 
-      // 유저 정보 생성
-      return await this.userService.createUser(
-        provider,
-        providerId,
-        name,
-        txOrPrisma,
-      );
-    } catch (error) {
-      throw new InternalServerErrorException('Failed to create User');
-    }
+    // 유저 정보 생성
+    return await this.userService.createUser(
+      provider,
+      providerId,
+      name,
+      txOrPrisma,
+    );
   }
 
   // 소셜 토큰 저장
