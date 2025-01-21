@@ -14,7 +14,6 @@ import { ApiAdmins } from './admin.swagger';
 import { CookieService } from 'src/auth/services/cookie.service';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from 'src/common/decorators/get-user.decorator';
 
 @ApiTags('admins')
 @Controller('admins')
@@ -36,7 +35,7 @@ export class AdminController {
     await this.cookieService.setAdminAccessTokenCookie(res, accessToken);
   }
 
-  // accessToken 검증 요청
+  // adminAccessToken 검증 요청
   @ApiAdmins.verifyAdmin()
   @Get('verify')
   @HttpCode(200)

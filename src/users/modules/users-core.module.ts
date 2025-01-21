@@ -6,5 +6,6 @@ import { UserExperienceModule } from './user-experience.module';
 
 @Module({
   imports: [UserExperienceModule, UserPointModule, UserHpModule, UsersModule],
+  exports: [UserHpModule, UsersModule],
 })
 export class UsersCoreModule {}

@@ -5,6 +5,8 @@ import { UsersService } from 'src/users/services/users.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from '../redis/redis.service';
+import { UserInfo } from 'src/users/entities/user.entity';
+import { AdminTokenPayload, TokenPayload } from './jwt.interface';
 
 // accessToken 전략
 @Injectable()
@@ -34,8 +36,9 @@ export class AccessTokenStrategy extends PassportStrategy(
     });
   }
 
-  async validate(request: Request, payload: any): Promise<any> {
+  async validate(request: Request, payload: TokenPayload): Promise<UserInfo> {
     const user = await this.userService.getUser(payload.userId);
+
     return user;
   }
 }
@@ -68,15 +71,17 @@ export class RefreshTokenStrategy extends PassportStrategy(
     });
   }
 
-  async validate(request: Request, payload: any): Promise<any> {
+  async validate(request: Request, payload: TokenPayload): Promise<UserInfo> {
     const refreshToken = request?.cookies?.refreshToken;
     if (!refreshToken) {
       throw new UnauthorizedException('No Refresh Token provided');
     }
 
-    const redisRefreshToken = await this.redisService.get(payload.userId);
+    const redisRefreshToken = await this.redisService.get(
+      String(payload.userId),
+    );
     if (!redisRefreshToken) {
-      throw new UnauthorizedException('Refresh Token not found in Redis');
+      throw new UnauthorizedException('Refresh Token not found');
     }
 
     // 요청받은 토큰과 redis의 토큰이 같은지 검사
@@ -113,7 +118,10 @@ export class AdminAccessTokenStrategy extends PassportStrategy(
     });
   }
 
-  async validate(request: Request, payload: any): Promise<any> {
+  async validate(
+    request: Request,
+    payload: AdminTokenPayload,
+  ): Promise<object> {
     if (payload.role !== 'admin') {
       throw new UnauthorizedException('Invalid Access Token');
     }

@@ -16,7 +16,6 @@ import { ApiTags } from '@nestjs/swagger';
 import { ApiSections } from './sections.swagger';
 import { ResSectionDto } from './dto/res-section.dto';
 import { UpdateSectionOrderDto } from './dto/update-section-order.dto';
-import { AdminGuard } from 'src/auth/guard/admin.guard';
 import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('sections')
