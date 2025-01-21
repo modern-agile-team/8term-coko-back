@@ -1,11 +1,10 @@
 import { PassportModule } from '@nestjs/passport';
-import { GoogleStrategy } from './google.strategy';
+import { GoogleStrategy } from './google/google.strategy';
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './services/auth.service';
 import { TokenService } from './services/token.service';
-import { UsersModule } from 'src/users/modules/users.module';
 import { RedisModule } from './redis/redis.module';
 import { CookieService } from './services/cookie.service';
 import {
@@ -13,10 +12,10 @@ import {
   AdminAccessTokenStrategy,
   RefreshTokenStrategy,
 } from './jwt/jwt.startegy';
-import { AdminGuard } from './guard/admin.guard';
+import { UsersCoreModule } from 'src/users/modules/users-core.module';
 
 @Module({
-  imports: [PassportModule, JwtModule, RedisModule, UsersModule],
+  imports: [PassportModule, JwtModule, RedisModule, UsersCoreModule],
   providers: [
     AuthService,
     TokenService,
@@ -25,7 +24,6 @@ import { AdminGuard } from './guard/admin.guard';
     AccessTokenStrategy,
     RefreshTokenStrategy,
     AdminAccessTokenStrategy,
-    AdminGuard,
   ],
   controllers: [AuthController],
   exports: [
