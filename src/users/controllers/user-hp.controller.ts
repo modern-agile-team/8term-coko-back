@@ -7,7 +7,7 @@ import { User } from 'src/common/decorators/get-user.decorator';
 import { ResUserHpDto } from '../dtos/res-user-hp.dto';
 import { ApiUserHp } from '../swaggers/user-hp.swagger';
 
-@ApiTags('user-hp')
+@ApiTags('users')
 @Controller('users/user-hp')
 export class UserHpController {
   constructor(private readonly userHpService: UserHpService) {}
