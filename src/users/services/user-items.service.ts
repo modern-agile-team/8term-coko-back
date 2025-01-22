@@ -12,7 +12,7 @@ import { ResponseItemDto } from '../dtos/response-item.dto';
 export class UserItemsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getUserItems(userId: number): Promise<ResponseItemDto> {
+  async getUserItems(userId: number): Promise<ResponseItemDto[]> {
     const userItems = await this.prisma.userItem.findMany({
       where: { userId },
       include: {
@@ -20,7 +20,7 @@ export class UserItemsService {
       },
     });
 
-    if (!userItems || userItems.length === 0) {
+    if (!userItems.length) {
       throw new NotFoundException('User items not found');
     }
     return userItems.map((userItem) => new ResponseItemDto(userItem));
