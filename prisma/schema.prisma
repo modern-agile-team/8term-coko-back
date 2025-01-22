@@ -176,3 +176,14 @@ model AdminUser {
 
   @@map("admin_users")
 }
+
+model DailyQuest {
+  id        Int    @id @default(autoincrement())
+  title     String @db.VarChar(50)
+  content   String @db.VarChar(255)
+  point     Int
+  exp       Int
+  condition Int
+
+  @@map("daily_quests")
+}
