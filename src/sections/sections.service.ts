@@ -88,9 +88,6 @@ export class SectionsService {
     const sectionPartsPartProgressArray =
       await this.sectionsRepository.findSectionsByCursor(pageSize, cursor);
 
-    //테스트
-    console.log(sectionPartsPartProgressArray);
-
     // 2. 디폴트 진행도 붙여주기
     const newSectons = sectionPartsPartProgressArray.map((sections) => {
       const { part, ...section } = sections;
@@ -148,9 +145,6 @@ export class SectionsService {
         pageSize,
         cursor,
       );
-
-    //테스트
-    console.log(sectionPartsPartProgressArray);
 
     const newSectons = sectionPartsPartProgressArray.map((sections) => {
       const { part, ...section } = sections;
