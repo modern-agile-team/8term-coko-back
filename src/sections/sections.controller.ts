@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   HttpCode,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { SectionsService } from './sections.service';
@@ -16,6 +17,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { ApiSections } from './sections.swagger';
 import { ResSectionDto } from './dto/res-section.dto';
 import { UpdateSectionOrderDto } from './dto/update-section-order.dto';
+import { QuerySectionDto } from './dto/query-section.dto';
+import { ResPaginationOfSectionPartsDto } from './dto/res-pagination-of-section-parts.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('sections')
@@ -30,24 +33,12 @@ export class SectionsController {
     return ResSectionDto.fromArray(sections);
   }
 
-  @ApiSections.findOne()
-  @Get(':id')
-  async findOne(
-    @Param('id', PositiveIntPipe) id: number,
-  ): Promise<ResSectionDto> {
-    const sectionWithParts = await this.sectionsService.findOneWithParts(id);
-    return new ResSectionDto(sectionWithParts);
-  }
-
-  @ApiSections.findOneWithStatus()
-  @Get(':id/users/:userId/part-status')
-  async findOneWithStatus(
-    @Param('userId', PositiveIntPipe) userId: number,
-    @Param('id', PositiveIntPipe) id: number,
-  ) {
-    const sectionWithParts =
-      await this.sectionsService.findOneWithPartsAndStatus(userId, id);
-    return new ResSectionDto(sectionWithParts);
+  @ApiSections.findAllPaginatedSectionsWithParts()
+  @Get('parts')
+  async findAllPaginatedSectionsWithParts(@Query() query: QuerySectionDto) {
+    const PaginatedSectionWithParts =
+      await this.sectionsService.findAllWithParts(query);
+    return new ResPaginationOfSectionPartsDto(PaginatedSectionWithParts);
   }
 
   @ApiSections.create()
@@ -59,32 +50,34 @@ export class SectionsController {
   }
 
   @ApiSections.updateAll()
-  @Patch(':id')
+  @Patch(':sectionId')
   @HttpCode(204)
   @UseGuards(AuthGuard('adminAccessToken'))
   async updateAll(
-    @Param('id', PositiveIntPipe) id: number,
+    @Param('sectionId', PositiveIntPipe) sectionId: number,
     @Body() body: CreateSectionDto,
   ): Promise<void> {
-    await this.sectionsService.updateAll(id, body);
+    await this.sectionsService.updateAll(sectionId, body);
   }
 
   @ApiSections.updateOrder()
-  @Patch(':id/order')
+  @Patch(':sectionId/order')
   @HttpCode(204)
   @UseGuards(AuthGuard('adminAccessToken'))
   async updateOrder(
-    @Param('id', PositiveIntPipe) id: number,
+    @Param('sectionId', PositiveIntPipe) sectionId: number,
     @Body() body: UpdateSectionOrderDto,
   ): Promise<void> {
-    await this.sectionsService.updateOrder(id, body);
+    await this.sectionsService.updateOrder(sectionId, body);
   }
 
   @ApiSections.remove()
-  @Delete(':id')
+  @Delete(':sectionId')
   @HttpCode(204)
   @UseGuards(AuthGuard('adminAccessToken'))
-  async remove(@Param('id', PositiveIntPipe) id: number): Promise<void> {
-    await this.sectionsService.remove(id);
+  async remove(
+    @Param('sectionId', PositiveIntPipe) sectionId: number,
+  ): Promise<void> {
+    await this.sectionsService.remove(sectionId);
   }
 }

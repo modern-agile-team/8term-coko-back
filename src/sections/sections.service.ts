@@ -8,15 +8,25 @@ import { CreateSectionDto } from './dto/create-section.dto';
 import { SectionsRepository } from './sections.repository';
 import { PartsRepository } from 'src/parts/parts.repository';
 import { Section } from './entities/section.entity';
-import { ResSectionDto } from './dto/res-section.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateSectionOrderDto } from './dto/update-section-order.dto';
+import {
+  SectionParts,
+  SectionPartsPartProgress,
+  SectionPartsStatus,
+} from 'src/common/type/type';
+import { PaginationService } from 'src/pagination/pagination.service';
+import { QuerySectionDto } from './dto/query-section.dto';
+import { PaginatedResult } from 'src/pagination/pagination.interface';
+import { DEFALTE_PAGE_SIZE } from './const/section.const';
+import { PartStatusValues } from 'src/part-progress/entities/part-progress.entity';
 
 @Injectable()
 export class SectionsService {
   constructor(
     private readonly sectionsRepository: SectionsRepository,
     private readonly partsRepository: PartsRepository,
+    private readonly paginationService: PaginationService,
     private readonly prisma: PrismaService,
   ) {}
 
@@ -69,6 +79,40 @@ export class SectionsService {
     return this.sectionsRepository.findAllSections();
   }
 
+  async findAllWithParts(
+    query: QuerySectionDto,
+  ): Promise<PaginatedResult<SectionPartsStatus>> {
+    const { cursor, pageSize = DEFALTE_PAGE_SIZE } = query;
+
+    // 1. 데이터베이스에서 데이터 가져오기
+    const sectionPartsPartProgressArray =
+      await this.sectionsRepository.findSectionsByCursor(pageSize, cursor);
+
+    // 2. 디폴트 진행도 붙여주기
+    const newSectons = sectionPartsPartProgressArray.map((sections) => {
+      const { part, ...section } = sections;
+
+      // ropository에서 받은 값 중 part를 정리하는 코드
+      const newParts = part.map((part) => {
+        return {
+          ...part,
+          status:
+            part.order === 1
+              ? PartStatusValues.STARTED
+              : PartStatusValues.LOCKED,
+        };
+      });
+
+      return {
+        ...section,
+        part: newParts,
+      };
+    });
+
+    // 3. 페이지네이션 처리
+    return this.paginationService.paginateById(newSectons, pageSize);
+  }
+
   async findOne(id: number): Promise<Section> {
     const section = await this.sectionsRepository.findOneSectionById(id);
 
@@ -79,7 +123,7 @@ export class SectionsService {
     return section;
   }
 
-  async findOneWithParts(id: number): Promise<ResSectionDto> {
+  async findOneWithParts(id: number): Promise<SectionParts> {
     const sectionWithParts =
       await this.sectionsRepository.findSectionWithPartsById(id);
 
@@ -90,31 +134,34 @@ export class SectionsService {
     return sectionWithParts;
   }
 
-  async findOneWithPartsAndStatus(
+  async findAllWithPartsAndStatus(
     userId: number,
-    id: number,
-  ): Promise<ResSectionDto> {
-    await this.findOne(id);
+    query: QuerySectionDto,
+  ): Promise<PaginatedResult<SectionPartsStatus>> {
+    const { cursor, pageSize = DEFALTE_PAGE_SIZE } = query;
+    const sectionPartsPartProgressArray =
+      await this.sectionsRepository.findSectionWithPartStatusByCursor(
+        userId,
+        pageSize,
+        cursor,
+      );
 
-    const { part, ...section } =
-      await this.sectionsRepository.findSectionWithPartStatus(userId, id);
+    const newSectons = sectionPartsPartProgressArray.map((sections) => {
+      const { part, ...section } = sections;
 
-    if (!section) {
-      throw new NotFoundException();
-    }
-
-    // ropository에서 받은 값 중 part를 정리하는 코드
-    const newParts = part.map(
-      ({ PartProgress, createdAt, updatedAt, ...orders }) => ({
+      // ropository에서 받은 값 중 part를 정리하는 코드
+      const newParts = part.map(({ PartProgress, ...orders }) => ({
         ...orders,
         status: PartProgress[0]?.status,
-      }),
-    );
+      }));
 
-    return {
-      ...section,
-      part: newParts,
-    };
+      return {
+        ...section,
+        part: newParts,
+      };
+    });
+
+    return this.paginationService.paginateById(newSectons, pageSize);
   }
 
   async create(body: CreateSectionDto): Promise<Section> {

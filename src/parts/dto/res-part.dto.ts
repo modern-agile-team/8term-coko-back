@@ -11,7 +11,7 @@ export class ResPartDto {
   @ApiProperty({ example: 'const' })
   readonly name: string;
 
-  @ApiProperty({ example: 2 })
+  @ApiProperty({ example: 1 })
   readonly order: number;
 
   constructor({ id, sectionId, name, order }: Part) {
