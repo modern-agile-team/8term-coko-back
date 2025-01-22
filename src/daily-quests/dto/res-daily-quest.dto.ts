@@ -16,4 +16,8 @@ export class ResDailyQuestDto {
     this.exp = dailyQuest.exp;
     this.condition = dailyQuest.condition;
   }
+
+  static fromArray(dailyQuests: DailyQuest[]): ResDailyQuestDto[] {
+    return dailyQuests.map((dailyQuest) => new ResDailyQuestDto(dailyQuest));
+  }
 }

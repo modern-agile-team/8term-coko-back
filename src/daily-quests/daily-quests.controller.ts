@@ -7,45 +7,52 @@ import {
   Param,
   Delete,
   UseGuards,
+  HttpCode,
 } from '@nestjs/common';
 import { DailyQuestsService } from './daily-quests.service';
 import { CreateDailyQuestDto } from './dto/create-daily-quest.dto';
 import { UpdateDailyQuestDto } from './dto/update-daily-quest.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { AuthGuard } from '@nestjs/passport';
+import { ResDailyQuestDto } from './dto/res-daily-quest.dto';
 
 @Controller('daily-quests')
 export class DailyQuestsController {
   constructor(private readonly dailyQuestsService: DailyQuestsService) {}
 
   @Get()
-  findAll() {
-    return this.dailyQuestsService.findAll();
+  async findAll() {
+    const dailyQuests = await this.dailyQuestsService.findAll();
+    return ResDailyQuestDto.fromArray(dailyQuests);
   }
 
   @Get(':questId')
-  findOne(@Param('questId', PositiveIntPipe) questId: number) {
-    return this.dailyQuestsService.findOne(questId);
+  async findOne(@Param('questId', PositiveIntPipe) questId: number) {
+    const dailyQuest = await this.dailyQuestsService.findOne(questId);
+    return new ResDailyQuestDto(dailyQuest);
   }
 
   @Post()
+  @HttpCode(204)
   @UseGuards(AuthGuard('adminAccessToken'))
-  create(@Body() body: CreateDailyQuestDto) {
-    return this.dailyQuestsService.create(body);
+  async create(@Body() body: CreateDailyQuestDto) {
+    await this.dailyQuestsService.create(body);
   }
 
   @Patch(':questId')
+  @HttpCode(204)
   @UseGuards(AuthGuard('adminAccessToken'))
-  update(
+  async update(
     @Param('questId', PositiveIntPipe) questId: number,
     @Body() body: UpdateDailyQuestDto,
   ) {
-    return this.dailyQuestsService.update(questId, body);
+    await this.dailyQuestsService.update(questId, body);
   }
 
   @Delete(':questId')
+  @HttpCode(204)
   @UseGuards(AuthGuard('adminAccessToken'))
-  remove(@Param('questId', PositiveIntPipe) questId: number) {
-    return this.dailyQuestsService.remove(questId);
+  async remove(@Param('questId', PositiveIntPipe) questId: number) {
+    await this.dailyQuestsService.remove(questId);
   }
 }
