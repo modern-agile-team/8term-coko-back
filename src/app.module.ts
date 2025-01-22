@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
 import { UserPointModule } from './users/modules/user-point.module';
 import { UserExperienceModule } from './users/modules/user-experience.module';
+import { UserItemsModule } from './users/modules/user-items.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ItemsModule } from './items/items.module';
 import { UsersModule } from './users/modules/users.module';
@@ -18,6 +19,7 @@ import { PartProgressModule } from './part-progress/part-progress.module';
     UsersModule,
     UserPointModule,
     UserExperienceModule,
+    UserItemsModule,
     ItemsModule,
     ConfigModule.forRoot({
       isGlobal: true,
