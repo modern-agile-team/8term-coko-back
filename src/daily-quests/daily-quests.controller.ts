@@ -10,6 +10,7 @@ import {
 import { DailyQuestsService } from './daily-quests.service';
 import { CreateDailyQuestDto } from './dto/create-daily-quest.dto';
 import { UpdateDailyQuestDto } from './dto/update-daily-quest.dto';
+import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 
 @Controller('daily-quests')
 export class DailyQuestsController {
@@ -20,26 +21,26 @@ export class DailyQuestsController {
     return this.dailyQuestsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.dailyQuestsService.findOne(+id);
+  @Get(':questId')
+  findOne(@Param('questId', PositiveIntPipe) questId: number) {
+    return this.dailyQuestsService.findOne(questId);
   }
 
   @Post()
-  create(@Body() createDailyQuestDto: CreateDailyQuestDto) {
-    return this.dailyQuestsService.create(createDailyQuestDto);
+  create(@Body() body: CreateDailyQuestDto) {
+    return this.dailyQuestsService.create(body);
   }
 
-  @Patch(':id')
+  @Patch(':questId')
   update(
-    @Param('id') id: string,
-    @Body() updateDailyQuestDto: UpdateDailyQuestDto,
+    @Param('questId', PositiveIntPipe) questId: number,
+    @Body() body: UpdateDailyQuestDto,
   ) {
-    return this.dailyQuestsService.update(+id, updateDailyQuestDto);
+    return this.dailyQuestsService.update(questId, body);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.dailyQuestsService.remove(+id);
+  @Delete(':questId')
+  remove(@Param('questId', PositiveIntPipe) questId: number) {
+    return this.dailyQuestsService.remove(questId);
   }
 }
