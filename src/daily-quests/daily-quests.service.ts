@@ -15,7 +15,7 @@ export class DailyQuestsService {
     const dailyQuest = await this.dailyQuestsRepository.findOne(questId);
 
     if (!dailyQuest) {
-      throw new NotFoundException(`ID ${questId} 를 찾을 수 없습니다.`);
+      throw new NotFoundException(`일일퀘스트 ${questId}를 찾을 수 없습니다.`);
     }
 
     return dailyQuest;
