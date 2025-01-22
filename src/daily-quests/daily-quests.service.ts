@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDailyQuestDto } from './dto/create-daily-quest.dto';
 import { UpdateDailyQuestDto } from './dto/update-daily-quest.dto';
+import { DailyQuestsRepository } from './daily-quests.repository';
 
 @Injectable()
 export class DailyQuestsService {
-  constructor(private readonly dailyQuestsRepository: any) {}
+  constructor(private readonly dailyQuestsRepository: DailyQuestsRepository) {}
 
   async findAll() {
     return this.dailyQuestsRepository.findAll();

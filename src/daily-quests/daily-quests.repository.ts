@@ -1,10 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateDailyQuestDto } from './dto/create-daily-quest.dto';
 import { UpdateDailyQuestDto } from './dto/update-daily-quest.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
-export class dailyQuestsRepository {
+export class DailyQuestsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll() {
