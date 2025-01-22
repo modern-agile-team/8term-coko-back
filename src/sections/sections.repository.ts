@@ -16,25 +16,26 @@ export class SectionsRepository {
 
   async findSectionsByCursor(
     pageSize: number,
-    cursor?: number,
+    cursorId?: number,
   ): Promise<SectionParts[]> {
     return this.prisma.section.findMany({
-      where: cursor ? { order: { gt: cursor } } : undefined, // order 기준으로 필터링
+      cursor: cursorId ? { id: cursorId } : undefined,
       include: {
         part: { orderBy: { order: 'asc' } },
       },
-      orderBy: { order: 'asc' }, // 반드시 order 기준으로 정렬
+      orderBy: { order: 'asc' },
       take: pageSize + 1, // 다음 페이지 확인을 위해 추가로 1개 더 가져옴
+      skip: cursorId ? 1 : 0,
     });
   }
 
   async findSectionWithPartStatusByCursor(
     userId: number,
     pageSize: number,
-    cursor?: number,
+    cursorId?: number,
   ): Promise<SectionPartsPartProgress[]> {
     return this.prisma.section.findMany({
-      where: cursor ? { order: { gt: cursor } } : undefined, // order 기준으로 필터링
+      cursor: cursorId ? { id: cursorId } : undefined,
       include: {
         part: {
           orderBy: { order: 'asc' },
@@ -48,6 +49,7 @@ export class SectionsRepository {
       },
       orderBy: { order: 'asc' },
       take: pageSize + 1, // 다음 페이지 확인을 위해 추가로 1개 더 가져옴
+      skip: cursorId ? 1 : 0,
     });
   }
 

@@ -88,6 +88,9 @@ export class SectionsService {
     const sectionPartsPartProgressArray =
       await this.sectionsRepository.findSectionsByCursor(pageSize, cursor);
 
+    //테스트
+    console.log(sectionPartsPartProgressArray);
+
     // 2. 디폴트 진행도 붙여주기
     const newSectons = sectionPartsPartProgressArray.map((sections) => {
       const { part, ...section } = sections;
@@ -110,7 +113,7 @@ export class SectionsService {
     });
 
     // 3. 페이지네이션 처리
-    return this.paginationService.paginateByOrder(newSectons, pageSize);
+    return this.paginationService.paginateById(newSectons, pageSize);
   }
 
   async findOne(id: number): Promise<Section> {
@@ -146,6 +149,9 @@ export class SectionsService {
         cursor,
       );
 
+    //테스트
+    console.log(sectionPartsPartProgressArray);
+
     const newSectons = sectionPartsPartProgressArray.map((sections) => {
       const { part, ...section } = sections;
 
@@ -161,7 +167,7 @@ export class SectionsService {
       };
     });
 
-    return this.paginationService.paginateByOrder(newSectons, pageSize);
+    return this.paginationService.paginateById(newSectons, pageSize);
   }
 
   async create(body: CreateSectionDto): Promise<Section> {
