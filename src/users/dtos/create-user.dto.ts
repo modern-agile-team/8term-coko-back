@@ -1,23 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsOptional, IsString } from 'class-validator';
+import {
+  IsInt,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class CreateUserDto {
   @ApiProperty({
     type: String,
-    description: '유저 email',
-    example: 'gwgw123@gmail.com',
+    description: '소셜 이름',
+    example: '이건우',
+    minLength: 2,
+    maxLength: 30,
   })
   @IsString()
-  readonly email: string;
-
-  @ApiProperty({
-    type: String,
-    description: '유저 닉네임',
-    example: 'gwgw99',
-    minimum: 2,
-    maximum: 10,
-  })
-  @IsString()
+  @MinLength(2)
+  @MaxLength(30)
   readonly name: string;
 
   @ApiProperty({

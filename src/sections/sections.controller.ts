@@ -19,7 +19,6 @@ import { ResSectionDto } from './dto/res-section.dto';
 import { UpdateSectionOrderDto } from './dto/update-section-order.dto';
 import { QuerySectionDto } from './dto/query-section.dto';
 import { ResPaginationOfSectionPartsDto } from './dto/res-pagination-of-section-parts.dto';
-import { AdminGuard } from 'src/auth/guard/admin.guard';
 import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('sections')
