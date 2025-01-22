@@ -7,4 +7,6 @@ export class DailyQuest implements DailyQuestModel {
   point: number;
   exp: number;
   condition: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
