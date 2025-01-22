@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { DailyQuestsService } from './daily-quests.service';
 import { CreateDailyQuestDto } from './dto/create-daily-quest.dto';
 import { UpdateDailyQuestDto } from './dto/update-daily-quest.dto';
@@ -6,11 +14,6 @@ import { UpdateDailyQuestDto } from './dto/update-daily-quest.dto';
 @Controller('daily-quests')
 export class DailyQuestsController {
   constructor(private readonly dailyQuestsService: DailyQuestsService) {}
-
-  @Post()
-  create(@Body() createDailyQuestDto: CreateDailyQuestDto) {
-    return this.dailyQuestsService.create(createDailyQuestDto);
-  }
 
   @Get()
   findAll() {
@@ -22,8 +25,16 @@ export class DailyQuestsController {
     return this.dailyQuestsService.findOne(+id);
   }
 
+  @Post()
+  create(@Body() createDailyQuestDto: CreateDailyQuestDto) {
+    return this.dailyQuestsService.create(createDailyQuestDto);
+  }
+
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDailyQuestDto: UpdateDailyQuestDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateDailyQuestDto: UpdateDailyQuestDto,
+  ) {
     return this.dailyQuestsService.update(+id, updateDailyQuestDto);
   }
 
