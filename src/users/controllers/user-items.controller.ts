@@ -10,7 +10,6 @@ import { ParseIntPipe } from '@nestjs/common';
 @Controller('users/:userId/items')
 export class UserItemsController {
   constructor(private readonly userItemsService: UserItemsService) {}
-
   //user의 아이템 목록 조회
   @Get()
   getUserItems(@Param('userId', PositiveIntPipe) userId: number) {
