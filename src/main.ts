@@ -14,7 +14,7 @@ async function bootstrap() {
     .addTag('users', 'users 관련 API')
     .addTag('point', 'point 관련 API')
     .addTag('experience', 'experience 관련 API')
-    .addTag('items', 'items 관련 API')
+    .addTag('user-items', '사용자 아이템 관련 API')
     .setTermsOfService('https://modern-agile-official-client.vercel.app/') // 설명 링크 첨부하면 됨
     .setContact(
       '백엔드 팀',
@@ -26,6 +26,7 @@ async function bootstrap() {
       'https://github.com/git/git-scm.com/blob/gh-pages/MIT-LICENSE.txt',
     )
     .addServer('https://api.cokoedu.com', 'develop')
+    .addServer('http://localhost:3000', 'local')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document, {
