@@ -1,32 +1,21 @@
 export class ResponseItemDto {
   readonly id: number; //UserItem id
-  readonly userId: number;
-  readonly itemId: number;
-  readonly purchasedAt: Date;
+  readonly name: string;
+  readonly price: number;
+  readonly image: string;
+  readonly mainCategoryId: number;
+  readonly subCategoryId: number | null;
   readonly isEquipped: boolean;
+  readonly purchasedAt: Date;
 
-  readonly item: {
-    readonly id: number;
-    readonly name: string;
-    readonly price: number;
-    readonly image: string;
-    readonly mainCategoryId: number;
-    readonly subCategoryId?: number; //Optional
-  };
-
-  constructor(userItem: any) {
-    this.id = userItem.id;
-    this.userId = userItem.userId;
-    this.itemId = userItem.itemId;
-    this.purchasedAt = userItem.purchasedAt;
-    this.isEquipped = userItem.isEquipped;
-    this.item = {
-      id: userItem.item.id,
-      name: userItem.item.name,
-      price: userItem.item.price,
-      image: userItem.item.image,
-      mainCategoryId: userItem.item.mainCategoryId,
-      subCategoryId: userItem.item.subCategoryId,
-    };
+  constructor(item: any, userItem?: any) {
+    this.id = item.id;
+    this.name = item.name;
+    this.price = item.price;
+    this.image = item.image;
+    this.mainCategoryId = item.mainCategoryId;
+    this.subCategoryId = item.subCategoryId;
+    this.isEquipped = userItem?.isEquipped ?? false;
+    this.purchasedAt = userItem?.purchasedAt ?? new Date();
   }
 }
