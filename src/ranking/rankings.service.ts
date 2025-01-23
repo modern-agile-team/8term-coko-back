@@ -5,6 +5,8 @@ import { PAGE_SIZE } from 'src/common/constants/rankings-constants';
 import { ResRankingsDto } from './dtos/res-rankings.dto';
 import { ResMyRankingDto } from './dtos/res-my-ranking.dto';
 import { UserInfo } from 'src/users/entities/user.entity';
+import { createFilterType } from 'src/common/util/filter-utils';
+import { createOrderBy } from 'src/common/util/sort-utils';
 
 @Injectable()
 export class RankingsService {
@@ -23,26 +25,8 @@ export class RankingsService {
     sortType: string,
     pageNumber: number,
   ): Promise<ResRankingsDto> {
-    let orderBy = {};
-
-    if (sortType === 'point') {
-      orderBy = orderBy = [
-        { point: 'desc' },
-        {
-          level: 'desc',
-        },
-        {
-          experience: 'desc',
-        },
-      ];
-    } else if (sortType === 'level') {
-      orderBy = [
-        { level: 'desc' },
-        {
-          experience: 'desc',
-        },
-      ];
-    }
+    // 랭킹 정보 정렬 조건
+    const orderBy = createOrderBy(sortType);
 
     const pageSize = PAGE_SIZE; // 페이지 사이즈 조정 가능
     const totalCount = await this.rankingsRepository.getTotalUserCount();
@@ -68,13 +52,7 @@ export class RankingsService {
     user: UserInfo,
   ): Promise<ResMyRankingDto> {
     // 나보다 높은 순위의 유저를 세기 위한 조건
-    let filterType = {};
-
-    if (sortType === 'point') {
-      filterType = { point: { gt: user.point } };
-    } else if (sortType === 'level') {
-      filterType = { level: { gt: user.level } };
-    }
+    const filterType = createFilterType(sortType, user);
 
     const higherRankCount =
       await this.rankingsRepository.getHigherRankCount(filterType);
