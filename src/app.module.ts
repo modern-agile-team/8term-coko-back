@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
 import { UsersCoreModule } from './users/modules/users-core.module';
 import { AdminModule } from './admin/admin.module';
+import { RankingsModule } from './ranking/rankings.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { AdminModule } from './admin/admin.module';
       isGlobal: true,
     }),
     PrismaModule,
+    RankingsModule,
     UsersCoreModule,
     SectionsModule,
     ItemsModule,
