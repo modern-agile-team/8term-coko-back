@@ -14,7 +14,7 @@ import { CreatePartDto } from './dto/create-part.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiParts } from './parts.swagger';
-import { ResPartDto } from './dto/res-part.part.dto';
+import { ResPartDto } from './dto/res-part.dto';
 import { UpdatePartOrderDto } from './dto/update-part-order.dto';
 import { AuthGuard } from '@nestjs/passport';
 

@@ -3,6 +3,8 @@ import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { ResSectionDto } from './dto/res-section.dto';
 import { UpdateSectionOrderDto } from './dto/update-section-order.dto';
+import { ResSectionPartsDto } from './dto/res-section-parts.dto';
+import { ResPaginationOfSectionPartsDto } from './dto/res-pagination-of-section-parts.dto';
 
 export const ApiSections = {
   create: () => {
@@ -86,7 +88,7 @@ export const ApiSections = {
       }),
     );
   },
-  findOne: () => {
+  findOneWithParts: () => {
     return applyDecorators(
       ApiOperation({
         summary: 'section 단일 조회',
@@ -95,7 +97,7 @@ export const ApiSections = {
         status: 200,
         description:
           '특정 section의 id param값을 통해 id, nmae 값을 조회 또한 id를 참조하는 part객체들을 배열로 보냄',
-        type: ResSectionDto,
+        type: ResSectionPartsDto,
         content: {
           JSON: {
             example: {
@@ -165,6 +167,7 @@ export const ApiSections = {
   findOneWithStatus: () => {
     return applyDecorators(
       ApiOperation({
+        summary: '이번에 복구한 api, 단일 section과 parts',
         description: `
           section id와 유저 id로 조회
           1. 단일 section 정보 
@@ -176,34 +179,46 @@ export const ApiSections = {
         status: 200,
         description:
           '특정 section의 id param값을 통해 id, nmae 값을 조회 또한 id를 참조하는 part객체들을 배열로 보냄',
-        content: {
-          JSON: {
-            example: {
-              id: 1,
-              name: '변수',
-              part: [
-                {
-                  id: 1,
-                  sectionId: 1,
-                  name: '변수명',
-                  status: 'LOCKED',
-                },
-                {
-                  id: 2,
-                  sectionId: 1,
-                  name: 'const',
-                  status: 'LOCKED',
-                },
-                {
-                  id: 3,
-                  sectionId: 1,
-                  name: 'let',
-                  status: 'LOCKED',
-                },
-              ],
-            },
-          },
-        },
+        type: ResSectionPartsDto,
+      }),
+    );
+  },
+  findAllPaginatedSectionsWithParts: () => {
+    return applyDecorators(
+      ApiOperation({
+        summary: '페이지네이션이 적용된 section과 관련 part 조회',
+        description: `
+            1. 페이지네이션을 위해 커서와 페이지 사이즈를 옵셔널하게 받음
+            2. 기본적으로 section과 part는 order 로 정렬되서 옴
+            3. 페이지네이션도 section의 order값 순서로 옴
+            4. 데이터, 다음 커서값, 다음 데이터가 있는지 3가지 정보를 받음
+            `,
+      }),
+      ApiResponse({
+        status: 200,
+        description:
+          '요청한 페이지네이션 정보, 다음 커서값, 다음 페이지의 유뮤를 보내줌',
+        type: ResPaginationOfSectionPartsDto,
+      }),
+    );
+  },
+  findAllPaginatedSectionsPartsWithStatus: () => {
+    return applyDecorators(
+      ApiOperation({
+        summary:
+          '로그인한 유저의 페이지네이션이 적용된 section과 관련 part 조회',
+        description: `
+            1. 페이지네이션을 위해 커서와 페이지 사이즈를 옵셔널하게 받음
+            2. 기본적으로 section과 part는 order 로 정렬되서 옴
+            3. 페이지네이션도 section의 order값 순서로 옴
+            4. 데이터, 다음 커서값, 다음 데이터가 있는지 3가지 정보를 받음
+            `,
+      }),
+      ApiResponse({
+        status: 200,
+        description:
+          '요청한 페이지네이션 정보, 다음 커서값, 다음 페이지의 유뮤를 보내줌',
+        type: ResPaginationOfSectionPartsDto,
       }),
     );
   },
