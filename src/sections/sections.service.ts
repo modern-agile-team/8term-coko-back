@@ -123,15 +123,27 @@ export class SectionsService {
     return section;
   }
 
-  async findOneWithParts(id: number): Promise<SectionParts> {
-    const sectionWithParts =
+  /**
+   * 기존 findOneWithParts 에서 parts에 status가 들거가도록 서비스 변경
+   */
+  async findOneWithParts(id: number): Promise<SectionPartsStatus> {
+    const { part, ...section } =
       await this.sectionsRepository.findSectionWithPartsById(id);
 
-    if (!sectionWithParts) {
+    if (!section) {
       throw new NotFoundException();
     }
 
-    return sectionWithParts;
+    // ropository에서 받은 값 중 part를 정리하는 코드
+    const newParts = part.map((part) => {
+      return {
+        ...part,
+        status:
+          part.order === 1 ? PartStatusValues.STARTED : PartStatusValues.LOCKED,
+      };
+    });
+
+    return { part: newParts, ...section };
   }
 
   async findAllWithPartsAndStatus(
