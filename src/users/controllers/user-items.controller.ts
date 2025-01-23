@@ -7,7 +7,7 @@ import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe
 import { ParseIntPipe } from '@nestjs/common';
 import { ApiGetUserItems } from '../swagger-dacorator/get-user-items.decorators';
 
-@ApiTags('items')
+@ApiTags('user-items')
 @Controller('users/:userId/items')
 export class UserItemsController {
   constructor(private readonly userItemsService: UserItemsService) {}
