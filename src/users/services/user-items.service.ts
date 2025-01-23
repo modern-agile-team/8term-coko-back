@@ -1,6 +1,7 @@
 import {
   Injectable,
   NotFoundException,
+  InternalServerErrorException,
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -13,17 +14,41 @@ export class UserItemsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getUserItems(userId: number): Promise<ResponseItemDto[]> {
-    const userItems = await this.prisma.userItem.findMany({
-      where: { userId },
-      include: {
-        item: true, //userItem에 연결된 item 정보도 가져온다
-      },
-    });
+    try {
+      //1. user_items의 유저의 itemId조회
+      const userItems = await this.prisma.userItem.findMany({
+        where: { userId },
+        select: { itemId: true }, //itemId만 선택한다.
+      });
 
-    if (!userItems.length) {
-      throw new NotFoundException('User items not found');
-    }
-    return userItems.map((userItem) => new ResponseItemDto(userItem));
+      if (!userItems.length) {
+        throw new NotFoundException('User items not found');
+      }
+
+      //2. 조회된 itemId를 이용하여 items 테이블에서 아이템 정보 조회
+      const itemIds = userItems.map((userIt) => userIt.itemId);
+      const items = await this.prisma.item.findMany({
+        where: {
+          id: { in: itemIds },
+        },
+        select: {
+          id: true,
+          name: true,
+          image: true,
+          price: true,
+          mainCategoryId: true,
+          subCategoryId: true,
+        },
+      });
+
+      //3. ResponseItemDto 형식으로 변환
+      return items.map((item) => new ResponseItemDto(item));
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('아이템 조회 중 오류 발생');
+    } //500에러
   }
 
   async buyItem(buyItemDto: BuyItemDto): Promise<void> {
