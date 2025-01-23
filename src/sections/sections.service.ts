@@ -127,12 +127,14 @@ export class SectionsService {
    * 기존 findOneWithParts 에서 parts에 status가 들거가도록 서비스 변경
    */
   async findOneWithParts(id: number): Promise<SectionPartsStatus> {
-    const { part, ...section } =
+    const sectionWithParts =
       await this.sectionsRepository.findSectionWithPartsById(id);
 
-    if (!section) {
+    if (!sectionWithParts) {
       throw new NotFoundException();
     }
+
+    const { part, ...section } = sectionWithParts;
 
     // ropository에서 받은 값 중 part를 정리하는 코드
     const newParts = part.map((part) => {
