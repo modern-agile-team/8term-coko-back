@@ -20,6 +20,7 @@ import { UpdateSectionOrderDto } from './dto/update-section-order.dto';
 import { QuerySectionDto } from './dto/query-section.dto';
 import { ResPaginationOfSectionPartsDto } from './dto/res-pagination-of-section-parts.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { ResSectionPartsDto } from './dto/res-section-parts.dto';
 
 @ApiTags('sections')
 @Controller('sections')
@@ -31,6 +32,20 @@ export class SectionsController {
   async findAll(): Promise<ResSectionDto[]> {
     const sections = await this.sectionsService.findAll();
     return ResSectionDto.fromArray(sections);
+  }
+
+  /**
+   * 기존 findOne 다시 복구
+   * 추가로 ResSectionPartsDto가 status도 확인하게 바뀌어서 관련된 값이 들어오도록 변경
+   * -> :Promise<ResSectionPartsDto>
+   */
+  @ApiSections.findOneWithStatus()
+  @Get(':id')
+  async findOneWithStatus(
+    @Param('id', PositiveIntPipe) id: number,
+  ): Promise<ResSectionPartsDto> {
+    const sectionWithParts = await this.sectionsService.findOneWithParts(id);
+    return new ResSectionPartsDto(sectionWithParts);
   }
 
   @ApiSections.findAllPaginatedSectionsWithParts()

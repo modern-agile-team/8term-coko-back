@@ -167,6 +167,7 @@ export const ApiSections = {
   findOneWithStatus: () => {
     return applyDecorators(
       ApiOperation({
+        summary: '이번에 복구한 api, 단일 section과 parts',
         description: `
           section id와 유저 id로 조회
           1. 단일 section 정보 
@@ -178,34 +179,7 @@ export const ApiSections = {
         status: 200,
         description:
           '특정 section의 id param값을 통해 id, nmae 값을 조회 또한 id를 참조하는 part객체들을 배열로 보냄',
-        content: {
-          JSON: {
-            example: {
-              id: 1,
-              name: '변수',
-              part: [
-                {
-                  id: 1,
-                  sectionId: 1,
-                  name: '변수명',
-                  status: 'LOCKED',
-                },
-                {
-                  id: 2,
-                  sectionId: 1,
-                  name: 'const',
-                  status: 'LOCKED',
-                },
-                {
-                  id: 3,
-                  sectionId: 1,
-                  name: 'let',
-                  status: 'LOCKED',
-                },
-              ],
-            },
-          },
-        },
+        type: ResSectionPartsDto,
       }),
     );
   },
