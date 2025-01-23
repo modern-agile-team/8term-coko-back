@@ -5,6 +5,7 @@ import { EquipItemDto } from '../dtos/equip-item.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { ParseIntPipe } from '@nestjs/common';
+import { ApiGetUserItems } from '../swagger-dacorator/get-user-items.decorators';
 
 @ApiTags('items')
 @Controller('users/:userId/items')
@@ -12,6 +13,7 @@ export class UserItemsController {
   constructor(private readonly userItemsService: UserItemsService) {}
   //user의 아이템 목록 조회
   @Get()
+  @ApiGetUserItems()
   getUserItems(@Param('userId', PositiveIntPipe) userId: number) {
     return this.userItemsService.getUserItems(userId);
   }

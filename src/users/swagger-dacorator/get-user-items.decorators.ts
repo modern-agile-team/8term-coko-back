@@ -13,11 +13,16 @@ export function ApiGetUserItems() {
       required: true,
       description: '조회할 사용자의 ID',
       type: Number,
+      example: 1,
     }),
     ApiResponse({
       status: 200,
       description: '사용자 아이템 목록 조회 성공',
       type: [ResponseItemDto], //배열 형태로 변환됨을 명시
+    }),
+    ApiResponse({
+      status: 400,
+      description: '잘못된 사용자 ID 형식',
     }),
     ApiResponse({
       status: 404,
