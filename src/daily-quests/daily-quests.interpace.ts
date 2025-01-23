@@ -1,4 +1,4 @@
-export interface DailyQuestModel {
+export interface DailyQuest {
   id: number;
   title: String;
   content: String;

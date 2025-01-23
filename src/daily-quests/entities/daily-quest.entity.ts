@@ -1,6 +1,6 @@
-import { DailyQuestModel } from '../daily-quests.interpace';
+import { DailyQuest } from '../daily-quests.interpace';
 
-export class DailyQuest implements DailyQuestModel {
+export class DailyQuestEntity implements DailyQuest {
   id: number;
   title: string;
   content: string;
