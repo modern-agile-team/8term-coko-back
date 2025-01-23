@@ -52,7 +52,7 @@ export class AuthController {
   // 로그아웃
   @Post('logout')
   @HttpCode(204)
-  @UseGuards(AuthGuard('accessTokens'))
+  @UseGuards(AuthGuard('accessToken'))
   async logout(
     @User() user: UserInfo,
     @Res({ passthrough: true }) res: Response,
