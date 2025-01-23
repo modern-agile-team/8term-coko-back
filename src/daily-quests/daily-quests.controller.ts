@@ -15,24 +15,30 @@ import { UpdateDailyQuestDto } from './dto/update-daily-quest.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { AuthGuard } from '@nestjs/passport';
 import { ResDailyQuestDto } from './dto/res-daily-quest.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { ApiDailyQuest } from './daily-quest.swagger';
 
+@ApiTags('daily-quests')
 @Controller('daily-quests')
 export class DailyQuestsController {
   constructor(private readonly dailyQuestsService: DailyQuestsService) {}
 
   @Get()
+  @ApiDailyQuest.findAll()
   async findAll() {
     const dailyQuests = await this.dailyQuestsService.findAll();
     return ResDailyQuestDto.fromArray(dailyQuests);
   }
 
   @Get(':questId')
+  @ApiDailyQuest.findOne()
   async findOne(@Param('questId', PositiveIntPipe) questId: number) {
     const dailyQuest = await this.dailyQuestsService.findOne(questId);
     return new ResDailyQuestDto(dailyQuest);
   }
 
   @Post()
+  @ApiDailyQuest.create()
   @HttpCode(204)
   @UseGuards(AuthGuard('adminAccessToken'))
   async create(@Body() body: CreateDailyQuestDto) {
@@ -40,6 +46,7 @@ export class DailyQuestsController {
   }
 
   @Patch(':questId')
+  @ApiDailyQuest.update()
   @HttpCode(204)
   @UseGuards(AuthGuard('adminAccessToken'))
   async update(
@@ -50,6 +57,7 @@ export class DailyQuestsController {
   }
 
   @Delete(':questId')
+  @ApiDailyQuest.remove()
   @HttpCode(204)
   @UseGuards(AuthGuard('adminAccessToken'))
   async remove(@Param('questId', PositiveIntPipe) questId: number) {

@@ -1,7 +1,7 @@
 export interface DailyQuest {
   id: number;
-  title: String;
-  content: String;
+  title: string;
+  content: string;
   point: number;
   exp: number;
   condition: number;
