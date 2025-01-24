@@ -15,15 +15,15 @@ export class RankingsController {
   constructor(private readonly rankingsService: RankingsService) {}
 
   // 랭킹 페이지 조회
-  @ApiRankings.getSelectedPageRankings()
+  @ApiRankings.findSelectedPageRankings()
   @Get('rankings')
   @UseGuards(AuthGuard('accessToken'))
-  async getSelectedPageRankings(
+  async findSelectedPageRankings(
     @Query() rankingsDto: RankingQueryDto,
   ): Promise<ResRankingsDto> {
     const { sort, page } = rankingsDto;
 
-    const allRankings = await this.rankingsService.getSelectedPageRankings(
+    const allRankings = await this.rankingsService.findSelectedPageRankings(
       sort,
       page,
     );

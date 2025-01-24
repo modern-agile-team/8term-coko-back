@@ -4,7 +4,7 @@ import { ResRankingsDto } from './dtos/res-rankings.dto';
 import { ResMyRankingDto } from './dtos/res-my-ranking.dto';
 
 export const ApiRankings = {
-  getSelectedPageRankings: () => {
+  findSelectedPageRankings: () => {
     return applyDecorators(
       ApiOperation({
         summary: '랭킹 페이지 정보 가져오기',

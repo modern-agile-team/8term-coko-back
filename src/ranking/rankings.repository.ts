@@ -12,7 +12,7 @@ export class RankingsRepository {
   }
 
   // 선택한 페이지 랭킹 정보
-  async getSelectedPageRankingsInfo(
+  async findSelectedPageRankingsInfo(
     page: number,
     pageSize: number,
     orderBy: object,

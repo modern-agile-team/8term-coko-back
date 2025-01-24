@@ -21,7 +21,7 @@ export class RankingsService {
    * @param page
    * @returns
    */
-  async getSelectedPageRankings(
+  async findSelectedPageRankings(
     sort: string,
     page: number,
   ): Promise<ResRankingsDto> {
@@ -32,7 +32,7 @@ export class RankingsService {
     const totalCount = await this.rankingsRepository.getTotalUserCount();
     const totalPages = Math.ceil(totalCount / pageSize);
 
-    const rankings = await this.rankingsRepository.getSelectedPageRankingsInfo(
+    const rankings = await this.rankingsRepository.findSelectedPageRankingsInfo(
       page,
       pageSize,
       orderBy,
