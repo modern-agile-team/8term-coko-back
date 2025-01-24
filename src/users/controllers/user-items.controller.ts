@@ -29,7 +29,8 @@ export class UserItemsController {
   }
 
   //user의 아이템 구매
-  @Post(':itemId')
+  @Post()
+  @HttpCode(201)
   async buyItem(
     @Param('userId', PositiveIntPipe) userId: number,
     @Body() buyItemDto: BuyItemDto,
