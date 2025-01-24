@@ -4,7 +4,7 @@ import { User } from 'src/common/decorators/get-user.decorator';
 import { UserInfo } from 'src/users/entities/user.entity';
 import { RankingsService } from './rankings.service';
 import { ApiRankings } from './ranking.swagger';
-import { RankingsDto } from './dtos/rankings.dto';
+import { RankingQueryDto } from './dtos/ranking-query.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ResRankingsDto } from './dtos/res-rankings.dto';
 import { ResMyRankingDto } from './dtos/res-my-ranking.dto';
@@ -19,13 +19,13 @@ export class RankingsController {
   @Get('rankings')
   @UseGuards(AuthGuard('accessToken'))
   async getSelectedPageRankings(
-    @Query() rankingsDto: RankingsDto,
+    @Query() rankingsDto: RankingQueryDto,
   ): Promise<ResRankingsDto> {
-    const { sortType, pageNumber } = rankingsDto;
+    const { sort, page } = rankingsDto;
 
     const allRankings = await this.rankingsService.getSelectedPageRankings(
-      sortType,
-      pageNumber,
+      sort,
+      page,
     );
 
     return allRankings;
@@ -37,9 +37,9 @@ export class RankingsController {
   @UseGuards(AuthGuard('accessToken'))
   async getMyRanking(
     @User() user: UserInfo,
-    @Query('sortType') sortType: string,
+    @Query('sort') sort: string,
   ): Promise<ResMyRankingDto> {
-    const myRanking = await this.rankingsService.getMyRanking(sortType, user);
+    const myRanking = await this.rankingsService.getMyRanking(sort, user);
 
     return myRanking;
   }

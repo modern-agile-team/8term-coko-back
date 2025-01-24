@@ -1,5 +1,5 @@
-export function createFilterType(sortType: string, user: any): object {
-  if (sortType === 'point') {
+export function createFilterType(sort: string, user: any): object {
+  if (sort === 'point') {
     return {
       OR: [
         { point: { gt: user.point } },
@@ -17,7 +17,7 @@ export function createFilterType(sortType: string, user: any): object {
     };
   }
 
-  if (sortType === 'level') {
+  if (sort === 'level') {
     return {
       OR: [
         { level: { gt: user.level } },

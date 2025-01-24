@@ -13,12 +13,12 @@ export class RankingsRepository {
 
   // 선택한 페이지 랭킹 정보
   async getSelectedPageRankingsInfo(
-    pageNumber: number,
+    page: number,
     pageSize: number,
     orderBy: object,
   ): Promise<UserRankingsDto[]> {
     const results = await this.prisma.user.findMany({
-      skip: (pageNumber - 1) * pageSize, // 건너뛸 항목 수 계산
+      skip: (page - 1) * pageSize, // 건너뛸 항목 수 계산
       take: pageSize, // 가져올 항목 수
       select: { id: true, name: true, point: true, level: true }, // 가져올 내용
       orderBy,

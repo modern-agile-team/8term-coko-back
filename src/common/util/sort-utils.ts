@@ -1,9 +1,9 @@
-export function createOrderBy(sortType: string): object[] {
-  if (sortType === 'point') {
+export function createOrderBy(sort: string): object[] {
+  if (sort === 'point') {
     return [{ point: 'desc' }, { level: 'desc' }, { experience: 'desc' }];
   }
 
-  if (sortType === 'level') {
+  if (sort === 'level') {
     return [{ level: 'desc' }, { experience: 'desc' }];
   }
 }
