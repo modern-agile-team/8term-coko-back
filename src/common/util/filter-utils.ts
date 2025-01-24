@@ -15,7 +15,9 @@ export function createFilterType(sortType: string, user: any): object {
         },
       ],
     };
-  } else if (sortType === 'level') {
+  }
+
+  if (sortType === 'level') {
     return {
       OR: [
         { level: { gt: user.level } },
