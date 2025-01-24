@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { RankingsRepository } from './rankings.repository';
-import { ResRankingsDto } from './dtos/res-rankings.dto';
+import { RankingPaginationResponseDto } from './dtos/ranking-pagination-res.dto';
 import { ResMyRankingDto } from './dtos/res-my-ranking.dto';
 import { UserInfo } from 'src/users/entities/user.entity';
 import { createFilterType } from 'src/common/util/filter-utils';
@@ -21,24 +21,23 @@ export class RankingsService {
     sort: string,
     page: number,
     limit: number,
-  ): Promise<ResRankingsDto> {
+  ): Promise<RankingPaginationResponseDto> {
     // 랭킹 정보 정렬 조건
     const orderBy = createOrderBy(sort);
 
     const totalCount = await this.rankingsRepository.getTotalUserCount();
-    const totalPages = Math.ceil(totalCount / limit);
 
-    const rankings = await this.rankingsRepository.findSelectedPageRankingsInfo(
+    const contents = await this.rankingsRepository.findSelectedPageRankingsInfo(
       page,
       limit,
       orderBy,
     );
 
-    return new ResRankingsDto({
+    return new RankingPaginationResponseDto({
       totalCount,
-      totalPages,
       currentPage: page,
-      rankings,
+      limit,
+      contents,
     });
   }
 

@@ -6,7 +6,7 @@ import { RankingsService } from './rankings.service';
 import { ApiRankings } from './ranking.swagger';
 import { RankingQueryDto } from './dtos/ranking-query.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { ResRankingsDto } from './dtos/res-rankings.dto';
+import { RankingPaginationResponseDto } from './dtos/ranking-pagination-res.dto';
 import { ResMyRankingDto } from './dtos/res-my-ranking.dto';
 import { Sort } from './entities/ranking.entity';
 
@@ -21,7 +21,7 @@ export class RankingsController {
   @UseGuards(AuthGuard('accessToken'))
   async findSelectedPageRankings(
     @Query() rankingsDto: RankingQueryDto,
-  ): Promise<ResRankingsDto> {
+  ): Promise<RankingPaginationResponseDto> {
     const { sort, page, limit } = rankingsDto;
 
     const allRankings = await this.rankingsService.findSelectedPageRankings(

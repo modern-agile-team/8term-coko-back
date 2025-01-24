@@ -1,6 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { ResRankingsDto } from './dtos/res-rankings.dto';
+import { RankingPaginationResponseDto } from './dtos/ranking-pagination-res.dto';
 import { ResMyRankingDto } from './dtos/res-my-ranking.dto';
 
 export const ApiRankings = {
@@ -12,7 +12,7 @@ export const ApiRankings = {
       ApiResponse({
         status: 200,
         description: `랭킹 정보를 성공적으로 가져옴`,
-        type: ResRankingsDto,
+        type: RankingPaginationResponseDto,
       }),
     );
   },

@@ -84,6 +84,7 @@ export class UsersService {
       where: { id },
       data: updateUserData,
     });
+
     return new ResponseUserDto(userResponse);
   }
 
