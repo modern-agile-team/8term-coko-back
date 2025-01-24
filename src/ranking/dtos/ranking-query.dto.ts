@@ -1,36 +1,36 @@
 import { IsEnum, IsInt, IsOptional, Min } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import { Sort, SortValues } from '../entities/ranking.entity';
 import { PaginationDefaults } from 'src/common/constants/rankings-constants';
 
 export class RankingQueryDto {
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: '랭킹 기준값 (point, level 등))',
     example: 'point',
     enum: SortValues,
+    default: SortValues.POINT,
   })
   @IsEnum(SortValues, { message: 'bad Sort value' })
-  @Transform(({ value }) => value || SortValues.POINT) // 여기 들어가는 기본 값은 사용자가 처음 들어왔을때 보여줄 페이지
-  readonly sort: Sort;
+  readonly sort: Sort = SortValues.POINT; // 여기 들어가는 기본 값은 사용자가 처음 들어왔을때 보여줄 페이지
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: '페이지 번호 (1부터 시작)',
     example: 1,
+    default: PaginationDefaults.PAGE_NUMBER,
   })
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  @Transform(({ value }) => value || PaginationDefaults.PAGE_NUMBER)
-  readonly page: number;
+  readonly page: number = PaginationDefaults.PAGE_NUMBER;
 
-  @ApiProperty({
-    description: '페이지 크기 (1부터 시작)',
+  @ApiPropertyOptional({
+    description: '페이지 크기',
     example: 5,
+    default: PaginationDefaults.PAGE_LIMIT,
   })
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  @Transform(({ value }) => value || PaginationDefaults.PAGE_LIMIT)
-  readonly limit: number;
+  readonly limit: number = PaginationDefaults.PAGE_LIMIT;
 }
