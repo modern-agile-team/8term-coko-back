@@ -13,6 +13,7 @@ import { ResponseItemDto } from '../dtos/response-item.dto';
 export class UserItemsService {
   constructor(private readonly prisma: PrismaService) {}
 
+  //사용자 아이템 목록 조회
   async getUserItems(userId: number): Promise<ResponseItemDto[]> {
     try {
       //1. user_items의 유저의 itemId조회
@@ -48,6 +49,7 @@ export class UserItemsService {
     } //500에러
   }
 
+  //아이템 구매
   async buyItem(buyItemDto: BuyItemDto): Promise<void> {
     const { userId, itemIds } = buyItemDto;
 
