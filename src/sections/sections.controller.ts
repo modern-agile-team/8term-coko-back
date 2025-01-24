@@ -34,6 +34,14 @@ export class SectionsController {
     return ResSectionDto.fromArray(sections);
   }
 
+  @ApiSections.findAllPaginatedSectionsWithParts()
+  @Get('parts')
+  async findAllPaginatedSectionsWithParts(@Query() query: QuerySectionDto) {
+    const PaginatedSectionWithParts =
+      await this.sectionsService.findAllWithParts(query);
+    return new ResPaginationOfSectionPartsDto(PaginatedSectionWithParts);
+  }
+
   /**
    * 기존 findOne 다시 복구
    * 추가로 ResSectionPartsDto가 status도 확인하게 바뀌어서 관련된 값이 들어오도록 변경
@@ -46,14 +54,6 @@ export class SectionsController {
   ): Promise<ResSectionPartsDto> {
     const sectionWithParts = await this.sectionsService.findOneWithParts(id);
     return new ResSectionPartsDto(sectionWithParts);
-  }
-
-  @ApiSections.findAllPaginatedSectionsWithParts()
-  @Get('parts')
-  async findAllPaginatedSectionsWithParts(@Query() query: QuerySectionDto) {
-    const PaginatedSectionWithParts =
-      await this.sectionsService.findAllWithParts(query);
-    return new ResPaginationOfSectionPartsDto(PaginatedSectionWithParts);
   }
 
   @ApiSections.create()
