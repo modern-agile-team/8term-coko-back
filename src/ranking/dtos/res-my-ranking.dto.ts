@@ -6,4 +6,8 @@ export class ResMyRankingDto {
     example: 7,
   })
   readonly myRanking: number;
+
+  constructor(resMyRankingDto: ResMyRankingDto) {
+    this.myRanking = resMyRankingDto.myRanking;
+  }
 }

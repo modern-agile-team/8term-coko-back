@@ -61,6 +61,6 @@ export class RankingsService {
 
     const myRanking = higherRankCount + 1;
 
-    return { myRanking };
+    return new ResMyRankingDto({ myRanking });
   }
 }
