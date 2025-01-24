@@ -38,7 +38,12 @@ export class RankingsService {
       orderBy,
     );
 
-    return { totalCount, totalPages, currentPage: page, rankings };
+    return new ResRankingsDto({
+      totalCount,
+      totalPages,
+      currentPage: page,
+      rankings,
+    });
   }
 
   /**

@@ -6,23 +6,30 @@ export class ResRankingsDto {
     description: '전체 사용자 수',
     example: 7,
   })
-  totalCount: number;
+  readonly totalCount: number;
 
   @ApiProperty({
     description: '총 페이지 수',
     example: 2,
   })
-  totalPages: number;
+  readonly totalPages: number;
 
   @ApiProperty({
     description: '현재 페이지 번호',
     example: 1,
   })
-  currentPage: number;
+  readonly currentPage: number;
 
   @ApiProperty({
     description: '랭킹 데이터',
     type: [UserRankingsDto], // 배열 타입으로 정의
   })
-  rankings: UserRankingsDto[];
+  readonly rankings: UserRankingsDto[];
+
+  constructor(resRankingDto: ResRankingsDto) {
+    this.totalCount = resRankingDto.totalCount;
+    this.totalPages = resRankingDto.totalPages;
+    this.currentPage = resRankingDto.currentPage;
+    this.rankings = resRankingDto.rankings;
+  }
 }
