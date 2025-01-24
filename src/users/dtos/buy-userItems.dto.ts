@@ -1,5 +1,5 @@
 import { IsArray, IsInt, ArrayMinSize, ArrayMaxSize } from 'class-validator';
-export class CreateItemDto {
+export class BuyUserItemsDto {
   @IsInt()
   userId: number;
 

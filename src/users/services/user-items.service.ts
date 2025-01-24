@@ -5,7 +5,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { BuyItemDto } from '../dtos/buy-item.dto';
+import { BuyUserItemsDto } from '../dtos/buy-userItems.dto';
 import { EquipItemDto } from '../dtos/equip-item.dto';
 import { ResponseItemDto } from '../dtos/response-item.dto';
 
@@ -50,8 +50,8 @@ export class UserItemsService {
   }
 
   //아이템 구매
-  async buyItem(buyItemDto: BuyItemDto): Promise<void> {
-    const { userId, itemIds } = buyItemDto;
+  async buyUserItems(buyUserItemsDto: BuyUserItemsDto): Promise<void> {
+    const { userId, itemIds } = buyUserItemsDto;
 
     await this.prisma.$transaction(async (prisma) => {
       //사용자 존재 여부 확인
