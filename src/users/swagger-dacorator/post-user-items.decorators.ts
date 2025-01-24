@@ -1,6 +1,7 @@
 import { applyDecorators } from '@nestjs/common';
 import {
   ApiOperation,
+  ApiParam,
   ApiResponse,
   ApiBody,
   ApiBadRequestResponse,
@@ -13,6 +14,14 @@ export function ApiPostUserItems() {
     ApiOperation({
       summary: '아이템 구매',
       description: '사용자가 포인트를 사용하여 아이템을 구매합니다.',
+    }),
+
+    ApiParam({
+      name: 'userId',
+      type: 'number',
+      description: '사용자 ID',
+      required: true,
+      example: 1,
     }),
 
     ApiBody({

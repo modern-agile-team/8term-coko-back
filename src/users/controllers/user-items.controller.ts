@@ -14,6 +14,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { ParseIntPipe } from '@nestjs/common';
 import { ApiGetUserItems } from '../swagger-dacorator/get-user-items.decorators';
+import { ApiPostUserItems } from '../swagger-dacorator/post-user-items.decorators';
 
 @ApiTags('user-items')
 @Controller('users/:userId/items')
@@ -31,6 +32,7 @@ export class UserItemsController {
   //user의 아이템 구매
   @Post()
   @HttpCode(201)
+  @ApiPostUserItems()
   async buyUserItems(
     @Param('userId', PositiveIntPipe) userId: number,
     @Body() buyUserItemsDto: BuyUserItemsDto,
