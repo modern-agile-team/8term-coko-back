@@ -8,7 +8,7 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { UserItemsService } from '../services/user-items.service';
-import { BuyItemDto } from '../dtos/buy-item.dto';
+import { CreateItemDto } from '../dtos/create-item.dto';
 import { EquipItemDto } from '../dtos/equip-item.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
@@ -33,10 +33,10 @@ export class UserItemsController {
   @HttpCode(201)
   async buyItem(
     @Param('userId', PositiveIntPipe) userId: number,
-    @Body() buyItemDto: BuyItemDto,
+    @Body() createItemDto: CreateItemDto,
   ) {
-    buyItemDto.userId = userId;
-    return await this.userItemsService.buyItem(buyItemDto);
+    createItemDto.userId = userId;
+    return await this.userItemsService.buyItem(createItemDto);
   }
 
   @Patch()
