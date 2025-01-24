@@ -7,6 +7,7 @@ import { ResMyRankingDto } from './dtos/res-my-ranking.dto';
 import { UserInfo } from 'src/users/entities/user.entity';
 import { createFilterType } from 'src/common/util/filter-utils';
 import { createOrderBy } from 'src/common/util/sort-utils';
+import { Sort } from './entities/ranking.entity';
 
 @Injectable()
 export class RankingsService {
@@ -52,7 +53,7 @@ export class RankingsService {
    * @param userId
    * @returns
    */
-  async getMyRanking(sort: string, user: UserInfo): Promise<ResMyRankingDto> {
+  async getMyRanking(sort: Sort, user: UserInfo): Promise<ResMyRankingDto> {
     // 나보다 높은 순위의 유저를 세기 위한 조건
     const filterType = createFilterType(sort, user);
 

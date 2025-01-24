@@ -8,6 +8,7 @@ import { RankingQueryDto } from './dtos/ranking-query.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ResRankingsDto } from './dtos/res-rankings.dto';
 import { ResMyRankingDto } from './dtos/res-my-ranking.dto';
+import { Sort } from './entities/ranking.entity';
 
 @ApiTags('rankings')
 @Controller('users')
@@ -37,7 +38,7 @@ export class RankingsController {
   @UseGuards(AuthGuard('accessToken'))
   async getMyRanking(
     @User() user: UserInfo,
-    @Query('sort') sort: string,
+    @Query('sort') sort: Sort,
   ): Promise<ResMyRankingDto> {
     const myRanking = await this.rankingsService.getMyRanking(sort, user);
 
