@@ -63,13 +63,18 @@ export class UserItemsService {
       //아이템 존재 확인
       const items = await prisma.item.findMany({
         where: { id: { in: itemIds } },
+        select: { id: true, price: true }, //필요한 부분(id, price
       });
 
-      //아이템 수량 확인 (***이거 좀 이상한 코드 같기도..)
-      if (items.length !== itemIds.length) {
-        throw new NotFoundException('Some items not found');
-      }
+      //존재하지 않는 아이템 ID 찾기
+      const foundItemIds = items.map((item) => item.id);
+      const notFoundItems = itemIds.filter((id) => !foundItemIds.includes(id));
 
+      if (notFoundItems.length > 0) {
+        throw new NotFoundException(
+          `Items not found: ${notFoundItems.join(',')}`,
+        );
+      }
       //총 가격 계산
       const totalPrice = items.reduce((sum, item) => sum + item.price, 0);
 
@@ -87,8 +92,11 @@ export class UserItemsService {
       //이미 소유한 아이템이 있을 경우 (이것도 좀 이상한 것 같기도 하고,,,,)
       if (existingItems.length > 0) {
         const ownedItemIds = existingItems.map((item) => item.itemId);
+        const duplicateItems = itemIds.filter((id) =>
+          ownedItemIds.includes(id),
+        );
         throw new BadRequestException(
-          `User already owns the following items: ${ownedItemIds.join(',')}`,
+          `User already owns the following items: ${duplicateItems.join(',')}`,
         );
       }
 
