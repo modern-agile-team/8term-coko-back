@@ -1,7 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { RankingsRepository } from './rankings.repository';
-import { UsersRepository } from 'src/users/repositories/users.reposirory';
-import { PAGE_SIZE } from 'src/common/constants/rankings-constants';
 import { ResRankingsDto } from './dtos/res-rankings.dto';
 import { ResMyRankingDto } from './dtos/res-my-ranking.dto';
 import { UserInfo } from 'src/users/entities/user.entity';
@@ -11,10 +9,7 @@ import { Sort } from './entities/ranking.entity';
 
 @Injectable()
 export class RankingsService {
-  constructor(
-    private readonly rankingsRepository: RankingsRepository,
-    private readonly usersRepository: UsersRepository,
-  ) {}
+  constructor(private readonly rankingsRepository: RankingsRepository) {}
 
   /**
    * 해당 페이지의 랭킹정보들을 가져옴
@@ -25,17 +20,17 @@ export class RankingsService {
   async findSelectedPageRankings(
     sort: string,
     page: number,
+    limit: number,
   ): Promise<ResRankingsDto> {
     // 랭킹 정보 정렬 조건
     const orderBy = createOrderBy(sort);
 
-    const pageSize = PAGE_SIZE; // 페이지 사이즈 조정 가능
     const totalCount = await this.rankingsRepository.getTotalUserCount();
-    const totalPages = Math.ceil(totalCount / pageSize);
+    const totalPages = Math.ceil(totalCount / limit);
 
     const rankings = await this.rankingsRepository.findSelectedPageRankingsInfo(
       page,
-      pageSize,
+      limit,
       orderBy,
     );
 

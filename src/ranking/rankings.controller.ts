@@ -22,11 +22,12 @@ export class RankingsController {
   async findSelectedPageRankings(
     @Query() rankingsDto: RankingQueryDto,
   ): Promise<ResRankingsDto> {
-    const { sort, page } = rankingsDto;
+    const { sort, page, limit } = rankingsDto;
 
     const allRankings = await this.rankingsService.findSelectedPageRankings(
       sort,
       page,
+      limit,
     );
 
     return allRankings;
