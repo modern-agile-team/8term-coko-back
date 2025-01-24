@@ -18,7 +18,6 @@ export class RankingsController {
   // 랭킹 페이지 조회
   @ApiRankings.findSelectedPageRankings()
   @Get('rankings')
-  @UseGuards(AuthGuard('accessToken'))
   async findSelectedPageRankings(
     @Query() rankingsDto: RankingQueryDto,
   ): Promise<RankingPaginationResponseDto> {

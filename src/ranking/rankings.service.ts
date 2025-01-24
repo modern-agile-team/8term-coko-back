@@ -3,8 +3,8 @@ import { RankingsRepository } from './rankings.repository';
 import { RankingPaginationResponseDto } from './dtos/ranking-pagination-res.dto';
 import { ResMyRankingDto } from './dtos/res-my-ranking.dto';
 import { UserInfo } from 'src/users/entities/user.entity';
-import { createFilterType } from 'src/common/util/filter-utils';
-import { createOrderBy } from 'src/common/util/sort-utils';
+import { createFilterType } from 'src/ranking/utils/filter-utils';
+import { createOrderBy } from 'src/ranking/utils/sort-utils';
 import { Sort } from './entities/ranking.entity';
 
 @Injectable()
