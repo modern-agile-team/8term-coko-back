@@ -25,14 +25,16 @@ export class DailyQuestsController {
 
   @Get()
   @ApiDailyQuest.findAll()
-  async findAll() {
+  async findAll(): Promise<ResDailyQuestDto[]> {
     const dailyQuests = await this.dailyQuestsService.findAll();
     return ResDailyQuestDto.fromArray(dailyQuests);
   }
 
   @Get(':questId')
   @ApiDailyQuest.findOne()
-  async findOne(@Param('questId', PositiveIntPipe) questId: number) {
+  async findOne(
+    @Param('questId', PositiveIntPipe) questId: number,
+  ): Promise<ResDailyQuestDto> {
     const dailyQuest = await this.dailyQuestsService.findOne(questId);
     return new ResDailyQuestDto(dailyQuest);
   }
@@ -41,7 +43,7 @@ export class DailyQuestsController {
   @ApiDailyQuest.create()
   @HttpCode(204)
   @UseGuards(AuthGuard('adminAccessToken'))
-  async create(@Body() body: CreateDailyQuestDto) {
+  async create(@Body() body: CreateDailyQuestDto): Promise<void> {
     await this.dailyQuestsService.create(body);
   }
 
@@ -52,7 +54,7 @@ export class DailyQuestsController {
   async update(
     @Param('questId', PositiveIntPipe) questId: number,
     @Body() body: UpdateDailyQuestDto,
-  ) {
+  ): Promise<void> {
     await this.dailyQuestsService.update(questId, body);
   }
 
@@ -60,7 +62,9 @@ export class DailyQuestsController {
   @ApiDailyQuest.remove()
   @HttpCode(204)
   @UseGuards(AuthGuard('adminAccessToken'))
-  async remove(@Param('questId', PositiveIntPipe) questId: number) {
+  async remove(
+    @Param('questId', PositiveIntPipe) questId: number,
+  ): Promise<void> {
     await this.dailyQuestsService.remove(questId);
   }
 }

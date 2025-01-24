@@ -11,8 +11,7 @@ export const ApiDailyQuest = {
       ApiResponse({
         status: 200,
         description: '일일퀘스트 전체를 모두 조회',
-        type: ResDailyQuestDto,
-        isArray: true,
+        type: [ResDailyQuestDto],
       }),
     );
   },
