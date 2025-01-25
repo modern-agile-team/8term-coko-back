@@ -9,6 +9,7 @@ import { AppController } from './app.controller';
 import { UsersCoreModule } from './users/modules/users-core.module';
 import { AdminModule } from './admin/admin.module';
 import { PaginationModule } from './pagination/pagination.module';
+import { DailyQuestsModule } from './daily-quests/daily-quests.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { PaginationModule } from './pagination/pagination.module';
     AuthModule,
     AdminModule,
     PaginationModule,
+    DailyQuestsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
