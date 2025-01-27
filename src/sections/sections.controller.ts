@@ -48,11 +48,12 @@ export class SectionsController {
    * -> :Promise<ResSectionPartsDto>
    */
   @ApiSections.findOneWithStatus()
-  @Get(':id')
+  @Get(':sectionId')
   async findOneWithStatus(
-    @Param('id', PositiveIntPipe) id: number,
+    @Param('sectionId', PositiveIntPipe) sectionId: number,
   ): Promise<ResSectionPartsDto> {
-    const sectionWithParts = await this.sectionsService.findOneWithParts(id);
+    const sectionWithParts =
+      await this.sectionsService.findOneWithParts(sectionId);
     return new ResSectionPartsDto(sectionWithParts);
   }
 
