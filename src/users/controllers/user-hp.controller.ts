@@ -9,7 +9,7 @@ import { ApiUserHp } from '../swaggers/user-hp.swagger';
 import { UserInfo } from '../entities/user.entity';
 
 @ApiTags('users')
-@Controller('users/user-hp')
+@Controller('users/me/hp')
 export class UserHpController {
   constructor(private readonly userHpService: UserHpService) {}
 
