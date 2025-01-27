@@ -6,9 +6,10 @@ import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/common/decorators/get-user.decorator';
 import { QuerySectionDto } from './dto/query-section.dto';
 import { ResPaginationOfSectionPartsDto } from './dto/res-pagination-of-section-parts.dto';
+import { UserInfo } from 'src/users/entities/user.entity';
 
 @ApiTags('sections')
-@Controller('users/sections')
+@Controller('users/me/sections')
 export class UsersSectionsController {
   constructor(private readonly sectionsService: SectionsService) {}
 
@@ -16,7 +17,7 @@ export class UsersSectionsController {
   @Get('/parts')
   @UseGuards(AuthGuard('accessToken'))
   async findAllPaginatedSectionsPartsWithStatus(
-    @User() user: any,
+    @User() user: UserInfo,
     @Query() query: QuerySectionDto,
   ) {
     const sectionWithPartsStatus =

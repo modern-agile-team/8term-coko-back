@@ -33,23 +33,12 @@ export class QuizzesController {
   }
 
   @ApiQuizzes.getQuiz()
-  @Get(':id')
-  async getQuiz(@Param('id', PositiveIntPipe) id: number): Promise<ResQuizDto> {
-    const quiz = await this.quizzesService.findOne(id);
+  @Get(':quizId')
+  async getQuiz(
+    @Param('quizId', PositiveIntPipe) quizId: number,
+  ): Promise<ResQuizDto> {
+    const quiz = await this.quizzesService.findOne(quizId);
     return new ResQuizDto(quiz);
-  }
-
-  @ApiQuizzes.getQuizzesProgressIncorrect()
-  @Get('users/:id/incorrect')
-  async getQuizzesProgressIncorrect(
-    @Param('id', PositiveIntPipe) userId: number,
-    @Query() query: QueryQuizDto,
-  ): Promise<ResQuizDto[]> {
-    const quizzes = await this.quizzesService.findAllProgressIncorrect(
-      userId,
-      query,
-    );
-    return ResQuizDto.fromArray(quizzes);
   }
 
   @ApiQuizzes.createQuiz()
@@ -61,21 +50,23 @@ export class QuizzesController {
   }
 
   @ApiQuizzes.updateQuiz()
-  @Put(':id')
+  @Put(':quizId')
   @HttpCode(204)
   @UseGuards(AuthGuard('adminAccessToken'))
   async updateQuiz(
-    @Param('id', PositiveIntPipe) id: number,
+    @Param('quizId', PositiveIntPipe) quizId: number,
     @Body() body: UpdateQuizDto,
   ): Promise<void> {
-    await this.quizzesService.update(id, body);
+    await this.quizzesService.update(quizId, body);
   }
 
   @ApiQuizzes.deleteQuiz()
-  @Delete(':id')
+  @Delete(':quizId')
   @HttpCode(204)
   @UseGuards(AuthGuard('adminAccessToken'))
-  async deleteQuiz(@Param('id', PositiveIntPipe) id: number): Promise<void> {
-    await this.quizzesService.remove(id);
+  async deleteQuiz(
+    @Param('quizId', PositiveIntPipe) quizId: number,
+  ): Promise<void> {
+    await this.quizzesService.remove(quizId);
   }
 }

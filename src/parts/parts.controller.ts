@@ -39,32 +39,34 @@ export class PartsController {
   }
 
   @ApiParts.updateAll()
-  @Patch(':id')
+  @Patch(':partId')
   @HttpCode(204)
   @UseGuards(AuthGuard('adminAccessToken'))
   async updateAll(
-    @Param('id', PositiveIntPipe) id: number,
+    @Param('partId', PositiveIntPipe) partId: number,
     @Body() body: CreatePartDto,
   ): Promise<void> {
-    await this.partsService.updateAll(id, body);
+    await this.partsService.updateAll(partId, body);
   }
 
   @ApiParts.updateOrder()
-  @Patch(':id/order')
+  @Patch(':partId/order')
   @HttpCode(204)
   @UseGuards(AuthGuard('adminAccessToken'))
   async updateOrder(
-    @Param('id', PositiveIntPipe) id: number,
+    @Param('partId', PositiveIntPipe) partId: number,
     @Body() body: UpdatePartOrderDto,
   ): Promise<void> {
-    await this.partsService.updateOrder(id, body);
+    await this.partsService.updateOrder(partId, body);
   }
 
   @ApiParts.remove()
-  @Delete(':id')
+  @Delete(':partId')
   @HttpCode(204)
   @UseGuards(AuthGuard('adminAccessToken'))
-  async remove(@Param('id', PositiveIntPipe) id: number): Promise<void> {
-    await this.partsService.remove(id);
+  async remove(
+    @Param('partId', PositiveIntPipe) partId: number,
+  ): Promise<void> {
+    await this.partsService.remove(partId);
   }
 }
