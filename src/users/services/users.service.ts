@@ -98,7 +98,7 @@ export class UsersService {
     return this.prisma.user.delete({ where: { id } });
   }
 
-  async getUserToken(userId: number): Promise<any> {
+  async getMyToken(userId: number): Promise<any> {
     const userTokenInfo = await this.prisma.token.findUnique({
       where: { userId },
     });
