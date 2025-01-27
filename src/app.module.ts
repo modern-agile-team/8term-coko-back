@@ -10,6 +10,7 @@ import { UsersCoreModule } from './users/modules/users-core.module';
 import { AdminModule } from './admin/admin.module';
 import { PaginationModule } from './pagination/pagination.module';
 import { DailyQuestsModule } from './daily-quests/daily-quests.module';
+import { RankingsModule } from './ranking/rankings.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { DailyQuestsModule } from './daily-quests/daily-quests.module';
       isGlobal: true,
     }),
     PrismaModule,
+    RankingsModule,
     UsersCoreModule,
     SectionsModule,
     ItemsModule,
