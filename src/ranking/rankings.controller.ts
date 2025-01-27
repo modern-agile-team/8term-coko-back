@@ -33,7 +33,7 @@ export class RankingsController {
   }
 
   // 자신의 랭킹 조회
-  @ApiRankings.getMyRanking()
+  @ApiRankings.findMyRanking()
   @Get('me/rankings')
   @UseGuards(AuthGuard('accessToken'))
   async getMyRanking(
