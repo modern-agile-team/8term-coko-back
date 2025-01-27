@@ -28,13 +28,6 @@ import { UserInfo } from '../entities/user.entity';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @ApiGetAllUsers()
-  @Get()
-  @UseGuards(AuthGuard('adminAccessToken'))
-  async getAllUsers() {
-    return this.usersService.getAllUsers();
-  }
-
   @ApiGetUser()
   @Get('me')
   @UseGuards(AuthGuard('accessToken'))
@@ -64,6 +57,13 @@ export class UsersController {
   @UseGuards(AuthGuard('accessToken'))
   async getMyToken(@User() user: UserInfo) {
     return this.usersService.getMyToken(user.id);
+  }
+
+  @ApiGetAllUsers()
+  @Get()
+  @UseGuards(AuthGuard('adminAccessToken'))
+  async getAllUsers() {
+    return this.usersService.getAllUsers();
   }
 
   @ApiGetUser()
