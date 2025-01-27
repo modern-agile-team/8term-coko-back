@@ -13,7 +13,7 @@ export const ApiProgress = {
         status: 200,
         description: `
         전체 문제 수,
-        유저가 한번이라도 푼 문제 수,
+        맞힌 문제 수 + 틀린 문제 수,
         유저가 맞힌 문제 수,
         유저가 틀린 문제 수
         `,
