@@ -123,8 +123,10 @@ export class UserItemsService {
   //아이템 착용상태 업데이트
   async updateItemEquipStatus(equipItemDto: EquipItemDto): Promise<void> {
     const { userId, itemIds, isEquipped } = equipItemDto;
-    // 사용자 아이템 존재 여부 확인 (아이템 카테고리 정보도 함께 조회)
     await this.prisma.$transaction(async (prisma) => {
+      console.log('Request:', { userId, itemIds, isEquipped });
+
+      // 사용자 아이템 존재 여부 확인 (아이템 카테고리 정보도 함께 조회)
       const userItems = await prisma.userItem.findMany({
         where: {
           userId,
@@ -140,14 +142,32 @@ export class UserItemsService {
         },
       });
 
+      console.log('Found userItems:', JSON.stringify(userItems, null, 2));
+
       if (!userItems || userItems.length === 0) {
         throw new NotFoundException('User item not found');
       }
 
       if (isEquipped) {
-        // 장착하려는 아이템들의 카테고리 정보 확인
+        // 메인 카테고리별로 아이템 그룹화
+        const itemsByMainCategory = new Map();
+
         for (const userItem of userItems) {
           const { mainCategory, subCategory } = userItem.item;
+
+          if (!itemsByMainCategory.has(mainCategory.id)) {
+            itemsByMainCategory.set(mainCategory.id, {
+              mainCategory,
+              items: [],
+            });
+          }
+
+          itemsByMainCategory
+            .get(mainCategory.id)
+            .items.push({ ...userItem, subCategory });
+        }
+        for (const [_, categoryGroup] of itemsByMainCategory) {
+          const { mainCategory, items } = categoryGroup;
 
           // 현재 장착된 아이템들 조회
           const equippedItems = await prisma.userItem.findMany({
@@ -168,24 +188,42 @@ export class UserItemsService {
             },
           });
 
-          if (!subCategory) {
+          console.log(
+            'Equipped items:',
+            JSON.stringify(equippedItems, null, 2),
+          );
+
+          if (items.some((item) => !item.subCategory)) {
             //서브카테고리가 없는 경우 : 카테고리당 하나만 장착 가능
             if (equippedItems.length > 0) {
               throw new BadRequestException(
                 `Can only equip one item from main category: ${mainCategory.name}`,
               );
             }
-          } else {
-            //서브카테고리가 있는 경우 : 같은 서브카테고리 내에서는 하나만 장착 가능
-            const hasEquippedItemInSameSubCategory = equippedItems.some(
-              (equippedItem) =>
-                equippedItem.item.subCategory?.id === subCategory.id &&
-                !itemIds.includes(equippedItem.itemId),
+            continue;
+          }
+          //서브카테고리별로 그룹화하여 검증
+          const itemsBySubCategory = new Map();
+          items.forEach((item) => {
+            if (!itemsBySubCategory.has(item.subCategory.id)) {
+              itemsBySubCategory.set(item.subCategory.id, []);
+            }
+            itemsBySubCategory.get(item.subCategory.id).push(item);
+          });
+
+          // 각 서브카테고리별로 중복 장착 검사
+          for (const [subCategoryId, subCategoryItems] of itemsBySubCategory) {
+            const existingEquipped = equippedItems.filter(
+              (eq) => eq.item.subCategory?.id === subCategoryId,
             );
 
-            if (hasEquippedItemInSameSubCategory) {
+            if (
+              existingEquipped.length > 0 &&
+              !existingEquipped.every((eq) => itemIds.includes(eq.itemId))
+            ) {
+              const subCategoryName = subCategoryItems[0].subCategory.name;
               throw new BadRequestException(
-                `Can only equip one item from sub category: ${subCategory.name}`,
+                `Can only equip one item from sub category: ${subCategoryName}`,
               );
             }
           }
