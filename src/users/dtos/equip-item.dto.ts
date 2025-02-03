@@ -1,12 +1,24 @@
-import { IsBoolean, IsInt, IsArray } from 'class-validator';
+import { IsBoolean, IsInt, IsArray, ArrayMinSize } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+
 export class EquipItemDto {
-  @IsInt()
   userId: number;
 
-  @IsArray() //배열
-  @IsInt({ each: true }) // 각 아이템 int인지 확인
+  @ApiProperty({
+    description: '장착/장착해제할 아이템 ID 배열',
+    example: [1, 2],
+    type: [Number],
+    minimum: 1,
+  })
+  @IsArray()
+  @IsInt({ each: true })
+  @ArrayMinSize(1)
   itemIds: number[];
 
+  @ApiProperty({
+    description: '장착 여부 (true: 장착, false: 장착해제)',
+    example: true,
+  })
   @IsBoolean()
   isEquipped: boolean;
 }

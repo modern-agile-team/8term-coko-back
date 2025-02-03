@@ -82,7 +82,7 @@ export class UserItemsService {
         throw new BadRequestException('Insufficient points to buy these items');
       }
 
-      //소유 여부 확인
+      //소유 여부 확인 (중복 아이템 구매 방지)
       const existingItems = await prisma.userItem.findMany({
         where: {
           userId: userId,
@@ -91,9 +91,11 @@ export class UserItemsService {
       });
 
       if (existingItems.length > 0) {
-        const ownedItemIds = existingItems.map((item) => item.itemId);
-        const duplicateItems = itemIds.filter((id) =>
-          ownedItemIds.includes(id),
+        const ownedItemIds = existingItems.map((item) => item.itemId); //이미 가진 아이템 id
+        const duplicateItems = itemIds.filter(
+          (
+            id, // 중복 아이템 id
+          ) => ownedItemIds.includes(id),
         );
         throw new BadRequestException(
           `User already owns the following items: ${duplicateItems.join(',')}`,
@@ -118,28 +120,85 @@ export class UserItemsService {
     });
   }
 
+  //아이템 착용상태 업데이트
   async updateItemEquipStatus(equipItemDto: EquipItemDto): Promise<void> {
     const { userId, itemIds, isEquipped } = equipItemDto;
+    // 사용자 아이템 존재 여부 확인 (아이템 카테고리 정보도 함께 조회)
+    await this.prisma.$transaction(async (prisma) => {
+      const userItems = await prisma.userItem.findMany({
+        where: {
+          userId,
+          itemId: { in: itemIds },
+        },
+        include: {
+          item: {
+            include: {
+              mainCategory: true,
+              subCategory: true,
+            },
+          },
+        },
+      });
 
-    const userItems = await this.prisma.userItem.findMany({
-      //유저-아이템 조회
-      where: {
-        userId,
-        itemId: { in: itemIds }, //userId와 itemIds가 일치하는 것을 찾기
-      },
-    });
+      if (!userItems || userItems.length === 0) {
+        throw new NotFoundException('User item not found');
+      }
 
-    if (!userItems || userItems.length === 0) {
-      throw new NotFoundException('User item not found');
-    }
+      if (isEquipped) {
+        // 장착하려는 아이템들의 카테고리 정보 확인
+        for (const userItem of userItems) {
+          const { mainCategory, subCategory } = userItem.item;
 
-    //유저-아이템 착용상태 업데이트
-    await this.prisma.userItem.updateMany({
-      where: {
-        userId,
-        itemId: { in: itemIds },
-      },
-      data: { isEquipped },
+          // 현재 장착된 아이템들 조회
+          const equippedItems = await prisma.userItem.findMany({
+            where: {
+              userId,
+              isEquipped: true,
+              item: {
+                // 같은 메인 카테고리
+                mainCategoryId: mainCategory.id,
+              },
+            },
+            include: {
+              item: {
+                include: {
+                  subCategory: true,
+                },
+              },
+            },
+          });
+
+          if (!subCategory) {
+            //서브카테고리가 없는 경우 : 카테고리당 하나만 장착 가능
+            if (equippedItems.length > 0) {
+              throw new BadRequestException(
+                `Can only equip one item from main category: ${mainCategory.name}`,
+              );
+            }
+          } else {
+            //서브카테고리가 있는 경우 : 같은 서브카테고리 내에서는 하나만 장착 가능
+            const hasEquippedItemInSameSubCategory = equippedItems.some(
+              (equippedItem) =>
+                equippedItem.item.subCategory?.id === subCategory.id &&
+                !itemIds.includes(equippedItem.itemId),
+            );
+
+            if (hasEquippedItemInSameSubCategory) {
+              throw new BadRequestException(
+                `Can only equip one item from sub category: ${subCategory.name}`,
+              );
+            }
+          }
+        }
+      }
+
+      await prisma.userItem.updateMany({
+        where: {
+          userId,
+          itemId: { in: itemIds },
+        },
+        data: { isEquipped },
+      });
     });
   }
 }

@@ -15,6 +15,7 @@ import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe
 import { ParseIntPipe } from '@nestjs/common';
 import { ApiGetUserItems } from '../swagger-dacorator/get-user-items.decorators';
 import { ApiPostUserItems } from '../swagger-dacorator/post-user-items.decorators';
+import { ApiPatchUserItems } from '../swagger-dacorator/patch-user-items.decorator';
 
 @ApiTags('user-items')
 @Controller('users/:userId/items')
@@ -42,10 +43,12 @@ export class UserItemsController {
   }
 
   @Patch()
+  @HttpCode(200)
+  @ApiPatchUserItems()
   async updateItemEquipStatus(
     @Param('userId', ParseIntPipe) userId: number,
     @Body() equipItemDto: EquipItemDto,
-  ) {
+  ): Promise<void> {
     equipItemDto.userId = userId;
     return await this.userItemsService.updateItemEquipStatus(equipItemDto);
   }
