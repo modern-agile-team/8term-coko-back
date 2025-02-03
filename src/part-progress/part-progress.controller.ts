@@ -3,9 +3,9 @@ import {
   Get,
   Body,
   Param,
-  Put,
   HttpCode,
   UseGuards,
+  Patch,
 } from '@nestjs/common';
 import { PartProgressService } from './part-progress.service';
 import { CreatePartProgressDto } from './dto/create-part-progress.dto';
@@ -17,13 +17,13 @@ import { User } from 'src/common/decorators/get-user.decorator';
 import { UserInfo } from 'src/users/entities/user.entity';
 import { AuthGuard } from '@nestjs/passport';
 
-@ApiTags('part-progress')
-@Controller('users/me/part-progress')
+@ApiTags('parts')
+@Controller('users/me/parts')
 export class PartProgressController {
   constructor(private readonly partProgressService: PartProgressService) {}
 
   @ApiPartProgress.findAll()
-  @Get()
+  @Get('status')
   @UseGuards(AuthGuard('accessToken'))
   async findAll(@User() user: UserInfo): Promise<ResPartProgressDto[]> {
     const partProgress = await this.partProgressService.findAll(user.id);
@@ -31,7 +31,7 @@ export class PartProgressController {
   }
 
   @ApiPartProgress.createOrUpdate()
-  @Put('parts/:partId')
+  @Patch(':partId/status')
   @HttpCode(204)
   @UseGuards(AuthGuard('accessToken'))
   async createOrUpdate(
