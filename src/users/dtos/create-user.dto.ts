@@ -1,33 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsOptional, IsString } from 'class-validator';
+import {
+  IsInt,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class CreateUserDto {
   @ApiProperty({
     type: String,
-    description: '유저 email',
-    example: 'gwgw123@gmail.com',
+    description: '소셜 이름',
+    example: '이건우',
+    minLength: 2,
+    maxLength: 30,
   })
   @IsString()
-  readonly email: string;
-
-  @ApiProperty({
-    type: String,
-    description: '유저 프로필 이미지지',
-    example:
-      'https://lh3.googleusercontent.com/a/ACg8ocK6wP1234RJfzG7BqWeqwerMuxJuIbBhmoYA7gus-EsM=s96-c',
-  })
-  @IsOptional()
-  @IsString()
-  readonly picture?: string;
-
-  @ApiProperty({
-    type: String,
-    description: '유저 닉네임',
-    example: 'gwgw99',
-    minimum: 2,
-    maximum: 10,
-  })
-  @IsString()
+  @MinLength(2)
+  @MaxLength(30)
   readonly name: string;
 
   @ApiProperty({
@@ -37,7 +27,7 @@ export class CreateUserDto {
       'ya29.a0AeDClZDZpzSfkfMpmn2qwerJsfaM5JZ0IbvupkAnLDHnwEFL3KtN8Iw7uMrzBdhCkSMDv0DNq9WSmWBBKbE0jzq-9r5g8TJYBhnlELNzzNl7R0A7uADJ5ECZ6WIrUZ3QHWxW7_qqA-OBh6OvHqwerU1gIskGHHvSSpBmaCgYKAaASARESFQ',
   })
   @IsString()
-  socialAccessToken: string;
+  readonly socialAccessToken: string;
 
   @ApiProperty({
     type: String,
@@ -47,7 +37,7 @@ export class CreateUserDto {
   })
   @IsString()
   @IsOptional()
-  socialRefeshToken?: string;
+  readonly socialRefeshToken?: string;
 
   @ApiProperty({
     type: String,

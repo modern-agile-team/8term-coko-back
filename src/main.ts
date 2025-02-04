@@ -25,21 +25,35 @@ async function bootstrap() {
       'MIT',
       'https://github.com/git/git-scm.com/blob/gh-pages/MIT-LICENSE.txt',
     )
-    .addServer('https://api.cokoedu.com', 'develop')
-    .addServer('http://localhost:3000', 'local')
+    .addServer('https://api.cokoedu.com', 'develop') // develop 서버
+    .addServer('http://localhost:3000', 'local') // 로컬 서버
+    .addCookieAuth('accessToken')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document, {
     swaggerOptions: {
       persistAuthorization: true, // Swagger UI에서 인증 정보를 유지
+      // Swagger UI에서 보여줄 API 순서 정렬
+      operationsSorter: (a: any, b: any) => {
+        //메서드 순서
+        const order = {
+          get: '0',
+          post: '1',
+          put: '2',
+          patch: '3',
+          delete: '4',
+        };
+
+        return order[a.get('method')].localeCompare(order[b.get('method')]);
+      },
     },
   });
 
   app.useGlobalPipes(
     new ValidationPipe({
+      transform: true,
       whitelist: true,
       forbidNonWhitelisted: true,
-      transform: true,
     }),
   );
 

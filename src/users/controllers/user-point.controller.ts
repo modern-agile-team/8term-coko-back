@@ -1,28 +1,29 @@
-import { Controller, Get, Body, Patch, Param } from '@nestjs/common';
+import { Controller, Get, Body, Patch, Param, UseGuards } from '@nestjs/common';
 import { UserPointService } from '../services/user-point.service';
 import { UpdatePointDto } from '../dtos/update-point.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiUpdatePoint } from '../swagger-dacorator/patch-user-point-decorators';
 import { ApiGetPoint } from '../swagger-dacorator/get-user-point-decorators';
-import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
+import { AuthGuard } from '@nestjs/passport';
+import { UserInfo } from '../entities/user.entity';
+import { User } from 'src/common/decorators/get-user.decorator';
 
 @ApiTags('point')
-@Controller('users/:id/point')
+@Controller('users/me/point')
 export class UserPointController {
   constructor(private readonly pointsService: UserPointService) {}
 
   @Get()
   @ApiGetPoint()
-  getUserPoint(@Param('id', PositiveIntPipe) userId: number) {
-    return this.pointsService.getUserPoint(userId);
+  @UseGuards(AuthGuard('accessToken'))
+  getUserPoint(@User() user: UserInfo) {
+    return this.pointsService.getUserPoint(user.id);
   }
 
   @Patch()
   @ApiUpdatePoint()
-  updatePoint(
-    @Param('id', PositiveIntPipe) userId: number,
-    @Body() updatePointData: UpdatePointDto,
-  ) {
-    return this.pointsService.updatePoint(userId, updatePointData);
+  @UseGuards(AuthGuard('accessToken'))
+  updatePoint(@User() user: UserInfo, @Body() updatePointData: UpdatePointDto) {
+    return this.pointsService.updatePoint(user.id, updatePointData);
   }
 }

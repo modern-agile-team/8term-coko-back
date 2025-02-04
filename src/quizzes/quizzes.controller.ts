@@ -8,6 +8,7 @@ import {
   Put,
   Query,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { QuizzesService } from './quizzes.service';
 import { CreateQuizDto } from './dto/create-quiz.dto';
@@ -17,6 +18,7 @@ import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe
 import { ApiTags } from '@nestjs/swagger';
 import { ApiQuizzes } from './quizzes.swagger';
 import { ResQuizDto } from './dto/res-quiz.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('quizzes')
 @Controller('quizzes')
@@ -31,46 +33,40 @@ export class QuizzesController {
   }
 
   @ApiQuizzes.getQuiz()
-  @Get(':id')
-  async getQuiz(@Param('id', PositiveIntPipe) id: number): Promise<ResQuizDto> {
-    const quiz = await this.quizzesService.findOne(id);
+  @Get(':quizId')
+  async getQuiz(
+    @Param('quizId', PositiveIntPipe) quizId: number,
+  ): Promise<ResQuizDto> {
+    const quiz = await this.quizzesService.findOne(quizId);
     return new ResQuizDto(quiz);
-  }
-
-  @ApiQuizzes.getQuizzesProgressIncorrect()
-  @Get('users/:id/incorrect')
-  async getQuizzesProgressIncorrect(
-    @Param('id', PositiveIntPipe) userId: number,
-    @Query() query: QueryQuizDto,
-  ): Promise<ResQuizDto[]> {
-    const quizzes = await this.quizzesService.findAllProgressIncorrect(
-      userId,
-      query,
-    );
-    return ResQuizDto.fromArray(quizzes);
   }
 
   @ApiQuizzes.createQuiz()
   @Post()
   @HttpCode(204)
+  @UseGuards(AuthGuard('adminAccessToken'))
   async createQuiz(@Body() body: CreateQuizDto): Promise<void> {
     await this.quizzesService.create(body);
   }
 
   @ApiQuizzes.updateQuiz()
-  @Put(':id')
+  @Put(':quizId')
   @HttpCode(204)
+  @UseGuards(AuthGuard('adminAccessToken'))
   async updateQuiz(
-    @Param('id', PositiveIntPipe) id: number,
+    @Param('quizId', PositiveIntPipe) quizId: number,
     @Body() body: UpdateQuizDto,
   ): Promise<void> {
-    await this.quizzesService.update(id, body);
+    await this.quizzesService.update(quizId, body);
   }
 
   @ApiQuizzes.deleteQuiz()
-  @Delete(':id')
+  @Delete(':quizId')
   @HttpCode(204)
-  async deleteQuiz(@Param('id', PositiveIntPipe) id: number): Promise<void> {
-    await this.quizzesService.remove(id);
+  @UseGuards(AuthGuard('adminAccessToken'))
+  async deleteQuiz(
+    @Param('quizId', PositiveIntPipe) quizId: number,
+  ): Promise<void> {
+    await this.quizzesService.remove(quizId);
   }
 }

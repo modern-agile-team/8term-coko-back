@@ -1,8 +1,10 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { TokenService } from './token.service';
 import { UsersService } from 'src/users/services/users.service';
+import { RedisService } from '../redis/redis.service';
+import { PrismaClientOrTransaction } from 'src/prisma/prisma.type';
 
 @Injectable()
 export class AuthService {
@@ -10,6 +12,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly tokenService: TokenService,
     private readonly userService: UsersService,
+    private readonly redisService: RedisService,
   ) {}
 
   async googleLogin(
@@ -17,16 +20,30 @@ export class AuthService {
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const { provider, providerId, name, socialAccessToken } = user;
 
-    // 유저 정보 조회 및 생성
-    const userInfo = await this.findOrCreateUser(provider, providerId, name);
+    // #1 유저생성(유저 hp 생성 및 유저 part 생성) → #2 소셜토큰 저장
+    const userInfo = await this.prisma.$transaction(async (tx) => {
+      // #1 유저 정보 조회 및 생성(유저 hp 생성 및 유저 part 생성)
+      const userInfo = await this.findOrCreateUser(
+        provider,
+        providerId,
+        name,
+        tx,
+      );
 
-    // 소셜 토큰 저장
-    await this.saveSocialToken(socialAccessToken, userInfo.id);
+      // #2 소셜 토큰 저장
+      await this.saveSocialToken(socialAccessToken, userInfo.id, tx);
 
+      return userInfo;
+    });
+
+    // JWT 생성
     const accessToken = await this.tokenService.createAccessToken(userInfo.id);
     const refreshToken = await this.tokenService.createRefreshToken(
       userInfo.id,
     );
+
+    // redis에 refresh 토큰 저장
+    await this.redisService.set(String(userInfo.id), refreshToken);
 
     return { accessToken, refreshToken };
   }
@@ -36,25 +53,31 @@ export class AuthService {
     provider: string,
     providerId: string,
     name: string,
+    txOrPrisma: PrismaClientOrTransaction = this.prisma,
   ) {
-    try {
-      // 기존 유저 정보 조회
-      const existingUser = await this.prisma.user.findUnique({
-        where: { providerId },
-      });
+    // 기존 유저 정보 조회
+    const existingUser = await txOrPrisma.user.findUnique({
+      where: { providerId },
+    });
 
-      if (existingUser) return existingUser;
+    if (existingUser) return existingUser;
 
-      // 유저 정보 생성
-      return await this.userService.createUser(provider, providerId, name);
-    } catch (error) {
-      throw new InternalServerErrorException('Failed to create');
-    }
+    // 유저 정보 생성
+    return await this.userService.createUser(
+      provider,
+      providerId,
+      name,
+      txOrPrisma,
+    );
   }
 
   // 소셜 토큰 저장
-  private saveSocialToken(socialAccessToken: string, userId: number) {
-    return this.prisma.token.upsert({
+  private saveSocialToken(
+    socialAccessToken: string,
+    userId: number,
+    txOrPrisma: PrismaClientOrTransaction = this.prisma,
+  ) {
+    return txOrPrisma.token.upsert({
       where: { userId },
       create: { socialAccessToken, userId },
       update: { socialAccessToken },

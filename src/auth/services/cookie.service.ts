@@ -33,7 +33,7 @@ export class CookieService {
       maxAge: Number(
         this.configService.get<string>('REFRESH_COOKIE_EXPIRATION_TIME'),
       ),
-      path: '/', // refreshToken은 특정 경로로 제한 가능
+      path: '/auth/new-accessToken', // refreshToken은 특정 경로로 제한
     };
     res.cookie('refreshToken', refreshToken, refreshTokenCookieOptions);
   }
@@ -49,9 +49,6 @@ export class CookieService {
 
     // refreshToken 쿠키 설정
     await this.setRefreshTokenCookie(res, refreshToken);
-
-    // 메인페이지로 리다이렉트
-    res.redirect(this.configService.get<string>('CLIENT_MAIN_PAGE_URL'));
   }
 
   // 쿠키 삭제 (로그아웃시)
@@ -65,5 +62,20 @@ export class CookieService {
 
     res.clearCookie('accessToken', deleteCookieOptions);
     res.clearCookie('refreshToken', deleteCookieOptions);
+  }
+
+  // adminAccessToken 쿠키 설정
+  async setAdminAccessTokenCookie(res: Response, accessToken: string) {
+    const accessTokenCookieOptions = {
+      httpOnly: true,
+      secure: true,
+      domain: this.configService.get<string>('ADMIN_COOKIE_DOMAIN'),
+      sameSite: 'none' as 'none', // none 타입으로 지정해줘야 함.
+      maxAge: Number(
+        this.configService.get<string>('ACCESS_COOKIE_EXPIRATION_TIME'),
+      ),
+      path: '/',
+    };
+    res.cookie('accessToken', accessToken, accessTokenCookieOptions);
   }
 }

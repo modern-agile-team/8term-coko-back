@@ -4,28 +4,34 @@ import { UserPointModule } from './users/modules/user-point.module';
 import { UserExperienceModule } from './users/modules/user-experience.module';
 import { UserItemsModule } from './users/modules/user-items.module';
 import { PrismaModule } from './prisma/prisma.module';
-import { ItemsModule } from './items/items.module';
-import { UsersModule } from './users/modules/users.module';
 import { SectionsModule } from './sections/sections.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
-import { PartProgressModule } from './part-progress/part-progress.module';
+import { UsersCoreModule } from './users/modules/users-core.module';
+import { AdminModule } from './admin/admin.module';
+import { PaginationModule } from './pagination/pagination.module';
+import { DailyQuestsModule } from './daily-quests/daily-quests.module';
+import { RankingsModule } from './ranking/rankings.module';
 
 @Module({
   imports: [
     SectionsModule,
     PrismaModule,
-    UsersModule,
+    UserItemsModule,
     UserPointModule,
     UserExperienceModule,
-    UserItemsModule,
-    ItemsModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    PrismaModule,
+    RankingsModule,
+    UsersCoreModule,
+    SectionsModule,
     AuthModule,
-    PartProgressModule,
+    AdminModule,
+    PaginationModule,
+    DailyQuestsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

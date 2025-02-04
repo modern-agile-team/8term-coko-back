@@ -4,7 +4,7 @@ export class ResProgressDto {
   @ApiProperty({ example: 20, description: '전체 문제 수' })
   readonly totalQuizCount: number;
 
-  @ApiProperty({ example: 10, description: '유저가 한번이라도 푼 문제 수' })
+  @ApiProperty({ example: 10, description: '맞힌 문제 수 + 틀린 문제 수' })
   readonly totalUserProgressCount: number;
 
   @ApiProperty({ example: 6, description: '유저가 맞힌 문제 수' })
