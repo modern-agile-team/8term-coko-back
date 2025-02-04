@@ -1,7 +1,7 @@
 import { IsBoolean, IsInt, IsArray, ArrayMinSize } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class EquipItemDto {
+export class EquipUseritemDto {
   userId: number;
 
   @ApiProperty({
@@ -16,7 +16,8 @@ export class EquipItemDto {
   itemIds: number[];
 
   @ApiProperty({
-    description: '장착 여부 (true: 장착, false: 장착해제)',
+    description:
+      '장착 여부 (true: 장착, false: 장착해제). true인 경우 같은 카테고리의 기존 아이템은 자동 해제됨',
     example: true,
   })
   @IsBoolean()

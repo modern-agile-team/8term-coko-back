@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { UserItemsService } from '../services/user-items.service';
 import { BuyUserItemsDto } from '../dtos/buy-userItems.dto';
-import { EquipItemDto } from '../dtos/equip-item.dto';
+import { EquipUseritemDto } from '../dtos/equip-useritem.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { ParseIntPipe } from '@nestjs/common';
@@ -47,9 +47,9 @@ export class UserItemsController {
   @ApiPatchUserItems()
   async updateItemEquipStatus(
     @Param('userId', ParseIntPipe) userId: number,
-    @Body() equipItemDto: EquipItemDto,
+    @Body() equipUseritemDto: EquipUseritemDto,
   ): Promise<void> {
-    equipItemDto.userId = userId;
-    return await this.userItemsService.updateItemEquipStatus(equipItemDto);
+    equipUseritemDto.userId = userId;
+    return await this.userItemsService.updateItemEquipStatus(equipUseritemDto);
   }
 }

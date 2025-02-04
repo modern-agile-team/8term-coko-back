@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { BuyUserItemsDto } from '../dtos/buy-userItems.dto';
-import { EquipItemDto } from '../dtos/equip-item.dto';
+import { EquipUseritemDto } from '../dtos/equip-useritem.dto';
 import { ResponseItemDto } from '../dtos/response-item.dto';
 
 @Injectable()
@@ -121,8 +121,10 @@ export class UserItemsService {
   }
 
   //아이템 착용상태 업데이트
-  async updateItemEquipStatus(equipItemDto: EquipItemDto): Promise<void> {
-    const { userId, itemIds, isEquipped } = equipItemDto;
+  async updateItemEquipStatus(
+    equipUseritemDto: EquipUseritemDto,
+  ): Promise<void> {
+    const { userId, itemIds, isEquipped } = equipUseritemDto;
     //트랜잭션 시작
     await this.prisma.$transaction(async (prisma) => {
       // 1. 장착하려는 아이템들 조회
