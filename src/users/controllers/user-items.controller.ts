@@ -7,6 +7,7 @@ import {
   Param,
   Body,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { UserItemsService } from '../services/user-items.service';
 import { BuyUserItemsDto } from '../dtos/buy-userItems.dto';
@@ -18,9 +19,12 @@ import { ApiGetUserItems } from '../swagger-dacorator/get-user-items.decorators'
 import { ApiPostUserItems } from '../swagger-dacorator/post-user-items.decorators';
 import { ApiPatchUserItems } from '../swagger-dacorator/patch-user-items.decorator';
 import { ApiUnequipAllItems } from '../swagger-dacorator/put-user-items.decorators';
+import { User } from 'src/common/decorators/get-user.decorator';
+import { UserInfo } from 'src/users/entities/user.entity';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('user-items')
-@Controller('users/:userId/items')
+@Controller('users/me/items')
 export class UserItemsController {
   constructor(private readonly userItemsService: UserItemsService) {}
 
@@ -28,8 +32,9 @@ export class UserItemsController {
   @Get()
   @HttpCode(200)
   @ApiGetUserItems()
-  getUserItems(@Param('userId', PositiveIntPipe) userId: number) {
-    return this.userItemsService.getUserItems(userId);
+  @UseGuards(AuthGuard('accessToken'))
+  getUserItems(@User() user: UserInfo) {
+    return this.userItemsService.getUserItems(user.id);
   }
 
   //user의 아이템 구매
@@ -37,10 +42,10 @@ export class UserItemsController {
   @HttpCode(201)
   @ApiPostUserItems()
   async buyUserItems(
-    @Param('userId', PositiveIntPipe) userId: number,
+    @User() user: UserInfo,
     @Body() buyUserItemsDto: BuyUserItemsDto,
   ) {
-    buyUserItemsDto.userId = userId;
+    buyUserItemsDto.userId = user.id;
     return await this.userItemsService.buyUserItems(buyUserItemsDto);
   }
 
@@ -48,7 +53,7 @@ export class UserItemsController {
   @HttpCode(200)
   @ApiPatchUserItems()
   async updateItemEquipStatus(
-    @Param('userId', ParseIntPipe) userId: number,
+    @Param('userId', PositiveIntPipe) userId: number,
     @Body() equipUseritemDto: EquipUseritemDto,
   ): Promise<void> {
     equipUseritemDto.userId = userId;
