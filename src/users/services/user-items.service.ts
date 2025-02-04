@@ -244,4 +244,20 @@ export class UserItemsService {
       });
     });
   }
+
+  async unequipAllItems(userId: number): Promise<void> {
+    // 사용자 존재 여부 확인
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException('사용자를 찾을 수 없습니다.');
+    }
+
+    // 모든 장착된 아이템 해제
+    await this.prisma.userItem.updateMany({
+      where: { userId, isEquipped: true }, //장착된 아이템만 대상으로
+      data: {
+        isEquipped: false, //모두 장착 해제상태로 변경
+      },
+    });
+  }
 }
