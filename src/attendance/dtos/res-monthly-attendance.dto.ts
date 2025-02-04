@@ -8,12 +8,6 @@ export class ResMyMonthlyAttendanceDto {
   readonly id: number;
 
   @ApiProperty({
-    description: '나의 id',
-    example: 7,
-  })
-  readonly userId: number;
-
-  @ApiProperty({
     description: '출석한 날짜',
     example: '2025-02-03T00:00:00.000Z',
   })
@@ -21,7 +15,6 @@ export class ResMyMonthlyAttendanceDto {
 
   constructor(props: ResMyMonthlyAttendanceDto) {
     this.id = props.id;
-    this.userId = props.userId;
     this.date = props.date;
   }
 
@@ -32,10 +25,4 @@ export class ResMyMonthlyAttendanceDto {
       (monthlyAttendance) => new ResMyMonthlyAttendanceDto(monthlyAttendance),
     );
   }
-
-  //   static fromArray(partProgress: PartProgress[]): ResPartProgressDto[] {
-  //       return partProgress.map(
-  //         (partProgress) => new ResPartProgressDto(partProgress),
-  //       );
-  //     }
 }

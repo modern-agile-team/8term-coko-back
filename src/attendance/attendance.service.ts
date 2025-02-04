@@ -13,16 +13,19 @@ export class AttendanceService {
     const now = new Date(); // 현재 시스템의 기본 시간
     const nowKST = new Date(now.getTime() + 9 * 60 * 60 * 1000); // UTC → KST 변환
 
+    // 당일의 날짜 데이터만으로 변경 (YYYY-MM-DD 00:00:00)
     const today = new Date(
-      nowKST.getFullYear(),
-      nowKST.getMonth(),
-      nowKST.getDate(),
-      0,
-      0,
-      0,
+      Date.UTC(
+        nowKST.getUTCFullYear(),
+        nowKST.getUTCMonth(),
+        nowKST.getUTCDate(),
+        0,
+        0,
+        0,
+      ),
     );
 
-    // 이미 출석 되어 있는지
+    // 이미 출석체크 되어 있는지
     const alreadyChecked = await this.attendanceRepository.findByUserAndDate(
       userId,
       today,
@@ -32,23 +35,31 @@ export class AttendanceService {
       throw new ConflictException();
     }
 
-    return await this.attendanceRepository.saveAttendance(userId, today);
+    await this.attendanceRepository.saveAttendance(userId, today);
   }
 
   /**
    * 당일 출석 여부 확인
    */
-  async checkTodayAttendance(userId: number) {
+  async checkTodayAttendance(userId: number): Promise<boolean> {
     const now = new Date(); // 현재 시스템의 기본 시간
     const nowKST = new Date(now.getTime() + 9 * 60 * 60 * 1000); // UTC → KST 변환
 
+    // 당일의 날짜 데이터만으로 변경 (YYYY-MM-DD 00:00:00)
     const today = new Date(
-      Date.UTC(nowKST.getFullYear(), nowKST.getMonth(), nowKST.getDate(), 0),
+      Date.UTC(
+        nowKST.getUTCFullYear(),
+        nowKST.getUTCMonth(),
+        nowKST.getUTCDate(),
+        0,
+        0,
+        0,
+      ),
     );
 
     const todayAttendance = await this.attendanceRepository.findByUserAndDate(
       userId,
-      nowKST,
+      today,
     );
 
     return !!todayAttendance; // 출석 데이터가 있으면 true, 없으면 false
@@ -57,7 +68,11 @@ export class AttendanceService {
   /**
    * 월간 출석정보 조회
    */
-  async findMonthAttendance(userId: number, year: string, month: string) {
+  async findMonthAttendance(
+    userId: number,
+    year: string,
+    month: string,
+  ): Promise<ResMyMonthlyAttendanceDto[]> {
     const startDate = new Date(`${year}-${month.padStart(2, '0')}-01`);
     const endDate = new Date(`${year}-${month.toString().padStart(2, '0')}-31`);
 

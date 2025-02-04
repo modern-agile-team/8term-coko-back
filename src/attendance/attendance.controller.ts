@@ -42,7 +42,7 @@ export class AttendanceController {
   async findMonthAttendance(
     @User() user: UserInfo,
     @Query() attendanceDateDto: AttendanceDateDto,
-  ): Promise<any> {
+  ): Promise<ResMyMonthlyAttendanceDto[]> {
     const { year, month } = attendanceDateDto;
 
     return await this.attendanceService.findMonthAttendance(
