@@ -4,7 +4,6 @@ import {
   Post,
   Patch,
   Put,
-  Param,
   Body,
   HttpCode,
   UseGuards,
@@ -13,8 +12,6 @@ import { UserItemsService } from '../services/user-items.service';
 import { BuyUserItemsDto } from '../dtos/buy-userItems.dto';
 import { EquipUseritemDto } from '../dtos/equip-useritem.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
-import { ParseIntPipe } from '@nestjs/common';
 import { ApiGetUserItems } from '../swagger-dacorator/get-user-items.decorators';
 import { ApiPostUserItems } from '../swagger-dacorator/post-user-items.decorators';
 import { ApiPatchUserItems } from '../swagger-dacorator/patch-user-items.decorator';
@@ -41,6 +38,7 @@ export class UserItemsController {
   @Post()
   @HttpCode(201)
   @ApiPostUserItems()
+  @UseGuards(AuthGuard('accessToken'))
   async buyUserItems(
     @User() user: UserInfo,
     @Body() buyUserItemsDto: BuyUserItemsDto,
@@ -52,20 +50,20 @@ export class UserItemsController {
   @Patch()
   @HttpCode(200)
   @ApiPatchUserItems()
+  @UseGuards(AuthGuard('accessToken'))
   async updateItemEquipStatus(
-    @Param('userId', PositiveIntPipe) userId: number,
+    @User() user: UserInfo,
     @Body() equipUseritemDto: EquipUseritemDto,
   ): Promise<void> {
-    equipUseritemDto.userId = userId;
+    equipUseritemDto.userId = user.id;
     return await this.userItemsService.updateItemEquipStatus(equipUseritemDto);
   }
 
   @Put('reset-equipment')
   @HttpCode(200)
   @ApiUnequipAllItems()
-  async unequipAllItems(
-    @Param('userId', PositiveIntPipe) userId: number,
-  ): Promise<void> {
-    return await this.userItemsService.unequipAllItems(userId);
+  @UseGuards(AuthGuard('accessToken'))
+  async unequipAllItems(@User() user: UserInfo): Promise<void> {
+    return await this.userItemsService.unequipAllItems(user.id);
   }
 }
