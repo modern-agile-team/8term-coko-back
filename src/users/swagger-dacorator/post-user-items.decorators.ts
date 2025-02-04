@@ -1,7 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import {
   ApiOperation,
-  ApiParam,
   ApiResponse,
   ApiBody,
   ApiBadRequestResponse,
@@ -13,15 +12,8 @@ export function ApiPostUserItems() {
   return applyDecorators(
     ApiOperation({
       summary: '아이템 구매',
-      description: '사용자가 포인트를 사용하여 아이템을 구매합니다.',
-    }),
-
-    ApiParam({
-      name: 'userId',
-      type: 'number',
-      description: '사용자 ID',
-      required: true,
-      example: 1,
+      description:
+        '현재 로그인한 사용자가 포인트를 사용하여 아이템을 구매합니다.',
     }),
 
     ApiBody({
@@ -30,7 +22,6 @@ export function ApiPostUserItems() {
       examples: {
         example1: {
           value: {
-            userId: 1,
             itemIds: [1, 2, 3],
           },
           summary: '아이템 구매 예시',
@@ -52,21 +43,18 @@ export function ApiPostUserItems() {
       schema: {
         example: {
           statusCode: 400,
-          message: 'Insufficient points to buy these items',
+          message: '포인트가 부족합니다.',
           error: 'Bad Request',
         },
       },
     }),
 
     ApiNotFoundResponse({
-      description:
-        '다음과 같은 경우 404에러가 발생합니다:\n' +
-        '- 사용자를 찾을 수 없는 경우\n' +
-        '- 요청한 아이템이 존재하지 않는 경우',
+      description: '요청한 아이템이 존재하지 않는 경우',
       schema: {
         example: {
           statusCode: 404,
-          message: 'Items not found: 1,2,3',
+          message: '다음 아이템을 찾을 수 없습니다.: 1,2,3',
           error: 'Not Found',
         },
       },

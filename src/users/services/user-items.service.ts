@@ -14,51 +14,36 @@ export class UserItemsService {
   constructor(private readonly prisma: PrismaService) {}
 
   //사용자 아이템 목록 조회
-  async getUserItems(userId: number): Promise<ResponseItemDto[]> {
-    try {
-      //1. user_items의 유저의 itemId조회
-      const userItems = await this.prisma.userItem.findMany({
-        where: { userId },
-        include: {
-          item: {
-            select: {
-              id: true,
-              name: true,
-              image: true,
-              price: true,
-              mainCategoryId: true,
-              subCategoryId: true,
-            },
+  async getUserItems(userId: number) {
+    const userItems = await this.prisma.userItem.findMany({
+      where: { userId },
+      include: {
+        item: {
+          include: {
+            mainCategory: true,
+            subCategory: true,
           },
         },
-      });
-
-      if (!userItems.length) {
-        throw new NotFoundException('User items not found');
-      }
-
-      //3. ResponseItemDto 형식으로 변환
-      return userItems.map(
-        (userItem) => new ResponseItemDto(userItem.item, userItem),
-      );
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException('아이템 조회 중 오류 발생');
-    } //500에러
+      },
+    });
+    if (!userItems) {
+      throw new NotFoundException('아이템을 찾을 수 없습니다.');
+    }
+    return userItems.map(
+      (userItem) => new ResponseItemDto(userItem.item, userItem),
+    );
   }
 
   //아이템 구매
-  async buyUserItems(buyUserItemsDto: BuyUserItemsDto): Promise<void> {
-    const { userId, itemIds } = buyUserItemsDto;
+  async buyUserItems(buyUserItemsDto: BuyUserItemsDto, userId: number) {
+    const { itemIds } = buyUserItemsDto;
 
     await this.prisma.$transaction(async (prisma) => {
       //사용자 존재 여부 확인
-      const user = await prisma.user.findUnique({ where: { id: userId } });
-      if (!user) {
-        throw new NotFoundException('User not found');
-      }
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { point: true },
+      });
 
       //아이템 존재 확인
       const items = await prisma.item.findMany({
@@ -72,14 +57,14 @@ export class UserItemsService {
 
       if (notFoundItems.length > 0) {
         throw new NotFoundException(
-          `Items not found: ${notFoundItems.join(',')}`,
+          `다음 아이템을 찾을 수 없습니다. : ${notFoundItems.join(',')}`,
         );
       }
       //총 가격 계산
       const totalPrice = items.reduce((sum, item) => sum + item.price, 0);
 
       if (user.point < totalPrice) {
-        throw new BadRequestException('Insufficient points to buy these items');
+        throw new BadRequestException('포인트가 부족합니다.');
       }
 
       //소유 여부 확인 (중복 아이템 구매 방지)
@@ -98,7 +83,7 @@ export class UserItemsService {
           ) => ownedItemIds.includes(id),
         );
         throw new BadRequestException(
-          `User already owns the following items: ${duplicateItems.join(',')}`,
+          `이미 보유한 아이템입니다.: ${duplicateItems.join(',')}`,
         );
       }
 
@@ -120,11 +105,12 @@ export class UserItemsService {
     });
   }
 
-  //아이템 착용상태 업데이트
+  //아이템 장착/해제
   async updateItemEquipStatus(
     equipUseritemDto: EquipUseritemDto,
+    userId: number,
   ): Promise<void> {
-    const { userId, itemIds, isEquipped } = equipUseritemDto;
+    const { itemIds, isEquipped } = equipUseritemDto;
     //트랜잭션 시작
     await this.prisma.$transaction(async (prisma) => {
       // 1. 장착하려는 아이템들 조회
@@ -245,7 +231,7 @@ export class UserItemsService {
     });
   }
 
-  async unequipAllItems(userId: number): Promise<void> {
+  async resetEquipment(userId: number): Promise<void> {
     // 사용자 존재 여부 확인
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) {

@@ -15,7 +15,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { ApiGetUserItems } from '../swagger-dacorator/get-user-items.decorators';
 import { ApiPostUserItems } from '../swagger-dacorator/post-user-items.decorators';
 import { ApiPatchUserItems } from '../swagger-dacorator/patch-user-items.decorator';
-import { ApiUnequipAllItems } from '../swagger-dacorator/put-user-items.decorators';
+import { ApiResetEquipment } from '../swagger-dacorator/put-user-items.decorators';
 import { User } from 'src/common/decorators/get-user.decorator';
 import { UserInfo } from 'src/users/entities/user.entity';
 import { AuthGuard } from '@nestjs/passport';
@@ -43,8 +43,7 @@ export class UserItemsController {
     @User() user: UserInfo,
     @Body() buyUserItemsDto: BuyUserItemsDto,
   ) {
-    buyUserItemsDto.userId = user.id;
-    return await this.userItemsService.buyUserItems(buyUserItemsDto);
+    return await this.userItemsService.buyUserItems(buyUserItemsDto, user.id);
   }
 
   @Patch()
@@ -55,15 +54,17 @@ export class UserItemsController {
     @User() user: UserInfo,
     @Body() equipUseritemDto: EquipUseritemDto,
   ): Promise<void> {
-    equipUseritemDto.userId = user.id;
-    return await this.userItemsService.updateItemEquipStatus(equipUseritemDto);
+    return await this.userItemsService.updateItemEquipStatus(
+      equipUseritemDto,
+      user.id,
+    );
   }
 
   @Put('reset-equipment')
   @HttpCode(200)
-  @ApiUnequipAllItems()
+  @ApiResetEquipment()
   @UseGuards(AuthGuard('accessToken'))
-  async unequipAllItems(@User() user: UserInfo): Promise<void> {
-    return await this.userItemsService.unequipAllItems(user.id);
+  async resetEquipment(@User() user: UserInfo): Promise<void> {
+    return await this.userItemsService.resetEquipment(user.id);
   }
 }
