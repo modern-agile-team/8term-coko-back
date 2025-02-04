@@ -54,8 +54,8 @@ export class RankingsService {
     const higherRankCount =
       await this.rankingsRepository.getHigherRankCount(filterType);
 
-    const myRanking = higherRankCount + 1;
+    const ranking = higherRankCount + 1;
 
-    return new ResMyRankingDto({ myRanking });
+    return new ResMyRankingDto({ ranking });
   }
 }
