@@ -5,6 +5,7 @@ import {
   HttpCode,
   UseGuards,
   Patch,
+  Body,
 } from '@nestjs/common';
 import { PartProgressService } from './part-progress.service';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
@@ -14,6 +15,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { User } from 'src/common/decorators/get-user.decorator';
 import { UserInfo } from 'src/users/entities/user.entity';
 import { AuthGuard } from '@nestjs/passport';
+import { CreatePartProgressDto } from './dto/create-part-progress.dto';
 
 @ApiTags('parts')
 @Controller('users/me/parts')
@@ -28,17 +30,17 @@ export class PartProgressController {
     return ResPartProgressDto.fromArray(partProgress);
   }
 
-  // @ApiPartProgress.createOrUpdate()
-  // @Patch(':partId/status')
-  // @HttpCode(204)
-  // @UseGuards(AuthGuard('accessToken'))
-  // async createOrUpdate(
-  //   @User() user: UserInfo,
-  //   @Param('partId', PositiveIntPipe) partId: number,
-  //   @Body() body: CreatePartProgressDto,
-  // ): Promise<void> {
-  //   await this.partProgressService.createOrUpdate(user.id, partId, body);
-  // }
+  @ApiPartProgress.createOrUpdate()
+  @Patch(':partId/status')
+  @HttpCode(204)
+  @UseGuards(AuthGuard('accessToken'))
+  async createOrUpdate(
+    @User() user: UserInfo,
+    @Param('partId', PositiveIntPipe) partId: number,
+    @Body() body: CreatePartProgressDto,
+  ): Promise<void> {
+    await this.partProgressService.createOrUpdate(user.id, partId, body);
+  }
 
   @ApiPartProgress.createOrUpdateCompleted()
   @Patch(':partId/status/completed')
