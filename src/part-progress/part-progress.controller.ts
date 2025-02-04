@@ -40,7 +40,7 @@ export class PartProgressController {
   //   await this.partProgressService.createOrUpdate(user.id, partId, body);
   // }
 
-  //@ApiPartProgress.createOrUpdate()
+  @ApiPartProgress.createOrUpdateCompleted()
   @Patch(':partId/status/completed')
   @HttpCode(204)
   @UseGuards(AuthGuard('accessToken'))

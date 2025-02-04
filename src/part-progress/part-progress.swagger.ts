@@ -45,8 +45,9 @@ export const ApiPartProgress = {
     return applyDecorators(
       ApiOperation({
         summary: '유저의 파트상태를 COMPLETED로 변경',
-        description: `같은 색션내 파트들 중에서 다음 order의 파트가 있으면 자동으로
-        STARTED로 변경함`,
+        description: `1. 유저의 파트상태를 COMPLETED로 변경함
+        2. 추가로 같은 색션내 파트들 중에서 다음 order의 파트가 있으면 
+        자동으로 STARTED로 변경함`,
       }),
       ApiResponse({
         status: 204,
