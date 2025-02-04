@@ -55,7 +55,7 @@ export class UserItemsController {
     return await this.userItemsService.updateItemEquipStatus(equipUseritemDto);
   }
 
-  @Put()
+  @Put('reset-equipment')
   @HttpCode(200)
   @ApiUnequipAllItems()
   async unequipAllItems(
