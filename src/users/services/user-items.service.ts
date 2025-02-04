@@ -123,8 +123,9 @@ export class UserItemsService {
   //아이템 착용상태 업데이트
   async updateItemEquipStatus(equipItemDto: EquipItemDto): Promise<void> {
     const { userId, itemIds, isEquipped } = equipItemDto;
+    //트랜잭션 시작
     await this.prisma.$transaction(async (prisma) => {
-      // 장착하려는 아이템 조회
+      // 1. 장착하려는 아이템들 조회
       const userItems = await prisma.userItem.findMany({
         where: {
           userId,
@@ -141,74 +142,103 @@ export class UserItemsService {
       });
 
       if (!userItems || userItems.length === 0) {
-        throw new NotFoundException('User item not found');
+        throw new NotFoundException('아이템을 찾을 수 없습니다.');
       }
 
       if (isEquipped) {
-        // 장착하려는 아이템들의 카테고리 검증
+        // 해제할 아이템 ID들을 저장할 Set
+        const itemsToUnequip = new Set<number>();
+
+        // 2. 장착 요청된 아이템들의 유효성 검사 및 해제할 아이템 찾기
+        const mainCategoryItems = new Map<number, number[]>();
+        const subCategoryItems = new Map<number, number[]>();
+
         for (const userItem of userItems) {
           const { mainCategory, subCategory } = userItem.item;
 
-          //현재 장착된 아이템들 조회
-          const equippedItems = await prisma.userItem.findMany({
-            where: {
-              userId,
-              isEquipped: true,
-              NOT: {
-                itemId: { in: itemIds },
-              },
-              item: {
-                mainCategoryId: mainCategory.id,
-              },
-            },
-            include: {
-              item: {
-                include: {
-                  subCategory: true,
-                },
-              },
-            },
-          });
           if (!subCategory) {
-            //서브카테고리가 없는 경우
-            if (equippedItems.length > 0) {
+            // 서브카테고리가 없는 경우
+            if (!mainCategoryItems.has(mainCategory.id)) {
+              mainCategoryItems.set(mainCategory.id, []);
+            }
+            mainCategoryItems.get(mainCategory.id)!.push(userItem.itemId);
+
+            // 같은 메인 카테고리에서 여러 아이템 선택 검증
+            if (mainCategoryItems.get(mainCategory.id)!.length > 1) {
               throw new BadRequestException(
-                `Can only equip one item from main category: ${mainCategory.name}`,
+                `메인 카테고리 "${mainCategory.name}"에서는 하나의 아이템만 선택 가능합니다.`,
               );
             }
           } else {
             // 서브카테고리가 있는 경우
-            const sameSubCategoryEquipped = equippedItems.find(
-              (equipped) => equipped.item.subCategory?.id === subCategory.id,
-            );
-            if (sameSubCategoryEquipped) {
-              throw new BadRequestException(
-                `Can only equip one item from sub category: ${subCategory.name}`,
-              );
+            if (!subCategoryItems.has(subCategory.id)) {
+              subCategoryItems.set(subCategory.id, []);
             }
+            subCategoryItems.get(subCategory.id)!.push(userItem.itemId);
 
-            // 같은 요청 내에서 동일 서브카테고리 아이템 체크
-            const sameSubCategoryItems = userItems.filter(
-              (item) =>
-                item.itemId !== userItem.itemId &&
-                item.item.subCategory?.id === subCategory.id,
-            );
-            if (sameSubCategoryItems.length > 0) {
+            // 같은 서브 카테고리에서 여러 아이템 선택 검증
+            if (subCategoryItems.get(subCategory.id)!.length > 1) {
               throw new BadRequestException(
-                `Cannot equip items from same sub category at the same time: ${subCategory.name}`,
+                `서브 카테고리 "${subCategory.name}"에서는 하나의 아이템만 선택 가능합니다.`,
               );
             }
           }
         }
+
+        // 3. 현재 장착된 아이템들 조회
+        const equippedItems = await prisma.userItem.findMany({
+          where: {
+            userId, // 해당 유저의
+            isEquipped: true, // 현재 장착된 아이템 중
+            NOT: {
+              itemId: { in: itemIds }, // 현재 요청한 아이템들은 제외시킨다.
+            },
+          },
+          include: {
+            item: {
+              include: {
+                mainCategory: true,
+                subCategory: true,
+              },
+            },
+          },
+        });
+
+        // 4. 해제할 아이템 결정
+        for (const equipped of equippedItems) {
+          const { mainCategory, subCategory } = equipped.item;
+          if (!subCategory) {
+            // 서브카테고리가 없는 경우
+            if (mainCategoryItems.has(mainCategory.id)) {
+              itemsToUnequip.add(equipped.itemId);
+            }
+          } else {
+            // 서브카테고리가 있는 경우
+            if (subCategoryItems.has(subCategory.id)) {
+              itemsToUnequip.add(equipped.itemId);
+            }
+          }
+        }
+
+        // 5. 기존 아이템 해제
+        if (itemsToUnequip.size > 0) {
+          await prisma.userItem.updateMany({
+            where: {
+              userId,
+              itemId: { in: Array.from(itemsToUnequip) },
+            },
+            data: { isEquipped: false },
+          });
+        }
       }
 
-      // 검증 후 장착 상태 업데이트
+      // 6. 새 아이템 장착 또는 해제
       await prisma.userItem.updateMany({
         where: {
           userId,
           itemId: { in: itemIds },
         },
-        data: { isEquipped },
+        data: { isEquipped }, // true: 장착, false: 해제
       });
     });
   }
