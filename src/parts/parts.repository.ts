@@ -39,6 +39,12 @@ export class PartsRepository {
     });
   }
 
+  async findOnePartByOrder(order: number): Promise<Part | null> {
+    return this.prisma.part.findFirst({
+      where: { order },
+    });
+  }
+
   /**
    *
    * @param sectionId - 섹션 아이디 별 파트 개수를 검색
