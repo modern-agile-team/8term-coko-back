@@ -8,6 +8,6 @@ import { PartsModule } from 'src/parts/parts.module';
   imports: [forwardRef(() => PartsModule)],
   controllers: [PartProgressController],
   providers: [PartProgressService, PartProgressRepository],
-  exports: [PartProgressService],
+  exports: [PartProgressService, PartProgressRepository],
 })
 export class PartProgressModule {}

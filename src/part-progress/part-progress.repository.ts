@@ -20,6 +20,22 @@ export class PartProgressRepository {
     });
   }
 
+  async findOneBySectionIdAndOrderByDesc(
+    userId: number,
+    sectionId: number,
+    txOrPrisma: PrismaClientOrTransaction = this.prisma,
+  ) {
+    return txOrPrisma.partProgress.findFirst({
+      where: {
+        userId,
+        part: { sectionId },
+      },
+      orderBy: {
+        part: { order: 'desc' },
+      },
+    });
+  }
+
   async upsertPartStatus(
     userId: number,
     partId: number,

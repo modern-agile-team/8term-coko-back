@@ -15,6 +15,7 @@ import {
   PartStatus,
   PartStatusValues,
 } from 'src/part-progress/entities/part-progress.entity';
+import { PartProgressRepository } from 'src/part-progress/part-progress.repository';
 
 @Injectable()
 export class PartsService {
@@ -22,6 +23,7 @@ export class PartsService {
     private readonly prisma: PrismaService,
     private readonly sectionsService: SectionsService,
     private readonly partsRepository: PartsRepository,
+    private readonly partProgressRepository: PartProgressRepository,
     private readonly quizzesRepository: QuizzesRepository,
   ) {}
   /**
@@ -72,26 +74,51 @@ export class PartsService {
   }
 
   /**
+   * 이 메소드는 모든 유저에게 추가된 파트의 상태가 어떻게 들어가게 될지 정해지는 메소드 입니다.
+   * 1. 비동기, 트랜잭션으로 작동합니다.
+   * 2. 기본적으로 LOCKED로 설정됩니다.
+   * 3. 추가된 파트의 순서가 첫번째일때 STARTED로 설정됩니다,
+   * 4. 유저의 마지막 순서의 파트가 COMPLETED일때 STARTED로 설정됩니다.
+   *
    * 기본적으로 파트 생성시 모든 유저에게 생성된 파트의 진행도를 넣어 줍니다.
    * 지금은 매우 적은 유저가 있을꺼라 생각해서 그냥 다 불러오는데
    * 언젠가 수많은 유저가 생성되면 해당로직을 고쳐야합니다.
    */
-  private async createDefaultPartProgress(order: number) {
-    const users = await this.prisma.user.findMany();
+  private async createDefaultPartProgress(sectionId: number, order: number) {
+    return this.prisma.$transaction(async (tx) => {
+      // 모든 유저 조회
+      const users = await tx.user.findMany();
 
-    return users.map((user) => {
-      let defaultStatus: PartStatus;
+      // 각 유저의 파트 진행 상태 생성
+      return Promise.all(
+        users.map(async (user) => {
+          //기본적으로 잠김
+          let defaultStatus: PartStatus = PartStatusValues.LOCKED;
 
-      if (order === 1) {
-        defaultStatus = PartStatusValues.STARTED;
-      } else {
-        defaultStatus = PartStatusValues.LOCKED;
-      }
+          //마지막 상태 가져옴
+          const lastPartStatus =
+            await this.partProgressRepository.findOneBySectionIdAndOrderByDesc(
+              user.id,
+              sectionId,
+              tx,
+            );
 
-      return {
-        userId: user.id,
-        status: defaultStatus,
-      };
+          //첫번째 파트 일때 열림
+          if (order === 1) {
+            defaultStatus = PartStatusValues.STARTED;
+          }
+
+          //마지막상태가 완료면 열림
+          if (lastPartStatus?.status === PartStatusValues.COMPLETED) {
+            defaultStatus = PartStatusValues.STARTED;
+          }
+
+          return {
+            userId: user.id,
+            status: defaultStatus,
+          };
+        }),
+      );
     });
   }
 
@@ -130,16 +157,28 @@ export class PartsService {
     return parts;
   }
 
+  /**
+   * 새로운 파트를 추가하는 함수
+   * 1. 섹션아이디와 이름을 디비에서 검증해봐야함
+   * 2. 새로운 파트를 추가할때는 유저들에게 이 새로운 파트의 상태가 어떻게 추가 되야할지 고려해야함
+   * @param body
+   * @returns
+   */
   async create(body: CreatePartDto): Promise<Part> {
     const { sectionId, name } = body;
 
+    //섹션아이디 검증
     await this.sectionsService.findOne(sectionId);
 
+    //파트 네이밍 검증
     const part = await this.partsRepository.findOnePartByName(name);
 
     if (part) {
       throw new ConflictException('part의 이름은 유니크 해야합니다.');
     }
+
+    //1. 추가
+    //유저들의 part 상태를 추가하는 함수 실행 -> 리턴은 defaultPartProgress 배열이 나와야함
 
     // 관련 섹션의 순서를 찾아보기
     const maxOrder = await this.partsRepository.aggregateBySectionId(sectionId);
@@ -148,7 +187,10 @@ export class PartsService {
     const newOrder = maxOrder + 1;
 
     // 파트 순서를 보고 모든유저에게 디폴트 진행도 값을 설정
-    const defaultPartProgress = await this.createDefaultPartProgress(newOrder);
+    const defaultPartProgress = await this.createDefaultPartProgress(
+      sectionId,
+      newOrder,
+    );
 
     // 각 값들로 트랜젝션 돌리기
     return this.partsRepository.createPartWithPartProgress(
