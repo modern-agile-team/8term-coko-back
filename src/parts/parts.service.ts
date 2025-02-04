@@ -109,6 +109,27 @@ export class PartsService {
     return this.partsRepository.findAllPart();
   }
 
+  /**
+   * 같은 섹션아이디의 파트들을 가져옴
+   * 만일 중복되는 order가 있으면 에러를 던짐
+   * @param sectionId
+   * @returns
+   */
+  async findAllBySectionId(sectionId: number) {
+    const parts = await this.partsRepository.findAllPartBySectionId(sectionId);
+
+    const orders = parts.map((part) => part.order);
+    const uniqueOrders = new Set(orders);
+
+    if (uniqueOrders.size !== orders.length) {
+      throw new ConflictException(
+        '같은 섹션 내에 중복된 order 값을 가진 파트가 존재합니다.',
+      );
+    }
+
+    return parts;
+  }
+
   async create(body: CreatePartDto): Promise<Part> {
     const { sectionId, name } = body;
 
