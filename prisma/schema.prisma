@@ -71,6 +71,7 @@ model User {
   token                  Token[]
   partProgress           PartProgress[]
   userHp                 UserHp?
+  attendance             Attendance[]
 
   @@map("users")
 }
@@ -188,4 +189,16 @@ model DailyQuest {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("daily_quests")
+}
+
+model Attendance {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  date      DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@map("attendance")
 }
