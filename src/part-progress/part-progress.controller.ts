@@ -1,14 +1,12 @@
 import {
   Controller,
   Get,
-  Body,
   Param,
   HttpCode,
   UseGuards,
   Patch,
 } from '@nestjs/common';
 import { PartProgressService } from './part-progress.service';
-import { CreatePartProgressDto } from './dto/create-part-progress.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { ResPartProgressDto } from './dto/res-part-progress.dto';
 import { ApiPartProgress } from './part-progress.swagger';
@@ -30,15 +28,26 @@ export class PartProgressController {
     return ResPartProgressDto.fromArray(partProgress);
   }
 
-  @ApiPartProgress.createOrUpdate()
-  @Patch(':partId/status')
+  // @ApiPartProgress.createOrUpdate()
+  // @Patch(':partId/status')
+  // @HttpCode(204)
+  // @UseGuards(AuthGuard('accessToken'))
+  // async createOrUpdate(
+  //   @User() user: UserInfo,
+  //   @Param('partId', PositiveIntPipe) partId: number,
+  //   @Body() body: CreatePartProgressDto,
+  // ): Promise<void> {
+  //   await this.partProgressService.createOrUpdate(user.id, partId, body);
+  // }
+
+  //@ApiPartProgress.createOrUpdate()
+  @Patch(':partId/status/completed')
   @HttpCode(204)
   @UseGuards(AuthGuard('accessToken'))
-  async createOrUpdate(
+  async createOrUpdateCompleted(
     @User() user: UserInfo,
     @Param('partId', PositiveIntPipe) partId: number,
-    @Body() body: CreatePartProgressDto,
   ): Promise<void> {
-    await this.partProgressService.createOrUpdate(user.id, partId, body);
+    await this.partProgressService.createOrUpdateCompleted(user.id, partId);
   }
 }
