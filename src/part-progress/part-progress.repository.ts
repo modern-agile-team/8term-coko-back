@@ -14,6 +14,12 @@ export class PartProgressRepository {
     });
   }
 
+  async findOneByKey(userId: number, partId: number): Promise<PartProgress> {
+    return this.prisma.partProgress.findUnique({
+      where: { userId_partId: { userId, partId } },
+    });
+  }
+
   async upsertPartStatus(
     userId: number,
     partId: number,

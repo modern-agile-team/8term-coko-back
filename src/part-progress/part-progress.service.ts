@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePartProgressDto } from './dto/create-part-progress.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PartProgressRepository } from './part-progress.repository';
@@ -28,12 +32,29 @@ export class PartProgressService {
     });
 
     if (!user) {
-      throw new NotFoundException();
+      throw new NotFoundException(`유저아이디 ${id}를 찾을 수 없습니다.`);
     }
 
     return user;
   }
   //
+
+  async findOne(userId: number, partId: number): Promise<PartProgress> {
+    await this.findUserById(userId);
+
+    await this.partsService.findOne(partId);
+
+    const partStatus = await this.partProgressRepository.findOneByKey(
+      userId,
+      partId,
+    );
+
+    if (!partStatus) {
+      throw new NotFoundException('유저의 파트상태가 없습니다.');
+    }
+
+    return partStatus;
+  }
 
   async findAll(userId: number): Promise<PartProgress[]> {
     await this.findUserById(userId);
@@ -46,9 +67,7 @@ export class PartProgressService {
     partId: number,
     body: CreatePartProgressDto,
   ): Promise<PartProgress> {
-    await this.findUserById(userId);
-
-    await this.partsService.findOne(partId);
+    await this.findOne(userId, partId);
 
     return this.partProgressRepository.upsertPartStatus(userId, partId, body);
   }
@@ -64,9 +83,15 @@ export class PartProgressService {
     userId: number,
     partId: number,
   ): Promise<PartProgress> {
-    await this.findUserById(userId);
-
     const part = await this.partsService.findOne(partId);
+
+    const { status } = await this.findOne(userId, partId);
+
+    if (status === PartStatusValues.LOCKED) {
+      throw new BadRequestException(
+        `${status}는 COMPLETED로 변경 할 수 없습니다.`,
+      );
+    }
 
     const sectionParts = await this.partsService.findAllBySectionId(
       part.sectionId,
