@@ -84,7 +84,7 @@ export class PartsService {
    * 지금은 매우 적은 유저가 있을꺼라 생각해서 그냥 다 불러오는데
    * 언젠가 수많은 유저가 생성되면 해당로직을 고쳐야합니다.
    */
-  private async createDefaultPartProgress(sectionId: number, order: number) {
+  private async appendPartStatusForAllUsers(sectionId: number, order: number) {
     return this.prisma.$transaction(async (tx) => {
       // 모든 유저 조회
       const users = await tx.user.findMany();
@@ -93,7 +93,7 @@ export class PartsService {
       return Promise.all(
         users.map(async (user) => {
           //기본적으로 잠김
-          let defaultStatus: PartStatus = PartStatusValues.LOCKED;
+          let newPartStatus: PartStatus = PartStatusValues.LOCKED;
 
           //마지막 상태 가져옴
           const lastPartStatus =
@@ -105,17 +105,17 @@ export class PartsService {
 
           //첫번째 파트 일때 열림
           if (order === 1) {
-            defaultStatus = PartStatusValues.STARTED;
+            newPartStatus = PartStatusValues.STARTED;
           }
 
           //마지막상태가 완료면 열림
           if (lastPartStatus?.status === PartStatusValues.COMPLETED) {
-            defaultStatus = PartStatusValues.STARTED;
+            newPartStatus = PartStatusValues.STARTED;
           }
 
           return {
             userId: user.id,
-            status: defaultStatus,
+            status: newPartStatus,
           };
         }),
       );
@@ -187,7 +187,7 @@ export class PartsService {
     const newOrder = maxOrder + 1;
 
     // 파트 순서를 보고 모든유저에게 디폴트 진행도 값을 설정
-    const defaultPartProgress = await this.createDefaultPartProgress(
+    const AllUsersPartStatus = await this.appendPartStatusForAllUsers(
       sectionId,
       newOrder,
     );
@@ -196,7 +196,7 @@ export class PartsService {
     return this.partsRepository.createPartWithPartProgress(
       body,
       newOrder,
-      defaultPartProgress,
+      AllUsersPartStatus,
     );
   }
 
