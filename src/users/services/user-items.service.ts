@@ -43,7 +43,7 @@ export class UserItemsService {
     const { itemIds } = buyUserItemsDto;
 
     //아이템 존재 확인
-    const items = await prisma.item.findMany({
+    const items = await this.prisma.item.findMany({
       where: { id: { in: itemIds } },
       select: { id: true, price: true }, //필요한 부분(id, price)
     });
