@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
+import { UserPointModule } from './users/modules/user-point.module';
+import { UserExperienceModule } from './users/modules/user-experience.module';
+import { UserItemsModule } from './users/modules/user-items.module';
 import { PrismaModule } from './prisma/prisma.module';
-import { ItemsModule } from './items/items.module';
 import { SectionsModule } from './sections/sections.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
@@ -15,6 +17,11 @@ import { AttendanceModule } from './attendance/attendance.module';
 
 @Module({
   imports: [
+    SectionsModule,
+    PrismaModule,
+    UserItemsModule,
+    UserPointModule,
+    UserExperienceModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -22,7 +29,6 @@ import { AttendanceModule } from './attendance/attendance.module';
     RankingsModule,
     UsersCoreModule,
     SectionsModule,
-    ItemsModule,
     AuthModule,
     AdminModule,
     PaginationModule,
