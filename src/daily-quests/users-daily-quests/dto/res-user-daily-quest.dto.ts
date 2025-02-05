@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { DailyQuest } from 'src/daily-quests/daily-quests.interpace';
 import { ResDailyQuestDto } from 'src/daily-quests/dto/res-daily-quest.dto';
 import { UserDailyQuestWiteQuestInfo } from '../user-daily-quests.interpace';
 
@@ -13,13 +12,13 @@ export class ResUserDailyQuestDto {
   @ApiProperty({ example: 1 })
   readonly dailyQuestId: number;
 
-  @ApiProperty({ example: 1 })
+  @ApiProperty({ example: 0 })
   readonly conditionProgress: number;
 
-  @ApiProperty({ example: 1 })
+  @ApiProperty({ example: false })
   readonly completed: boolean;
 
-  @ApiProperty({ example: 1 })
+  @ApiProperty({ type: [ResDailyQuestDto] })
   readonly dailyQuest: ResDailyQuestDto;
 
   constructor(userDailyQuest: UserDailyQuestWiteQuestInfo) {
