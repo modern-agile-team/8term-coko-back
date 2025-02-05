@@ -32,7 +32,7 @@ export const ApiUserDailyQuest = {
       ApiResponse({
         status: 200,
         description: '진행사항 + 진행중인 일퀘',
-        type: [ResUserDailyQuestDto],
+        type: ResUserDailyQuestDto,
       }),
     );
   },
