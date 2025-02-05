@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Item, UserItem } from '../entities/user-item.entity';
 
 export class ResponseItemDto {
   @ApiProperty({
@@ -50,7 +51,7 @@ export class ResponseItemDto {
   })
   readonly purchasedAt: Date;
 
-  constructor(item: any, userItem?: any) {
+  constructor(item: any, userItem?: UserItem) {
     this.id = item.id;
     this.name = item.name;
     this.price = item.price;
