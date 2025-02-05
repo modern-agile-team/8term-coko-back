@@ -51,7 +51,7 @@ export class ResponseItemDto {
   })
   readonly purchasedAt: Date;
 
-  constructor(item: any, userItem?: UserItem) {
+  constructor(item: Item, userItem?: UserItem) {
     this.id = item.id;
     this.name = item.name;
     this.price = item.price;
