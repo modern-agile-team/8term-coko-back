@@ -5,9 +5,9 @@ export class ResMyRankingDto {
     description: '나의 순위',
     example: 7,
   })
-  readonly myRanking: number;
+  readonly ranking: number;
 
   constructor(resMyRankingDto: ResMyRankingDto) {
-    this.myRanking = resMyRankingDto.myRanking;
+    this.ranking = resMyRankingDto.ranking;
   }
 }
