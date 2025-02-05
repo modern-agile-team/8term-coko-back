@@ -7,6 +7,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/common/decorators/get-user.decorator';
 import { UserInfo } from 'src/users/entities/user.entity';
 import { ResUserDailyQuestDto } from './dto/res-user-daily-quest.dto';
+import { ApiUserDailyQuest } from './users-daily-quest.swagger';
 
 @ApiTags('user-quests')
 @Controller('users/me/quests/daily')
@@ -16,6 +17,7 @@ export class UsersDailyQuestsController {
   ) {}
 
   @Get()
+  @ApiUserDailyQuest.findAll()
   @UseGuards(AuthGuard('accessToken'))
   async findAll(@User() user: UserInfo): Promise<ResUserDailyQuestDto[]> {
     const userDailyQuests = await this.usersDailyQuestsService.findAll(user.id);
@@ -23,6 +25,7 @@ export class UsersDailyQuestsController {
   }
 
   @Patch(':userDailyQuestId')
+  @ApiUserDailyQuest.update()
   @UseGuards(AuthGuard('accessToken'))
   async update(
     @Param('userDailyQuestId', PositiveIntPipe) userDailyQuestId: number,
