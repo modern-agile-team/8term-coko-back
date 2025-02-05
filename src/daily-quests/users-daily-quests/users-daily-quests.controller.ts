@@ -8,7 +8,7 @@ import { User } from 'src/common/decorators/get-user.decorator';
 import { UserInfo } from 'src/users/entities/user.entity';
 import { ResUserDailyQuestDto } from './dto/res-user-daily-quest.dto';
 
-@ApiTags('quests')
+@ApiTags('user-quests')
 @Controller('users/me/quests/daily')
 export class UsersDailyQuestsController {
   constructor(

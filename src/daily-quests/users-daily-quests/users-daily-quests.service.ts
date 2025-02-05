@@ -15,21 +15,24 @@ export class UsersDailyQuestsService {
       await this.usersDailyQuestsRepository.findOneById(userDailyQuestId);
 
     if (!userDailyQuest) {
-      throw new NotFoundException('유저 일일퀘스트가 없습니다.');
+      throw new NotFoundException(
+        `userDailyQuestId: ${userDailyQuestId} 은(는) 없습니다.`,
+      );
     }
 
     return userDailyQuest;
   }
 
   async findAll(userId: number) {
-    const UsersDailyQuests =
+    const usersDailyQuests =
       await this.usersDailyQuestsRepository.findAllByUserId(userId);
 
-    if (UsersDailyQuests.length) {
-      return UsersDailyQuests;
+    if (usersDailyQuests.length) {
+      return usersDailyQuests;
     }
 
-    return this.createRandomUserDailyQuest(userId);
+    const newUsersDailyQuests = await this.createRandomUserDailyQuest(userId);
+    return [newUsersDailyQuests];
   }
 
   async createRandomUserDailyQuest(userId: number) {
