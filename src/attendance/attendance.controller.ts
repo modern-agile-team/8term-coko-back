@@ -1,4 +1,11 @@
-import { Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AttendanceService } from './attendance.service';
 import { ApiAttendance } from './attendance.swagger';
@@ -18,6 +25,7 @@ export class AttendanceController {
    */
   @ApiAttendance.attend()
   @Post()
+  @HttpCode(204)
   @UseGuards(AuthGuard('accessToken'))
   async attend(@User() user: UserInfo): Promise<void> {
     await this.attendanceService.attend(user.id);

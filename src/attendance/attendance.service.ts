@@ -32,7 +32,7 @@ export class AttendanceService {
     );
 
     if (alreadyChecked) {
-      throw new ConflictException();
+      throw new ConflictException('Attendance has already been checked');
     }
 
     await this.attendanceRepository.saveAttendance(userId, today);
