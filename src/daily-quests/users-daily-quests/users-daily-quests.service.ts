@@ -7,6 +7,7 @@ import {
   UserDailyQuest,
   UserDailyQuestWiteQuestInfo,
 } from './user-daily-quests.interpace';
+import { DAILY_RESET } from './const/const';
 
 @Injectable()
 export class UsersDailyQuestsService {
@@ -81,7 +82,7 @@ export class UsersDailyQuestsService {
     return updateByCompleted(false);
   }
 
-  @Cron('0 15 * * *') // UTC 15시 === KST 00시
+  @Cron(DAILY_RESET)
   async deleteAllDailyQuests(): Promise<{ count: number }> {
     return this.usersDailyQuestsRepository.deleteAll();
   }
