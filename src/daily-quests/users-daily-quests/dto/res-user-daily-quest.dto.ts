@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { DailyQuest } from 'src/daily-quests/daily-quests.interpace';
 import { ResDailyQuestDto } from 'src/daily-quests/dto/res-daily-quest.dto';
+import { UserDailyQuestWiteQuestInfo } from '../user-daily-quests.interpace';
 
 export class ResUserDailyQuestDto {
   @ApiProperty({ example: 1 })
@@ -21,7 +22,7 @@ export class ResUserDailyQuestDto {
   @ApiProperty({ example: 1 })
   readonly dailyQuest: ResDailyQuestDto;
 
-  constructor(userDailyQuest) {
+  constructor(userDailyQuest: UserDailyQuestWiteQuestInfo) {
     this.id = userDailyQuest.id;
     this.userId = userDailyQuest.userId;
     this.dailyQuestId = userDailyQuest.dailyQuestId;
@@ -30,7 +31,7 @@ export class ResUserDailyQuestDto {
     this.dailyQuest = new ResDailyQuestDto(userDailyQuest.dailyQuest);
   }
 
-  static fromArray(userDailyQuests) {
+  static fromArray(userDailyQuests: UserDailyQuestWiteQuestInfo[]) {
     return userDailyQuests.map(
       (userDailyQuest) => new ResUserDailyQuestDto(userDailyQuest),
     );

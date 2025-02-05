@@ -1,13 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateUsersDailyQuestDto } from './dto/update-users-daily-quest.dto';
-import { UserDailyQuest } from './user-daily-quests.interpace';
+import {
+  UserDailyQuest,
+  UserDailyQuestWiteQuestInfo,
+} from './user-daily-quests.interpace';
 
 @Injectable()
 export class UsersDailyQuestsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAllByUserId(userId: number): Promise<UserDailyQuest[]> {
+  async findAllByUserId(
+    userId: number,
+  ): Promise<UserDailyQuestWiteQuestInfo[]> {
     return this.prisma.userDailyQuest.findMany({
       where: { userId },
       include: { dailyQuest: true },
@@ -20,7 +25,10 @@ export class UsersDailyQuestsRepository {
     });
   }
 
-  async create(userId: number, dailyQuestId: number): Promise<UserDailyQuest> {
+  async create(
+    userId: number,
+    dailyQuestId: number,
+  ): Promise<UserDailyQuestWiteQuestInfo> {
     return this.prisma.userDailyQuest.create({
       data: { userId, dailyQuestId },
       include: { dailyQuest: true },
@@ -30,7 +38,7 @@ export class UsersDailyQuestsRepository {
   async updateById(
     id: number,
     body: UpdateUsersDailyQuestDto,
-  ): Promise<UserDailyQuest> {
+  ): Promise<UserDailyQuestWiteQuestInfo> {
     return this.prisma.userDailyQuest.update({
       where: { id },
       data: { ...body },

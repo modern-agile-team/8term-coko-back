@@ -3,7 +3,10 @@ import { UpdateUsersDailyQuestDto } from './dto/update-users-daily-quest.dto';
 import { UsersDailyQuestsRepository } from './users-daily-quests.repository';
 import { DailyQuestsRepository } from '../daily-quests.repository';
 import { Cron } from '@nestjs/schedule';
-import { UserDailyQuest } from './user-daily-quests.interpace';
+import {
+  UserDailyQuest,
+  UserDailyQuestWiteQuestInfo,
+} from './user-daily-quests.interpace';
 
 @Injectable()
 export class UsersDailyQuestsService {
@@ -24,7 +27,7 @@ export class UsersDailyQuestsService {
     return userDailyQuest;
   }
 
-  async findAll(userId: number): Promise<UserDailyQuest[]> {
+  async findAll(userId: number): Promise<UserDailyQuestWiteQuestInfo[]> {
     const usersDailyQuests =
       await this.usersDailyQuestsRepository.findAllByUserId(userId);
 
@@ -36,7 +39,9 @@ export class UsersDailyQuestsService {
     return [newUsersDailyQuests];
   }
 
-  async createRandomUserDailyQuest(userId: number): Promise<UserDailyQuest> {
+  async createRandomUserDailyQuest(
+    userId: number,
+  ): Promise<UserDailyQuestWiteQuestInfo> {
     const allQuests = await this.dailyQuestsRepository.findAll();
 
     if (allQuests.length === 0) {
@@ -55,7 +60,7 @@ export class UsersDailyQuestsService {
   async update(
     userDailyQuestId: number,
     body: UpdateUsersDailyQuestDto,
-  ): Promise<UserDailyQuest> {
+  ): Promise<UserDailyQuestWiteQuestInfo> {
     const { conditionProgress } = body;
     const { dailyQuestId } = await this.findOne(userDailyQuestId);
     const dailyQuest = await this.dailyQuestsRepository.findOne(dailyQuestId);

@@ -1,3 +1,5 @@
+import { DailyQuest } from '../daily-quests.interpace';
+
 export interface UserDailyQuest {
   id: number;
   userId: number;
@@ -6,4 +8,8 @@ export interface UserDailyQuest {
   completed: boolean;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface UserDailyQuestWiteQuestInfo extends UserDailyQuest {
+  dailyQuest: DailyQuest;
 }
