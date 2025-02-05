@@ -1,10 +1,16 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { AttendanceRepository } from './attendance.repository';
 import { ResMyMonthlyAttendanceDto } from './dtos/res-monthly-attendance.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { UsersRepository } from 'src/users/repositories/users.reposirory';
 
 @Injectable()
 export class AttendanceService {
-  constructor(private readonly attendanceRepository: AttendanceRepository) {}
+  constructor(
+    private readonly attendanceRepository: AttendanceRepository,
+    private readonly prisma: PrismaService,
+    private readonly usersRepository: UsersRepository,
+  ) {}
 
   /**
    * 출석체크 요청
@@ -35,7 +41,16 @@ export class AttendanceService {
       throw new ConflictException('Attendance has already been checked');
     }
 
-    await this.attendanceRepository.saveAttendance(userId, today);
+    /**
+     * attendance row가 추가되면서 + user의 total_attendance가 증가 해야함
+     */
+    await this.prisma.$transaction(async (tx) => {
+      // attendance row 추가
+      await this.attendanceRepository.saveAttendance(userId, today, tx);
+
+      // user의 total_attendance가 증가
+      await this.usersRepository.increaseUserTotalAttendance(userId, tx);
+    });
   }
 
   /**
