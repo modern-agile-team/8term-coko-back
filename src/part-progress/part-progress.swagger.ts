@@ -7,7 +7,7 @@ export const ApiPartProgress = {
   findAll: () => {
     return applyDecorators(
       ApiOperation({
-        summary: '유저의 전체 문제 풀이 현황 조회',
+        summary: '유저의 파트 status 모두 조회',
       }),
       ApiResponse({
         status: 200,
@@ -38,6 +38,20 @@ export const ApiPartProgress = {
         status: 204,
         description:
           '유저의 part-progress가 성공적으로 생성되었거나 업데이트 됨',
+      }),
+    );
+  },
+  createOrUpdateCompleted: () => {
+    return applyDecorators(
+      ApiOperation({
+        summary: '유저의 파트상태를 COMPLETED로 변경',
+        description: `1. 유저의 파트상태를 COMPLETED로 변경함
+        2. 추가로 같은 색션내 파트들 중에서 다음 order의 파트가 있으면 
+        자동으로 STARTED로 변경함 3. sections API에서 users/me/sections/parts를 보면 편함`,
+      }),
+      ApiResponse({
+        status: 204,
+        description: '유저의 파트 status가 COMPLETED로 변경됨',
       }),
     );
   },

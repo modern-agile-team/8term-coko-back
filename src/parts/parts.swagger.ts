@@ -8,7 +8,7 @@ export const ApiParts = {
   create: () => {
     return applyDecorators(
       ApiOperation({
-        summary: 'section 생성',
+        summary: '생성',
       }),
       ApiBody({
         description: '섹션 생성에 필요한 정보',
@@ -66,7 +66,7 @@ export const ApiParts = {
   findAll: () => {
     return applyDecorators(
       ApiOperation({
-        summary: '문제파트의 종류 전체 조회',
+        summary: '모든 파트 조회',
       }),
       ApiResponse({
         status: 200,
@@ -92,7 +92,8 @@ export const ApiParts = {
   updateAll: () => {
     return applyDecorators(
       ApiOperation({
-        summary: 'part 단일 속성 수정',
+        summary: '이름 또는 섹션id 수정',
+        description: 'patch요청 이지만, 두 옵션 모두 필수로 넣어야함 ',
       }),
       ApiBody({
         description: '파트 생성에 필요한 정보',
@@ -145,7 +146,8 @@ export const ApiParts = {
   updateOrder: () => {
     return applyDecorators(
       ApiOperation({
-        summary: 'part의 순서 변경',
+        summary: '순서 변경',
+        description: '정말 필요하지 않으면 일단은 사용하지 않기... (수정예정)',
       }),
       ApiBody({
         description: '파트 수정에 필요한 order 정보',
@@ -199,7 +201,7 @@ export const ApiParts = {
   remove: () => {
     return applyDecorators(
       ApiOperation({
-        summary: '문제파트 단일 삭제',
+        summary: '삭제',
       }),
       ApiResponse({
         status: 204,
