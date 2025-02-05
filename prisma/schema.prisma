@@ -200,5 +200,5 @@ model Attendance {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, date])
-  @@map("attendance")
+  @@map("attendances")
 }
