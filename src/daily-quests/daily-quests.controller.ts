@@ -18,8 +18,8 @@ import { ResDailyQuestDto } from './dto/res-daily-quest.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiDailyQuest } from './daily-quest.swagger';
 
-@ApiTags('daily-quests')
-@Controller('daily-quests')
+@ApiTags('quests')
+@Controller('quests/daily')
 export class DailyQuestsController {
   constructor(private readonly dailyQuestsService: DailyQuestsService) {}
 
