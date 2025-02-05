@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, Min } from 'class-validator';
+import { IsInt, Max, Min } from 'class-validator';
 
 export class UpdateUsersDailyQuestDto {
   @ApiProperty({
@@ -8,5 +8,6 @@ export class UpdateUsersDailyQuestDto {
   })
   @IsInt()
   @Min(0)
+  @Max(1000)
   readonly conditionProgress: number;
 }
