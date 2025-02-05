@@ -6,6 +6,7 @@ import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/common/decorators/get-user.decorator';
 import { UserInfo } from 'src/users/entities/user.entity';
+import { ResUserDailyQuestDto } from './dto/res-user-daily-quest.dto';
 
 @ApiTags('quests')
 @Controller('users/me/quests/daily')
@@ -17,7 +18,8 @@ export class UsersDailyQuestsController {
   @Get()
   @UseGuards(AuthGuard('accessToken'))
   async findAll(@User() user: UserInfo) {
-    return this.usersDailyQuestsService.findAll(user.id);
+    const userDailyQuests = await this.usersDailyQuestsService.findAll(user.id);
+    return ResUserDailyQuestDto.fromArray(userDailyQuests);
   }
 
   @Patch(':userDailyQuestId')
@@ -26,6 +28,10 @@ export class UsersDailyQuestsController {
     @Param('userDailyQuestId', PositiveIntPipe) userDailyQuestId: number,
     @Body() body: UpdateUsersDailyQuestDto,
   ) {
-    return this.usersDailyQuestsService.update(userDailyQuestId, body);
+    const userDailyQuest = await this.usersDailyQuestsService.update(
+      userDailyQuestId,
+      body,
+    );
+    return new ResUserDailyQuestDto(userDailyQuest);
   }
 }

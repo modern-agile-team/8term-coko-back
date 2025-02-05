@@ -24,10 +24,10 @@ export class UsersDailyQuestsRepository {
     });
   }
 
-  async updateById(id: number, data: UpdateUsersDailyQuestDto) {
+  async updateById(id: number, body: UpdateUsersDailyQuestDto) {
     return this.prisma.userDailyQuest.update({
       where: { id },
-      data,
+      data: { ...body },
     });
   }
 
