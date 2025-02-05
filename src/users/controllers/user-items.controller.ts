@@ -42,8 +42,12 @@ export class UserItemsController {
   async buyUserItems(
     @User() user: UserInfo,
     @Body() buyUserItemsDto: BuyUserItemsDto,
-  ) {
-    return await this.userItemsService.buyUserItems(buyUserItemsDto, user.id);
+  ): Promise<void> {
+    await this.userItemsService.buyUserItems(
+      buyUserItemsDto,
+      user.id,
+      user.point,
+    );
   }
 
   @Patch()

@@ -35,38 +35,36 @@ export class UserItemsService {
   }
 
   //아이템 구매
-  async buyUserItems(buyUserItemsDto: BuyUserItemsDto, userId: number) {
+  async buyUserItems(
+    buyUserItemsDto: BuyUserItemsDto,
+    userId: number,
+    userPoint: number,
+  ): Promise<void> {
     const { itemIds } = buyUserItemsDto;
 
+    //아이템 존재 확인
+    const items = await prisma.item.findMany({
+      where: { id: { in: itemIds } },
+      select: { id: true, price: true }, //필요한 부분(id, price)
+    });
+
+    //존재하지 않는 아이템 ID 찾기
+    const foundItemIds = items.map((item) => item.id);
+    const notFoundItems = itemIds.filter((id) => !foundItemIds.includes(id)); //요청한 id 중 존재하지 않는 아이템 ID 찾기
+
+    if (notFoundItems.length > 0) {
+      throw new NotFoundException(
+        `다음 아이템을 찾을 수 없습니다. : ${notFoundItems.join(',')}`,
+      );
+    }
+    //총 가격 계산
+    const totalPrice = items.reduce((sum, item) => sum + item.price, 0);
+
+    if (userPoint < totalPrice) {
+      throw new BadRequestException('포인트가 부족합니다.');
+    }
+
     await this.prisma.$transaction(async (prisma) => {
-      //사용자 존재 여부 확인
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { point: true },
-      });
-
-      //아이템 존재 확인
-      const items = await prisma.item.findMany({
-        where: { id: { in: itemIds } },
-        select: { id: true, price: true }, //필요한 부분(id, price)
-      });
-
-      //존재하지 않는 아이템 ID 찾기
-      const foundItemIds = items.map((item) => item.id);
-      const notFoundItems = itemIds.filter((id) => !foundItemIds.includes(id)); //요청한 id 중 존재하지 않는 아이템 ID 찾기
-
-      if (notFoundItems.length > 0) {
-        throw new NotFoundException(
-          `다음 아이템을 찾을 수 없습니다. : ${notFoundItems.join(',')}`,
-        );
-      }
-      //총 가격 계산
-      const totalPrice = items.reduce((sum, item) => sum + item.price, 0);
-
-      if (user.point < totalPrice) {
-        throw new BadRequestException('포인트가 부족합니다.');
-      }
-
       //소유 여부 확인 (중복 아이템 구매 방지)
       const existingItems = await prisma.userItem.findMany({
         where: {
