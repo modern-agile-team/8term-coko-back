@@ -6,7 +6,7 @@ import { Cron } from '@nestjs/schedule';
 import {
   UserDailyQuest,
   UserDailyQuestWiteQuestInfo,
-} from './users-daily-quests.interpace';
+} from './users-daily-quests.interface';
 import { DAILY_RESET } from './const/users-daily-quests.const';
 
 @Injectable()

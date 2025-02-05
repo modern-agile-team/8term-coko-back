@@ -1,4 +1,4 @@
-import { DailyQuest } from '../daily-quests.interpace';
+import { DailyQuest } from '../daily-quests.interface';
 
 export interface UserDailyQuest {
   id: number;

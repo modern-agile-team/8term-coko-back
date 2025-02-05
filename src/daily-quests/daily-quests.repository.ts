@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateDailyQuestDto } from './dto/create-daily-quest.dto';
 import { UpdateDailyQuestDto } from './dto/update-daily-quest.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { DailyQuest } from './daily-quests.interpace';
+import { DailyQuest } from './daily-quests.interface';
 
 @Injectable()
 export class DailyQuestsRepository {

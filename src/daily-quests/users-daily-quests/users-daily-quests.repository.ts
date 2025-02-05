@@ -4,7 +4,7 @@ import { UpdateUsersDailyQuestDto } from './dto/update-users-daily-quest.dto';
 import {
   UserDailyQuest,
   UserDailyQuestWiteQuestInfo,
-} from './users-daily-quests.interpace';
+} from './users-daily-quests.interface';
 
 @Injectable()
 export class UsersDailyQuestsRepository {

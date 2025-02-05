@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ResDailyQuestDto } from 'src/daily-quests/dto/res-daily-quest.dto';
-import { UserDailyQuestWiteQuestInfo } from '../users-daily-quests.interpace';
+import { UserDailyQuestWiteQuestInfo } from '../users-daily-quests.interface';
 
 export class ResUserDailyQuestDto {
   @ApiProperty({ example: 1 })
