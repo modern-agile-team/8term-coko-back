@@ -65,7 +65,7 @@ export class UsersDailyQuestsService {
     const { dailyQuestId } = await this.findOne(userDailyQuestId);
     const dailyQuest = await this.dailyQuestsRepository.findOne(dailyQuestId);
 
-    const completedNewBody = (completed: boolean) => {
+    const updateByCompleted = (completed: boolean) => {
       const newBody = { ...body, completed };
 
       return this.usersDailyQuestsRepository.updateById(
@@ -75,10 +75,10 @@ export class UsersDailyQuestsService {
     };
 
     if (dailyQuest.condition <= conditionProgress) {
-      return completedNewBody(true);
+      return updateByCompleted(true);
     }
 
-    return completedNewBody(false);
+    return updateByCompleted(false);
   }
 
   @Cron('0 15 * * *') // UTC 15시 === KST 00시
