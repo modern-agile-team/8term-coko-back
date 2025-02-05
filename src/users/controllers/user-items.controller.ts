@@ -58,7 +58,7 @@ export class UserItemsController {
     @User() user: UserInfo,
     @Body() equipUseritemDto: EquipUseritemDto,
   ): Promise<void> {
-    return await this.userItemsService.updateItemEquipStatus(
+    await this.userItemsService.updateItemEquipStatus(
       equipUseritemDto,
       user.id,
     );
