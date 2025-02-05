@@ -52,9 +52,25 @@ export class UsersDailyQuestsService {
   }
 
   async update(userDailyQuestId: number, body: UpdateUsersDailyQuestDto) {
-    await this.findOne(userDailyQuestId);
+    const { conditionProgress } = body;
+    const { dailyQuestId } = await this.findOne(userDailyQuestId);
+    const dailyQuest = await this.dailyQuestsRepository.findOne(dailyQuestId);
 
-    return this.usersDailyQuestsRepository.updateById(userDailyQuestId, body);
+    if (dailyQuest.condition <= conditionProgress) {
+      const newBody = { ...body, completed: true };
+
+      return this.usersDailyQuestsRepository.updateById(
+        userDailyQuestId,
+        newBody,
+      );
+    }
+
+    const newBody = { ...body, completed: false };
+
+    return this.usersDailyQuestsRepository.updateById(
+      userDailyQuestId,
+      newBody,
+    );
   }
 
   @Cron('0 15 * * *') // UTC 15시 === KST 00시

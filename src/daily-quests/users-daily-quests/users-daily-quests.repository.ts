@@ -9,6 +9,7 @@ export class UsersDailyQuestsRepository {
   async findAllByUserId(userId: number) {
     return this.prisma.userDailyQuest.findMany({
       where: { userId },
+      include: { dailyQuest: true },
     });
   }
 
@@ -21,6 +22,7 @@ export class UsersDailyQuestsRepository {
   async create(userId: number, dailyQuestId: number) {
     return this.prisma.userDailyQuest.create({
       data: { userId, dailyQuestId },
+      include: { dailyQuest: true },
     });
   }
 
@@ -28,6 +30,7 @@ export class UsersDailyQuestsRepository {
     return this.prisma.userDailyQuest.update({
       where: { id },
       data: { ...body },
+      include: { dailyQuest: true },
     });
   }
 
