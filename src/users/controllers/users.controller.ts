@@ -61,7 +61,7 @@ export class UsersController {
 
   @ApiGetAllUsers()
   @Get()
-  //@UseGuards(AuthGuard('adminAccessToken'))
+  @UseGuards(AuthGuard('adminAccessToken'))
   async getAllUsers() {
     return this.usersService.getAllUsers();
   }
