@@ -69,6 +69,6 @@ export class UserItemsController {
   @ApiResetEquipment()
   @UseGuards(AuthGuard('accessToken'))
   async resetEquipment(@User() user: UserInfo): Promise<void> {
-    return await this.userItemsService.resetEquipment(user.id);
+    await this.userItemsService.resetEquipment(user.id);
   }
 }
