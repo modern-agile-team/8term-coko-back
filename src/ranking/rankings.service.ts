@@ -25,8 +25,10 @@ export class RankingsService {
     // 랭킹 정보 정렬 조건
     const orderBy = createOrderBy(sort);
 
+    // 전체 유저 수 조회
     const totalCount = await this.rankingsRepository.getTotalUserCount();
 
+    // 선택한 페이지의 랭킹 정보 탐색
     const contents = await this.rankingsRepository.findSelectedPageRankingsInfo(
       page,
       limit,

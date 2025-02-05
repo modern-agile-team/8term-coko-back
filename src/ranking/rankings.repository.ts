@@ -20,7 +20,13 @@ export class RankingsRepository {
     const results = await this.prisma.user.findMany({
       skip: (page - 1) * limit, // 건너뛸 항목 수 계산
       take: limit, // 가져올 항목 수
-      select: { id: true, name: true, point: true, level: true }, // 가져올 내용
+      select: {
+        id: true,
+        name: true,
+        point: true,
+        level: true,
+        totalAttendance: true,
+      }, // 가져올 내용
       orderBy,
     });
 

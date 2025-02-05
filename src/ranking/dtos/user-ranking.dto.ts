@@ -24,4 +24,10 @@ export class UserRankingDto {
     example: 10,
   })
   level: number;
+
+  @ApiProperty({
+    description: '사용자의 총 출석일',
+    example: 17,
+  })
+  totalAttendance: number;
 }
