@@ -36,7 +36,7 @@ export class UserItemsController {
 
   //user의 아이템 구매
   @Post()
-  @HttpCode(201)
+  @HttpCode(204)
   @ApiPostUserItems()
   @UseGuards(AuthGuard('accessToken'))
   async buyUserItems(
@@ -51,7 +51,7 @@ export class UserItemsController {
   }
 
   @Patch()
-  @HttpCode(200)
+  @HttpCode(204)
   @ApiPatchUserItems()
   @UseGuards(AuthGuard('accessToken'))
   async updateItemEquipStatus(
@@ -65,7 +65,7 @@ export class UserItemsController {
   }
 
   @Put('reset-equipment')
-  @HttpCode(200)
+  @HttpCode(204)
   @ApiResetEquipment()
   @UseGuards(AuthGuard('accessToken'))
   async resetEquipment(@User() user: UserInfo): Promise<void> {
