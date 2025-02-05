@@ -74,7 +74,7 @@ export class AttendanceService {
     month: string,
   ): Promise<ResMyMonthlyAttendanceDto[]> {
     const startDate = new Date(`${year}-${month.padStart(2, '0')}-01`);
-    const endDate = new Date(`${year}-${month.toString().padStart(2, '0')}-31`);
+    const endDate = new Date(`${year}-${month.padStart(2, '0')}-31`);
 
     const monthlyAttendance =
       await this.attendanceRepository.findMonthlyAttendance(
