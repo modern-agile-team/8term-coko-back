@@ -17,7 +17,7 @@ export class UsersDailyQuestsController {
 
   @Get()
   @UseGuards(AuthGuard('accessToken'))
-  async findAll(@User() user: UserInfo) {
+  async findAll(@User() user: UserInfo): Promise<ResUserDailyQuestDto[]> {
     const userDailyQuests = await this.usersDailyQuestsService.findAll(user.id);
     return ResUserDailyQuestDto.fromArray(userDailyQuests);
   }
@@ -27,7 +27,7 @@ export class UsersDailyQuestsController {
   async update(
     @Param('userDailyQuestId', PositiveIntPipe) userDailyQuestId: number,
     @Body() body: UpdateUsersDailyQuestDto,
-  ) {
+  ): Promise<ResUserDailyQuestDto> {
     const userDailyQuest = await this.usersDailyQuestsService.update(
       userDailyQuestId,
       body,
