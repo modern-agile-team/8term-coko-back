@@ -56,23 +56,24 @@ model Section {
 }
 
 model User {
-  id                     Int            @id @default(autoincrement())
-  provider               String         @db.VarChar(20)
-  providerId             String         @unique @map("provider_id")
-  name                   String         @db.VarChar(30)
-  level                  Int            @default(1)
-  experience             Int            @default(0)
-  experienceForNextLevel Int            @default(50) @map("experience_for_next_level")
-  point                  Int            @default(0)
-  totalAttendance        Int            @default(0) @map("total_attendance")
-  createdAt              DateTime       @default(now()) @map("created_at")
-  updatedAt              DateTime       @updatedAt @map("updated_at")
+  id                     Int              @id @default(autoincrement())
+  provider               String           @db.VarChar(20)
+  providerId             String           @unique @map("provider_id")
+  name                   String           @db.VarChar(30)
+  level                  Int              @default(1)
+  experience             Int              @default(0)
+  experienceForNextLevel Int              @default(50) @map("experience_for_next_level")
+  point                  Int              @default(0)
+  totalAttendance        Int              @default(0) @map("total_attendance")
+  createdAt              DateTime         @default(now()) @map("created_at")
+  updatedAt              DateTime         @updatedAt @map("updated_at")
   Progress               Progress[]
   userItems              UserItem[]
   token                  Token[]
   partProgress           PartProgress[]
   userHp                 UserHp?
   attendance             Attendance[]
+  UserDailyQuest         UserDailyQuest[]
 
   @@map("users")
 }
@@ -200,14 +201,15 @@ model AdminUser {
 }
 
 model DailyQuest {
-  id        Int      @id @default(autoincrement())
-  title     String   @db.VarChar(50)
-  content   String   @db.VarChar(255)
-  point     Int
-  exp       Int
-  condition Int
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id             Int              @id @default(autoincrement())
+  title          String           @db.VarChar(50)
+  content        String           @db.VarChar(255)
+  point          Int
+  exp            Int
+  condition      Int
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+  UserDailyQuest UserDailyQuest[]
 
   @@map("daily_quests")
 }
@@ -222,4 +224,21 @@ model Attendance {
 
   @@unique([userId, date])
   @@map("attendances")
+}
+
+model UserDailyQuest {
+  id                Int      @id @default(autoincrement())
+  userId            Int      @map("user_id")
+  dailyQuestId      Int      @map("daily_quest_id")
+  conditionProgress Int      @default(0) @map("condition_progress")
+  completed         Boolean  @default(false)
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dailyQuest DailyQuest @relation(fields: [dailyQuestId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, dailyQuestId])
+  @@index([dailyQuestId])
+  @@map("user_daily_quests")
 }

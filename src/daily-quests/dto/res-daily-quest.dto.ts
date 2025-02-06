@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { DailyQuest } from '../daily-quests.interpace';
+import { DailyQuest } from '../daily-quests.interface';
 
 export class ResDailyQuestDto {
   @ApiProperty({ example: 1 })

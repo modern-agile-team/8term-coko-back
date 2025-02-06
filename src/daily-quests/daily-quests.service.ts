@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDailyQuestDto } from './dto/create-daily-quest.dto';
 import { UpdateDailyQuestDto } from './dto/update-daily-quest.dto';
 import { DailyQuestsRepository } from './daily-quests.repository';
-import { DailyQuest } from './daily-quests.interpace';
+import { DailyQuest } from './daily-quests.interface';
 
 @Injectable()
 export class DailyQuestsService {
