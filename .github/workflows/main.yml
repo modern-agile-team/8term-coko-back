@@ -37,7 +37,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_TOKEN_DG1418 }}
+          password: ${{ secrets.GHCR_TOCKEN_HEENA }}
 
       # Build 및 push
       - name: Build and push
@@ -60,7 +60,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_TOKEN_DG1418 }}
+          password: ${{ secrets.GHCR_TOCKEN_HEENA }}
 
       # 앱 이미지 이름 업데이트
       - name: Update DOCKER_IMAGE in .env file
