@@ -1,7 +1,6 @@
-import { IsEnum, IsInt, Min } from 'class-validator';
+import { IsInt, Min } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { Sort, SortValues } from '../entities/ranking.entity';
 import { PaginationDefaults } from 'src/common/constants/rankings-constants';
 import { RankingSortDto } from './ranking-sort.dto';
 

@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaClientOrTransaction } from 'src/prisma/prisma.type';
+import { ATTENDANCE_INCREASE_VALUE } from '../constants/user-attendance.constant';
 
 @Injectable()
 export class UsersRepository {
@@ -10,5 +12,15 @@ export class UsersRepository {
       where: { id: userId },
     });
     return userInfo;
+  }
+
+  async increaseUserTotalAttendance(
+    userId: number,
+    txOrPrisma: PrismaClientOrTransaction = this.prisma,
+  ) {
+    await txOrPrisma.user.update({
+      where: { id: userId },
+      data: { totalAttendance: { increment: ATTENDANCE_INCREASE_VALUE } },
+    });
   }
 }

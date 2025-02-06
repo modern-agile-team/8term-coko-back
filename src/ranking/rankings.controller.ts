@@ -1,7 +1,4 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { User } from 'src/common/decorators/get-user.decorator';
-import { UserInfo } from 'src/users/entities/user.entity';
 import { RankingsService } from './rankings.service';
 import { ApiRankings } from './ranking.swagger';
 import { RankingQueryDto } from './dtos/ranking-query.dto';
