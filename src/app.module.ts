@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
+import { ItemsModule } from './items/items.module';
 import { UserPointModule } from './users/modules/user-point.module';
 import { UserExperienceModule } from './users/modules/user-experience.module';
 import { UserItemsModule } from './users/modules/user-items.module';
@@ -17,6 +18,7 @@ import { AttendanceModule } from './attendance/attendance.module';
 
 @Module({
   imports: [
+    ItemsModule,
     SectionsModule,
     PrismaModule,
     UserItemsModule,
