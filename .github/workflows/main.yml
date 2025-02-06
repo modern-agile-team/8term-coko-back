@@ -31,7 +31,6 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ env.VERSION }}
           restore-keys: |
             ${{ runner.os }}-buildx-
-
       # GitHub 컨테이너 레지스트리에 로그인 후 빌드 & 푸시
       - name: Login to ghcr
         uses: docker/login-action@v2
@@ -71,7 +70,6 @@ jobs:
           else
             echo "IMAGE_NAME=${{ env.DOCKER_IMAGE }}:latest" >> /home/ubuntu/.env
           fi
-
       # Docker Compose를 사용한 서비스 배포
       - name: Docker run
         run: |
