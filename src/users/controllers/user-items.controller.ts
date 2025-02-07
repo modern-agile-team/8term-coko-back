@@ -31,6 +31,8 @@ export class UserItemsController {
   @ApiGetUserItems()
   @UseGuards(AuthGuard('accessToken'))
   getUserItems(@User() user: UserInfo) {
+    console.log(1);
+
     return this.userItemsService.getUserItems(user.id);
   }
 
