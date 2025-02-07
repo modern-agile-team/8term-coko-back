@@ -40,7 +40,7 @@ jobs:
             echo "TOKEN=${{ secrets.GHCR_TOKEN }}" >> $GITHUB_OUTPUT
           elif [ "${{ github.actor }}" = "dg1418" ]; then
             echo "TOKEN=${{ secrets.GHCR_TOKEN_DG1418 }}" >> $GITHUB_OUTPUT
-          elif [ "${{ github.actor }}" = "JeonHeena" ]; then
+          elif [ "${{ github.actor }}" = "jeonheena" ]; then
             echo "TOKEN=${{ secrets.GHCR_TOCKEN_HEENA }}" >> $GITHUB_OUTPUT
           fi
 
@@ -75,7 +75,7 @@ jobs:
             echo "TOKEN=${{ secrets.GHCR_TOKEN }}" >> $GITHUB_OUTPUT
           elif [ "${{ github.actor }}" = "dg1418" ]; then
             echo "TOKEN=${{ secrets.GHCR_TOKEN_DG1418 }}" >> $GITHUB_OUTPUT
-          elif [ "${{ github.actor }}" = "JeonHeena" ]; then
+          elif [ "${{ github.actor }}" = "jeonheena" ]; then
             echo "TOKEN=${{ secrets.GHCR_TOCKEN_HEENA }}" >> $GITHUB_OUTPUT
           fi
 
