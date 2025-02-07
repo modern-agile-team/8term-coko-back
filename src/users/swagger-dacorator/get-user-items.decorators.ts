@@ -1,9 +1,10 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ResponseItemDto } from '../dtos/response-item.dto';
 
 export function ApiGetUserItems() {
   return applyDecorators(
+    ApiCookieAuth('access-token'),
     ApiOperation({
       summary: '사용자 아이템 목록 조회',
       description:
