@@ -1,6 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { EquipItemDto, UnequipItemDto } from './dto/item-changeStatus.dto';
 
 export const ApiItems = {
   getAllItems: () => {
@@ -21,36 +20,6 @@ export const ApiItems = {
               image: '2',
               createdAt: '2024-11-05T10:30:15.000Z',
               updatedAt: '2024-11-05T10:40:15.000Z',
-            },
-          },
-        },
-      }),
-    );
-  },
-
-  unequipItem: () => {
-    return applyDecorators(
-      ApiOperation({
-        summary: '특정 user가 특정 item 해제',
-        description: '특정 user가 장착한 item을 해제한다',
-      }),
-      ApiBody({
-        description: 'userId와 itemId를 포함한 요청 바디',
-        type: UnequipItemDto,
-      }),
-      ApiResponse({
-        status: 204,
-        description: 'item 해제 성공',
-      }),
-      ApiResponse({
-        status: 400,
-        description: '유효하지 않은 요청 값 (userId 또는 itemId 오류)',
-        content: {
-          JSON: {
-            example: {
-              statusCode: 400,
-              message: 'Invalid userId or itemId provided',
-              error: 'Bad request',
             },
           },
         },

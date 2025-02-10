@@ -20,7 +20,3 @@ export class ItemChangeStatusDto {
   @Min(1)
   itemId: number;
 }
-
-export class EquipItemDto extends ItemChangeStatusDto {}
-export class UnequipItemDto extends ItemChangeStatusDto {}
-export class BuyItemDto extends ItemChangeStatusDto {}
