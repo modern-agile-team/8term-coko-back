@@ -15,39 +15,6 @@ export class ItemsService {
     return this.prisma.item.findMany(); // findMany() : 모든 아이템(항목) 조회
   }
 
-  //아이템 구매 buyItem
-  async buyItem(buyItemDto: ItemChangeStatusDto): Promise<void> {
-    const { userId, itemId } = buyItemDto;
-
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw new BadRequestException('User not found');
-    }
-
-    const item = await this.prisma.item.findUnique({ where: { id: itemId } });
-    if (!item) {
-      throw new BadRequestException('Item not found');
-    }
-
-    //유저 아이템 유무 확인
-    const existingItem = await this.prisma.userItem.findUnique({
-      where: {
-        userId_itemId: { userId, itemId },
-      },
-    });
-
-    if (existingItem) {
-      throw new BadRequestException('User already owns this item.');
-    }
-
-    await this.prisma.userItem.create({
-      data: {
-        userId,
-        itemId,
-      },
-    });
-  }
-
   //특정 사용자 아이템 목록 조회 getUserItems
   getUserItems(userId: number) {
     return this.prisma.userItem.findMany({

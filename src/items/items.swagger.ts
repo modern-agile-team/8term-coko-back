@@ -1,10 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
-import {
-  BuyItemDto,
-  EquipItemDto,
-  UnequipItemDto,
-} from './dto/item-changeStatus.dto';
+import { EquipItemDto, UnequipItemDto } from './dto/item-changeStatus.dto';
 
 export const ApiItems = {
   getAllItems: () => {
@@ -25,65 +21,6 @@ export const ApiItems = {
               image: '2',
               createdAt: '2024-11-05T10:30:15.000Z',
               updatedAt: '2024-11-05T10:40:15.000Z',
-            },
-          },
-        },
-      }),
-    );
-  },
-  buyItem: () => {
-    return applyDecorators(
-      ApiOperation({
-        summary: '특정 user의 특정 item 구매하기',
-        description: '특정 user가 특정 item을 구매합니다.',
-      }),
-      ApiBody({
-        description: 'userId와 itemId를 포함한 요청 바디',
-        type: BuyItemDto,
-      }),
-      ApiResponse({
-        status: 204,
-        description: 'user가 item을 성공적으로 구매함',
-      }),
-      ApiResponse({
-        status: 400,
-        description: '유효하지 않은 요청 값 (userId 또는 itemId 오류)',
-        content: {
-          JSON: {
-            example: {
-              statusCode: 400,
-              message: 'Invalid userId or itemId provided',
-              error: 'Bad request',
-            },
-          },
-        },
-      }),
-    );
-  },
-
-  equipItem: () => {
-    return applyDecorators(
-      ApiOperation({
-        summary: '특정 user가 특정 item 장착',
-        description: '특정 user가 소유한 item을 장착',
-      }),
-      ApiBody({
-        description: 'userId와 itemId를 포함한 요청 바디',
-        type: EquipItemDto,
-      }),
-      ApiResponse({
-        status: 204,
-        description: 'item 장착 성공',
-      }),
-      ApiResponse({
-        status: 400,
-        description: '유효하지 않은 요청 값 (userId 또는 itemId 오류)',
-        content: {
-          JSON: {
-            example: {
-              statusCode: 400,
-              message: 'Invalid userId or itemId provided',
-              error: 'Bad request',
             },
           },
         },
