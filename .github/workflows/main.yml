@@ -31,13 +31,26 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ env.VERSION }}
           restore-keys: |
             ${{ runner.os }}-buildx-
-      # GitHub 컨테이너 레지스트리에 로그인 후 빌드 & 푸시
+
+      # 조건에 맞게 토큰 값을 설정하는 스텝
+      - name: Set ghcr token
+        id: set-token
+        run: |
+          if [ "${{ github.actor }}" = "gwgw123" ]; then
+            echo "TOKEN=${{ secrets.GHCR_TOKEN }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.actor }}" = "dg1418" ]; then
+            echo "TOKEN=${{ secrets.GHCR_TOKEN_DG1418 }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.actor }}" = "jeonheena" ]; then
+            echo "TOKEN=${{ secrets.GHCR_TOCKEN_HEENA }}" >> $GITHUB_OUTPUT
+          fi
+
+      # GitHub Container Registry 로그인
       - name: Login to ghcr
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_TOKEN_DG1418 }}
+          password: ${{ steps.set-token.outputs.TOKEN }}
 
       # Build 및 push
       - name: Build and push
@@ -54,13 +67,25 @@ jobs:
     name: Deploy
     runs-on: [self-hosted, label-go] # AWS ./configure에서 사용할 label명
     steps:
-      # GHCR 로그인
+      # 조건에 맞게 토큰 값을 설정하는 스텝
+      - name: Set ghcr token
+        id: set-token
+        run: |
+          if [ "${{ github.actor }}" = "gwgw123" ]; then
+            echo "TOKEN=${{ secrets.GHCR_TOKEN }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.actor }}" = "dg1418" ]; then
+            echo "TOKEN=${{ secrets.GHCR_TOKEN_DG1418 }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.actor }}" = "jeonheena" ]; then
+            echo "TOKEN=${{ secrets.GHCR_TOCKEN_HEENA }}" >> $GITHUB_OUTPUT
+          fi
+
+      # GitHub Container Registry 로그인
       - name: Login to ghcr
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_TOKEN_DG1418 }}
+          password: ${{ steps.set-token.outputs.TOKEN }}
 
       # 앱 이미지 이름 업데이트
       - name: Update DOCKER_IMAGE in .env file
