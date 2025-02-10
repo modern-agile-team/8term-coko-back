@@ -14,7 +14,7 @@ import { CookieService } from './services/cookie.service';
 import { TokenService } from './services/token.service';
 import { RedisService } from './redis/redis.service';
 import { ConfigService } from '@nestjs/config';
-import { socialUserInfoDto } from './dtos/social-user-info.dto';
+import { SocialUserInfoDto } from './dtos/social-user-info.dto';
 import { UserInfo } from 'src/users/entities/user.entity';
 import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { ApiAuth } from './auth-swagger';
@@ -43,7 +43,7 @@ export class AuthController {
   @HttpCode(302)
   @UseGuards(AuthGuard('google'))
   async googleLogin(
-    @User() user: socialUserInfoDto,
+    @User() user: SocialUserInfoDto,
     @Res({ passthrough: true }) res: Response,
   ) {
     const { accessToken, refreshToken } =
@@ -67,7 +67,7 @@ export class AuthController {
   @HttpCode(302)
   @UseGuards(AuthGuard('kakao'))
   async kakaoLogin(
-    @User() user: socialUserInfoDto,
+    @User() user: SocialUserInfoDto,
     @Res({ passthrough: true }) res: Response,
   ) {
     const { accessToken, refreshToken } =

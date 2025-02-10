@@ -4,7 +4,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-kakao';
 import { plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
-import { socialUserInfoDto } from '../dtos/social-user-info.dto';
+import { SocialUserInfoDto } from '../dtos/social-user-info.dto';
 
 @Injectable()
 export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
@@ -37,7 +37,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     };
 
     // user로 들어간 데이터를 dto 객체에 맞게 변경시켜줌
-    const kakaoUser = plainToInstance(socialUserInfoDto, user);
+    const kakaoUser = plainToInstance(SocialUserInfoDto, user);
     // dto에 지정한 타입을 만족하는지 검사 ( 메모리에 메타데이터로 dto 정보가 저장되어 있음 )
     const errors = validateSync(kakaoUser);
 
