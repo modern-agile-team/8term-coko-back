@@ -14,6 +14,7 @@ import {
 } from './jwt/jwt.startegy';
 import { UsersCoreModule } from 'src/users/modules/users-core.module';
 import { KakaoStrategy } from './kakao/kakao.startegy';
+import { GithubStrategy } from './github/github.strategy';
 
 @Module({
   imports: [PassportModule, JwtModule, RedisModule, UsersCoreModule],
@@ -21,8 +22,9 @@ import { KakaoStrategy } from './kakao/kakao.startegy';
     AuthService,
     TokenService,
     CookieService,
-    KakaoStrategy,
     GoogleStrategy,
+    KakaoStrategy,
+    GithubStrategy,
     AccessTokenStrategy,
     RefreshTokenStrategy,
     AdminAccessTokenStrategy,

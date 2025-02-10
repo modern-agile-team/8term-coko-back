@@ -31,7 +31,9 @@ export class AuthController {
     private readonly redisService: RedisService,
   ) {}
 
-  // Google 로그인 시작
+  /**
+   * Google 로그인
+   */
   @Get('google')
   @ApiExcludeEndpoint()
   @UseGuards(AuthGuard('google'))
@@ -55,7 +57,9 @@ export class AuthController {
     res.redirect(this.configService.get<string>('CLIENT_MAIN_PAGE_URL'));
   }
 
-  // 카카오 로그인 시작
+  /**
+   * Kakao 로그인
+   */
   @Get('kakao')
   @ApiExcludeEndpoint()
   @UseGuards(AuthGuard('kakao'))
@@ -67,6 +71,32 @@ export class AuthController {
   @HttpCode(302)
   @UseGuards(AuthGuard('kakao'))
   async kakaoLogin(
+    @User() user: SocialUserInfoDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { accessToken, refreshToken } =
+      await this.authService.googleLogin(user);
+
+    await this.cookieService.cookieResponse(res, accessToken, refreshToken);
+
+    // 메인페이지로 리다이렉트
+    res.redirect(this.configService.get<string>('CLIENT_MAIN_PAGE_URL'));
+  }
+
+  /**
+   * Github 로그인
+   */
+  @Get('github')
+  @ApiExcludeEndpoint()
+  @UseGuards(AuthGuard('github'))
+  Github() {}
+
+  // Google 로그인 콜백 처리
+  @Get('github/callback')
+  @ApiExcludeEndpoint()
+  @HttpCode(302)
+  @UseGuards(AuthGuard('github'))
+  async githubLogin(
     @User() user: SocialUserInfoDto,
     @Res({ passthrough: true }) res: Response,
   ) {
