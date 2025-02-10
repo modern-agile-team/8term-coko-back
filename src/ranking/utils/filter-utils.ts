@@ -35,7 +35,7 @@ export function createFilterType(sort: string, user: any): object {
     };
   }
 
-  if (sort === 'attendance') {
+  if (sort === 'totalAttendance') {
     return {
       OR: [
         { totalAttendance: { gt: user.totalAttendance } },
