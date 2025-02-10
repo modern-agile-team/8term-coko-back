@@ -18,7 +18,13 @@ export class AuthService {
   async googleLogin(
     user: CreateUserDto,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    const { provider, providerId, name, socialAccessToken } = user;
+    const {
+      provider,
+      providerId,
+      name,
+      socialAccessToken,
+      socialRefreshToken,
+    } = user;
 
     // #1 유저생성(유저 hp 생성 및 유저 part 생성) → #2 소셜토큰 저장
     const userInfo = await this.prisma.$transaction(async (tx) => {
@@ -31,7 +37,12 @@ export class AuthService {
       );
 
       // #2 소셜 토큰 저장
-      await this.saveSocialToken(socialAccessToken, userInfo.id, tx);
+      await this.saveSocialToken(
+        socialAccessToken,
+        socialRefreshToken,
+        userInfo.id,
+        tx,
+      );
 
       return userInfo;
     });
@@ -74,13 +85,14 @@ export class AuthService {
   // 소셜 토큰 저장
   private saveSocialToken(
     socialAccessToken: string,
+    socialRefreshToken: string,
     userId: number,
     txOrPrisma: PrismaClientOrTransaction = this.prisma,
   ) {
     return txOrPrisma.token.upsert({
       where: { userId },
-      create: { socialAccessToken, userId },
-      update: { socialAccessToken },
+      create: { socialAccessToken, socialRefreshToken, userId },
+      update: { socialAccessToken, socialRefreshToken },
     });
   }
 }

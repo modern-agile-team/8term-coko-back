@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback } from 'passport-google-oauth20';
-import { GoogleUserDto } from './google-user.dto';
+import { socialUserInfoDto } from '../dtos/social-user-info.dto';
 import { plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
 
@@ -25,7 +25,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   ): Promise<void> {
     const { displayName, provider, id } = profile;
 
-    const user: GoogleUserDto = {
+    const user: socialUserInfoDto = {
       name: displayName,
       socialAccessToken: accessToken,
       socialRefreshToken: refreshToken || null,
@@ -33,13 +33,15 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       providerId: id,
     };
 
-    const googleUserDto = plainToInstance(GoogleUserDto, user);
-    const errors = validateSync(googleUserDto);
+    // user로 들어간 데이터를 dto 객체에 맞게 변경시켜줌
+    const googleUser = plainToInstance(socialUserInfoDto, user);
+    // dto에 지정한 타입을 만족하는지 검사
+    const errors = validateSync(googleUser);
 
     if (errors.length > 0) {
       return done(new BadRequestException(errors), null);
     }
 
-    done(null, googleUserDto);
+    done(null, googleUser);
   }
 }
