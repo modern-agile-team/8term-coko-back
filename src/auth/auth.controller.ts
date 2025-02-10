@@ -55,6 +55,7 @@ export class AuthController {
     res.redirect(this.configService.get<string>('CLIENT_MAIN_PAGE_URL'));
   }
 
+  // 카카오 로그인 시작
   @Get('kakao')
   @ApiExcludeEndpoint()
   @UseGuards(AuthGuard('kakao'))

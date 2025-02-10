@@ -6,10 +6,6 @@ import { plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
 import { socialUserInfoDto } from '../dtos/social-user-info.dto';
 
-interface VerifyCallback {
-  (error: any, user?: any, info?: any): void;
-}
-
 @Injectable()
 export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
   constructor(private readonly configService: ConfigService) {
@@ -25,7 +21,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     accessToken: string,
     refreshToken: string,
     profile: any,
-    done: VerifyCallback,
+    done: (error: any, user?: any, info?: any) => void,
   ): Promise<void> {
     const { username, provider, id } = profile;
 
