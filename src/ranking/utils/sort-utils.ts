@@ -12,7 +12,7 @@ export function createOrderBy(sort: string): object[] {
     return [{ level: 'desc' }, { experience: 'desc' }];
   }
 
-  if (sort === 'attendance') {
+  if (sort === 'totalAttendance') {
     return [
       { totalAttendance: 'desc' },
       { level: 'desc' },
