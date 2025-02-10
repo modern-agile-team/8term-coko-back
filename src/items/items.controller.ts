@@ -12,6 +12,6 @@ export class ItemsController {
   @Get()
   @ApiItems.getAllItems()
   async getAllItems() {
-    return await this.itemsService.getAllItems(); //service에서 아이템 목록을 받아서, 반환(return)
+    return await this.itemsService.getAllItems();
   }
 }

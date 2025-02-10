@@ -14,7 +14,7 @@ export const ApiItems = {
         content: {
           JSON: {
             example: {
-              id: 2,
+              id: 1,
               name: 'blue-hat',
               cost: 2000,
               image: '2',
