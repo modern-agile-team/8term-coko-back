@@ -9,24 +9,4 @@ export class ItemsService {
   getAllItems() {
     return this.prisma.item.findMany(); // findMany() : 모든 아이템(항목) 조회
   }
-
-  //특정 사용자의 특정 아이템 삭제
-  async deleteUserItem(userId: number, itemId: number): Promise<void> {
-    const userItem = await this.prisma.userItem.findUnique({
-      where: {
-        userId_itemId: {
-          userId,
-          itemId,
-        },
-      },
-    });
-
-    if (!userItem) {
-      throw new NotFoundException('Item not found for this user');
-    }
-
-    await this.prisma.userItem.delete({
-      where: { id: userItem.id },
-    });
-  }
 }
