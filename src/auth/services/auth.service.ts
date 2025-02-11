@@ -15,6 +15,11 @@ export class AuthService {
     private readonly redisService: RedisService,
   ) {}
 
+  /**
+   * 소셜 로그인
+   * @param user
+   * @returns
+   */
   async socialLogin(
     user: CreateUserDto,
   ): Promise<{ accessToken: string; refreshToken: string }> {
@@ -59,7 +64,7 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  // 조회한 유저정보가 없다면 생성하느 메서드
+  // 조회한 유저정보가 없다면 생성하는 메서드
   private async findOrCreateUser(
     provider: string,
     providerId: string,
