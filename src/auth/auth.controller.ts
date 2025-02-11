@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   HttpCode,
   Post,
@@ -19,6 +20,7 @@ import { UserInfo } from 'src/users/entities/user.entity';
 import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { ApiAuth } from './auth-swagger';
 import { ResponseUserDto } from 'src/users/dtos/response-user.dto';
+import { UsersService } from 'src/users/services/users.service';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -29,6 +31,7 @@ export class AuthController {
     private readonly cookieService: CookieService,
     private readonly tokenService: TokenService,
     private readonly redisService: RedisService,
+    private readonly usersService: UsersService,
   ) {}
 
   /**
@@ -144,5 +147,25 @@ export class AuthController {
   ) {
     await this.redisService.del(String(user.id));
     await this.cookieService.deleteCookie(res);
+  }
+
+  // 회원탈퇴
+  @Delete('me')
+  @HttpCode(204)
+  @UseGuards(AuthGuard('accessToken'))
+  async deleteUser(
+    @User() user: UserInfo,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    await this.usersService.deleteUser(user.id, res);
+    await this.redisService.del(String(user.id));
+    await this.cookieService.deleteCookie(res);
+
+    // 병렬 처리 방식
+    // Promise.all([
+    //   await this.usersService.deleteUser(user.id, res),
+    //   await this.redisService.del(String(user.id)),
+    //   await this.cookieService.deleteCookie(res),
+    // ]);
   }
 }

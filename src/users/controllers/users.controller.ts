@@ -6,9 +6,11 @@ import {
   Get,
   Param,
   Patch,
+  Res,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { UsersService } from '../services/users.service';
 import { ResponseUserDto } from '../dtos/response-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
@@ -48,9 +50,11 @@ export class UsersController {
   @ApiDeleteUser()
   @Delete('me')
   @UseGuards(AuthGuard('accessToken'))
-  async deleteMe(@User() user: UserInfo) {
-    await this.usersService.deleteUser(user.id);
-    return { statusCode: 204, message: 'No Content' };
+  async deleteMe(
+    @User() user: UserInfo,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    await this.usersService.deleteUser(user.id, res);
   }
 
   @Get('me/token')
@@ -73,11 +77,11 @@ export class UsersController {
     return this.usersService.getUser(userId);
   }
 
-  @ApiDeleteUser()
-  @Delete(':userId')
-  @UseGuards(AuthGuard('adminAccessToken'))
-  async deleteUser(@Param('userId', PositiveIntPipe) userId: number) {
-    await this.usersService.deleteUser(userId);
-    return { statusCode: 204, message: 'No Content' };
-  }
+  // @ApiDeleteUser()
+  // @Delete(':userId')
+  // @UseGuards(AuthGuard('adminAccessToken'))
+  // async deleteUser(@Param('userId', PositiveIntPipe) userId: number) {
+  //   await this.usersService.deleteUser(userId);
+  //   return { statusCode: 204, message: 'No Content' };
+  // }
 }

@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Response } from 'express';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ResponseUserDto } from '../dtos/response-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
@@ -8,10 +9,17 @@ import {
 } from 'src/part-progress/entities/part-progress.entity';
 import { Part } from 'src/parts/entities/part.entity';
 import { PrismaClientOrTransaction } from 'src/prisma/prisma.type';
+import { UsersRepository } from '../repositories/users.reposirory';
+import { TokenService } from 'src/auth/services/token.service';
+import { RedisService } from 'src/auth/redis/redis.service';
+import { CookieService } from 'src/auth/services/cookie.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly usersRepository: UsersRepository,
+  ) {}
 
   private async createDefaultPartProgress(txOrPrisma: any = this.prisma) {
     const parts = await txOrPrisma.part.findMany();
@@ -64,38 +72,37 @@ export class UsersService {
     return userResponse;
   }
 
-  async getUser(id: number): Promise<ResponseUserDto> {
-    const userResponse = await this.prisma.user.findUnique({ where: { id } });
+  async getUser(userId: number): Promise<ResponseUserDto> {
+    const userResponse = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
     if (!userResponse) {
-      throw new NotFoundException(`id ${id} not found`);
+      throw new NotFoundException(`id ${userId} not found`);
     }
     return new ResponseUserDto(userResponse);
   }
 
   async updateUser(
-    id: number,
+    userId: number,
     updateUserData: UpdateUserDto,
   ): Promise<ResponseUserDto> {
-    if (!(await this.prisma.user.findUnique({ where: { id } }))) {
-      throw new NotFoundException(`id ${id} not found`);
+    if (!(await this.prisma.user.findUnique({ where: { id: userId } }))) {
+      throw new NotFoundException(`id ${userId} not found`);
     }
 
     const userResponse = await this.prisma.user.update({
-      where: { id },
+      where: { id: userId },
       data: updateUserData,
     });
 
     return new ResponseUserDto(userResponse);
   }
 
-  async deleteUser(id: number): Promise<any> {
-    const user = await this.prisma.user.findUnique({ where: { id } });
-
-    if (!user) {
-      throw new NotFoundException(`id ${id} not found`);
-    }
-
-    return this.prisma.user.delete({ where: { id } });
+  /**
+   * 회원 탈퇴시 사용
+   */
+  async deleteUser(userId: number, res: Response): Promise<void> {
+    await this.usersRepository.deleteUserInfo(userId);
   }
 
   async getMyToken(userId: number): Promise<any> {
