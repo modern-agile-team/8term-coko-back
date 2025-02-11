@@ -1,5 +1,11 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiBody, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiTags,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 
@@ -17,6 +23,16 @@ export const ApiItems = {
       ApiTags('items'),
       ApiOperation({ summary: '모든 아이템 목록 조회' }),
       ApiResponse({ status: 200, description: '모든 아이템 조회 성공' }),
+      ApiQuery({
+        name: 'limit',
+        required: false,
+        description: '가져올 아이템의 최대 개수',
+      }),
+      ApiQuery({
+        name: 'offset',
+        required: false,
+        description: '가져올 시작 지점',
+      }),
     );
   },
   getItemById: () => {

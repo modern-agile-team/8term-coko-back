@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
+import { PaginationQueryDto } from './dto/pagination-query.dto';
+
 @Injectable()
 export class ItemsService {
   constructor(private readonly prisma: PrismaService) {}
@@ -14,8 +16,12 @@ export class ItemsService {
   }
 
   //아이템 전체 조회 getAllItems
-  async getAllItems() {
-    return this.prisma.item.findMany();
+  async getAllItems(paginationQuery: PaginationQueryDto) {
+    const { limit = 8, offset = 0 } = paginationQuery;
+    return this.prisma.item.findMany({
+      skip: offset,
+      take: limit,
+    });
   }
 
   async getItemById(id: number) {
