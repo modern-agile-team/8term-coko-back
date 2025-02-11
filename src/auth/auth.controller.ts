@@ -151,6 +151,7 @@ export class AuthController {
 
   // 회원탈퇴
   @Delete('me')
+  @ApiExcludeEndpoint()
   @HttpCode(204)
   @UseGuards(AuthGuard('accessToken'))
   async withdraw(
