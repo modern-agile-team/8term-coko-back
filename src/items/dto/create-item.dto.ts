@@ -12,7 +12,7 @@ export class CreateItemDto {
 
   @ApiProperty({
     description: '아이템 이미지 URL',
-    example: 'http://example.com/image.png',
+    example: 'blue-hat.png',
   })
   @IsString()
   @IsNotEmpty()
