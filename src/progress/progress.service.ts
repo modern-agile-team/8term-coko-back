@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProgressDto } from './dto/create-progress.dto';
 import { QueryProgressDto } from './dto/query-progress.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { ProgressRepository } from './progress.repository';
 import { QuizzesService } from 'src/quizzes/quizzes.service';
 import { PartsService } from 'src/parts/parts.service';
@@ -9,41 +8,24 @@ import { SectionsService } from 'src/sections/sections.service';
 import { QuizzesRepository } from 'src/quizzes/quizzes.repository';
 import { ResProgressDto } from './dto/res-progress.dto';
 import { Progress } from './entities/progress.entity';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class ProgressService {
   constructor(
-    private readonly prisma: PrismaService,
     private readonly progressRepository: ProgressRepository,
     private readonly sectionsService: SectionsService,
     private readonly partsService: PartsService,
     private readonly quizzesService: QuizzesService,
     private readonly quizzesRepository: QuizzesRepository,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
-
-  // 추후 수정사항
-  private async findUserById(id: number) {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id,
-      },
-    });
-
-    if (!user) {
-      throw new NotFoundException();
-    }
-
-    return user;
-  }
-  //
 
   async findAll(
     userId: number,
     query: QueryProgressDto,
   ): Promise<ResProgressDto> {
     const { sectionId, partId } = query;
-
-    await this.findUserById(userId);
 
     if (sectionId) {
       await this.sectionsService.findOne(sectionId);
@@ -81,8 +63,15 @@ export class ProgressService {
   ): Promise<Progress> {
     await this.quizzesService.findOne(quizId);
 
-    await this.findUserById(userId);
+    const progress = await this.progressRepository.upsertProgress(
+      userId,
+      quizId,
+      body,
+    );
 
-    return this.progressRepository.upsertProgress(userId, quizId, body);
+    // progress 업데이트가 완료된 후 이벤트 발행
+    this.eventEmitter.emit('progress.updated', progress);
+
+    return progress;
   }
 }
