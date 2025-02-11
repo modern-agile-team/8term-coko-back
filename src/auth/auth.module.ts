@@ -1,5 +1,7 @@
 import { PassportModule } from '@nestjs/passport';
-import { GoogleStrategy } from './google/google.strategy';
+import { GoogleStrategy } from './social/google.strategy';
+import { KakaoStrategy } from './social/kakao.startegy';
+import { GithubStrategy } from './social/github.strategy';
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
@@ -13,8 +15,6 @@ import {
   RefreshTokenStrategy,
 } from './jwt/jwt.startegy';
 import { UsersCoreModule } from 'src/users/modules/users-core.module';
-import { KakaoStrategy } from './kakao/kakao.startegy';
-import { GithubStrategy } from './github/github.strategy';
 
 @Module({
   imports: [PassportModule, JwtModule, RedisModule, UsersCoreModule],

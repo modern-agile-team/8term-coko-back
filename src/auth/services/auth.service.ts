@@ -15,7 +15,7 @@ export class AuthService {
     private readonly redisService: RedisService,
   ) {}
 
-  async googleLogin(
+  async socialLogin(
     user: CreateUserDto,
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const {

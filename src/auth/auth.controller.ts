@@ -49,7 +49,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const { accessToken, refreshToken } =
-      await this.authService.googleLogin(user);
+      await this.authService.socialLogin(user);
 
     await this.cookieService.cookieResponse(res, accessToken, refreshToken);
 
@@ -75,7 +75,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const { accessToken, refreshToken } =
-      await this.authService.googleLogin(user);
+      await this.authService.socialLogin(user);
 
     await this.cookieService.cookieResponse(res, accessToken, refreshToken);
 
@@ -89,7 +89,7 @@ export class AuthController {
   @Get('github')
   @ApiExcludeEndpoint()
   @UseGuards(AuthGuard('github'))
-  Github() {}
+  github() {}
 
   // Google 로그인 콜백 처리
   @Get('github/callback')
@@ -101,7 +101,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const { accessToken, refreshToken } =
-      await this.authService.googleLogin(user);
+      await this.authService.socialLogin(user);
 
     await this.cookieService.cookieResponse(res, accessToken, refreshToken);
 

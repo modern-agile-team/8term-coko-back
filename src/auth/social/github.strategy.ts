@@ -23,10 +23,9 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     profile: any,
     done: (error: any, user?: any, info?: any) => void,
   ): Promise<void> {
-    console.log(profile);
     const { username, provider, id } = profile;
 
-    // profile._json 내 properties.nickname 값이 존재하면 우선 사용, 없으면 username 사용
+    // profile내 profile내 displayName 값이 존재하면 우선 사용, 없으면 username 사용
     const nickname = profile.displayName || username;
 
     const user: any = {
