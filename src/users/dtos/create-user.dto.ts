@@ -37,7 +37,7 @@ export class CreateUserDto {
   })
   @IsString()
   @IsOptional()
-  readonly socialRefeshToken?: string;
+  readonly socialRefreshToken?: string;
 
   @ApiProperty({
     type: String,
