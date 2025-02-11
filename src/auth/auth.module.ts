@@ -15,9 +15,16 @@ import {
   RefreshTokenStrategy,
 } from './jwt/jwt.startegy';
 import { UsersCoreModule } from 'src/users/modules/users-core.module';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  imports: [PassportModule, JwtModule, RedisModule, UsersCoreModule],
+  imports: [
+    PassportModule,
+    JwtModule,
+    RedisModule,
+    UsersCoreModule,
+    HttpModule,
+  ],
   providers: [
     AuthService,
     TokenService,

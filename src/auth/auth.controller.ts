@@ -153,19 +153,11 @@ export class AuthController {
   @Delete('me')
   @HttpCode(204)
   @UseGuards(AuthGuard('accessToken'))
-  async deleteUser(
+  async withdraw(
     @User() user: UserInfo,
     @Res({ passthrough: true }) res: Response,
   ) {
-    await this.usersService.deleteUser(user.id, res);
-    await this.redisService.del(String(user.id));
+    await this.authService.withdraw(user.id, res);
     await this.cookieService.deleteCookie(res);
-
-    // 병렬 처리 방식
-    // Promise.all([
-    //   await this.usersService.deleteUser(user.id, res),
-    //   await this.redisService.del(String(user.id)),
-    //   await this.cookieService.deleteCookie(res),
-    // ]);
   }
 }

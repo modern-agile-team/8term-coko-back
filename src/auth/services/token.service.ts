@@ -1,10 +1,12 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class TokenService {
   constructor(
+    private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
   ) {}
@@ -49,5 +51,12 @@ export class TokenService {
     });
 
     return accessToken;
+  }
+
+  // 토큰 조회
+  async getMyToken(userId: number) {
+    const tokenInfo = await this.prisma.token.findUnique({ where: { userId } });
+
+    return tokenInfo;
   }
 }

@@ -10,9 +10,6 @@ import {
 import { Part } from 'src/parts/entities/part.entity';
 import { PrismaClientOrTransaction } from 'src/prisma/prisma.type';
 import { UsersRepository } from '../repositories/users.reposirory';
-import { TokenService } from 'src/auth/services/token.service';
-import { RedisService } from 'src/auth/redis/redis.service';
-import { CookieService } from 'src/auth/services/cookie.service';
 
 @Injectable()
 export class UsersService {
@@ -113,5 +110,14 @@ export class UsersService {
       throw new NotFoundException(`userId ${userId} not found`);
     }
     return userTokenInfo;
+  }
+
+  async getProviderInfo(userId: number): Promise<string> {
+    const { provider } = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { provider: true },
+    });
+
+    return provider;
   }
 }
