@@ -7,7 +7,6 @@ import {
   Query,
   Body,
   HttpCode,
-  ParseIntPipe,
 } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { CreateItemDto } from './dto/create-item.dto';
