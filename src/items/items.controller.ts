@@ -7,12 +7,16 @@ import {
   Query,
   Body,
   HttpCode,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { ApiItems } from './items.swagger';
 import { PaginationQueryDto } from './dto/pagination-query.dto';
+import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
+import { CategoryQueryDto } from './dto/category-query.dto';
+
 @Controller('items')
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
@@ -33,23 +37,23 @@ export class ItemsController {
     return this.itemsService.getAllItems(paginationQuery);
   }
 
-  //3. 단일 아이템 조회 : GET /items/:id
-  @Get(':id')
-  @ApiItems.getItemById()
-  @HttpCode(200)
-  async getItemById(@Param('id') id: number) {
-    return this.itemsService.getItemById(id);
-  }
-
   //4. 카테고리별 아이템 조회 : GET /items/category?mainCategoryId=1&subCategoryId=2
   @Get('category')
   @ApiItems.getItemsByCategory()
   @HttpCode(200)
-  async getItemByCategory(
-    @Query('mainCategoryId') mainCategoryId: number,
-    @Query('subCategory') subCategoryId: number,
-  ) {
-    return this.itemsService.getItemByCategory(mainCategoryId, subCategoryId);
+  async getItemsByCategory(@Query() query: CategoryQueryDto) {
+    return this.itemsService.getItemsByCategory(
+      query.mainCategoryId,
+      query.subCategoryId,
+    );
+  }
+
+  //3. 단일 아이템 조회 : GET /items/:id
+  @Get(':id')
+  @ApiItems.getItemById()
+  @HttpCode(200)
+  async getItemById(@Param('id', PositiveIntPipe) id: number) {
+    return this.itemsService.getItemById(id);
   }
 
   //5. 아이템 수정 : PATCH /items/:id

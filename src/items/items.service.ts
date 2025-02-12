@@ -35,20 +35,22 @@ export class ItemsService {
   }
 
   async getItemById(id: number) {
-    const item = await this.prisma.item.findUnique({ where: { id } });
+    const item = await this.prisma.item.findUnique({ where: { id: id } });
     if (!item) {
-      throw new NotFoundException('아이템을 찾을 수 없습니다.');
+      throw new NotFoundException(`아이템을 찾을 수 없습니다. ID: ${id}`);
     }
     return item;
   }
 
-  async getItemByCategory(mainCategoryId: number, subCategoryId?: number) {
-    return this.prisma.item.findMany({
-      where: {
-        mainCategoryId,
-        ...(subCategoryId && { subCategoryId }),
-      },
-    });
+  async getItemsByCategory(mainCategoryId: number, subCategoryId?: number) {
+    const where = {
+      mainCategoryId,
+      ...(subCategoryId && { subCategoryId }),
+    };
+
+    console.log('Query where clause:', where);
+
+    return await this.prisma.item.findMany({ where });
   }
 
   async updateItem(id: number, updateItemDto: UpdateItemDto) {
