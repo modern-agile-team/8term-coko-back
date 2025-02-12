@@ -48,8 +48,6 @@ export class ItemsService {
       ...(subCategoryId && { subCategoryId }),
     };
 
-    console.log('Query where clause:', where);
-
     return await this.prisma.item.findMany({ where });
   }
 
