@@ -17,6 +17,7 @@ export class ItemsService {
       });
     } catch (error) {
       if (error.code === 'P2002') {
+        //P2002 : Prisma에러코드 : 유니크제약조건 위반 시 사용됨
         throw new BadRequestException(
           `이미 존재하는 아이템 이름입니다: ${createItemDto.name}`,
         );
