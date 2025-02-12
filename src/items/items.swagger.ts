@@ -14,8 +14,42 @@ export const ApiItems = {
     return applyDecorators(
       ApiTags('items'),
       ApiOperation({ summary: '새로운 아이템 추가' }),
-      ApiResponse({ status: 201, description: '아이템 생성 성공' }),
-      ApiBody({ type: CreateItemDto, description: '생성할 아이템 정보' }),
+      ApiBody({
+        type: CreateItemDto,
+        description: '생성할 아이템 정보',
+        examples: {
+          item: {
+            value: {
+              name: 'blue-hat',
+              image: 'blue-hat.svg',
+              price: 2000,
+              mainCategoryId: 2,
+              subCategoryId: 3,
+            },
+          },
+        },
+      }),
+      ApiResponse({
+        status: 201,
+        description: '아이템 생성 성공',
+        schema: {
+          example: {
+            success: true,
+            message: '아이템이 성공적으로 생성되었습니다.',
+            data: {
+              id: 1,
+              name: 'blue-hat',
+              image: 'blue-hat.svg',
+              price: 2000,
+              mainCategoryId: 2,
+              subCategoryId: 3,
+              createdAt: '2024-01-01T00:00:00.000Z',
+              updatedAt: '2024-01-01T00:00:00.000Z',
+            },
+          },
+        },
+      }),
+      ApiResponse({ status: 400, description: '잘못된 요청' }),
     );
   },
   getAllItems: () => {
