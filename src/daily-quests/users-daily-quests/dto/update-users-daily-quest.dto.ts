@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, Max, Min } from 'class-validator';
-import { UserDailyQuest } from '../users-daily-quests.interface';
 
 export class UpdateUsersDailyQuestDto {
   @ApiProperty({
