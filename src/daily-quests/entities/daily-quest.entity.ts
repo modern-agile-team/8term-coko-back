@@ -5,7 +5,7 @@ export class DailyQuestEntity implements DailyQuest {
   title: string;
   content: string;
   point: number;
-  exp: number;
+  experience: number;
   condition: number;
   createdAt: Date;
   updatedAt: Date;
