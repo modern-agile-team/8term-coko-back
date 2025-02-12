@@ -6,9 +6,11 @@ import {
   Get,
   Param,
   Patch,
+  Res,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { UsersService } from '../services/users.service';
 import { ResponseUserDto } from '../dtos/response-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
@@ -28,6 +30,9 @@ import { UserInfo } from '../entities/user.entity';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  /**
+   * 자신의 정보 가져오기
+   */
   @ApiGetUser()
   @Get('me')
   @UseGuards(AuthGuard('accessToken'))
@@ -35,30 +40,25 @@ export class UsersController {
     return this.usersService.getUser(user.id);
   }
 
-  @ApiUpdateUser()
-  @Patch('me')
-  @UseGuards(AuthGuard('accessToken'))
-  async updateMe(
-    @User() user: UserInfo,
-    @Body() updateUserData: UpdateUserDto,
-  ): Promise<ResponseUserDto> {
-    return this.usersService.updateUser(user.id, updateUserData);
-  }
-
+  /**
+   * 회원 탈퇴시 사용
+   * @param user
+   * @param res
+   */
   @ApiDeleteUser()
   @Delete('me')
   @UseGuards(AuthGuard('accessToken'))
-  async deleteMe(@User() user: UserInfo) {
-    await this.usersService.deleteUser(user.id);
-    return { statusCode: 204, message: 'No Content' };
+  async deleteMe(
+    @User() user: UserInfo,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    await this.usersService.deleteUser(user.id, res);
   }
 
-  @Get('me/token')
-  @UseGuards(AuthGuard('accessToken'))
-  async getMyToken(@User() user: UserInfo) {
-    return this.usersService.getMyToken(user.id);
-  }
-
+  /**
+   * 모든 유저정보 가져오기 - admin
+   * @returns
+   */
   @ApiGetAllUsers()
   @Get()
   @UseGuards(AuthGuard('adminAccessToken'))
@@ -66,18 +66,31 @@ export class UsersController {
     return this.usersService.getAllUsers();
   }
 
+  /**
+   * 유저정보 업데이트
+   * @param user
+   * @param updateUserData 포인트, 경험치
+   * @returns
+   */
+  @ApiUpdateUser()
+  @Patch(':userId')
+  @UseGuards(AuthGuard('adminAccessToken'))
+  async updateMe(
+    @User() user: UserInfo,
+    @Body() updateUserData: UpdateUserDto,
+  ): Promise<ResponseUserDto> {
+    return this.usersService.updateUser(user.id, updateUserData);
+  }
+
+  /**
+   * 유저 정보 가져오기 - admin
+   * @param userId
+   * @returns
+   */
   @ApiGetUser()
   @Get(':userId')
   @UseGuards(AuthGuard('adminAccessToken'))
   async getUser(@Param('userId', PositiveIntPipe) userId: number) {
     return this.usersService.getUser(userId);
-  }
-
-  @ApiDeleteUser()
-  @Delete(':userId')
-  @UseGuards(AuthGuard('adminAccessToken'))
-  async deleteUser(@Param('userId', PositiveIntPipe) userId: number) {
-    await this.usersService.deleteUser(userId);
-    return { statusCode: 204, message: 'No Content' };
   }
 }

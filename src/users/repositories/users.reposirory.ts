@@ -14,6 +14,17 @@ export class UsersRepository {
     return userInfo;
   }
 
+  async deleteUserInfo(userId: number) {
+    await this.prisma.user.delete({
+      where: { id: userId },
+    });
+  }
+
+  /**
+   * 유저의 총 출석일 증가
+   * @param userId
+   * @param txOrPrisma
+   */
   async increaseUserTotalAttendance(
     userId: number,
     txOrPrisma: PrismaClientOrTransaction = this.prisma,

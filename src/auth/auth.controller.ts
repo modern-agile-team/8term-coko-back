@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   HttpCode,
   Post,
@@ -19,6 +20,7 @@ import { UserInfo } from 'src/users/entities/user.entity';
 import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { ApiAuth } from './auth-swagger';
 import { ResponseUserDto } from 'src/users/dtos/response-user.dto';
+import { UsersService } from 'src/users/services/users.service';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -29,9 +31,12 @@ export class AuthController {
     private readonly cookieService: CookieService,
     private readonly tokenService: TokenService,
     private readonly redisService: RedisService,
+    private readonly usersService: UsersService,
   ) {}
 
-  // Google 로그인 시작
+  /**
+   * Google 로그인
+   */
   @Get('google')
   @ApiExcludeEndpoint()
   @UseGuards(AuthGuard('google'))
@@ -47,7 +52,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const { accessToken, refreshToken } =
-      await this.authService.googleLogin(user);
+      await this.authService.socialLogin(user);
 
     await this.cookieService.cookieResponse(res, accessToken, refreshToken);
 
@@ -55,7 +60,9 @@ export class AuthController {
     res.redirect(this.configService.get<string>('CLIENT_MAIN_PAGE_URL'));
   }
 
-  // 카카오 로그인 시작
+  /**
+   * Kakao 로그인
+   */
   @Get('kakao')
   @ApiExcludeEndpoint()
   @UseGuards(AuthGuard('kakao'))
@@ -71,7 +78,33 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const { accessToken, refreshToken } =
-      await this.authService.googleLogin(user);
+      await this.authService.socialLogin(user);
+
+    await this.cookieService.cookieResponse(res, accessToken, refreshToken);
+
+    // 메인페이지로 리다이렉트
+    res.redirect(this.configService.get<string>('CLIENT_MAIN_PAGE_URL'));
+  }
+
+  /**
+   * Github 로그인
+   */
+  @Get('github')
+  @ApiExcludeEndpoint()
+  @UseGuards(AuthGuard('github'))
+  github() {}
+
+  // Google 로그인 콜백 처리
+  @Get('github/callback')
+  @ApiExcludeEndpoint()
+  @HttpCode(302)
+  @UseGuards(AuthGuard('github'))
+  async githubLogin(
+    @User() user: SocialUserInfoDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { accessToken, refreshToken } =
+      await this.authService.socialLogin(user);
 
     await this.cookieService.cookieResponse(res, accessToken, refreshToken);
 
@@ -113,6 +146,19 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     await this.redisService.del(String(user.id));
+    await this.cookieService.deleteCookie(res);
+  }
+
+  // 회원탈퇴
+  @Delete('me')
+  @ApiExcludeEndpoint()
+  @HttpCode(204)
+  @UseGuards(AuthGuard('accessToken'))
+  async withdraw(
+    @User() user: UserInfo,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    await this.authService.withdraw(user.id, res);
     await this.cookieService.deleteCookie(res);
   }
 }
