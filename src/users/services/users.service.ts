@@ -102,16 +102,11 @@ export class UsersService {
     await this.usersRepository.deleteUserInfo(userId);
   }
 
-  async getMyToken(userId: number): Promise<any> {
-    const userTokenInfo = await this.prisma.token.findUnique({
-      where: { userId },
-    });
-    if (!userTokenInfo) {
-      throw new NotFoundException(`userId ${userId} not found`);
-    }
-    return userTokenInfo;
-  }
-
+  /**
+   * 소셜 제공자 정보 가져오기
+   * @param userId
+   * @returns
+   */
   async getProviderInfo(userId: number): Promise<string> {
     const { provider } = await this.prisma.user.findUnique({
       where: { id: userId },
