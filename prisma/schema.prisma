@@ -202,11 +202,10 @@ model AdminUser {
 
 model DailyQuest {
   id             Int              @id @default(autoincrement())
-  title          String           @db.VarChar(50)
   content        String           @db.VarChar(255)
-  point          Int
-  exp            Int
-  condition      Int
+  point          Int              @default(0)
+  experience     Int              @default(0)
+  condition      Int              @default(0)
   createdAt      DateTime         @default(now()) @map("created_at")
   updatedAt      DateTime         @updatedAt @map("updated_at")
   UserDailyQuest UserDailyQuest[]

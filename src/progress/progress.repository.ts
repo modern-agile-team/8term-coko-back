@@ -8,6 +8,28 @@ import { Progress } from './entities/progress.entity';
 export class ProgressRepository {
   constructor(private readonly prisma: PrismaService) {}
 
+  async countProgressByUserIdAndDate(
+    userId: number,
+    targetDate: Date,
+  ): Promise<number> {
+    const startOfDay = new Date(targetDate);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(targetDate);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    return this.prisma.progress.count({
+      where: {
+        userId,
+        isCorrect: true,
+        updatedAt: {
+          gte: startOfDay,
+          lt: endOfDay,
+        },
+      },
+    });
+  }
+
   async countProgressByQuery(
     userId: number,
     query: QueryProgressDto,

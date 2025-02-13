@@ -1,14 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsString, Min } from 'class-validator';
+import { DailyQuest } from '../daily-quests.interface';
 
-export class CreateDailyQuestDto {
-  @ApiProperty({
-    description: '제목',
-    example: '제목',
-  })
-  @IsString()
-  readonly title: string;
-
+export class CreateDailyQuestDto
+  implements Omit<DailyQuest, 'id' | 'createdAt' | 'updatedAt'>
+{
   @ApiProperty({
     description: '내용',
     example: '문제 5개를 푸세요',
@@ -30,7 +26,7 @@ export class CreateDailyQuestDto {
   })
   @IsInt()
   @Min(0)
-  readonly exp: number;
+  readonly experience: number;
 
   @ApiProperty({
     description: '달성조건',

@@ -1,8 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ResDailyQuestDto } from 'src/daily-quests/dto/res-daily-quest.dto';
-import { UserDailyQuestWiteQuestInfo } from '../users-daily-quests.interface';
+import {
+  UserDailyQuest,
+  UserDailyQuestWiteQuestInfo,
+} from '../users-daily-quests.interface';
 
-export class ResUserDailyQuestDto {
+export class ResUserDailyQuestDto
+  implements Omit<UserDailyQuest, 'createdAt' | 'updatedAt'>
+{
   @ApiProperty({ example: 1 })
   readonly id: number;
 
