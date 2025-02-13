@@ -1,4 +1,11 @@
-import { IsString, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsInt,
+  Min,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateItemDto {
@@ -22,7 +29,8 @@ export class CreateItemDto {
     description: '아이템 가격',
     example: 2000,
   })
-  @IsNumber()
+  @IsInt()
+  @Min(1)
   @IsNotEmpty()
   price: number;
 
