@@ -7,6 +7,7 @@ import {
   Query,
   Body,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { CreateItemDto } from './dto/create-item.dto';
@@ -16,7 +17,7 @@ import { PaginationQueryDto } from './dto/pagination-query.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { CategoryQueryDto } from './dto/category-query.dto';
 import { ApiTags } from '@nestjs/swagger';
-
+import { AuthGuard } from '@nestjs/passport';
 @ApiTags('items')
 @Controller('items')
 export class ItemsController {
@@ -26,6 +27,7 @@ export class ItemsController {
   @Post()
   @ApiItems.createItem()
   @HttpCode(201)
+  @UseGuards(AuthGuard('adminAccessToken'))
   async createItem(@Body() createItemDto: CreateItemDto) {
     return await this.itemsService.createItem(createItemDto);
   }
