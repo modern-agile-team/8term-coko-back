@@ -4,9 +4,14 @@ import { UsersDailyQuestsController } from './users-daily-quests.controller';
 import { UsersDailyQuestsRepository } from './users-daily-quests.repository';
 import { DailyQuestsModule } from '../daily-quests.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ProgressModule } from 'src/progress/progress.module';
 
 @Module({
-  imports: [forwardRef(() => DailyQuestsModule), ScheduleModule.forRoot()],
+  imports: [
+    forwardRef(() => DailyQuestsModule),
+    ScheduleModule.forRoot(),
+    ProgressModule,
+  ],
   controllers: [UsersDailyQuestsController],
   providers: [UsersDailyQuestsService, UsersDailyQuestsRepository],
 })

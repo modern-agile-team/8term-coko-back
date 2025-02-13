@@ -15,6 +15,7 @@ import { PaginationModule } from './pagination/pagination.module';
 import { DailyQuestsModule } from './daily-quests/daily-quests.module';
 import { RankingsModule } from './ranking/rankings.module';
 import { AttendanceModule } from './attendance/attendance.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AttendanceModule } from './attendance/attendance.module';
     PaginationModule,
     DailyQuestsModule,
     AttendanceModule,
+    EventEmitterModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],
