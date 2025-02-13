@@ -4,6 +4,7 @@ import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { PaginationQueryDto } from './dto/pagination-query.dto';
 import { BadRequestException } from '@nestjs/common';
+import { InternalServerErrorException } from '@nestjs/common';
 
 @Injectable()
 export class ItemsService {
@@ -22,7 +23,8 @@ export class ItemsService {
           `이미 존재하는 아이템 이름입니다: ${createItemDto.name}`,
         );
       }
-      throw error;
+      console.error('Database Error:', error); //서버 로그에 오류 기록
+      throw new InternalServerErrorException('서버 오류 발생'); //클라이언트에는 일반화된 오류 메시지 반환
     }
   }
   //아이템 전체 조회 getAllItems
