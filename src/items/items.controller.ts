@@ -2,71 +2,72 @@ import {
   Controller,
   Get,
   Post,
+  Patch,
   Param,
+  Query,
   Body,
-  Delete,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { ItemsService } from './items.service';
-import {
-  BuyItemDto,
-  EquipItemDto,
-  UnequipItemDto,
-} from './dto/item-changeStatus.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { CreateItemDto } from './dto/create-item.dto';
+import { UpdateItemDto } from './dto/update-item.dto';
 import { ApiItems } from './items.swagger';
-
+import { PaginationQueryDto } from './dto/pagination-query.dto';
+import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
+import { CategoryQueryDto } from './dto/category-query.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 @ApiTags('items')
-@Controller('items') // '/items'경로 요청 처리
+@Controller('items')
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
 
-  // GET /items 요청 처리
+  //1. 새로운 아이템 추가 : POST /items
+  @Post()
+  @ApiItems.createItem()
+  @HttpCode(201)
+  @UseGuards(AuthGuard('adminAccessToken'))
+  async createItem(@Body() createItemDto: CreateItemDto) {
+    return await this.itemsService.createItem(createItemDto);
+  }
+
+  //2. 전체 아이템 목록 조회 : GET /items --> pagination 적용
   @Get()
   @ApiItems.getAllItems()
-  async getAllItems() {
-    return await this.itemsService.getAllItems(); //service에서 아이템 목록을 받아서, 반환(return)
+  @HttpCode(200)
+  async getAllItems(@Query() paginationQuery: PaginationQueryDto) {
+    return this.itemsService.getAllItems(paginationQuery);
   }
 
-  // POST /items/buy 요청 처리
-  @Post('buy')
-  @HttpCode(204)
-  @ApiItems.buyItem()
-  async buyItem(@Body() buyItemDto: BuyItemDto): Promise<void> {
-    await this.itemsService.buyItem(buyItemDto);
+  //4. 카테고리별 아이템 조회 : GET /items/category?mainCategoryId=1&subCategoryId=2
+  @Get('category')
+  @ApiItems.getItemsByCategory()
+  @HttpCode(200)
+  async getItemsByCategory(@Query() query: CategoryQueryDto) {
+    return this.itemsService.getItemsByCategory(
+      query.mainCategoryId,
+      query.subCategoryId,
+    );
   }
 
-  // GET /items/user/:userId 요청 처리
-  @Get('users/:userId')
-  @ApiItems.getUserItems()
-  async getUserItems(@Param('userId') userId: number) {
-    return await this.itemsService.getUserItems(userId);
+  //3. 단일 아이템 조회 : GET /items/:id
+  @Get(':id')
+  @ApiItems.getItemById()
+  @HttpCode(200)
+  async getItemById(@Param('id', PositiveIntPipe) id: number) {
+    return this.itemsService.getItemById(id);
   }
 
-  // POST /items/equip 요청 처리
-  @Post('equip')
-  @HttpCode(204)
-  @ApiItems.equipItem()
-  async equipItem(@Body() equipItemDto: EquipItemDto) {
-    await this.itemsService.equipItem(equipItemDto);
-  }
-
-  // POST /items/unequip 요청 처리
-  @Post('unequip')
-  @HttpCode(204)
-  @ApiItems.unequipItem()
-  async unequipItem(@Body() unequipItemDto: UnequipItemDto) {
-    await this.itemsService.unequipItem(unequipItemDto);
-  }
-
-  // DELETE /items/:userId/:itemId 요청 처리
-  @Delete('users/:userId/:itemId')
-  @HttpCode(204)
-  @ApiItems.deleteUserItem()
-  async deleteUserItem(
-    @Param('userId') userId: number,
-    @Param('itemId') itemId: number,
+  //5. 아이템 수정 : PATCH /items/:id
+  @Patch(':id')
+  @ApiItems.updateItem()
+  @HttpCode(200)
+  @UseGuards(AuthGuard('adminAccessToken'))
+  async updateItem(
+    @Param('id', PositiveIntPipe) id: number,
+    @Body() updateItemDto: UpdateItemDto,
   ) {
-    await this.itemsService.deleteUserItem(userId, itemId);
+    return this.itemsService.updateItem(id, updateItemDto);
   }
 }

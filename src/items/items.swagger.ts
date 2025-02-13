@@ -1,196 +1,134 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import {
-  BuyItemDto,
-  EquipItemDto,
-  UnequipItemDto,
-} from './dto/item-changeStatus.dto';
+  ApiOperation,
+  ApiResponse,
+  ApiQuery,
+  ApiBody,
+  ApiParam,
+} from '@nestjs/swagger';
+import { CreateItemDto } from './dto/create-item.dto';
+import { UpdateItemDto } from './dto/update-item.dto';
 
 export const ApiItems = {
   getAllItems: () => {
     return applyDecorators(
       ApiOperation({
-        summary: '모든 items 조회',
-        description: '존재하는 모든 아이템을 조회합니다.',
+        summary: '전체 아이템 목록 조회',
+        description: '페이지네이션을 적용하여 전체 아이템 목록을 조회합니다.',
+      }),
+      ApiQuery({
+        name: 'limit',
+        required: false,
+        description: '한 번에 가져올 데이터의 최대 개수',
+        example: 10,
+      }),
+      ApiQuery({
+        name: 'offset',
+        required: false,
+        description: '데이터를 가져올 시작 지점',
+        example: 0,
       }),
       ApiResponse({
         status: 200,
-        description: '모든 items 성공적으로 조회됨',
-        content: {
-          JSON: {
-            example: {
-              id: 2,
-              name: 'blue-hat',
-              cost: 2000,
-              image: '2',
-              createdAt: '2024-11-05T10:30:15.000Z',
-              updatedAt: '2024-11-05T10:40:15.000Z',
-            },
-          },
-        },
-      }),
-    );
-  },
-  buyItem: () => {
-    return applyDecorators(
-      ApiOperation({
-        summary: '특정 user의 특정 item 구매하기',
-        description: '특정 user가 특정 item을 구매합니다.',
-      }),
-      ApiBody({
-        description: 'userId와 itemId를 포함한 요청 바디',
-        type: BuyItemDto,
-      }),
-      ApiResponse({
-        status: 204,
-        description: 'user가 item을 성공적으로 구매함',
+        description: '아이템 목록 조회 성공',
       }),
       ApiResponse({
         status: 400,
-        description: '유효하지 않은 요청 값 (userId 또는 itemId 오류)',
-        content: {
-          JSON: {
-            example: {
-              statusCode: 400,
-              message: 'Invalid userId or itemId provided',
-              error: 'Bad request',
-            },
-          },
-        },
+        description: '잘못된 요청',
       }),
     );
   },
-
-  equipItem: () => {
+  getItemsByCategory: () => {
     return applyDecorators(
       ApiOperation({
-        summary: '특정 user가 특정 item 장착',
-        description: '특정 user가 소유한 item을 장착',
+        summary: '카테고리별 아이템 조회',
+        description: '메인 카테고리와 서브 카테고리로 아이템을 조회합니다.',
       }),
-      ApiBody({
-        description: 'userId와 itemId를 포함한 요청 바디',
-        type: EquipItemDto,
+      ApiQuery({
+        name: 'mainCategoryId',
+        required: true,
+        description: '메인 카테고리 ID',
+        example: 1,
       }),
-      ApiResponse({
-        status: 204,
-        description: 'item 장착 성공',
-      }),
-      ApiResponse({
-        status: 400,
-        description: '유효하지 않은 요청 값 (userId 또는 itemId 오류)',
-        content: {
-          JSON: {
-            example: {
-              statusCode: 400,
-              message: 'Invalid userId or itemId provided',
-              error: 'Bad request',
-            },
-          },
-        },
-      }),
-    );
-  },
-
-  unequipItem: () => {
-    return applyDecorators(
-      ApiOperation({
-        summary: '특정 user가 특정 item 해제',
-        description: '특정 user가 장착한 item을 해제한다',
-      }),
-      ApiBody({
-        description: 'userId와 itemId를 포함한 요청 바디',
-        type: UnequipItemDto,
-      }),
-      ApiResponse({
-        status: 204,
-        description: 'item 해제 성공',
-      }),
-      ApiResponse({
-        status: 400,
-        description: '유효하지 않은 요청 값 (userId 또는 itemId 오류)',
-        content: {
-          JSON: {
-            example: {
-              statusCode: 400,
-              message: 'Invalid userId or itemId provided',
-              error: 'Bad request',
-            },
-          },
-        },
-      }),
-    );
-  },
-
-  deleteUserItem: () => {
-    return applyDecorators(
-      ApiOperation({
-        summary: '특정 user의 특정 item 삭제',
-        description: '특정 user의 특정 item을 삭제한다',
-      }),
-      ApiResponse({
-        status: 204,
-        description: 'user의 item 삭제 성공',
-      }),
-      ApiResponse({
-        status: 400,
-        description: '유효하지 않은 요청 값 (userId 또는 itemId 오류)',
-        content: {
-          JSON: {
-            example: {
-              statusCode: 400,
-              message: 'Invalid userId or itemId provided',
-              error: 'Bad request',
-            },
-          },
-        },
-      }),
-    );
-  },
-
-  getUserItems: () => {
-    return applyDecorators(
-      ApiOperation({
-        summary: '특정 user의 items 조회',
-        description: '특정 user가 소유한 모든 items를 조회한다',
+      ApiQuery({
+        name: 'subCategoryId',
+        required: false,
+        description: '서브 카테고리 ID',
+        example: 2,
       }),
       ApiResponse({
         status: 200,
-        description: 'user의 모든 items가 성공적으로 조회됨',
-        content: {
-          JSON: {
-            example: [
-              {
-                id: 2,
-                itemId: 3,
-                userId: 1,
-                isEquipped: false,
-                createdAt: '2024-11-05T10:30:15.000Z',
-                updatedAt: '2024-11-05T10:40:15.000Z',
-              },
-              {
-                id: 3,
-                itemId: 5,
-                userId: 1,
-                isEquipped: true,
-                createdAt: '2024-11-05T10:40:15.000Z',
-                updatedAt: '2024-11-05T10:40:15.000Z',
-              },
-            ],
-          },
-        },
+        description: '카테고리별 아이템 조회 성공',
+      }),
+      ApiResponse({
+        status: 400,
+        description: '잘못된 요청',
+      }),
+    );
+  },
+  getItemById: () => {
+    return applyDecorators(
+      ApiOperation({
+        summary: '아이템 상세 조회',
+        description: '아이템 ID를 사용하여 특정 아이템을 조회합니다.',
+      }),
+      ApiParam({
+        name: 'id',
+        required: true,
+        description: '아이템 ID',
+        example: 1,
+      }),
+      ApiResponse({
+        status: 200,
+        description: '아이템 조회 성공',
       }),
       ApiResponse({
         status: 404,
-        description: '해당 user를 찾을 수 없음',
-        content: {
-          JSON: {
-            example: {
-              statusCode: 404,
-              message: 'User not found',
-              error: 'Not Found',
-            },
-          },
-        },
+        description: '아이템을 찾을 수 없음',
+      }),
+    );
+  },
+  createItem: () => {
+    return applyDecorators(
+      ApiOperation({
+        summary: '아이템 생성',
+        description: '새로운 아이템을 생성합니다.',
+      }),
+      ApiBody({
+        description: '아이템 생성에 필요한 정보',
+        type: CreateItemDto,
+      }),
+      ApiResponse({
+        status: 201,
+        description: '아이템 생성 성공',
+      }),
+      ApiResponse({
+        status: 400,
+        description: '잘못된 요청',
+      }),
+    );
+  },
+  updateItem: () => {
+    return applyDecorators(
+      ApiOperation({
+        summary: '아이템 수정',
+        description: '기존 아이템을 수정합니다.',
+      }),
+      ApiBody({
+        description: '아이템 수정에 필요한 정보',
+        type: UpdateItemDto,
+      }),
+      ApiResponse({
+        status: 200,
+        description: '아이템 수정 성공',
+      }),
+      ApiResponse({
+        status: 400,
+        description: '잘못된 요청',
+      }),
+      ApiResponse({
+        status: 404,
+        description: '아이템을 찾을 수 없음',
       }),
     );
   },
