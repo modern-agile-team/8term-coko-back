@@ -242,3 +242,15 @@ model UserDailyQuest {
   @@index([dailyQuestId])
   @@map("user_daily_quests")
 }
+
+model MainQuest {
+  id         Int      @id @default(autoincrement())
+  content    String   @db.VarChar(255)
+  point      Int
+  experience Int
+  condition  Int
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("main_quests")
+}
