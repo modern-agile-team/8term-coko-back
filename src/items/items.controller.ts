@@ -63,8 +63,9 @@ export class ItemsController {
   @Patch(':id')
   @ApiItems.updateItem()
   @HttpCode(200)
+  @UseGuards(AuthGuard('adminAccessToken'))
   async updateItem(
-    @Param('id') id: number,
+    @Param('id', PositiveIntPipe) id: number,
     @Body() updateItemDto: UpdateItemDto,
   ) {
     return this.itemsService.updateItem(id, updateItemDto);
