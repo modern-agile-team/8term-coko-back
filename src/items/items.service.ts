@@ -1,125 +1,66 @@
-import {
-  Injectable,
-  BadRequestException,
-  NotFoundException,
-} from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service'; //PrismaService를 통해 db에서 아이템목록 가져온다.
-import { ItemChangeStatusDto } from './dto/item-changeStatus.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateItemDto } from './dto/create-item.dto';
+import { UpdateItemDto } from './dto/update-item.dto';
+import { PaginationQueryDto } from './dto/pagination-query.dto';
+import { BadRequestException } from '@nestjs/common';
+import { InternalServerErrorException } from '@nestjs/common';
 
-@Injectable() //클래스 : 의존성 주입 가능 (다른 곳에서 이 클래스를 불러와서 사용할 수 있게 한다)
+@Injectable()
 export class ItemsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  //모든 아이템 목록 조회 getAllItems
-  getAllItems() {
-    return this.prisma.item.findMany(); // findMany() : 모든 아이템(항목) 조회
+  //아이템 생성 createItem
+  async createItem(createItemDto: CreateItemDto) {
+    try {
+      return await this.prisma.item.create({
+        data: createItemDto,
+      });
+    } catch (error) {
+      if (error.code === 'P2002') {
+        //P2002 : Prisma에러코드 : 유니크제약조건 위반 시 사용됨
+        throw new BadRequestException(
+          `이미 존재하는 아이템 이름입니다: ${createItemDto.name}`,
+        );
+      }
+      console.error('Database Error:', error); //서버 로그에 오류 기록
+      throw new InternalServerErrorException('서버 오류 발생'); //클라이언트에는 일반화된 오류 메시지 반환
+    }
+  }
+  //아이템 전체 조회 getAllItems
+  async getAllItems(paginationQuery: PaginationQueryDto) {
+    const { limit = 8, offset = 0 } = paginationQuery;
+    return this.prisma.item.findMany({
+      skip: offset,
+      take: limit,
+    });
   }
 
-  //아이템 구매 buyItem
-  async buyItem(buyItemDto: ItemChangeStatusDto): Promise<void> {
-    const { userId, itemId } = buyItemDto;
-
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw new BadRequestException('User not found');
-    }
-
-    const item = await this.prisma.item.findUnique({ where: { id: itemId } });
+  async getItemById(id: number) {
+    const item = await this.prisma.item.findUnique({ where: { id: id } });
     if (!item) {
-      throw new BadRequestException('Item not found');
+      throw new NotFoundException(`아이템을 찾을 수 없습니다. ID: ${id}`);
     }
-
-    //유저 아이템 유무 확인
-    const existingItem = await this.prisma.userItem.findUnique({
-      where: {
-        userId_itemId: { userId, itemId },
-      },
-    });
-
-    if (existingItem) {
-      throw new BadRequestException('User already owns this item.');
-    }
-
-    await this.prisma.userItem.create({
-      data: {
-        userId,
-        itemId,
-      },
-    });
+    return item;
   }
 
-  //특정 사용자 아이템 목록 조회 getUserItems
-  getUserItems(userId: number) {
-    return this.prisma.userItem.findMany({
-      where: { userId },
-    });
+  async getItemsByCategory(mainCategoryId: number, subCategoryId?: number) {
+    const where = {
+      mainCategoryId,
+      ...(subCategoryId && { subCategoryId }),
+    };
+
+    return await this.prisma.item.findMany({ where });
   }
 
-  //아이템 장착
-  async equipItem(equipItemDto: ItemChangeStatusDto): Promise<void> {
-    const { userId, itemId } = equipItemDto;
-    const userItem = await this.prisma.userItem.findUnique({
-      where: {
-        userId_itemId: {
-          userId,
-          itemId,
-        },
-      },
+  async updateItem(id: number, updateItemDto: UpdateItemDto) {
+    const item = await this.prisma.item.update({
+      where: { id },
+      data: updateItemDto,
     });
-
-    if (!userItem) {
-      throw new NotFoundException('Item not found for this user');
+    if (!item) {
+      throw new NotFoundException('아이템을 찾을 수 없습니다.');
     }
-    if (userItem.isEquipped) {
-      throw new BadRequestException('Item is already equipped');
-    }
-
-    await this.prisma.userItem.update({
-      where: { id: userItem.id },
-      data: { isEquipped: true },
-    });
-  }
-
-  //아이템 장착 해제
-  async unequipItem(unequipItemDto: ItemChangeStatusDto): Promise<void> {
-    const { userId, itemId } = unequipItemDto;
-    const userItem = await this.prisma.userItem.findUnique({
-      where: {
-        userId_itemId: { userId, itemId },
-      },
-    });
-
-    if (!userItem) {
-      throw new NotFoundException('Item not found for this user');
-    }
-
-    if (!userItem.isEquipped) {
-      throw new BadRequestException('Item is already unequipped');
-    }
-
-    await this.prisma.userItem.update({
-      where: { id: userItem.id },
-      data: { isEquipped: false },
-    });
-  }
-
-  //특정 사용자의 특정 아이템 삭제
-  async deleteUserItem(userId: number, itemId: number): Promise<void> {
-    const userItem = await this.prisma.userItem.findUnique({
-      where: {
-        userId_itemId: {
-          userId,
-          itemId,
-        },
-      },
-    });
-
-    if (!userItem) {
-      throw new NotFoundException('Item not found for this user');
-    }
-
-    await this.prisma.userItem.delete({
-      where: { id: userItem.id },
-    });
+    return item;
   }
 }
