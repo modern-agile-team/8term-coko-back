@@ -18,20 +18,36 @@ export class ItemsService {
 
   //아이템 생성 createItem
   async createItem(createItemDto: CreateItemDto) {
-    try {
-      return await this.prisma.item.create({
-        data: createItemDto,
-      });
-    } catch (error) {
-      if (error.code === 'P2002') {
-        //P2002 : Prisma에러코드 : 유니크제약조건 위반 시 사용됨
-        throw new BadRequestException(
-          `이미 존재하는 아이템 이름입니다: ${createItemDto.name}`,
-        );
-      }
-      console.error('Database Error:', error); //서버 로그에 오류 기록
-      throw new InternalServerErrorException('서버 오류 발생'); //클라이언트에는 일반화된 오류 메시지 반환
+    const { name, mainCategoryId, subCategoryId } = createItemDto;
+
+    const item = await this.prisma.item.findUnique({
+      where: { name },
+    });
+    if (item) {
+      throw new BadRequestException(`이미 존재하는 아이템 이름입니다: ${name}`);
     }
+
+    const mainCategory = await this.prisma.itemMainCategory.findUnique({
+      where: { id: mainCategoryId },
+    });
+    if (!mainCategory) {
+      throw new BadRequestException(
+        `존재하지 않는 메인 카테고리입니다: ${mainCategoryId}`,
+      );
+    }
+
+    const subCategory = await this.prisma.itemSubCategory.findUnique({
+      where: { id: subCategoryId },
+    });
+    if (!subCategory) {
+      throw new BadRequestException(
+        `존재하지 않는 서브 카테고리입니다: ${subCategoryId}`,
+      );
+    }
+
+    return this.prisma.item.create({
+      data: createItemDto,
+    });
   }
   //아이템 전체 조회 getAllItems
   async getAllItems(
