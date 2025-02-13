@@ -2,13 +2,19 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
-import { PaginationQueryDto } from './dto/pagination-query.dto';
+
 import { BadRequestException } from '@nestjs/common';
 import { InternalServerErrorException } from '@nestjs/common';
-
+import { Item } from '@prisma/client';
+import { ItemsRepository } from './items.repository';
+import { ItemsPaginationResponseDto } from './dto/items-pagination-response.dto';
+import { itemsPaginationQueryDto } from './dto/items-pagination-query.dto';
 @Injectable()
 export class ItemsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly itemsRepository: ItemsRepository,
+  ) {}
 
   //아이템 생성 createItem
   async createItem(createItemDto: CreateItemDto) {
@@ -28,11 +34,19 @@ export class ItemsService {
     }
   }
   //아이템 전체 조회 getAllItems
-  async getAllItems(paginationQuery: PaginationQueryDto) {
-    const { limit = 8, offset = 0 } = paginationQuery;
-    return this.prisma.item.findMany({
-      skip: offset,
-      take: limit,
+  async getAllItems(
+    itemsPaginationQuery: itemsPaginationQueryDto,
+  ): Promise<ItemsPaginationResponseDto> {
+    const { limit = 8, page = 1 } = itemsPaginationQuery;
+
+    const totalCount = await this.itemsRepository.getTotalItemCount();
+    const contents = await this.itemsRepository.findItems(page, limit);
+
+    return new ItemsPaginationResponseDto({
+      totalCount,
+      currentPage: page,
+      limit,
+      contents,
     });
   }
 
