@@ -69,7 +69,7 @@ export class ItemsController {
   @Patch(':id')
   @ApiItems.updateItem()
   @HttpCode(200)
-  // @UseGuards(AuthGuard('adminAccessToken'))
+  @UseGuards(AuthGuard('adminAccessToken'))
   async updateItem(
     @Param('id', PositiveIntPipe) id: number,
     @Body() updateItemDto: UpdateItemDto,
