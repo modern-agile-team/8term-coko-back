@@ -30,7 +30,7 @@ export class ItemsController {
   @Post()
   @ApiItems.createItem()
   @HttpCode(201)
-  // @UseGuards(AuthGuard('adminAccessToken'))
+  @UseGuards(AuthGuard('adminAccessToken'))
   async createItem(@Body() createItemDto: CreateItemDto) {
     return await this.itemsService.createItem(createItemDto);
   }
@@ -69,7 +69,7 @@ export class ItemsController {
   @Patch(':id')
   @ApiItems.updateItem()
   @HttpCode(200)
-  @UseGuards(AuthGuard('adminAccessToken'))
+  // @UseGuards(AuthGuard('adminAccessToken'))
   async updateItem(
     @Param('id', PositiveIntPipe) id: number,
     @Body() updateItemDto: UpdateItemDto,
