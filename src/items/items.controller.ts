@@ -15,7 +15,9 @@ import { ApiItems } from './items.swagger';
 import { PaginationQueryDto } from './dto/pagination-query.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { CategoryQueryDto } from './dto/category-query.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('items')
 @Controller('items')
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
