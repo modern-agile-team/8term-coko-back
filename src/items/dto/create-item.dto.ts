@@ -38,7 +38,8 @@ export class CreateItemDto {
     description: '메인 카테고리 ID',
     example: 1,
   })
-  @IsNumber()
+  @IsInt()
+  @Min(1)
   @IsNotEmpty()
   mainCategoryId: number;
 
@@ -48,6 +49,7 @@ export class CreateItemDto {
     required: false,
   })
   @IsOptional()
-  @IsNumber()
+  @IsInt()
+  @Min(1)
   subCategoryId?: number;
 }
