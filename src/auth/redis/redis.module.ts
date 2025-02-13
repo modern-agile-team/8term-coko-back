@@ -11,7 +11,7 @@ import * as redisStore from 'cache-manager-redis-store';
         store: redisStore,
         host: configService.get<string>('REDIS_HOST'),
         port: Number(configService.get<string>('REDIS_PORT')),
-        // password: configService.get<string>('REDIS_PASSWORD'),
+        password: configService.get<string>('REDIS_PASSWORD'),
         ttl: Number(configService.get<string>('REDIS_EXPIRATION_TIME')),
       }),
       inject: [ConfigService],

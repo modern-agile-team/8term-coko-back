@@ -27,7 +27,7 @@ export class ItemsController {
   @Post()
   @ApiItems.createItem()
   @HttpCode(201)
-  // @UseGuards(AuthGuard('adminAccessToken'))
+  @UseGuards(AuthGuard('adminAccessToken'))
   async createItem(@Body() createItemDto: CreateItemDto) {
     return await this.itemsService.createItem(createItemDto);
   }
