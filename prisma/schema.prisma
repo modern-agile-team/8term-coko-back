@@ -245,9 +245,9 @@ model UserDailyQuest {
 model Challenge {
   id         Int      @id @default(autoincrement())
   content    String   @db.VarChar(255)
-  point      Int
-  experience Int
-  condition  Int
+  point      Int      @default(0)
+  experience Int      @default(0)
+  condition  Int      @default(0)
   badgeName  String   @map("badge_name")
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
