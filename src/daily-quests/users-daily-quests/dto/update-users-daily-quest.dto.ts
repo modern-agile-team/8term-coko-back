@@ -11,6 +11,12 @@ export class UpdateUsersDailyQuestDto {
   @Max(1000)
   readonly conditionProgress: number;
 
+  @ApiProperty({
+    description: '완료 유뮤',
+    example: false,
+  })
+  readonly completed: boolean;
+
   constructor(conditionProgress: number) {
     this.conditionProgress = conditionProgress;
   }
