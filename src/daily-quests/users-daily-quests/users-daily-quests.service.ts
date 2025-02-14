@@ -75,12 +75,17 @@ export class UsersDailyQuestsService {
     const isCorrectTrueCount =
       await this.progressRepository.countProgressByUserIdAndDate(userId, today);
 
-    const updateDto = new UpdateUsersDailyQuestDto(isCorrectTrueCount);
-
     const shouldBeCompleted =
-      userDailyQuest.dailyQuest.condition <= updateDto.conditionProgress;
+      userDailyQuest.dailyQuest.condition <= isCorrectTrueCount;
 
-    const updatedData = { ...updateDto, completed: shouldBeCompleted };
+    const conditionProgress = shouldBeCompleted
+      ? userDailyQuest.dailyQuest.condition
+      : isCorrectTrueCount;
+
+    const updatedData: UpdateUsersDailyQuestDto = {
+      conditionProgress,
+      completed: shouldBeCompleted,
+    };
 
     return this.usersDailyQuestsRepository.updateById(
       userDailyQuest.id,
