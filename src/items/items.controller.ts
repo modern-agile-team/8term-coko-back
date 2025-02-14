@@ -15,7 +15,6 @@ import { UpdateItemDto } from './dto/update-item.dto';
 import { ApiItems } from './items.swagger';
 import { itemsPaginationQueryDto } from './dto/items-pagination-query.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
-import { CategoryQueryDto } from './dto/category-query.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { OffsetPaginationBaseResponseDto } from 'src/pagination/dtos/offset-pagination-res.dto';
@@ -35,27 +34,26 @@ export class ItemsController {
     return await this.itemsService.createItem(createItemDto);
   }
 
-  //2. 전체 아이템 목록 조회 : GET /items -> pagination
+  //2. 전체 아이템 목록 조회 : GET /items?mainCategoryId=1&subCategoryId=2&page=1&limit=8
   @Get()
-  @ApiItems.getAllItems()
+  @ApiItems.getItemsByCategory()
   @HttpCode(200)
-  async getAllItems(
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 8,
+  async getItemsByCategory(
+    @Query() query: itemsPaginationQueryDto,
   ): Promise<OffsetPaginationBaseResponseDto<Item>> {
-    return this.itemsService.getAllItems({ page, limit });
+    return this.itemsService.getItemsByCategory(query);
   }
 
   //4. 카테고리별 아이템 조회 : GET /items/category?mainCategoryId=1&subCategoryId=2
-  @Get('category')
-  @ApiItems.getItemsByCategory()
-  @HttpCode(200)
-  async getItemsByCategory(@Query() query: CategoryQueryDto) {
-    return this.itemsService.getItemsByCategory(
-      query.mainCategoryId,
-      query.subCategoryId,
-    );
-  }
+  // @Get('category')
+  // @ApiItems.getItemsByCategory()
+  // @HttpCode(200)
+  // async getItemsByCategory(@Query() query: CategoryQueryDto) {
+  //   return this.itemsService.getItemsByCategory(
+  //     query.mainCategoryId,
+  //     query.subCategoryId,
+  //   );
+  // }
 
   //3. 단일 아이템 조회 : GET /items/:id
   @Get(':id')

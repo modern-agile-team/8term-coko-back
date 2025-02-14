@@ -4,11 +4,11 @@ import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 
 import { BadRequestException } from '@nestjs/common';
-import { InternalServerErrorException } from '@nestjs/common';
 import { Item } from '@prisma/client';
 import { ItemsRepository } from './items.repository';
 import { ItemsPaginationResponseDto } from './dto/items-pagination-response.dto';
 import { itemsPaginationQueryDto } from './dto/items-pagination-query.dto';
+
 @Injectable()
 export class ItemsService {
   constructor(
@@ -50,13 +50,36 @@ export class ItemsService {
     });
   }
   //아이템 전체 조회 getAllItems
-  async getAllItems(
-    itemsPaginationQuery: itemsPaginationQueryDto,
+  async getItemsByCategory(
+    query: itemsPaginationQueryDto,
   ): Promise<ItemsPaginationResponseDto> {
-    const { limit = 8, page = 1 } = itemsPaginationQuery;
+    const { mainCategoryId, subCategoryId, page, limit } = query;
 
-    const totalCount = await this.itemsRepository.getTotalItemCount();
-    const contents = await this.itemsRepository.findItems(page, limit);
+    if (
+      mainCategoryId &&
+      !(await this.itemsRepository.existMainCategory(mainCategoryId))
+    ) {
+      throw new NotFoundException(
+        `존재하지 않는 메인 카테고리입니다: ${mainCategoryId}`,
+      );
+    }
+
+    if (
+      subCategoryId &&
+      !(await this.itemsRepository.existSubCategory(subCategoryId))
+    ) {
+      throw new NotFoundException(
+        `존재하지 않는 서브 카테고리입니다: ${subCategoryId}`,
+      );
+    }
+
+    const where = {
+      ...(mainCategoryId && { mainCategoryId }),
+      ...(subCategoryId && { subCategoryId }),
+    };
+
+    const totalCount = await this.itemsRepository.getTotalItemCount(where);
+    const contents = await this.itemsRepository.findItems(page, limit, where);
 
     return new ItemsPaginationResponseDto({
       totalCount,
@@ -66,22 +89,21 @@ export class ItemsService {
     });
   }
 
+  // async getItemsByCategory(mainCategoryId: number, subCategoryId?: number) {
+  //   const where = {
+  //     mainCategoryId,
+  //     ...(subCategoryId && { subCategoryId }),
+  //   };
+
+  //   return await this.prisma.item.findMany({ where });
+  // }
+
   async getItemById(id: number) {
     const item = await this.prisma.item.findUnique({ where: { id: id } });
     if (!item) {
       throw new NotFoundException(`아이템을 찾을 수 없습니다. ID: ${id}`);
     }
     return item;
-  }
-
-  async getItemsByCategory(mainCategoryId: number, subCategoryId?: number) {
-    const where = {
-      mainCategoryId,
-      //subCategoryId : subCategoryId
-      ...(subCategoryId && { subCategoryId }),
-    };
-
-    return await this.prisma.item.findMany({ where });
   }
 
   async updateItem(id: number, updateItemDto: UpdateItemDto) {
