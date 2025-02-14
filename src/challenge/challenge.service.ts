@@ -2,13 +2,29 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
 import { UpdateChallengeDto } from './dto/update-challenge.dto';
 import { ChallengeRepository } from './challenge.repository';
+import { QueryChallengeDto } from './dto/query-challenge.dto';
+import { ResChallengePaginationDto } from './dto/res-challenge-pagination.dto';
 
 @Injectable()
 export class ChallengeService {
   constructor(private readonly challengeRepository: ChallengeRepository) {}
 
-  async findAll() {
-    return `오프셋 페이지네이션`;
+  async findAll(query: QueryChallengeDto) {
+    const { page, limit } = query;
+    const totalCount = await this.challengeRepository.getTotalChallengeCount();
+
+    const contents =
+      await this.challengeRepository.findSelectedPageChallengesInfo(
+        page,
+        limit,
+      );
+
+    // return new ResChallengePaginationDto({
+    //   totalCount,
+    //   currentPage: page,
+    //   limit,
+    //   contents,
+    // });
   }
 
   async findOne(challengeId: number) {

@@ -2,36 +2,44 @@ import { Injectable } from '@nestjs/common';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
 import { UpdateChallengeDto } from './dto/update-challenge.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { QueryChallengeDto } from './dto/query-challenge.dto';
 
 @Injectable()
 export class ChallengeRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll() {
-    return `페이지네이션으로 구현되야함`;
+  async getTotalChallengeCount() {
+    return await this.prisma.challenge.count();
   }
 
-  findOneById(id: number) {
-    return this.prisma.challenge.findUnique({
+  async findSelectedPageChallengesInfo(page: number, limit: number) {
+    return await this.prisma.challenge.findMany({
+      skip: (page - 1) * limit, // 건너뛸 항목 수 계산
+      take: limit, // 가져올 항목 수
+    });
+  }
+
+  async findOneById(id: number) {
+    return await this.prisma.challenge.findUnique({
       where: { id },
     });
   }
 
-  createChallenge(data: CreateChallengeDto) {
-    return this.prisma.challenge.create({
+  async createChallenge(data: CreateChallengeDto) {
+    return await this.prisma.challenge.create({
       data,
     });
   }
 
-  updateChallengeById(id: number, data: UpdateChallengeDto) {
-    return this.prisma.challenge.update({
+  async updateChallengeById(id: number, data: UpdateChallengeDto) {
+    return await this.prisma.challenge.update({
       where: { id },
       data,
     });
   }
 
-  deleteChallengeById(id: number) {
-    return this.prisma.challenge.delete({
+  async deleteChallengeById(id: number) {
+    return await this.prisma.challenge.delete({
       where: { id },
     });
   }

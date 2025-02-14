@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { ChallengeService } from './challenge.service';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
@@ -15,6 +16,7 @@ import { UpdateChallengeDto } from './dto/update-challenge.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { ResChallengeDto } from './dto/res-challenge.dto';
+import { QueryChallengeDto } from './dto/query-challenge.dto';
 
 @Controller('challenge')
 export class ChallengeController {
@@ -22,8 +24,8 @@ export class ChallengeController {
 
   @Get()
   //@ApiChallenge.findAll()
-  async findAll() {
-    const challenges = await this.challengeService.findAll();
+  async findAll(@Query() query: QueryChallengeDto) {
+    const challenges = await this.challengeService.findAll(query);
     //return ResChallengeDto.fromArray(challenges);
   }
 
