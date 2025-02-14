@@ -1,9 +1,8 @@
 export interface DailyQuest {
   id: number;
-  title: string;
   content: string;
   point: number;
-  exp: number;
+  experience: number;
   condition: number;
   createdAt: Date;
   updatedAt: Date;

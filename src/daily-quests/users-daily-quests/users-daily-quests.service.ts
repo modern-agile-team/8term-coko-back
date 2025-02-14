@@ -8,13 +8,18 @@ import {
   UserDailyQuestWiteQuestInfo,
 } from './users-daily-quests.interface';
 import { DAILY_RESET } from './const/users-daily-quests.const';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Progress } from 'src/progress/entities/progress.entity';
+import { ProgressRepository } from 'src/progress/progress.repository';
 
 @Injectable()
 export class UsersDailyQuestsService {
   constructor(
+    private readonly progressRepository: ProgressRepository,
     private readonly dailyQuestsRepository: DailyQuestsRepository,
     private readonly usersDailyQuestsRepository: UsersDailyQuestsRepository,
   ) {}
+
   async findOne(userDailyQuestId: number): Promise<UserDailyQuest> {
     const userDailyQuest =
       await this.usersDailyQuestsRepository.findOneById(userDailyQuestId);
@@ -36,8 +41,8 @@ export class UsersDailyQuestsService {
       return usersDailyQuests;
     }
 
-    const newUsersDailyQuests = await this.createRandomUserDailyQuest(userId);
-    return [newUsersDailyQuests];
+    const newUserDailyQuest = await this.createRandomUserDailyQuest(userId);
+    return [newUserDailyQuest];
   }
 
   async createRandomUserDailyQuest(
@@ -58,32 +63,43 @@ export class UsersDailyQuestsService {
     return this.usersDailyQuestsRepository.create(userId, id);
   }
 
-  async update(
-    userDailyQuestId: number,
-    body: UpdateUsersDailyQuestDto,
-  ): Promise<UserDailyQuestWiteQuestInfo> {
-    const { conditionProgress } = body;
-    const { dailyQuestId } = await this.findOne(userDailyQuestId);
-    const dailyQuest = await this.dailyQuestsRepository.findOne(dailyQuestId);
+  async update(userId: number): Promise<UserDailyQuestWiteQuestInfo | null> {
+    const [userDailyQuest] = await this.findAll(userId);
 
-    const updateByCompleted = (completed: boolean) => {
-      const newBody = { ...body, completed };
+    if (!userDailyQuest) return null;
 
-      return this.usersDailyQuestsRepository.updateById(
-        userDailyQuestId,
-        newBody,
-      );
+    // 완료된 퀘스트는 업데이트하지 않음
+    if (userDailyQuest.completed) return null;
+
+    const today = new Date();
+    const isCorrectTrueCount =
+      await this.progressRepository.countProgressByUserIdAndDate(userId, today);
+
+    const shouldBeCompleted =
+      userDailyQuest.dailyQuest.condition <= isCorrectTrueCount;
+
+    const conditionProgress = shouldBeCompleted
+      ? userDailyQuest.dailyQuest.condition
+      : isCorrectTrueCount;
+
+    const updatedData: UpdateUsersDailyQuestDto = {
+      conditionProgress,
+      completed: shouldBeCompleted,
     };
 
-    if (dailyQuest.condition <= conditionProgress) {
-      return updateByCompleted(true);
-    }
-
-    return updateByCompleted(false);
+    return this.usersDailyQuestsRepository.updateById(
+      userDailyQuest.id,
+      updatedData,
+    );
   }
 
   @Cron(DAILY_RESET)
   async deleteAllDailyQuests(): Promise<{ count: number }> {
     return this.usersDailyQuestsRepository.deleteAll();
+  }
+
+  @OnEvent('progress.updated')
+  async handleProgressUpdatedEvent(progress: Progress) {
+    await this.update(progress.userId);
   }
 }

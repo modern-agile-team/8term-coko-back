@@ -24,17 +24,17 @@ export class UsersDailyQuestsController {
     return ResUserDailyQuestDto.fromArray(userDailyQuests);
   }
 
-  @Patch(':userDailyQuestId')
-  @ApiUserDailyQuest.update()
-  @UseGuards(AuthGuard('accessToken'))
-  async update(
-    @Param('userDailyQuestId', PositiveIntPipe) userDailyQuestId: number,
-    @Body() body: UpdateUsersDailyQuestDto,
-  ): Promise<ResUserDailyQuestDto> {
-    const userDailyQuest = await this.usersDailyQuestsService.update(
-      userDailyQuestId,
-      body,
-    );
-    return new ResUserDailyQuestDto(userDailyQuest);
-  }
+  // @Patch(':userDailyQuestId')
+  // @ApiUserDailyQuest.update()
+  // @UseGuards(AuthGuard('accessToken'))
+  // async update(
+  //   @Param('userDailyQuestId', PositiveIntPipe) userDailyQuestId: number,
+  //   @Body() body: UpdateUsersDailyQuestDto,
+  // ): Promise<ResUserDailyQuestDto> {
+  //   const userDailyQuest = await this.usersDailyQuestsService.update(
+  //     userDailyQuestId,
+  //     body,
+  //   );
+  //   return new ResUserDailyQuestDto(userDailyQuest);
+  // }
 }
