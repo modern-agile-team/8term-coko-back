@@ -24,7 +24,7 @@ export class ChallengeController {
   //@ApiChallenge.findAll()
   async findAll() {
     const challenges = await this.challengeService.findAll();
-    return ResChallengeDto.fromArray(challenges);
+    //return ResChallengeDto.fromArray(challenges);
   }
 
   @Get(':challengeId')
