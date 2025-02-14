@@ -5,6 +5,7 @@ import { OffsetPaginationBaseResponseDto } from 'src/pagination/dtos/offset-pagi
 export class RankingPaginationResponseDto extends OffsetPaginationBaseResponseDto<UserRankingDto> {
   @ApiProperty({
     description: '조회된 랭킹 목록',
+    type: [UserRankingDto],
   })
   readonly contents: UserRankingDto[];
 
