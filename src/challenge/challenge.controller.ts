@@ -14,6 +14,7 @@ import { CreateChallengeDto } from './dto/create-challenge.dto';
 import { UpdateChallengeDto } from './dto/update-challenge.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
+import { ResChallengeDto } from './dto/res-challenge.dto';
 
 @Controller('challenge')
 export class ChallengeController {
@@ -22,13 +23,15 @@ export class ChallengeController {
   @Get()
   //@ApiChallenge.findAll()
   async findAll() {
-    await this.challengeService.findAll();
+    const challenges = await this.challengeService.findAll();
+    return ResChallengeDto.fromArray(challenges);
   }
 
   @Get(':challengeId')
   //@ApiChallenge.findOne()
   async findOne(@Param('challengeId', PositiveIntPipe) challengeId: number) {
-    await this.challengeService.findOne(challengeId);
+    const challenge = await this.challengeService.findOne(challengeId);
+    return new ResChallengeDto(challenge);
   }
 
   @Post()
