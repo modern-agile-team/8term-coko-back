@@ -18,13 +18,16 @@ import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe
 import { ResChallengeDto } from './dto/res-challenge.dto';
 import { QueryChallengeDto } from './dto/query-challenge.dto';
 import { ResChallengePaginationDto } from './dto/res-challenge-pagination.dto';
+import { ApiChallenge } from './challenge.swagger';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('challenges')
 @Controller('challenges')
 export class ChallengeController {
   constructor(private readonly challengeService: ChallengeService) {}
 
   @Get()
-  //@ApiChallenge.findAll()
+  @ApiChallenge.findAll()
   async findAll(@Query() query: QueryChallengeDto) {
     const paginationData =
       await this.challengeService.findAllByPageAndLimit(query);
@@ -32,24 +35,24 @@ export class ChallengeController {
   }
 
   @Get(':challengeId')
-  //@ApiChallenge.findOne()
+  @ApiChallenge.findOne()
   async findOne(@Param('challengeId', PositiveIntPipe) challengeId: number) {
     const challenge = await this.challengeService.findOne(challengeId);
     return new ResChallengeDto(challenge);
   }
 
   @Post()
-  //@ApiChallenge.create()
+  @ApiChallenge.create()
   @HttpCode(204)
-  //@UseGuards(AuthGuard('adminAccessToken'))
+  @UseGuards(AuthGuard('adminAccessToken'))
   async create(@Body() body: CreateChallengeDto) {
     await this.challengeService.create(body);
   }
 
   @Patch(':challengeId')
-  //@ApiChallenge.update()
+  @ApiChallenge.update()
   @HttpCode(204)
-  //@UseGuards(AuthGuard('adminAccessToken'))
+  @UseGuards(AuthGuard('adminAccessToken'))
   async update(
     @Param('challengeId', PositiveIntPipe) challengeId: number,
     @Body() body: UpdateChallengeDto,
@@ -58,9 +61,9 @@ export class ChallengeController {
   }
 
   @Delete(':challengeId')
-  //@ApiChallenge.remove()
+  @ApiChallenge.remove()
   @HttpCode(204)
-  //@UseGuards(AuthGuard('adminAccessToken'))
+  @UseGuards(AuthGuard('adminAccessToken'))
   async remove(@Param('challengeId', PositiveIntPipe) challengeId: number) {
     await this.challengeService.remove(challengeId);
   }

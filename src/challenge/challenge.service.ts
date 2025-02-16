@@ -38,7 +38,9 @@ export class ChallengeService {
     const challenge = await this.challengeRepository.findOneById(challengeId);
 
     if (!challenge) {
-      throw new NotFoundException(`도전과제를 찾을 수 없습니다.${challengeId}`);
+      throw new NotFoundException(
+        `도전과제 ${challengeId}를 찾을 수 없습니다.`,
+      );
     }
 
     return challenge;
