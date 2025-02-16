@@ -17,16 +17,18 @@ import { AuthGuard } from '@nestjs/passport';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { ResChallengeDto } from './dto/res-challenge.dto';
 import { QueryChallengeDto } from './dto/query-challenge.dto';
+import { ResChallengePaginationDto } from './dto/res-challenge-pagination.dto';
 
-@Controller('challenge')
+@Controller('challenges')
 export class ChallengeController {
   constructor(private readonly challengeService: ChallengeService) {}
 
   @Get()
   //@ApiChallenge.findAll()
   async findAll(@Query() query: QueryChallengeDto) {
-    const challenges = await this.challengeService.findAll(query);
-    //return ResChallengeDto.fromArray(challenges);
+    const paginationData =
+      await this.challengeService.findAllByPageAndLimit(query);
+    return new ResChallengePaginationDto(paginationData);
   }
 
   @Get(':challengeId')

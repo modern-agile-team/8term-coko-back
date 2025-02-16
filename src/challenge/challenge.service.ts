@@ -4,27 +4,30 @@ import { UpdateChallengeDto } from './dto/update-challenge.dto';
 import { ChallengeRepository } from './challenge.repository';
 import { QueryChallengeDto } from './dto/query-challenge.dto';
 import { ResChallengePaginationDto } from './dto/res-challenge-pagination.dto';
+import { OffsetPaginationBaseResponseDto } from 'src/pagination/dtos/offset-pagination-res.dto';
+import { ResChallengeDto } from './dto/res-challenge.dto';
 
 @Injectable()
 export class ChallengeService {
   constructor(private readonly challengeRepository: ChallengeRepository) {}
 
-  async findAll(query: QueryChallengeDto) {
+  async findAllByPageAndLimit(query: QueryChallengeDto) {
     const { page, limit } = query;
-    const totalCount = await this.challengeRepository.getTotalChallengeCount();
+    const allChallengesCount =
+      await this.challengeRepository.getTotalChallengeCount();
 
-    const contents =
+    const challenges =
       await this.challengeRepository.findSelectedPageChallengesInfo(
         page,
         limit,
       );
 
-    // return new ResChallengePaginationDto({
-    //   totalCount,
-    //   currentPage: page,
-    //   limit,
-    //   contents,
-    // });
+    return {
+      totalCount: allChallengesCount,
+      currentPage: page,
+      limit,
+      contents: challenges,
+    };
   }
 
   async findOne(challengeId: number) {

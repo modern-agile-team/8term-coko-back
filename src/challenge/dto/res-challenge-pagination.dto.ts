@@ -8,8 +8,10 @@ export class ResChallengePaginationDto extends OffsetPaginationBaseResponseDto<R
   })
   readonly contents: ResChallengeDto[];
 
-  constructor(props: ResChallengePaginationDto) {
+  constructor(
+    props: Omit<OffsetPaginationBaseResponseDto<Challenge>, 'totalPage'>,
+  ) {
     super(props);
-    this.contents = props.contents;
+    this.contents = ResChallengeDto.fromArray(props.contents);
   }
 }
