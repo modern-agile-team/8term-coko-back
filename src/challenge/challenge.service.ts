@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
 import { UpdateChallengeDto } from './dto/update-challenge.dto';
 import { ChallengeRepository } from './challenge.repository';
@@ -40,12 +44,31 @@ export class ChallengeService {
     return challenge;
   }
 
+  async chackedBadgeName(badgeName: string) {
+    const challenge =
+      await this.challengeRepository.findOneByBadgeName(badgeName);
+
+    if (challenge) {
+      throw new ConflictException(`벳지이름은 유니크 해야합니다.`);
+    }
+
+    return challenge;
+  }
+
   async create(body: CreateChallengeDto) {
+    const { badgeName } = body;
+
+    await this.chackedBadgeName(badgeName);
+
     return await this.challengeRepository.createChallenge(body);
   }
 
   async update(challengeId: number, body: UpdateChallengeDto) {
+    const { badgeName } = body;
+
     await this.findOne(challengeId);
+
+    badgeName && (await this.chackedBadgeName(badgeName));
 
     return await this.challengeRepository.updateChallengeById(
       challengeId,

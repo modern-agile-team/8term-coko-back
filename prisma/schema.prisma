@@ -248,7 +248,7 @@ model Challenge {
   point      Int      @default(0)
   experience Int      @default(0)
   condition  Int      @default(0)
-  badgeName  String   @map("badge_name")
+  badgeName  String   @unique @map("badge_name") @db.VarChar(255)
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 

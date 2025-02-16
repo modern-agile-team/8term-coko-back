@@ -25,6 +25,12 @@ export class ChallengeRepository {
     });
   }
 
+  async findOneByBadgeName(badgeName: string) {
+    return await this.prisma.challenge.findUnique({
+      where: { badgeName },
+    });
+  }
+
   async createChallenge(data: CreateChallengeDto) {
     return await this.prisma.challenge.create({
       data,
