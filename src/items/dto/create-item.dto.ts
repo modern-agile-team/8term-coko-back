@@ -1,12 +1,6 @@
-import {
-  IsString,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsInt,
-  Min,
-} from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsInt, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 export class CreateItemDto {
   @ApiProperty({
@@ -32,6 +26,7 @@ export class CreateItemDto {
   @IsInt()
   @Min(1)
   @IsNotEmpty()
+  @Type(() => Number)
   price: number;
 
   @ApiProperty({
@@ -41,6 +36,7 @@ export class CreateItemDto {
   @IsInt()
   @Min(1)
   @IsNotEmpty()
+  @Type(() => Number)
   mainCategoryId: number;
 
   @ApiProperty({
@@ -51,5 +47,6 @@ export class CreateItemDto {
   @IsOptional()
   @IsInt()
   @Min(1)
+  @Type(() => Number)
   subCategoryId?: number;
 }
