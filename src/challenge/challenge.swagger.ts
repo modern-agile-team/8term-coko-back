@@ -25,7 +25,7 @@ export const ApiChallenge = {
       ApiResponse({
         status: 200,
         description: `아이디를 통해 단일 도전과제 조회 됨`,
-        type: [ResChallengeDto],
+        type: ResChallengeDto,
       }),
     );
   },

@@ -5,6 +5,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class ResChallengePaginationDto extends OffsetPaginationBaseResponseDto<ResChallengeDto> {
   @ApiProperty({
     description: '조회된 도전과제 목록',
+    type: [ResChallengeDto],
   })
   readonly contents: ResChallengeDto[];
 
