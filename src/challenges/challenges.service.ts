@@ -8,10 +8,14 @@ import { UpdateChallengesDto } from './dto/update-challenges.dto';
 import { ChallengesRepository } from './challenges.repository';
 import { QueryChallengesDto } from './dto/query-challenges.dto';
 import { Challenge, PaginationChallenges } from './challenges.interface';
+import { UsersRepository } from 'src/users/repositories/users.reposirory';
 
 @Injectable()
 export class ChallengesService {
-  constructor(private readonly challengesRepository: ChallengesRepository) {}
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly challengesRepository: ChallengesRepository,
+  ) {}
 
   async findAllByPageAndLimit(
     query: QueryChallengesDto,
@@ -62,7 +66,16 @@ export class ChallengesService {
 
     await this.chackedBadgeName(badgeName);
 
-    return await this.challengesRepository.createChallenges(body);
+    const allUsers = await this.usersRepository.findAllUsers();
+
+    const defaultUserChallenges = allUsers.map((user) => {
+      return { userId: user.id };
+    });
+
+    return this.challengesRepository.createChallenges(
+      body,
+      defaultUserChallenges,
+    );
   }
 
   async update(

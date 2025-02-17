@@ -35,9 +35,15 @@ export class ChallengesRepository {
     });
   }
 
-  async createChallenges(data: CreateChallengesDto): Promise<Challenge> {
+  async createChallenges(
+    body: CreateChallengesDto,
+    defaultUserChallenges: { userId: number }[],
+  ): Promise<Challenge> {
     return await this.prisma.challenge.create({
-      data,
+      data: {
+        ...body,
+        UserChallenge: { create: defaultUserChallenges },
+      },
     });
   }
 
