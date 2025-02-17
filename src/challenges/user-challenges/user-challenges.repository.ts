@@ -1,12 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UserChallengesAndInfo } from './user-challenges.interface';
+import {
+  UserChallenge,
+  UserChallengesAndInfo,
+} from './user-challenges.interface';
+import { CreateUserChallengesDto } from './dto/create-user-challenges.dto';
+import { UpdateUserChallengesDto } from './dto/update-user-challenges.dto';
 
 @Injectable()
 export class UserChallengesRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getTotalUserChallengesCount(userId: number) {
+  async getTotalUserChallengesCount(userId: number): Promise<number> {
     return await this.prisma.userChallenge.count({
       where: { userId },
     });
@@ -25,19 +30,24 @@ export class UserChallengesRepository {
     });
   }
 
-  async findOneById(id: number) {
+  async findOneById(id: number): Promise<UserChallenge> {
     return await this.prisma.userChallenge.findUnique({
       where: { id },
     });
   }
 
-  async createUserChallenges(data) {
+  async createUserChallenges(
+    data: CreateUserChallengesDto,
+  ): Promise<UserChallenge> {
     return await this.prisma.userChallenge.create({
       data,
     });
   }
 
-  async updateUserChallengesById(id: number, data) {
+  async updateUserChallengesById(
+    id: number,
+    data: UpdateUserChallengesDto,
+  ): Promise<UserChallenge> {
     return await this.prisma.userChallenge.update({
       where: { id },
       data,

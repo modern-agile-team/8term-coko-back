@@ -74,7 +74,7 @@ model User {
   userHp                 UserHp?
   attendance             Attendance[]
   UserDailyQuest         UserDailyQuest[]
-  UserChallenge          UserChallenge[]
+  //UserChallenge          UserChallenge[]
 
   @@map("users")
 }
@@ -253,24 +253,24 @@ model Challenge {
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 
-  UserChallenge UserChallenge[]
+  //UserChallenge UserChallenge[]
 
   @@map("challenges")
 }
 
-model UserChallenge {
-  id            Int       @id @default(autoincrement())
-  userId        Int       @map("user_id")
-  challengeId   Int       @map("challenge_id")
-  completed     Boolean   @default(false)
-  completedDate DateTime? @map("completed_date")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+// model UserChallenge {
+//   id            Int       @id @default(autoincrement())
+//   userId        Int       @map("user_id")
+//   challengeId   Int       @map("challenge_id")
+//   completed     Boolean   @default(false)
+//   completedDate DateTime? @map("completed_date")
+//   createdAt     DateTime  @default(now()) @map("created_at")
+//   updatedAt     DateTime  @updatedAt @map("updated_at")
 
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  challenge Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+//   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   challenge Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, challengeId])
-  @@index([challengeId])
-  @@map("user_challenges")
-}
+//   @@unique([userId, challengeId])
+//   @@index([challengeId])
+//   @@map("user_challenges")
+// }
