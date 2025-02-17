@@ -107,7 +107,7 @@ export class ItemsService {
   }
 
   async updateItem(id: number, body: UpdateItemDto) {
-    const { name, mainCategoryId, subCategoryId } = body;
+    const { name, image, price, mainCategoryId, subCategoryId } = body;
 
     const item = await this.prisma.item.findUnique({
       where: { id },
@@ -123,31 +123,31 @@ export class ItemsService {
       if (itemCheckedByName) {
         throw new BadRequestException('이미 존재하는 아이템 이름입니다.');
       }
-
-      if (mainCategoryId) {
-        const itemCheckedByMainCategory =
-          await this.prisma.itemMainCategory.findUnique({
-            where: { id: mainCategoryId },
-          });
-        if (!itemCheckedByMainCategory) {
-          throw new BadRequestException('존재하지 않는 메인 카테고리입니다.');
-        }
-      }
-
-      if (subCategoryId) {
-        const itemCheckedBySubCategory =
-          await this.prisma.itemSubCategory.findUnique({
-            where: { id: subCategoryId },
-          });
-        if (!itemCheckedBySubCategory) {
-          throw new BadRequestException('존재하지 않는 서브 카테고리입니다.');
-        }
-      }
-
-      return this.prisma.item.update({
-        where: { id },
-        data: body,
-      });
     }
+
+    if (mainCategoryId) {
+      const itemCheckedByMainCategory =
+        await this.prisma.itemMainCategory.findUnique({
+          where: { id: mainCategoryId },
+        });
+      if (!itemCheckedByMainCategory) {
+        throw new BadRequestException('존재하지 않는 메인 카테고리입니다.');
+      }
+    }
+
+    if (subCategoryId) {
+      const itemCheckedBySubCategory =
+        await this.prisma.itemSubCategory.findUnique({
+          where: { id: subCategoryId },
+        });
+      if (!itemCheckedBySubCategory) {
+        throw new BadRequestException('존재하지 않는 서브 카테고리입니다.');
+      }
+    }
+
+    return this.prisma.item.update({
+      where: { id },
+      data: body,
+    });
   }
 }
