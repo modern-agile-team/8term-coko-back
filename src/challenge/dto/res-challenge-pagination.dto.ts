@@ -1,6 +1,7 @@
 import { OffsetPaginationBaseResponseDto } from 'src/pagination/dtos/offset-pagination-res.dto';
 import { ResChallengeDto } from './res-challenge.dto';
 import { ApiProperty } from '@nestjs/swagger';
+import { PaginationChallenge } from '../challenge.interface';
 
 export class ResChallengePaginationDto extends OffsetPaginationBaseResponseDto<ResChallengeDto> {
   @ApiProperty({
@@ -9,9 +10,7 @@ export class ResChallengePaginationDto extends OffsetPaginationBaseResponseDto<R
   })
   readonly contents: ResChallengeDto[];
 
-  constructor(
-    props: Omit<OffsetPaginationBaseResponseDto<Challenge>, 'totalPage'>,
-  ) {
+  constructor(props: PaginationChallenge) {
     super(props);
     this.contents = ResChallengeDto.fromArray(props.contents);
   }

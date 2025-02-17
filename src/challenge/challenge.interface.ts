@@ -1,4 +1,6 @@
-interface Challenge {
+import { OffsetPaginationBaseResponseDto } from 'src/pagination/dtos/offset-pagination-res.dto';
+
+export interface Challenge {
   id: number;
   content: string;
   point: number;
@@ -8,3 +10,6 @@ interface Challenge {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface PaginationChallenge
+  extends Omit<OffsetPaginationBaseResponseDto<Challenge>, 'totalPage'> {}

@@ -10,12 +10,15 @@ import { QueryChallengeDto } from './dto/query-challenge.dto';
 import { ResChallengePaginationDto } from './dto/res-challenge-pagination.dto';
 import { OffsetPaginationBaseResponseDto } from 'src/pagination/dtos/offset-pagination-res.dto';
 import { ResChallengeDto } from './dto/res-challenge.dto';
+import { Challenge, PaginationChallenge } from './challenge.interface';
 
 @Injectable()
 export class ChallengeService {
   constructor(private readonly challengeRepository: ChallengeRepository) {}
 
-  async findAllByPageAndLimit(query: QueryChallengeDto) {
+  async findAllByPageAndLimit(
+    query: QueryChallengeDto,
+  ): Promise<PaginationChallenge> {
     const { page, limit } = query;
     const allChallengesCount =
       await this.challengeRepository.getTotalChallengeCount();
@@ -34,7 +37,7 @@ export class ChallengeService {
     };
   }
 
-  async findOne(challengeId: number) {
+  async findOne(challengeId: number): Promise<Challenge> {
     const challenge = await this.challengeRepository.findOneById(challengeId);
 
     if (!challenge) {
@@ -46,7 +49,7 @@ export class ChallengeService {
     return challenge;
   }
 
-  async chackedBadgeName(badgeName: string) {
+  async chackedBadgeName(badgeName: string): Promise<Challenge> {
     const challenge =
       await this.challengeRepository.findOneByBadgeName(badgeName);
 
@@ -57,7 +60,7 @@ export class ChallengeService {
     return challenge;
   }
 
-  async create(body: CreateChallengeDto) {
+  async create(body: CreateChallengeDto): Promise<Challenge> {
     const { badgeName } = body;
 
     await this.chackedBadgeName(badgeName);
@@ -65,7 +68,10 @@ export class ChallengeService {
     return await this.challengeRepository.createChallenge(body);
   }
 
-  async update(challengeId: number, body: UpdateChallengeDto) {
+  async update(
+    challengeId: number,
+    body: UpdateChallengeDto,
+  ): Promise<Challenge> {
     const { badgeName } = body;
 
     await this.findOne(challengeId);
@@ -78,7 +84,7 @@ export class ChallengeService {
     );
   }
 
-  async remove(challengeId: number) {
+  async remove(challengeId: number): Promise<Challenge> {
     await this.findOne(challengeId);
 
     return await this.challengeRepository.deleteChallengeById(challengeId);
