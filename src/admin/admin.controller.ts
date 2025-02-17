@@ -31,8 +31,10 @@ export class AdminController {
     @Body() loginAdminInfo: LoginAdminDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const accessToken = await this.adminsService.loginAdmin(loginAdminInfo);
-    await this.cookieService.setAdminAccessTokenCookie(res, accessToken);
+    const adminAccessToken =
+      await this.adminsService.loginAdmin(loginAdminInfo);
+    await this.cookieService.setAdminAccessTokenCookie(res, adminAccessToken);
+    console.log(adminAccessToken);
   }
 
   // adminAccessToken 검증 요청

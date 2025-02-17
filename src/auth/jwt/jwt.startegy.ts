@@ -105,7 +105,7 @@ export class AdminAccessTokenStrategy extends PassportStrategy(
         (request: Request) => {
           // ? 옵셔널 을 붙여준 이유는 request 나 cookies 에 값이 없을때
           // null 을 반환하여 서버 종료를 방지하기 위함
-          return request?.cookies?.accessToken || null;
+          return request?.cookies?.adminAccessToken || null;
         },
       ]),
       // 시크릿키로 검증

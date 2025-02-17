@@ -43,14 +43,14 @@ export class TokenService {
   async createAdminAccessToken(role: string): Promise<string> {
     const payload = { role };
 
-    const accessToken = this.jwtService.sign(payload, {
+    const adminAccessToken = this.jwtService.sign(payload, {
       secret: this.configService.get<string>('ADMIN_ACCESS_SECRET'),
       expiresIn: Number(
         this.configService.get<string>('ADMIN_ACCESS_EXPIRATION_TIME'),
       ),
     });
 
-    return accessToken;
+    return adminAccessToken;
   }
 
   // 토큰 조회

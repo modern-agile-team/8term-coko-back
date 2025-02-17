@@ -37,9 +37,10 @@ export class AdminsService {
       throw new UnauthorizedException('Password does not match.');
     }
 
-    const accessToken = await this.tokenService.createAdminAccessToken('admin');
+    const adminAccessToken =
+      await this.tokenService.createAdminAccessToken('admin');
 
-    return accessToken;
+    return adminAccessToken;
   }
 
   /**
