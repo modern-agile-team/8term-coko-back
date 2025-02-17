@@ -241,3 +241,16 @@ model UserDailyQuest {
   @@index([dailyQuestId])
   @@map("user_daily_quests")
 }
+
+model Challenge {
+  id         Int      @id @default(autoincrement())
+  content    String   @db.VarChar(255)
+  point      Int      @default(0)
+  experience Int      @default(0)
+  condition  Int      @default(0)
+  badgeName  String   @unique @map("badge_name") @db.VarChar(255)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("challenges")
+}
