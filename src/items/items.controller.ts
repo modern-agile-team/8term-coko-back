@@ -56,22 +56,22 @@ export class ItemsController {
   // }
 
   //3. 단일 아이템 조회 : GET /items/:id
-  @Get(':id')
+  @Get(':itemId')
   @ApiItems.getItemById()
   @HttpCode(200)
-  async getItemById(@Param('id', PositiveIntPipe) id: number) {
-    return this.itemsService.getItemById(id);
+  async getItemById(@Param('itemId', PositiveIntPipe) itemId: number) {
+    return this.itemsService.getItemById(itemId);
   }
 
   //5. 아이템 수정 : PATCH /items/:id
-  @Patch(':id')
+  @Patch(':itemId')
   @ApiItems.updateItem()
-  @HttpCode(200)
+  @HttpCode(204)
   @UseGuards(AuthGuard('adminAccessToken'))
   async updateItem(
-    @Param('id', PositiveIntPipe) id: number,
-    @Body() updateItemDto: UpdateItemDto,
+    @Param('itemId', PositiveIntPipe) itemId: number,
+    @Body() body: UpdateItemDto,
   ) {
-    return this.itemsService.updateItem(id, updateItemDto);
+    await this.itemsService.updateItem(itemId, body);
   }
 }
