@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserChallengeDto } from './dto/create-user-challenge.dto';
 import { UpdateUserChallengeDto } from './dto/update-user-challenge.dto';
 import { UserChallengeRepository } from './user-challenge.repository';
@@ -30,15 +30,22 @@ export class UserChallengeService {
     };
   }
 
-  async findOne(id: number) {
-    return `This action returns a #${id} userChallenge`;
+  async findOne(userChallengeId: number) {
+    const userChallenge =
+      await this.userChallengeRepository.findOneById(userChallengeId);
+    if (!userChallenge) {
+      throw new NotFoundException(`ID: ${userChallengeId}를 찾을 수 없습니다.`);
+    }
   }
 
-  async create(createUserChallengeDto: CreateUserChallengeDto) {
-    return 'This action adds a new userChallenge';
+  async create(body: CreateUserChallengeDto) {
+    return this.userChallengeRepository.createUserChallenge(body);
   }
 
-  async update(id: number, updateUserChallengeDto: UpdateUserChallengeDto) {
-    return `This action updates a #${id} userChallenge`;
+  async update(userChallengeId: number, body: UpdateUserChallengeDto) {
+    return this.userChallengeRepository.updateUserChallengeById(
+      userChallengeId,
+      body,
+    );
   }
 }

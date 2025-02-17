@@ -270,5 +270,7 @@ model UserChallenge {
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   challenge Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
 
+  @@unique([userId, challengeId])
+  @@index([challengeId])
   @@map("user_challenges")
 }
