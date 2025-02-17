@@ -66,7 +66,7 @@ export class ItemsController {
   //5. 아이템 수정 : PATCH /items/:id
   @Patch(':id')
   @ApiItems.updateItem()
-  @HttpCode(200)
+  @HttpCode(204)
   @UseGuards(AuthGuard('adminAccessToken'))
   async updateItem(
     @Param('id', PositiveIntPipe) id: number,
