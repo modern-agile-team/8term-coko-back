@@ -31,4 +31,12 @@ export class UserHpController {
     const userHp = await this.userHpService.updateUserHpByUserId(user.id, body);
     return new ResUserHpDto(userHp);
   }
+
+  @ApiUserHp.updateUserHp()
+  @Patch()
+  @UseGuards(AuthGuard('accessToken'))
+  async decreaseUserHp(@User() user: UserInfo): Promise<ResUserHpDto> {
+    const userHp = await this.userHpService.decreaseUserHpByUserId(user.id);
+    return new ResUserHpDto(userHp);
+  }
 }

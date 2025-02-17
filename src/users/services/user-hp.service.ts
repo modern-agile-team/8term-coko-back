@@ -43,6 +43,7 @@ export class UserHpService {
 
     return userHp;
   }
+
   async updateUserHpByUserId(
     userId: number,
     body: UpdateHpDto,
@@ -58,5 +59,25 @@ export class UserHpService {
     }
 
     return this.userHpRepository.updateUserHpByUserId(userId, body);
+  }
+
+  /**
+   * hp 감소 메서드
+   */
+  async decreaseUserHpByUserId(userId: number): Promise<UserHp> {
+    const userHp = await this.userHpRepository.findUserHpByUserId(userId);
+
+    if (!userHp) {
+      throw new NotFoundException(`id ${userId}'s HP not found`);
+    }
+
+    if (userHp.hp === 0) {
+      throw new BadRequestException(`id ${userId}'s HP is 0`);
+    }
+
+    const decreasedHpValue =
+      await this.userHpRepository.decreaseUserHpByUserId(userId);
+
+    return decreasedHpValue;
   }
 }
