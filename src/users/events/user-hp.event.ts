@@ -1,22 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { UserHpService } from '../services/user-hp.service';
+import { HP_REFILL_TIME } from '../constants/user-hp.constant';
 
 @Injectable()
 export class HpEventsListener {
   constructor(private readonly userHpService: UserHpService) {}
 
+  /**
+   * hp 감소시 이벤트
+   * @param payload
+   */
   @OnEvent('hp.decreased')
-  handleHpDecreasedEvent(payload: { userId: number }) {
-    const { userId } = payload;
-    console.log(`HP 감소 이벤트 수신: userId=${userId}`);
+  handleHpDecreasedEvent(payload: {
+    userId: number;
+    decreasedHpValue: any;
+    hpStorage: number;
+  }) {
+    const { userId, decreasedHpValue, hpStorage } = payload;
 
-    // 20분 후에 HP 갱신 작업 실행
-    setTimeout(
-      () => {
-        //   this.userHpService.refillHp(userId);
-      },
-      20 * 60 * 1000,
+    // timer 예약 메서드 호출
+    this.userHpService.scheduleRefillTimer(
+      userId,
+      hpStorage,
+      decreasedHpValue.hp,
+      HP_REFILL_TIME,
     );
   }
 }

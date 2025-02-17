@@ -26,7 +26,6 @@ export class SseController {
 
     // 브라우저 닫힘 등으로 연결이 종료될 때 처리
     request.on('close', () => {
-      //   console.log(`SSE 연결 종료됨: userId=${userId}`);
       this.sseService.removeClient(userId);
       client.complete();
     });

@@ -21,17 +21,22 @@ export class UserHpController {
     return new ResUserHpDto(userHp);
   }
 
-  @ApiUserHp.updateUserHp()
-  @Patch()
-  @UseGuards(AuthGuard('accessToken'))
-  async updateUserHp(
-    @User() user: UserInfo,
-    @Body() body: UpdateHpDto,
-  ): Promise<ResUserHpDto> {
-    const userHp = await this.userHpService.updateUserHpByUserId(user.id, body);
-    return new ResUserHpDto(userHp);
-  }
+  // @ApiUserHp.updateUserHp()
+  // @Patch()
+  // @UseGuards(AuthGuard('accessToken'))
+  // async updateUserHp(
+  //   @User() user: UserInfo,
+  //   @Body() body: UpdateHpDto,
+  // ): Promise<ResUserHpDto> {
+  //   const userHp = await this.userHpService.updateUserHpByUserId(user.id, body);
+  //   return new ResUserHpDto(userHp);
+  // }
 
+  /**
+   * 유저 hp 감소
+   * @param user
+   * @returns
+   */
   @ApiUserHp.updateUserHp()
   @Patch()
   @UseGuards(AuthGuard('accessToken'))

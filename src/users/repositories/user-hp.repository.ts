@@ -24,10 +24,31 @@ export class UserHpRepository {
     });
   }
 
+  /**
+   * hp 감소 메서드
+   * @param userId
+   * @returns
+   */
   async decreaseUserHpByUserId(userId: number): Promise<UserHp> {
     return this.prisma.userHp.update({
       where: { userId },
-      data: { hp: { increment: HP_DECREASE_VALUE } },
+      data: { hp: { decrement: HP_DECREASE_VALUE } },
+    });
+  }
+
+  /**
+   * hp 리필 메서드
+   * @param userId
+   * @param hpRefillValue
+   * @returns
+   */
+  async refillUserHpByUserId(
+    userId: number,
+    hpRefillValue: number,
+  ): Promise<UserHp> {
+    return this.prisma.userHp.update({
+      where: { userId },
+      data: { hp: { increment: hpRefillValue } },
     });
   }
 }

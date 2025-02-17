@@ -5,6 +5,6 @@ import { SseService } from './sse.service';
 @Module({
   controllers: [SseController],
   providers: [SseService],
-  exports: [],
+  exports: [SseService],
 })
-export class UsersModule {}
+export class SseModule {}
