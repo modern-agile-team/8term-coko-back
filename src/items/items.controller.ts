@@ -19,6 +19,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { OffsetPaginationBaseResponseDto } from 'src/pagination/dtos/offset-pagination-res.dto';
 import { Item } from '@prisma/client';
+import { body } from 'express-validator';
 
 @ApiTags('items')
 @Controller('items')
@@ -70,8 +71,8 @@ export class ItemsController {
   @UseGuards(AuthGuard('adminAccessToken'))
   async updateItem(
     @Param('id', PositiveIntPipe) id: number,
-    @Body() updateItemDto: UpdateItemDto,
+    @Body() body: UpdateItemDto,
   ) {
-    return this.itemsService.updateItem(id, updateItemDto);
+    await this.itemsService.updateItem(id, body);
   }
 }
