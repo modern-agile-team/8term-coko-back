@@ -13,13 +13,13 @@ import { UserInfo } from '../entities/user.entity';
 export class UserHpController {
   constructor(private readonly userHpService: UserHpService) {}
 
-  @ApiUserHp.getUserHp()
-  @Get()
-  @UseGuards(AuthGuard('accessToken'))
-  async getUserHp(@User() user: UserInfo): Promise<ResUserHpDto> {
-    const userHp = await this.userHpService.findUserHpByUserId(user.id);
-    return new ResUserHpDto(userHp);
-  }
+  // @ApiUserHp.getUserHp()
+  // @Get()
+  // @UseGuards(AuthGuard('accessToken'))
+  // async getUserHp(@User() user: UserInfo): Promise<ResUserHpDto> {
+  //   const userHp = await this.userHpService.findUserHpByUserId(user.id);
+  //   return new ResUserHpDto(userHp);
+  // }
 
   // @ApiUserHp.updateUserHp()
   // @Patch()
@@ -31,6 +31,19 @@ export class UserHpController {
   //   const userHp = await this.userHpService.updateUserHpByUserId(user.id, body);
   //   return new ResUserHpDto(userHp);
   // }
+
+  /**
+   * userHp 조회 메서드
+   * @param user
+   * @returns
+   */
+  @ApiUserHp.getUserHp()
+  @Get()
+  @UseGuards(AuthGuard('accessToken'))
+  async getUserHp(@User() user: UserInfo): Promise<ResUserHpDto> {
+    const userHp = await this.userHpService.findUserHpByUserId(user.id);
+    return new ResUserHpDto(userHp);
+  }
 
   /**
    * 유저 hp 감소

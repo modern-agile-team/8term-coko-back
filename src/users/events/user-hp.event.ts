@@ -19,7 +19,7 @@ export class HpEventsListener {
   }) {
     const { userId, decreasedHpValue, hpStorage } = payload;
 
-    // timer 예약 메서드 호출
+    // 해당 이벤트 발행시 timer 예약 메서드 호출
     this.userHpService.scheduleRefillTimer(
       userId,
       hpStorage,
