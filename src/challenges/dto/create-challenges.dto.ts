@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsString, Max, Min } from 'class-validator';
-import { Challenge } from '../challenge.interface';
+import { Challenge } from '../challenges.interface';
 
-export class CreateChallengeDto
+export class CreateChallengesDto
   implements Omit<Challenge, 'id' | 'createdAt' | 'updatedAt'>
 {
   @ApiProperty({

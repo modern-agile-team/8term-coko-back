@@ -1,9 +1,9 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { ResChallengePaginationDto } from './dto/res-challenge-pagination.dto';
-import { ResChallengeDto } from './dto/res-challenge.dto';
+import { ResChallengesPaginationDto } from './dto/res-challenges-pagination.dto';
+import { ResChallengesDto } from './dto/res-challenges.dto';
 
-export const ApiChallenge = {
+export const ApiChallenges = {
   findAll: () => {
     return applyDecorators(
       ApiOperation({
@@ -13,7 +13,7 @@ export const ApiChallenge = {
       ApiResponse({
         status: 200,
         description: `페이지네이션 된 도전과제 조회 됨`,
-        type: [ResChallengePaginationDto],
+        type: [ResChallengesPaginationDto],
       }),
     );
   },
@@ -25,7 +25,7 @@ export const ApiChallenge = {
       ApiResponse({
         status: 200,
         description: `아이디를 통해 단일 도전과제 조회 됨`,
-        type: ResChallengeDto,
+        type: ResChallengesDto,
       }),
     );
   },

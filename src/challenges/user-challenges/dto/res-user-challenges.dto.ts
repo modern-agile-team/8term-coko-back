@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   UserChallenge,
-  UserChallengeAndInfo,
-} from '../user-challenge.interface';
-import { ResChallengeDto } from 'src/challenge/dto/res-challenge.dto';
+  UserChallengesAndInfo,
+} from '../user-challenges.interface';
+import { ResChallengesDto } from 'src/challenges/dto/res-challenges.dto';
 
-export class ResUserChallengeDto
+export class ResUserChallengesDto
   implements Omit<UserChallenge, 'createdAt' | 'updatedAt'>
 {
   @ApiProperty({ example: 1, description: '유저도전과제 아이디' })
@@ -32,24 +32,24 @@ export class ResUserChallengeDto
   @ApiProperty({
     example: 0,
     description: '도전과제 완료한 시간',
-    type: ResChallengeDto,
+    type: ResChallengesDto,
   })
-  readonly challenge: ResChallengeDto;
+  readonly challenge: ResChallengesDto;
 
-  constructor(userChallenge: UserChallengeAndInfo) {
-    this.id = userChallenge.id;
-    this.userId = userChallenge.userId;
-    this.challengeId = userChallenge.challengeId;
-    this.completed = userChallenge.completed;
-    this.completedDate = userChallenge.completedDate;
-    this.challenge = new ResChallengeDto(userChallenge.challenge);
+  constructor(userChallenges: UserChallengesAndInfo) {
+    this.id = userChallenges.id;
+    this.userId = userChallenges.userId;
+    this.challengeId = userChallenges.challengeId;
+    this.completed = userChallenges.completed;
+    this.completedDate = userChallenges.completedDate;
+    this.challenge = new ResChallengesDto(userChallenges.challenge);
   }
 
   static fromArray(
-    userChallenges: UserChallengeAndInfo[],
-  ): ResUserChallengeDto[] {
-    return userChallenges.map(
-      (userChallenge) => new ResUserChallengeDto(userChallenge),
+    userChallengess: UserChallengesAndInfo[],
+  ): ResUserChallengesDto[] {
+    return userChallengess.map(
+      (userChallenges) => new ResUserChallengesDto(userChallenges),
     );
   }
 }
