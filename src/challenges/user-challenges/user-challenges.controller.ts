@@ -19,7 +19,7 @@ export class UserChallengesController {
   async findAllUserChallenges(
     @User() user: UserInfo,
     @Query() query: QueryChallengesDto,
-  ) {
+  ): Promise<ResUserChallengesPaginationDto> {
     const paginationData =
       await this.userChallengesService.findAllByPageAndLimit(user.id, query);
     return new ResUserChallengesPaginationDto(paginationData);
