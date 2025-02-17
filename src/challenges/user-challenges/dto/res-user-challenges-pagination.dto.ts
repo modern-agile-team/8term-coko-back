@@ -6,7 +6,7 @@ import { PaginationUserChallenges } from '../user-challenges.interface';
 
 export class ResUserChallengesPaginationDto extends OffsetPaginationBaseResponseDto<ResUserChallengesDto> {
   @ApiProperty({
-    description: '조회된 도전과제 목록',
+    description: '조회된 유저-도전과제 목록',
     type: [ResUserChallengesDto],
   })
   readonly contents: ResUserChallengesDto[];
