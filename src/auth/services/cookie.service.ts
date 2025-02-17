@@ -65,8 +65,8 @@ export class CookieService {
   }
 
   // adminAccessToken 쿠키 설정
-  async setAdminAccessTokenCookie(res: Response, accessToken: string) {
-    const accessTokenCookieOptions = {
+  async setAdminAccessTokenCookie(res: Response, adminAccessToken: string) {
+    const adminAccessTokenCookieOptions = {
       httpOnly: true,
       secure: true,
       domain: this.configService.get<string>('ADMIN_COOKIE_DOMAIN'),
@@ -76,6 +76,10 @@ export class CookieService {
       ),
       path: '/',
     };
-    res.cookie('accessToken', accessToken, accessTokenCookieOptions);
+    res.cookie(
+      'adminAccessToken',
+      adminAccessToken,
+      adminAccessTokenCookieOptions,
+    );
   }
 }
