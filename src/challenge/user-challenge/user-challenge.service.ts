@@ -4,11 +4,7 @@ import { UpdateUserChallengeDto } from './dto/update-user-challenge.dto';
 
 @Injectable()
 export class UserChallengeService {
-  create(createUserChallengeDto: CreateUserChallengeDto) {
-    return 'This action adds a new userChallenge';
-  }
-
-  findAll() {
+  findAllByPageAndLimit() {
     return `This action returns all userChallenge`;
   }
 
@@ -16,11 +12,11 @@ export class UserChallengeService {
     return `This action returns a #${id} userChallenge`;
   }
 
-  update(id: number, updateUserChallengeDto: UpdateUserChallengeDto) {
-    return `This action updates a #${id} userChallenge`;
+  create(createUserChallengeDto: CreateUserChallengeDto) {
+    return 'This action adds a new userChallenge';
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} userChallenge`;
+  update(id: number, updateUserChallengeDto: UpdateUserChallengeDto) {
+    return `This action updates a #${id} userChallenge`;
   }
 }

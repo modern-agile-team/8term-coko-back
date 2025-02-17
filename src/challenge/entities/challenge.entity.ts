@@ -1,1 +1,1 @@
-export class Challenge {}
+export class ChallengeEntity {}
