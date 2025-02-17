@@ -6,6 +6,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/common/decorators/get-user.decorator';
 import { UserInfo } from 'src/users/entities/user.entity';
 import { ResUserChallengesPaginationDto } from './dto/res-user-challenges-pagination.dto';
+import { ApiChallenges } from '../challenges.swagger';
 
 @ApiTags('users/me/challengess')
 @Controller('user-challenges')
@@ -13,9 +14,12 @@ export class UserChallengesController {
   constructor(private readonly userChallengesService: UserChallengesService) {}
 
   @Get()
-  //@ApiUserChallenges.findAll()
+  @ApiChallenges.findAllUserChallenges()
   @UseGuards(AuthGuard('accessToken'))
-  async findAll(@User() user: UserInfo, @Query() query: QueryChallengesDto) {
+  async findAllUserChallenges(
+    @User() user: UserInfo,
+    @Query() query: QueryChallengesDto,
+  ) {
     const paginationData =
       await this.userChallengesService.findAllByPageAndLimit(user.id, query);
     return new ResUserChallengesPaginationDto(paginationData);

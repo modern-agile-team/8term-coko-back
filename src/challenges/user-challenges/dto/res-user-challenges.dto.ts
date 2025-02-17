@@ -30,7 +30,6 @@ export class ResUserChallengesDto
   readonly completedDate: Date | null;
 
   @ApiProperty({
-    example: 0,
     description: '도전과제 완료한 시간',
     type: ResChallengesDto,
   })

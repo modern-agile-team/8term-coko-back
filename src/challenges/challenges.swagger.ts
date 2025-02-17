@@ -2,6 +2,7 @@ import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ResChallengesPaginationDto } from './dto/res-challenges-pagination.dto';
 import { ResChallengesDto } from './dto/res-challenges.dto';
+import { ResUserChallengesPaginationDto } from './user-challenges/dto/res-user-challenges-pagination.dto';
 
 export const ApiChallenges = {
   findAll: () => {
@@ -13,7 +14,7 @@ export const ApiChallenges = {
       ApiResponse({
         status: 200,
         description: `페이지네이션 된 도전과제 조회 됨`,
-        type: [ResChallengesPaginationDto],
+        type: ResChallengesPaginationDto,
       }),
     );
   },
@@ -114,6 +115,18 @@ export const ApiChallenges = {
             },
           },
         },
+      }),
+    );
+  },
+  findAllUserChallenges: () => {
+    return applyDecorators(
+      ApiOperation({
+        summary: '모든 유저-도전과제 페이지네이션으로 조회',
+      }),
+      ApiResponse({
+        status: 200,
+        description: `페이지네이션 된 유저-도전과제 조회 됨`,
+        type: ResUserChallengesPaginationDto,
       }),
     );
   },
