@@ -10,7 +10,6 @@ export class UpdateUsersDailyQuestDto {
   @Min(0)
   @Max(1000)
   readonly conditionProgress: number;
-  readonly completed: boolean;
 
   @ApiProperty({
     description: '완료 유뮤',
