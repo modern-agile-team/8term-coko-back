@@ -19,7 +19,6 @@ import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { OffsetPaginationBaseResponseDto } from 'src/pagination/dtos/offset-pagination-res.dto';
 import { Item } from '@prisma/client';
-import { body } from 'express-validator';
 
 @ApiTags('items')
 @Controller('items')
@@ -57,22 +56,22 @@ export class ItemsController {
   // }
 
   //3. 단일 아이템 조회 : GET /items/:id
-  @Get(':id')
+  @Get(':itemId')
   @ApiItems.getItemById()
   @HttpCode(200)
-  async getItemById(@Param('id', PositiveIntPipe) id: number) {
-    return this.itemsService.getItemById(id);
+  async getItemById(@Param('itemId', PositiveIntPipe) itemId: number) {
+    return this.itemsService.getItemById(itemId);
   }
 
   //5. 아이템 수정 : PATCH /items/:id
-  @Patch(':id')
+  @Patch(':itemId')
   @ApiItems.updateItem()
   @HttpCode(204)
   @UseGuards(AuthGuard('adminAccessToken'))
   async updateItem(
-    @Param('id', PositiveIntPipe) id: number,
+    @Param('itemId', PositiveIntPipe) itemId: number,
     @Body() body: UpdateItemDto,
   ) {
-    await this.itemsService.updateItem(id, body);
+    await this.itemsService.updateItem(itemId, body);
   }
 }
