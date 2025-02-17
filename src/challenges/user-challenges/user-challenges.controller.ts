@@ -8,8 +8,8 @@ import { UserInfo } from 'src/users/entities/user.entity';
 import { ResUserChallengesPaginationDto } from './dto/res-user-challenges-pagination.dto';
 import { ApiChallenges } from '../challenges.swagger';
 
-@ApiTags('users/me/challengess')
-@Controller('user-challenges')
+@ApiTags('challenges')
+@Controller('users/me/challenges')
 export class UserChallengesController {
   constructor(private readonly userChallengesService: UserChallengesService) {}
 

@@ -21,8 +21,8 @@ import { ResChallengesPaginationDto } from './dto/res-challenges-pagination.dto'
 import { ApiChallenges } from './challenges.swagger';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('challengess')
-@Controller('challengess')
+@ApiTags('challenges')
+@Controller('challenges')
 export class ChallengesController {
   constructor(private readonly challengesService: ChallengesService) {}
 
