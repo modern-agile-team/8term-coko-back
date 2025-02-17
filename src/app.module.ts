@@ -17,6 +17,7 @@ import { RankingsModule } from './ranking/rankings.module';
 import { AttendanceModule } from './attendance/attendance.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { SseModule } from './sse/sse.module';
+import { ChallengeModule } from './challenge/challenge.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { SseModule } from './sse/sse.module';
     AttendanceModule,
     EventEmitterModule.forRoot(),
     SseModule,
+    ChallengeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
