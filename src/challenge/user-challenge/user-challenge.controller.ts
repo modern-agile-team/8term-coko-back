@@ -5,6 +5,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/common/decorators/get-user.decorator';
 import { UserInfo } from 'src/users/entities/user.entity';
+import { ResUserChallengePaginationDto } from './dto/res-user-challenge-pagination.dto';
 
 @ApiTags('users/me/challenges')
 @Controller('user-challenge')
@@ -17,6 +18,6 @@ export class UserChallengeController {
   async findAll(@User() user: UserInfo, @Query() query: QueryChallengeDto) {
     const paginationData =
       await this.userChallengeService.findAllByPageAndLimit(user.id, query);
-    return paginationData;
+    return new ResUserChallengePaginationDto(paginationData);
   }
 }

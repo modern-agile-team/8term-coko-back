@@ -5,14 +5,22 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class UserChallengeRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getTotalUserChallengeCount() {
-    return await this.prisma.userChallenge.count();
+  async getTotalUserChallengeCount(userId: number) {
+    return await this.prisma.userChallenge.count({
+      where: { userId },
+    });
   }
 
-  async findSelectedPageUserChallengesInfo(page: number, limit: number) {
+  async findSelectedPageUserChallengesInfo(
+    userId: number,
+    page: number,
+    limit: number,
+  ) {
     return await this.prisma.userChallenge.findMany({
+      where: { userId },
       skip: (page - 1) * limit, // 건너뛸 항목 수 계산
       take: limit, // 가져올 항목 수
+      include: { challenge: true },
     });
   }
 
