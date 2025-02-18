@@ -8,6 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
+import { ItemDto } from './dto/response-item.dto';
 import { PaginatedItemsResponseDto } from './dto/response-item.dto';
 
 export const ApiItems = {
@@ -61,15 +62,10 @@ export const ApiItems = {
         summary: '아이템 상세 조회',
         description: '아이템 ID를 사용하여 특정 아이템을 조회합니다.',
       }),
-      ApiParam({
-        name: 'id',
-        required: true,
-        description: '아이템 ID',
-        example: 1,
-      }),
       ApiResponse({
         status: 200,
         description: '아이템 조회 성공',
+        type: ItemDto,
       }),
       ApiResponse({
         status: 404,

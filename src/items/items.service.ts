@@ -89,15 +89,6 @@ export class ItemsService {
     });
   }
 
-  // async getItemsByCategory(mainCategoryId: number, subCategoryId?: number) {
-  //   const where = {
-  //     mainCategoryId,
-  //     ...(subCategoryId && { subCategoryId }),
-  //   };
-
-  //   return await this.prisma.item.findMany({ where });
-  // }
-
   async getItemById(id: number) {
     const item = await this.prisma.item.findUnique({ where: { id: id } });
     if (!item) {
