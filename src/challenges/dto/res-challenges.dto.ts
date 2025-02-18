@@ -46,7 +46,7 @@ export class ResChallengesDto
     this.badgeName = challenges.badgeName;
   }
 
-  static fromArray(challengess: Challenge[]): ResChallengesDto[] {
-    return challengess.map((challenges) => new ResChallengesDto(challenges));
+  static fromArray(challenges: Challenge[]): ResChallengesDto[] {
+    return challenges.map((challenge) => new ResChallengesDto(challenge));
   }
 }

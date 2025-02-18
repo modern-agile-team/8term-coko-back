@@ -13,7 +13,7 @@ export class ChallengesRepository {
     return await this.prisma.challenge.count();
   }
 
-  async findSelectedPageChallengessInfo(
+  async findSelectedPageChallengesInfo(
     page: number,
     limit: number,
   ): Promise<Challenge[]> {
@@ -35,7 +35,7 @@ export class ChallengesRepository {
     });
   }
 
-  async createChallenges(
+  async createChallenge(
     body: CreateChallengesDto,
     defaultUserChallenges: { userId: number }[],
   ): Promise<Challenge> {

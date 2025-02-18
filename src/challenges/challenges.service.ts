@@ -21,20 +21,20 @@ export class ChallengesService {
     query: QueryChallengesDto,
   ): Promise<PaginationChallenges> {
     const { page, limit } = query;
-    const allChallengessCount =
+    const allChallengesCount =
       await this.challengesRepository.getTotalChallengesCount();
 
-    const challengess =
-      await this.challengesRepository.findSelectedPageChallengessInfo(
+    const challenges =
+      await this.challengesRepository.findSelectedPageChallengesInfo(
         page,
         limit,
       );
 
     return {
-      totalCount: allChallengessCount,
+      totalCount: allChallengesCount,
       currentPage: page,
       limit,
-      contents: challengess,
+      contents: challenges,
     };
   }
 
@@ -72,7 +72,7 @@ export class ChallengesService {
       return { userId: user.id };
     });
 
-    return this.challengesRepository.createChallenges(
+    return this.challengesRepository.createChallenge(
       body,
       defaultUserChallenges,
     );

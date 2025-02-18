@@ -3,10 +3,10 @@ import { ChallengesService } from './challenges.service';
 import { ChallengesController } from './challenges.controller';
 import { ChallengesRepository } from './challenges.repository';
 import { UserChallengesModule } from './user-challenges/user-challenges.module';
-import { UsersModule } from 'src/users/modules/users.module';
+import { UsersCoreModule } from 'src/users/modules/users-core.module';
 
 @Module({
-  imports: [UserChallengesModule, UsersModule],
+  imports: [UserChallengesModule, UsersCoreModule],
   controllers: [ChallengesController],
   providers: [ChallengesService, ChallengesRepository],
 })
