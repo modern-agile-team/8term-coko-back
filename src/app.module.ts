@@ -17,15 +17,12 @@ import { RankingsModule } from './ranking/rankings.module';
 import { AttendanceModule } from './attendance/attendance.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ChallengesModule } from './challenges/challenges.module';
-
+import { SseModule } from './sse/sse.module';
 @Module({
   imports: [
     ItemsModule,
     SectionsModule,
     PrismaModule,
-    UserItemsModule,
-    UserPointModule,
-    UserExperienceModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -40,6 +37,7 @@ import { ChallengesModule } from './challenges/challenges.module';
     AttendanceModule,
     EventEmitterModule.forRoot(),
     ChallengesModule,
+    SseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

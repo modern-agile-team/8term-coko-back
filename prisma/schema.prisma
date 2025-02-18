@@ -181,8 +181,8 @@ model PartProgress {
 model UserHp {
   id        Int      @id @default(autoincrement())
   userId    Int      @unique @map("user_id")
-  hp        Int      @default(5)
-  hpStorage Int      @default(5) @map("hp_storage")
+  hp        Int      @default(10)
+  hpStorage Int      @default(10) @map("hp_storage")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 

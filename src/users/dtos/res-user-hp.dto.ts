@@ -5,10 +5,10 @@ export class ResUserHpDto {
   @ApiProperty({ example: 12 })
   readonly userId: number;
 
-  @ApiProperty({ example: 3 })
+  @ApiProperty({ example: 7 })
   readonly hp: number;
 
-  @ApiProperty({ example: 5 })
+  @ApiProperty({ example: 10 })
   readonly hpStorage: number;
 
   constructor(userHp: UserHp) {
