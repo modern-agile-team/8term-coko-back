@@ -11,5 +11,5 @@ export interface Challenge {
   updatedAt: Date;
 }
 
-export interface PaginationChallenge
+export interface PaginationChallenges
   extends Omit<OffsetPaginationBaseResponseDto<Challenge>, 'totalPage'> {}

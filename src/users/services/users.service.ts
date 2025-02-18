@@ -10,6 +10,7 @@ import {
 import { Part } from 'src/parts/entities/part.entity';
 import { PrismaClientOrTransaction } from 'src/prisma/prisma.type';
 import { UsersRepository } from '../repositories/users.reposirory';
+import { Challenge } from 'src/challenges/challenges.interface';
 
 @Injectable()
 export class UsersService {
@@ -18,7 +19,14 @@ export class UsersService {
     private readonly usersRepository: UsersRepository,
   ) {}
 
-  private async createDefaultPartProgress(txOrPrisma: any = this.prisma) {
+  private async createDefaultPartProgress(
+    txOrPrisma: any = this.prisma,
+  ): Promise<
+    {
+      partId: number;
+      status: PartStatus;
+    }[]
+  > {
     const parts = await txOrPrisma.part.findMany();
 
     return parts.map((part: Part) => {
@@ -37,6 +45,18 @@ export class UsersService {
     });
   }
 
+  private async createDefaultUserChallenges(
+    txOrPrisma: any = this.prisma,
+  ): Promise<{ challengeId: number }[]> {
+    const challenges = await txOrPrisma.challenge.findMany({
+      select: { id: true },
+    });
+
+    return challenges.map((challenge: Challenge) => {
+      return { challengeId: challenge.id };
+    });
+  }
+
   getAllUsers(): Promise<ResponseUserDto[]> {
     return this.prisma.user.findMany();
   }
@@ -48,7 +68,12 @@ export class UsersService {
     txOrPrisma: PrismaClientOrTransaction = this.prisma,
   ): Promise<ResponseUserDto> {
     // 유저 생성시 디폴트 파트 진행도를 생성
-    const defaulPartProgress = await this.createDefaultPartProgress(txOrPrisma);
+    const defaultPartProgress =
+      await this.createDefaultPartProgress(txOrPrisma);
+
+    // 유저 생성시 디폴트 유저 도전과제를 생성
+    const defaultUserChallenges =
+      await this.createDefaultUserChallenges(txOrPrisma);
 
     // 유저 생성시 기본 유저 생명력 생성
     const userResponse = await txOrPrisma.user.create({
@@ -56,8 +81,9 @@ export class UsersService {
         provider,
         providerId,
         name,
-        partProgress: { create: defaulPartProgress },
+        partProgress: { create: defaultPartProgress },
         userHp: { create: {} },
+        userChallenge: { create: defaultUserChallenges },
       },
     });
 

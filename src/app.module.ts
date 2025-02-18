@@ -16,7 +16,7 @@ import { DailyQuestsModule } from './daily-quests/daily-quests.module';
 import { RankingsModule } from './ranking/rankings.module';
 import { AttendanceModule } from './attendance/attendance.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { ChallengeModule } from './challenge/challenge.module';
+import { ChallengesModule } from './challenges/challenges.module';
 
 @Module({
   imports: [
@@ -39,7 +39,7 @@ import { ChallengeModule } from './challenge/challenge.module';
     DailyQuestsModule,
     AttendanceModule,
     EventEmitterModule.forRoot(),
-    ChallengeModule,
+    ChallengesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
