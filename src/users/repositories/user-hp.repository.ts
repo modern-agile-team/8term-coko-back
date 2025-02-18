@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UpdateHpDto } from '../dtos/update-hp.dto';
 import { UserHp } from '../entities/user-hp.entity';
 import { HP_DECREASE_VALUE } from '../constants/user-hp.constant';
 
@@ -14,7 +13,7 @@ export class UserHpRepository {
     });
   }
 
-  // 추후 사용될 수 도 있는 메서드
+  // 추후 사용될 수도 있는 메서드
   // async updateUserHpByUserId(
   //   userId: number,
   //   data: UpdateHpDto,
