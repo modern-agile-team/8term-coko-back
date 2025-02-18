@@ -14,6 +14,10 @@ export class UsersRepository {
     return userInfo;
   }
 
+  async findAllUsers() {
+    return await this.prisma.user.findMany();
+  }
+
   async deleteUserInfo(userId: number) {
     await this.prisma.user.delete({
       where: { id: userId },

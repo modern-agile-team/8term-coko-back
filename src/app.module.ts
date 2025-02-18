@@ -16,6 +16,7 @@ import { DailyQuestsModule } from './daily-quests/daily-quests.module';
 import { RankingsModule } from './ranking/rankings.module';
 import { AttendanceModule } from './attendance/attendance.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ChallengesModule } from './challenges/challenges.module';
 import { SseModule } from './sse/sse.module';
 import { ChallengeModule } from './challenge/challenge.module';
 
@@ -40,6 +41,7 @@ import { ChallengeModule } from './challenge/challenge.module';
     DailyQuestsModule,
     AttendanceModule,
     EventEmitterModule.forRoot(),
+    ChallengesModule,
     SseModule,
     ChallengeModule,
   ],

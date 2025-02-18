@@ -3,7 +3,7 @@ import { Type } from 'class-transformer';
 import { IsInt, IsOptional, Min } from 'class-validator';
 import { PaginationDefaults } from 'src/common/constants/rankings-constants';
 
-export class QueryChallengeDto {
+export class QueryChallengesDto {
   @ApiPropertyOptional({
     description: '페이지 크기',
     example: PaginationDefaults.PAGE_LIMIT,

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Challenge } from '../challenge.interface';
+import { Challenge } from '../challenges.interface';
 
-export class ResChallengeDto
+export class ResChallengesDto
   implements Omit<Challenge, 'createdAt' | 'updatedAt'>
 {
   @ApiProperty({ example: 1, description: '도전과제 아이디' })
@@ -37,16 +37,16 @@ export class ResChallengeDto
   })
   readonly badgeName: string;
 
-  constructor(challenge: Challenge) {
-    this.id = challenge.id;
-    this.content = challenge.content;
-    this.point = challenge.point;
-    this.experience = challenge.experience;
-    this.condition = challenge.condition;
-    this.badgeName = challenge.badgeName;
+  constructor(challenges: Challenge) {
+    this.id = challenges.id;
+    this.content = challenges.content;
+    this.point = challenges.point;
+    this.experience = challenges.experience;
+    this.condition = challenges.condition;
+    this.badgeName = challenges.badgeName;
   }
 
-  static fromArray(challenges: Challenge[]): ResChallengeDto[] {
-    return challenges.map((challenge) => new ResChallengeDto(challenge));
+  static fromArray(challenges: Challenge[]): ResChallengesDto[] {
+    return challenges.map((challenge) => new ResChallengesDto(challenge));
   }
 }
