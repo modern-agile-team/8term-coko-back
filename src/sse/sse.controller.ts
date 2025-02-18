@@ -7,12 +7,14 @@ import { Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { UserInfo } from 'src/users/entities/user.entity';
 import { User } from 'src/common/decorators/get-user.decorator';
+import { ApiExcludeEndpoint } from '@nestjs/swagger';
 
 @Controller('sse')
 export class SseController {
   constructor(private readonly sseService: SseService) {}
 
   @Sse()
+  @ApiExcludeEndpoint()
   @UseGuards(AuthGuard('accessToken'))
   sse(
     @User() user: UserInfo,
