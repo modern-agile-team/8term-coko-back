@@ -23,11 +23,19 @@ export class itemsPaginationQueryDto {
 
   @IsInt()
   @Min(1)
+  @ApiPropertyOptional({
+    description: '페이지 번호 (기본값: 1)',
+    example: 1,
+  })
   @Type(() => Number)
   page: number = 1; //기본값 1
 
   @IsInt()
   @Min(1)
+  @ApiPropertyOptional({
+    description: '페이지당 아이템 수 (기본값: 8)',
+    example: 8,
+  })
   @Type(() => Number)
   limit: number = 8; //기본값 8
 }

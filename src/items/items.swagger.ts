@@ -8,22 +8,46 @@ import {
 } from '@nestjs/swagger';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
+import { PaginatedItemsResponseDto } from './dto/response-item.dto';
 
 export const ApiItems = {
   getItemsByCategory: () => {
     return applyDecorators(
       ApiOperation({
-        summary: '카테고리별 아이템 조회',
+        summary: '카테고리별 아이템 조회 - pagination',
         description: `
         1. 메인 카테고리와 서브 카테고리로 아이템을 조회합니다.
         2. 메인 카테고리와 서브 카테고리는 선택적으로 포함될 수 있습니다.
-        3. 페이지네이션을 적용하여 아이템을 조회합니다.
+        3. pagination을 적용하여 아이템을 조회합니다.
         `,
       }),
       ApiResponse({
         status: 200,
         description: '아이템 조회 성공',
-        type: [ResponseItemDto],
+        type: PaginatedItemsResponseDto,
+        schema: {
+          example: {
+            totalCount: 11,
+            totalPages: 2,
+            currentPage: 1,
+            contents: [
+              {
+                id: 1,
+                name: 'coko-setup',
+                price: 10000,
+                mainCategoryId: 1,
+                subCategoryId: 1,
+              },
+              {
+                id: 2,
+                name: 'coko-setup2',
+                price: 11000,
+                mainCategoryId: 1,
+                subCategoryId: 1,
+              },
+            ],
+          },
+        },
       }),
       ApiResponse({
         status: 400,
