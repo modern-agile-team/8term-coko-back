@@ -41,7 +41,7 @@ export class UserHpController {
   @Get()
   @UseGuards(AuthGuard('accessToken'))
   async getUserHp(@User() user: UserInfo): Promise<ResUserHpDto> {
-    const userHp = await this.userHpService.findUserHpByUserId(user.id);
+    const userHp = await this.userHpService.getUserHpByUserId(user.id);
     return new ResUserHpDto(userHp);
   }
 
@@ -50,7 +50,7 @@ export class UserHpController {
    * @param user
    * @returns
    */
-  @ApiUserHp.updateUserHp()
+  @ApiUserHp.dcreaseUserHp()
   @Patch()
   @UseGuards(AuthGuard('accessToken'))
   async decreaseUserHp(@User() user: UserInfo): Promise<ResUserHpDto> {

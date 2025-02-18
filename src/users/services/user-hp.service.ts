@@ -76,8 +76,8 @@ export class UserHpService {
    * @param userId
    * @returns
    */
-  async findUserHpByUserId(userId: number) {
-    const userHpInfo = await this.userHpRepository.findUserHpByUserId(userId);
+  async getUserHpByUserId(userId: number) {
+    const userHpInfo = await this.userHpRepository.getUserHpByUserId(userId);
 
     if (!userHpInfo) {
       throw new NotFoundException(`id ${userId}'s HP not found`);
@@ -90,7 +90,7 @@ export class UserHpService {
    * hp 감소 메서드
    */
   async decreaseUserHpByUserId(userId: number): Promise<UserHp> {
-    const userHp = await this.userHpRepository.findUserHpByUserId(userId);
+    const userHp = await this.userHpRepository.getUserHpByUserId(userId);
 
     if (!userHp) {
       throw new NotFoundException(`id ${userId}'s HP not found`);

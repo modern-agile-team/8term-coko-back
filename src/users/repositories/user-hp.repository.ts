@@ -8,7 +8,7 @@ import { HP_DECREASE_VALUE } from '../constants/user-hp.constant';
 export class UserHpRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findUserHpByUserId(userId: number): Promise<UserHp> {
+  async getUserHpByUserId(userId: number): Promise<UserHp> {
     return this.prisma.userHp.findUnique({
       where: { userId },
     });
