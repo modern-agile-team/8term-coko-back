@@ -10,34 +10,6 @@ import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 
 export const ApiItems = {
-  getAllItems: () => {
-    return applyDecorators(
-      ApiOperation({
-        summary: '전체 아이템 목록 조회',
-        description: '페이지네이션을 적용하여 전체 아이템 목록을 조회합니다.',
-      }),
-      ApiQuery({
-        name: 'limit',
-        required: false,
-        description: '한 번에 가져올 데이터의 최대 개수',
-        example: 10,
-      }),
-      ApiQuery({
-        name: 'offset',
-        required: false,
-        description: '데이터를 가져올 시작 지점',
-        example: 0,
-      }),
-      ApiResponse({
-        status: 200,
-        description: '아이템 목록 조회 성공',
-      }),
-      ApiResponse({
-        status: 400,
-        description: '잘못된 요청',
-      }),
-    );
-  },
   getItemsByCategory: () => {
     return applyDecorators(
       ApiOperation({

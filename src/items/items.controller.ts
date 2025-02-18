@@ -44,18 +44,7 @@ export class ItemsController {
     return this.itemsService.getItemsByCategory(query);
   }
 
-  //4. 카테고리별 아이템 조회 : GET /items/category?mainCategoryId=1&subCategoryId=2
-  // @Get('category')
-  // @ApiItems.getItemsByCategory()
-  // @HttpCode(200)
-  // async getItemsByCategory(@Query() query: CategoryQueryDto) {
-  //   return this.itemsService.getItemsByCategory(
-  //     query.mainCategoryId,
-  //     query.subCategoryId,
-  //   );
-  // }
-
-  //3. 단일 아이템 조회 : GET /items/:id
+  //3. 단일 아이템 조회 : GET /items/:itemId
   @Get(':itemId')
   @ApiItems.getItemById()
   @HttpCode(200)
@@ -63,11 +52,11 @@ export class ItemsController {
     return this.itemsService.getItemById(itemId);
   }
 
-  //5. 아이템 수정 : PATCH /items/:id
+  //4. 아이템 수정 : PATCH /items/:itemId
   @Patch(':itemId')
   @ApiItems.updateItem()
   @HttpCode(204)
-  // @UseGuards(AuthGuard('adminAccessToken'))
+  @UseGuards(AuthGuard('adminAccessToken'))
   async updateItem(
     @Param('itemId', PositiveIntPipe) itemId: number,
     @Body() body: UpdateItemDto,
