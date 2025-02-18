@@ -2,9 +2,9 @@ import { applyDecorators } from '@nestjs/common';
 import {
   ApiOperation,
   ApiResponse,
-  ApiQuery,
   ApiBody,
   ApiParam,
+  ApiCookieAuth,
 } from '@nestjs/swagger';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
@@ -14,23 +14,16 @@ export const ApiItems = {
     return applyDecorators(
       ApiOperation({
         summary: '카테고리별 아이템 조회',
-        description: '메인 카테고리와 서브 카테고리로 아이템을 조회합니다.',
-      }),
-      ApiQuery({
-        name: 'mainCategoryId',
-        required: true,
-        description: '메인 카테고리 ID',
-        example: 1,
-      }),
-      ApiQuery({
-        name: 'subCategoryId',
-        required: false,
-        description: '서브 카테고리 ID',
-        example: 2,
+        description: `
+        1. 메인 카테고리와 서브 카테고리로 아이템을 조회합니다.
+        2. 메인 카테고리와 서브 카테고리는 선택적으로 포함될 수 있습니다.
+        3. 페이지네이션을 적용하여 아이템을 조회합니다.
+        `,
       }),
       ApiResponse({
         status: 200,
-        description: '카테고리별 아이템 조회 성공',
+        description: '아이템 조회 성공',
+        type: [ResponseItemDto],
       }),
       ApiResponse({
         status: 400,
@@ -62,6 +55,7 @@ export const ApiItems = {
   },
   createItem: () => {
     return applyDecorators(
+      ApiCookieAuth('access-Token'),
       ApiOperation({
         summary: '아이템 생성',
         description: '새로운 아이템을 생성합니다.',
@@ -82,6 +76,7 @@ export const ApiItems = {
   },
   updateItem: () => {
     return applyDecorators(
+      ApiCookieAuth('access-Token'),
       ApiOperation({
         summary: '아이템 수정',
         description: '기존 아이템을 수정합니다.',
