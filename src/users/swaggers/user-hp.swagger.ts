@@ -1,6 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { HP_FULL_RECHARGE_TIME } from '../constants/user-experience.constant';
 import { ResUserHpDto } from '../dtos/res-user-hp.dto';
 import {
   HP_DECREASE_VALUE,

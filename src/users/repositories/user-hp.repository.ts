@@ -14,15 +14,16 @@ export class UserHpRepository {
     });
   }
 
-  async updateUserHpByUserId(
-    userId: number,
-    data: UpdateHpDto,
-  ): Promise<UserHp> {
-    return this.prisma.userHp.update({
-      where: { userId },
-      data,
-    });
-  }
+  // 추후 사용될 수 도 있는 메서드
+  // async updateUserHpByUserId(
+  //   userId: number,
+  //   data: UpdateHpDto,
+  // ): Promise<UserHp> {
+  //   return this.prisma.userHp.update({
+  //     where: { userId },
+  //     data,
+  //   });
+  // }
 
   /**
    * hp 감소 메서드
