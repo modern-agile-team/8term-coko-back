@@ -267,6 +267,7 @@ model Challenge {
 
   UserChallenge UserChallenge[]
 
+  @@unique([challengeType, condition])
   @@map("challenges")
 }
 

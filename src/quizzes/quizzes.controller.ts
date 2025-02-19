@@ -44,7 +44,7 @@ export class QuizzesController {
   @ApiQuizzes.createQuiz()
   @Post()
   @HttpCode(204)
-  @UseGuards(AuthGuard('adminAccessToken'))
+  //@UseGuards(AuthGuard('adminAccessToken'))
   async createQuiz(@Body() body: CreateQuizDto): Promise<void> {
     await this.quizzesService.create(body);
   }

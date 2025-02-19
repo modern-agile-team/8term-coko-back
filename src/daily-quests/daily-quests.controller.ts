@@ -42,7 +42,7 @@ export class DailyQuestsController {
   @Post()
   @ApiDailyQuest.create()
   @HttpCode(204)
-  @UseGuards(AuthGuard('adminAccessToken'))
+  //@UseGuards(AuthGuard('adminAccessToken'))
   async create(@Body() body: CreateDailyQuestDto): Promise<void> {
     await this.dailyQuestsService.create(body);
   }

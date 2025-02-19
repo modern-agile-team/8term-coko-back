@@ -60,7 +60,7 @@ export class SectionsController {
   @ApiSections.create()
   @Post()
   @HttpCode(204)
-  @UseGuards(AuthGuard('adminAccessToken'))
+  //@UseGuards(AuthGuard('adminAccessToken'))
   async create(@Body() body: CreateSectionDto): Promise<void> {
     await this.sectionsService.create(body);
   }
