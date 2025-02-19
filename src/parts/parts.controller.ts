@@ -33,7 +33,7 @@ export class PartsController {
   @ApiParts.create()
   @Post()
   @HttpCode(204)
-  //@UseGuards(AuthGuard('adminAccessToken'))
+  @UseGuards(AuthGuard('adminAccessToken'))
   async create(@Body() createPartDto: CreatePartDto): Promise<void> {
     await this.partsService.create(createPartDto);
   }
