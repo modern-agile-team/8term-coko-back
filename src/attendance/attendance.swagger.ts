@@ -1,10 +1,11 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ResMyMonthlyAttendanceDto } from './dtos/res-monthly-attendance.dto';
 
 export const ApiAttendance = {
   attend: () => {
     return applyDecorators(
+      ApiCookieAuth('accessToken'),
       ApiOperation({
         summary: '출석체크 요청',
       }),
@@ -20,6 +21,7 @@ export const ApiAttendance = {
   },
   checkTodayAttendance: () => {
     return applyDecorators(
+      ApiCookieAuth('accessToken'),
       ApiOperation({
         summary: '당일 출석체크 확인',
       }),
@@ -31,6 +33,7 @@ export const ApiAttendance = {
   },
   findMonthAttendance: () => {
     return applyDecorators(
+      ApiCookieAuth('accessToken'),
       ApiOperation({
         summary: '나의 월간 출석체크 정보 가져오기',
       }),

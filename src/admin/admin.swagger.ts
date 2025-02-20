@@ -1,9 +1,10 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 export const ApiAdmins = {
   loginAdmin: () => {
     return applyDecorators(
+      ApiCookieAuth('adminAccessToken'),
       ApiOperation({
         summary: 'admin 정보 인증',
       }),
@@ -15,6 +16,7 @@ export const ApiAdmins = {
   },
   verifyAdmin: () => {
     return applyDecorators(
+      ApiCookieAuth('adminAccessToken'),
       ApiOperation({
         summary: 'admin 토큰 인증',
       }),

@@ -1,13 +1,14 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ResOpinionsDto } from './dtos/res-opinions.dto';
 import { ResMyOpinionsDto } from './dtos/res-my-opinions.dto';
 
 export const ApiOpinions = {
   findAllOpinions: () => {
     return applyDecorators(
+      ApiCookieAuth('accessAdminToken'),
       ApiOperation({
-        summary: '모든 문의 가져오기',
+        summary: '모든 문의 가져오기 - admin',
       }),
       ApiResponse({
         status: 200,
@@ -18,6 +19,7 @@ export const ApiOpinions = {
   },
   findMyOpinions: () => {
     return applyDecorators(
+      ApiCookieAuth('accessToken'),
       ApiOperation({
         summary: '나의 문의 가져오기',
       }),
@@ -30,6 +32,7 @@ export const ApiOpinions = {
   },
   createOpinion: () => {
     return applyDecorators(
+      ApiCookieAuth('accessToken'),
       ApiOperation({
         summary: '문의 생성하기',
       }),
@@ -41,8 +44,9 @@ export const ApiOpinions = {
   },
   deleteOpinion: () => {
     return applyDecorators(
+      ApiCookieAuth('accessAdminToken'),
       ApiOperation({
-        summary: '문의 삭제하기',
+        summary: '문의 삭제하기 - admin',
       }),
       ApiResponse({
         status: 204,

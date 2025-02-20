@@ -1,11 +1,12 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RankingPaginationResponseDto } from './dtos/ranking-pagination-res.dto';
 import { ResMyRankingDto } from './dtos/res-my-ranking.dto';
 
 export const ApiRankings = {
   findSelectedPageRankings: () => {
     return applyDecorators(
+      ApiCookieAuth('accessToken'),
       ApiOperation({
         summary: '랭킹 페이지 정보 가져오기',
       }),
@@ -18,6 +19,7 @@ export const ApiRankings = {
   },
   findMyRanking: () => {
     return applyDecorators(
+      ApiCookieAuth('accessToken'),
       ApiOperation({
         summary: '나의 랭킹 정보 가져오기',
       }),
