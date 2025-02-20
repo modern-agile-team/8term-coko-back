@@ -32,7 +32,7 @@ export class ChallengesEventsListener {
       //sse메시지
       this.sseService.notifyUser(userId, {
         type: 'partStatus.completed',
-        message: '도전과제 섹션 1번 클리어!',
+        message: `도전과제 완료 : ${completed.challenge.content}`,
         timestamp: new Date().toISOString(),
       });
     }

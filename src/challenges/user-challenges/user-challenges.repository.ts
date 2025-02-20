@@ -48,10 +48,11 @@ export class UserChallengesRepository {
     userId: number,
     challengeId: number,
     data: UpdateUserChallengesDto,
-  ): Promise<UserChallenge> {
+  ): Promise<UserChallengesAndInfo> {
     return await this.prisma.userChallenge.update({
       where: { userId_challengeId: { userId, challengeId } },
       data,
+      include: { challenge: true },
     });
   }
 }
