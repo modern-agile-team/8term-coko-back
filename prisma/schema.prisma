@@ -75,6 +75,7 @@ model User {
   attendance             Attendance[]
   userDailyQuest         UserDailyQuest[]
   userChallenge          UserChallenge[]
+  opinions               Opinion[]
 
   @@map("users")
 }
@@ -273,4 +274,16 @@ model UserChallenge {
   @@unique([userId, challengeId])
   @@index([challengeId])
   @@map("user_challenges")
+}
+
+model Opinion {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  title     String   @db.VarChar(255)
+  content   String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("opinions")
 }
