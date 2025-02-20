@@ -22,17 +22,17 @@ export class ChallengesEventsListener {
   }) {
     const { userId, sectionId } = payload;
 
-    const completed =
+    const userChallengesAndInfo =
       await this.sectionsChallengesService.chackedByAllPartStatusCompleted(
         userId,
         sectionId,
       );
 
-    if (completed) {
+    if (userChallengesAndInfo) {
       //sse메시지
       this.sseService.notifyUser(userId, {
         type: 'partStatus.completed',
-        message: `도전과제 완료 : ${completed.challenge.content}`,
+        message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
         timestamp: new Date().toISOString(),
       });
     }
