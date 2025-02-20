@@ -53,14 +53,4 @@ export class UserChallengesService {
   async create(body: CreateUserChallengesDto): Promise<UserChallenge> {
     return this.userChallengesRepository.createUserChallenges(body);
   }
-
-  async update(
-    userChallengesId: number,
-    body: UpdateUserChallengesDto,
-  ): Promise<UserChallenge> {
-    return this.userChallengesRepository.updateUserChallengesById(
-      userChallengesId,
-      body,
-    );
-  }
 }

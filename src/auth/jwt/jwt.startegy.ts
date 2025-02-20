@@ -122,6 +122,12 @@ export class AdminAccessTokenStrategy extends PassportStrategy(
     request: Request,
     payload: AdminTokenPayload,
   ): Promise<object> {
+    // 개발 모드라면 토큰 검증 없이 바로 통과
+    //console.log(process.env.NODE_ENV);
+    if (process.env.NODE_ENV === 'development') {
+      return { isAdmin: true };
+    }
+
     if (payload.role !== 'admin') {
       throw new UnauthorizedException('Invalid Access Token');
     }

@@ -6,5 +6,6 @@ import { UserChallengesRepository } from './user-challenges.repository';
 @Module({
   controllers: [UserChallengesController],
   providers: [UserChallengesService, UserChallengesRepository],
+  exports: [UserChallengesRepository],
 })
 export class UserChallengesModule {}

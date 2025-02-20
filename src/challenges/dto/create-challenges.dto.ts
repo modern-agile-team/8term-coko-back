@@ -1,6 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsString, Max, Min } from 'class-validator';
+import { IsEnum, IsInt, IsString, Max, Min } from 'class-validator';
 import { Challenge } from '../challenges.interface';
+import {
+  ChallengeType,
+  ChallengeTypeValues,
+} from '../const/challenges.constant';
 
 export class CreateChallengesDto
   implements Omit<Challenge, 'id' | 'createdAt' | 'updatedAt'>
@@ -29,6 +33,16 @@ export class CreateChallengesDto
   @Min(0)
   @Max(1000000)
   readonly experience: number;
+
+  @ApiProperty({
+    description: '도전과제 유형',
+    example: ChallengeTypeValues.LEVEL_CLEAR,
+    enum: ChallengeTypeValues,
+  })
+  @IsEnum(ChallengeTypeValues, {
+    message: 'challengeType형식에 맞게 넣어야 합니다.',
+  })
+  readonly challengeType: ChallengeType;
 
   @ApiProperty({
     description: '무언가 세야할때 쓸러는데 빠질 수 도 있을거 같음',
