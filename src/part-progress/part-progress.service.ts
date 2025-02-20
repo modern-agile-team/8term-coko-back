@@ -11,6 +11,7 @@ import {
   PartProgress,
   PartStatusValues,
 } from './entities/part-progress.entity';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class PartProgressService {
@@ -18,6 +19,7 @@ export class PartProgressService {
     private readonly prisma: PrismaService,
     private readonly partsService: PartsService,
     private readonly partProgressRepository: PartProgressRepository,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
   /**
    * @todo 추후에 유저서비스에서 연결하는 코드로 변경하기
@@ -103,13 +105,24 @@ export class PartProgressService {
 
     const completed = new CreatePartProgressDto(PartStatusValues.COMPLETED);
 
+    const eventPartStatusCompleted = (userId: number, sectionId: number) => {
+      this.eventEmitter.emit('partStatus.completed', {
+        userId,
+        sectionId,
+      });
+    };
+
     //다음 순서의 파트가 없으면
     if (!nextPart) {
-      return this.partProgressRepository.upsertPartStatus(
+      const partStatus = await this.partProgressRepository.upsertPartStatus(
         userId,
         partId,
         completed,
       );
+
+      eventPartStatusCompleted(userId, part.sectionId);
+
+      return partStatus;
     }
 
     //다음 순서의 파트가 있으면
@@ -124,12 +137,16 @@ export class PartProgressService {
         tx,
       );
 
-      return this.partProgressRepository.upsertPartStatus(
+      const partStatus = await this.partProgressRepository.upsertPartStatus(
         userId,
         partId,
         completed,
         tx,
       );
+
+      eventPartStatusCompleted(userId, part.sectionId);
+
+      return partStatus;
     });
   }
 }
