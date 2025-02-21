@@ -18,6 +18,7 @@ import { AttendanceModule } from './attendance/attendance.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ChallengesModule } from './challenges/challenges.module';
 import { SseModule } from './sse/sse.module';
+import { OpinionsModule } from './users/opinions/user-opinions.module';
 @Module({
   imports: [
     ItemsModule,
@@ -38,6 +39,7 @@ import { SseModule } from './sse/sse.module';
     EventEmitterModule.forRoot(),
     ChallengesModule,
     SseModule,
+    OpinionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

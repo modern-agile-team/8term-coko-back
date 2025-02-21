@@ -1,6 +1,6 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { RankingsService } from './rankings.service';
-import { ApiRankings } from './ranking.swagger';
+import { ApiRankings } from './rankings.swagger';
 import { RankingQueryDto } from './dtos/ranking-query.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { RankingPaginationResponseDto } from './dtos/ranking-pagination-res.dto';
