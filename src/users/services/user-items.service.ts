@@ -8,30 +8,58 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { BuyUserItemsDto } from '../dtos/buy-userItems.dto';
 import { EquipUseritemDto } from '../dtos/equip-useritem.dto';
 import { ResponseItemDto } from '../dtos/response-item.dto';
-
+import { UserItemsPaginationQueryDto } from '../dtos/userItems-pagination-query.dto';
+import { UserItemsPaginationResponseDto } from '../dtos/userItems-pagination-res.dto';
+import { UserItemsRepository } from '../repositories/user-items.repository';
 @Injectable()
 export class UserItemsService {
   constructor(private readonly prisma: PrismaService) {}
 
   //사용자 아이템 목록 조회
-  async getUserItems(userId: number) {
-    const userItems = await this.prisma.userItem.findMany({
-      where: { userId },
-      include: {
-        item: {
-          include: {
-            mainCategory: true,
-            subCategory: true,
-          },
-        },
-      },
-    });
-    if (!userItems) {
-      throw new NotFoundException('아이템을 찾을 수 없습니다.');
+  async getUserItems(
+    userId: number,
+    query: UserItemsPaginationQueryDto,
+  ): Promise<UserItemsPaginationResponseDto> {
+    const { mainCategoryId, subCategoryId, page, limit } = query;
+    //카테고리 존재 여부 확인
+    if (
+      mainCategoryId &&
+      !(await this.userItemsRepository.existMainCategory(mainCategoryId))
+    ) {
+      throw new NotFoundException(
+        `존재하지 않는 메인 카테고리입니다: ${mainCategoryId}`,
+      );
     }
-    return userItems.map(
-      (userItem) => new ResponseItemDto(userItem.item, userItem),
+    if (
+      subCategoryId &&
+      !(await this.userItemsRepository.existSubCategory(subCategoryId))
+    ) {
+      throw new NotFoundException(
+        `존재하지 않는 서브 카테고리입니다: ${subCategoryId}`,
+      );
+    }
+
+    const where = {
+      userId,
+      ...(mainCategoryId && { 'item.mainCategoryId': mainCategoryId }),
+      ...(subCategoryId && { 'item.subCategoryId': subCategoryId }),
+    };
+
+    const totalCount = await this.userItemsRepository.getTotalItemCount(where);
+    const contents = await this.userItemsRepository.findItems(
+      page,
+      limit,
+      where,
     );
+
+    return new UserItemsPaginationResponseDto({
+      totalCount,
+      currentPage: page,
+      limit,
+      contents: contents.map(
+        (userItem) => new ResponseItemDto(userItem.item, userItem),
+      ),
+    });
   }
 
   //아이템 구매

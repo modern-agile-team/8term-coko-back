@@ -7,10 +7,12 @@ import {
   Body,
   HttpCode,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { UserItemsService } from '../services/user-items.service';
 import { BuyUserItemsDto } from '../dtos/buy-userItems.dto';
 import { EquipUseritemDto } from '../dtos/equip-useritem.dto';
+import { UserItemsPaginationQueryDto } from '../dtos/userItems-pagination-query.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiGetUserItems } from '../swagger-dacorator/get-user-items.decorators';
 import { ApiPostUserItems } from '../swagger-dacorator/post-user-items.decorators';
@@ -19,19 +21,25 @@ import { ApiResetEquipment } from '../swagger-dacorator/put-user-items.decorator
 import { User } from 'src/common/decorators/get-user.decorator';
 import { UserInfo } from 'src/users/entities/user.entity';
 import { AuthGuard } from '@nestjs/passport';
+import { OffsetPaginationBaseResponseDto } from 'src/pagination/dtos/offset-pagination-res.dto';
+import { UserItem } from '@prisma/client';
 
 @ApiTags('user-items')
 @Controller('users/me/items')
 export class UserItemsController {
   constructor(private readonly userItemsService: UserItemsService) {}
 
-  //user의 아이템 목록 조회
+  //user의 아이템 목록 조회 -> pagination 적용
+  //1. 전체 아이템 목록 조회 : GET /users/me/items?mainCategoryId=1&subCategoryId=2&page=1&limit=8
   @Get()
-  @HttpCode(200)
   @ApiGetUserItems()
+  @HttpCode(200)
   @UseGuards(AuthGuard('accessToken'))
-  getUserItems(@User() user: UserInfo) {
-    return this.userItemsService.getUserItems(user.id);
+  async getUserItems(
+    @User() user: UserInfo,
+    @Query() query: UserItemsPaginationQueryDto,
+  ): Promise<OffsetPaginationBaseResponseDto<UserItem>> {
+    return this.userItemsService.getUserItems(user.id, query);
   }
 
   //user의 아이템 구매
