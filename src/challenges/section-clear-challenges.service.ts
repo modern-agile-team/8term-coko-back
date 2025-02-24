@@ -31,6 +31,7 @@ export class SectionsChallengesService {
       section.order,
     );
     if (!challenge) {
+      return null;
       throw new NotFoundException('존재하지 않는 도전과제 입니다.');
     }
 
@@ -53,6 +54,7 @@ export class SectionsChallengesService {
         challenge.id,
       );
     if (!userChallenge) {
+      return null;
       throw new NotFoundException('유저에게 도전과제가 없습니다.');
     }
     if (userChallenge.completed) {

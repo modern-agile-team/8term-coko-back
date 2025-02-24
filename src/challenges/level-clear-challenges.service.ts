@@ -19,6 +19,7 @@ export class LevelClearChallengesService {
       completedLevel,
     );
     if (!challenge) {
+      return null;
       throw new NotFoundException('해당 레벨 도전과제가 존재하지 않습니다.');
     }
 
@@ -28,7 +29,8 @@ export class LevelClearChallengesService {
         userId,
         challenge.id,
       );
-    if (userChallenge) {
+    if (!userChallenge) {
+      return null;
       throw new NotFoundException('유저에게 도전과제가 없습니다.');
     }
     if (userChallenge.completed) {
