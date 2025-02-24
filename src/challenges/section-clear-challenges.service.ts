@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PartStatus } from '@prisma/client';
 import { ChallengesRepository } from './challenges.repository';
 import { PartProgressRepository } from 'src/part-progress/part-progress.repository';
 import { PartStatusValues } from 'src/part-progress/entities/part-progress.entity';
@@ -19,49 +18,57 @@ export class SectionsChallengesService {
     private readonly userChallengesRepository: UserChallengesRepository,
   ) {}
 
-  async chackedByAllPartStatusCompleted(userId: number, sectionId: number) {
-    //어떤 도전과제에 대한 내용인지 먼저 찾기
-    const challengeType = this.challengeType;
+  async checkAndCompleteSectionChallenge(userId: number, sectionId: number) {
+    // 섹션 정보를 가져와서 order 값을 확인.
+    const section = await this.sectionsRepository.findOneSectionById(sectionId);
+    if (!section) {
+      throw new NotFoundException('존재하지 않는 섹션입니다.');
+    }
 
-    const { order } =
-      await this.sectionsRepository.findOneSectionById(sectionId);
-
-    const chalenge = await this.challengesRepository.findOneByTypeAndCondition(
-      challengeType,
-      order, //이곳에서 condition은 section의 order
+    // 섹션 order를 조건으로 도전과제를 조회.
+    const challenge = await this.challengesRepository.findOneByTypeAndCondition(
+      this.challengeType,
+      section.order,
     );
-
-    if (!chalenge) {
+    if (!challenge) {
       throw new NotFoundException('존재하지 않는 도전과제 입니다.');
     }
 
-    //partProgress중 completed가 아닌 값이 있는지 확인
-    const excludedStatus: PartStatus = PartStatusValues.COMPLETED;
-
-    const filteredPartStatus =
+    // 사용자의 partProgress 중, COMPLETED가 아닌 항목들을 조회.
+    const incompleteParts =
       await this.partProgressRepository.findAllExceptStatusValue(
         userId,
-        excludedStatus,
+        PartStatusValues.COMPLETED,
       );
 
-    //값이 있으면 리턴
-    if (filteredPartStatus.length) {
+    // 미완료 항목이 있다면 업데이트 없이 종료.
+    if (incompleteParts.length) {
       return null;
     }
 
-    //없으면 완료 처리
-    const data: UpdateUserChallengesDto = {
+    // 이미 완료된 도전과제라면, 추가 업데이트 없이 반환
+    const userChallenge =
+      await this.userChallengesRepository.findOneByChallenge(
+        userId,
+        challenge.id,
+      );
+    if (!userChallenge) {
+      throw new NotFoundException('유저에게 도전과제가 없습니다.');
+    }
+    if (userChallenge.completed) {
+      return null;
+    }
+
+    // 모든 part가 완료되었으므로, 도전과제를 완료.
+    const updateData: UpdateUserChallengesDto = {
       completed: true,
       completedDate: new Date(),
     };
 
-    const userChallengeUpdateData =
-      await this.userChallengesRepository.updateUserChallengesByUserId(
-        userId,
-        chalenge.id,
-        data,
-      );
-
-    return userChallengeUpdateData;
+    return this.userChallengesRepository.updateUserChallengesByUserId(
+      userId,
+      challenge.id,
+      updateData,
+    );
   }
 }

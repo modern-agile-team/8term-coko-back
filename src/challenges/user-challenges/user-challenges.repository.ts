@@ -30,6 +30,15 @@ export class UserChallengesRepository {
     });
   }
 
+  async findOneByChallenge(
+    userId: number,
+    challengeId: number,
+  ): Promise<UserChallenge> {
+    return await this.prisma.userChallenge.findUnique({
+      where: { userId_challengeId: { userId, challengeId } },
+    });
+  }
+
   async findOneById(id: number): Promise<UserChallenge> {
     return await this.prisma.userChallenge.findUnique({
       where: { id },
