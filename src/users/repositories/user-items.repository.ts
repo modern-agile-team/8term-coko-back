@@ -42,7 +42,7 @@ export class UserItemsRepository {
   }
 
   //아이템 총 개수 조회
-  async getTotalItemCount(where: any): Promise<number> {
+  async getTotalItemCount(where: WhereClause): Promise<number> {
     return this.prisma.userItem.count({ where });
   }
 }

@@ -29,17 +29,16 @@ import { UserItem } from '@prisma/client';
 export class UserItemsController {
   constructor(private readonly userItemsService: UserItemsService) {}
 
-  //user의 아이템 목록 조회 -> pagination 적용
   //1. 전체 아이템 목록 조회 : GET /users/me/items?mainCategoryId=1&subCategoryId=2&page=1&limit=8
   @Get()
   @ApiGetUserItems()
   @HttpCode(200)
   @UseGuards(AuthGuard('accessToken'))
-  async getUserItems(
+  async getUserItemsByCategory(
     @User() user: UserInfo,
     @Query() query: UserItemsPaginationQueryDto,
   ): Promise<OffsetPaginationBaseResponseDto<UserItem>> {
-    return this.userItemsService.getUserItems(user.id, query);
+    return this.userItemsService.getUserItemsByCategory(user.id, query);
   }
 
   //user의 아이템 구매

@@ -9,14 +9,17 @@ import { BuyUserItemsDto } from '../dtos/buy-userItems.dto';
 import { EquipUseritemDto } from '../dtos/equip-useritem.dto';
 import { ResponseItemDto } from '../dtos/response-item.dto';
 import { UserItemsPaginationQueryDto } from '../dtos/userItems-pagination-query.dto';
-import { UserItemsPaginationResponseDto } from '../dtos/userItems-pagination-res.dto';
 import { UserItemsRepository } from '../repositories/user-items.repository';
+import { UserItemsPaginationResponseDto } from '../dtos/response-userItems-pagination.dto';
 @Injectable()
 export class UserItemsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly userItemsRepository: UserItemsRepository,
+  ) {}
 
   //사용자 아이템 목록 조회
-  async getUserItems(
+  async getUserItemsByCategory(
     userId: number,
     query: UserItemsPaginationQueryDto,
   ): Promise<UserItemsPaginationResponseDto> {
@@ -41,12 +44,12 @@ export class UserItemsService {
 
     const where = {
       userId,
-      ...(mainCategoryId && { 'item.mainCategoryId': mainCategoryId }),
-      ...(subCategoryId && { 'item.subCategoryId': subCategoryId }),
+      ...(mainCategoryId && { mainCategoryId }),
+      ...(subCategoryId && { subCategoryId }),
     };
 
     const totalCount = await this.userItemsRepository.getTotalItemCount(where);
-    const contents = await this.userItemsRepository.findItems(
+    const contents = await this.userItemsRepository.findUserItems(
       page,
       limit,
       where,
@@ -56,9 +59,7 @@ export class UserItemsService {
       totalCount,
       currentPage: page,
       limit,
-      contents: contents.map(
-        (userItem) => new ResponseItemDto(userItem.item, userItem),
-      ),
+      contents,
     });
   }
 
