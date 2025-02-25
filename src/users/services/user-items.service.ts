@@ -18,7 +18,7 @@ export class UserItemsService {
     private readonly userItemsRepository: UserItemsRepository,
   ) {}
 
-  //사용자 아이템 목록 조회
+  //1. 사용자 아이템 목록 조회
   async getUserItemsByCategory(
     userId: number,
     query: UserItemsPaginationQueryDto,
@@ -63,7 +63,7 @@ export class UserItemsService {
     });
   }
 
-  //아이템 구매
+  //2. 아이템 구매
   async buyUserItems(
     buyUserItemsDto: BuyUserItemsDto,
     userId: number,
@@ -132,7 +132,7 @@ export class UserItemsService {
     });
   }
 
-  //아이템 장착/해제
+  //3. 아이템 장착/해제
   async updateItemEquipStatus(
     equipUseritemDto: EquipUseritemDto,
     userId: number,
@@ -258,6 +258,7 @@ export class UserItemsService {
     });
   }
 
+  //4. 모든 장착된 아이템 해제
   async resetEquipment(userId: number): Promise<void> {
     // 사용자 존재 여부 확인
     const user = await this.prisma.user.findUnique({ where: { id: userId } });

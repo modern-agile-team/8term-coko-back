@@ -41,7 +41,7 @@ export class UserItemsController {
     return this.userItemsService.getUserItemsByCategory(user.id, query);
   }
 
-  //user의 아이템 구매
+  //2. user의 아이템 구매
   @Post()
   @HttpCode(204)
   @ApiPostUserItems()
@@ -57,6 +57,7 @@ export class UserItemsController {
     );
   }
 
+  //3. 아이템 장착/해제
   @Patch()
   @HttpCode(204)
   @ApiPatchUserItems()
@@ -71,6 +72,7 @@ export class UserItemsController {
     );
   }
 
+  //4. 모든 장착된 아이템 해제
   @Put('reset-equipment')
   @HttpCode(204)
   @ApiResetEquipment()
