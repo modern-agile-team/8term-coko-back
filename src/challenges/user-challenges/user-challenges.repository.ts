@@ -40,16 +40,6 @@ export class UserChallengesRepository {
     });
   }
 
-  async findManyByUserAndChallengeIds(
-    userId: number,
-    challengeIds: number[],
-  ): Promise<UserChallenge[]> {
-    return await this.prisma.userChallenge.findMany({
-      where: { userId, challengeId: { in: challengeIds } },
-      orderBy: {},
-    });
-  }
-
   async findManyByUserAndType(
     userId: number,
     lowerCondition: number,
@@ -96,28 +86,6 @@ export class UserChallengesRepository {
       where: { userId_challengeId: { userId, challengeId }, completed: false },
       data,
       include: { challenge: true },
-    });
-  }
-
-  /**
-   * 다중 업데이트를 위한 메서드입니다.
-   * @param userId 특정 유저를 선택
-   * @param challengeIds 업데이트할 도전과제 목록을 가져옴
-   * @param data: 업데이트 할 내용
-   * completed: false인 값만 true로 변경하면서 업데이트 성능을 향상
-   */
-  async updateManyUserChallenges(
-    userId: number,
-    challengeIds: number[],
-    data: UpdateUserChallengesDto,
-  ) {
-    return await this.prisma.userChallenge.updateMany({
-      where: {
-        userId,
-        challengeId: { in: challengeIds },
-        completed: false,
-      },
-      data,
     });
   }
 
