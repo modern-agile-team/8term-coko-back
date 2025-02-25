@@ -8,7 +8,6 @@ export class CreateOpinionDto {
     minLength: 0,
   })
   @IsString()
-  @MinLength(0)
   readonly title: string;
 
   @ApiProperty({
@@ -17,7 +16,6 @@ export class CreateOpinionDto {
     minLength: 0,
   })
   @IsString()
-  @MinLength(0)
   @MaxLength(255)
   readonly content: string;
 }
