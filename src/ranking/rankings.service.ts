@@ -119,10 +119,10 @@ export class RankingsService {
   }
 
   /**
-   * 00시(자정) 마다 총 정답 수 업데이트
+   * 00시(자정)마다 모든 유저의 총 정답 수 업데이트
    */
   @Cron(DAILY_RESET)
-  async DailyUpdateUserTotalCorrectAnswer(): Promise<void> {
+  async DailyUpdateAllUsersTotalCorrectAnswer(): Promise<void> {
     // 모든 유저의 id 조회
     const users = await this.usersRepository.getAllUserIds();
     const userIds = users.map((user) => user.id);
