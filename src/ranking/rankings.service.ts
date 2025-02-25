@@ -102,7 +102,6 @@ export class RankingsService {
         { isCorrect },
       );
 
-    console.log('랭킹 서비스단 타이머ㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓ', totalCorrectAnswer);
     // rxjs timer를 사용해 예약
     const timerSubscription = timer(delayTime).subscribe(async () => {
       await this.usersRepository.updateUserTotalCorrectAnswer(
@@ -110,7 +109,6 @@ export class RankingsService {
         totalCorrectAnswer,
       );
 
-      console.log('타이머 끝 콜백함수 실행 !');
       this.totalCorrectAnswerUpdateTimers.delete(userId);
     });
 

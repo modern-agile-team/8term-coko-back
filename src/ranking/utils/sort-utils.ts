@@ -19,4 +19,12 @@ export function createOrderBy(sort: string): object[] {
       { experience: 'desc' },
     ];
   }
+
+  if (sort === 'totalCorrectAnswer') {
+    return [
+      { totalCorrectAnswer: 'desc' },
+      { level: 'desc' },
+      { experience: 'desc' },
+    ];
+  }
 }

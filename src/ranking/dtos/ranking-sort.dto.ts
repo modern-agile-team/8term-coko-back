@@ -4,7 +4,8 @@ import { IsEnum } from 'class-validator';
 
 export class RankingSortDto {
   @ApiPropertyOptional({
-    description: '랭킹 기준값 (level, point, totalAttendance 등))',
+    description:
+      '랭킹 기준값 (level, point, totalAttendance, totalCorrectAnswer 등))',
     example: 'level',
     enum: SortValues,
     default: SortValues.LEVEL,

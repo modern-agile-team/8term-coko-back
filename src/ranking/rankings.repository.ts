@@ -26,6 +26,7 @@ export class RankingsRepository {
         point: true,
         level: true,
         totalAttendance: true,
+        totalCorrectAnswer: true,
       }, // 가져올 내용
       orderBy,
     });
