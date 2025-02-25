@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { OpinionsController } from './opinions.controller';
 import { UserOpinionsController } from './user-opinions.controller';
-import { OpinionsService } from './user-opinions.service';
-import { OpinionsRepository } from './user-opinions.repository';
+import { OpinionsService } from './opinions.service';
+import { OpinionsRepository } from './opinions.repository';
 
 @Module({
   imports: [],

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { OpinionsRepository } from './user-opinions.repository';
+import { OpinionsRepository } from './opinions.repository';
 import { CreateOpinionDto } from './dtos/create-opinion.dto';
 import { ResOpinionsDto } from './dtos/res-opinions.dto';
 import { ResMyOpinionsDto } from './dtos/res-my-opinions.dto';
