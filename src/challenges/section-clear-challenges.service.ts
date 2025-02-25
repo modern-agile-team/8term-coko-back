@@ -22,7 +22,6 @@ export class SectionsChallengesService {
     // 섹션 정보를 가져와서 order 값을 확인.
     const section = await this.sectionsRepository.findOneSectionById(sectionId);
     if (!section) {
-      return null;
       throw new NotFoundException('존재하지 않는 섹션입니다.');
     }
 
@@ -33,7 +32,19 @@ export class SectionsChallengesService {
     );
     if (!challenge) {
       return null;
-      throw new NotFoundException('존재하지 않는 도전과제 입니다.');
+    }
+
+    // 이미 완료된 도전과제라면, 추가 업데이트 없이 반환
+    const userChallenge =
+      await this.userChallengesRepository.findOneByChallenge(
+        userId,
+        challenge.id,
+      );
+    if (!userChallenge) {
+      throw new NotFoundException('유저에게 도전과제가 없습니다.');
+    }
+    if (userChallenge.completed) {
+      return null;
     }
 
     // 사용자의 partProgress 중, COMPLETED가 아닌 항목들을 조회.
@@ -45,20 +56,6 @@ export class SectionsChallengesService {
 
     // 미완료 항목이 있다면 업데이트 없이 종료.
     if (incompleteParts.length) {
-      return null;
-    }
-
-    // 이미 완료된 도전과제라면, 추가 업데이트 없이 반환
-    const userChallenge =
-      await this.userChallengesRepository.findOneByChallenge(
-        userId,
-        challenge.id,
-      );
-    if (!userChallenge) {
-      return null;
-      throw new NotFoundException('유저에게 도전과제가 없습니다.');
-    }
-    if (userChallenge.completed) {
       return null;
     }
 

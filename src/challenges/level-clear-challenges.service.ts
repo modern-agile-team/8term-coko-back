@@ -3,17 +3,23 @@ import { ChallengesRepository } from './challenges.repository';
 import { UserChallengesRepository } from './user-challenges/user-challenges.repository';
 import { UpdateUserChallengesDto } from './user-challenges/dto/update-user-challenges.dto';
 import { ChallengeTypeValues } from './const/challenges.constant';
+import { UserInfo } from 'src/users/entities/user.entity';
+import { UsersRepository } from 'src/users/repositories/users.reposirory';
 
 @Injectable()
 export class LevelClearChallengesService {
   private readonly challengeType = ChallengeTypeValues.LEVEL_CLEAR;
 
   constructor(
+    private readonly usersRepository: UsersRepository,
     private readonly challengesRepository: ChallengesRepository,
     private readonly userChallengesRepository: UserChallengesRepository,
   ) {}
 
   async chackedByUserLevel(userId: number, completedLevel: number) {
+    //const userId = user.id;
+    //const completedLevel = level || user.level; // 이걸 잘 사용해봐도 좋을거 같음
+
     const challenge = await this.challengesRepository.findOneByTypeAndCondition(
       this.challengeType,
       completedLevel,
