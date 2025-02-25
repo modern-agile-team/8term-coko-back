@@ -55,4 +55,16 @@ export class UsersRepository {
       data: { totalCorrectAnswer },
     });
   }
+
+  /**
+   * 모든 유저의 id를 조회
+   * @returns
+   */
+  async getAllUserIds(): Promise<{ id: number }[]> {
+    const users = await this.prisma.user.findMany({
+      select: { id: true },
+    });
+
+    return users;
+  }
 }

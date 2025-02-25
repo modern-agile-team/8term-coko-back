@@ -9,6 +9,8 @@ import { Sort } from './entities/ranking.entity';
 import { Subscription, timer } from 'rxjs';
 import { UsersRepository } from 'src/users/repositories/users.reposirory';
 import { ProgressRepository } from 'src/progress/progress.repository';
+import { Cron } from '@nestjs/schedule';
+import { DAILY_RESET } from 'src/daily-quests/users-daily-quests/const/users-daily-quests.const';
 
 @Injectable()
 export class RankingsService {
@@ -114,5 +116,34 @@ export class RankingsService {
 
     // 새 subscription 저장
     this.totalCorrectAnswerUpdateTimers.set(userId, timerSubscription);
+  }
+
+  /**
+   * 00시(자정) 마다 총 정답 수 업데이트
+   */
+  @Cron(DAILY_RESET)
+  async DailyUpdateUserTotalCorrectAnswer(): Promise<void> {
+    // 모든 유저의 id 조회
+    const users = await this.usersRepository.getAllUserIds();
+    const userIds = users.map((user) => user.id);
+
+    // 각 작업을 병렬 처리
+    await Promise.all(
+      userIds.map(async (userId) => {
+        // 총 정답 수 조회
+        const totalCorrectAnswer =
+          await this.progressRepository.countProgressByQuery(
+            userId,
+            {},
+            { isCorrect: true },
+          );
+
+        // 유저의 총 정답 수 업데이트
+        await this.usersRepository.updateUserTotalCorrectAnswer(
+          userId,
+          totalCorrectAnswer,
+        );
+      }),
+    );
   }
 }
