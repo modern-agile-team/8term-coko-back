@@ -20,7 +20,6 @@ export class LevelClearChallengesService {
     );
     if (!challenge) {
       return null;
-      throw new NotFoundException('해당 레벨 도전과제가 존재하지 않습니다.');
     }
 
     // 이미 완료된 도전과제라면, 추가 업데이트 없이 반환
@@ -30,7 +29,6 @@ export class LevelClearChallengesService {
         challenge.id,
       );
     if (!userChallenge) {
-      return null;
       throw new NotFoundException('유저에게 도전과제가 없습니다.');
     }
     if (userChallenge.completed) {
