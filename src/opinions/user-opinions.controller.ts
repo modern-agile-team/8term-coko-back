@@ -13,10 +13,10 @@ import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/common/decorators/get-user.decorator';
 import { UserInfo } from 'src/users/entities/user.entity';
-import { OpinionsService } from './user-opinions.service';
+import { OpinionsService } from './opinions.service';
 import { CreateOpinionDto } from './dtos/create-opinion.dto';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
-import { ApiOpinions } from './user-opinions.swagger';
+import { ApiOpinions } from './opinions.swagger';
 import { ResMyRankingDto } from 'src/ranking/dtos/res-my-ranking.dto';
 import { ResMyOpinionsDto } from './dtos/res-my-opinions.dto';
 

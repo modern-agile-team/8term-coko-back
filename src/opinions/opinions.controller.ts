@@ -1,9 +1,9 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { OpinionsService } from './user-opinions.service';
+import { OpinionsService } from './opinions.service';
 import { ResOpinionsDto } from './dtos/res-opinions.dto';
-import { ApiOpinions } from './user-opinions.swagger';
+import { ApiOpinions } from './opinions.swagger';
 import { ResMyOpinionsDto } from './dtos/res-my-opinions.dto';
 
 @ApiTags('opinions')
