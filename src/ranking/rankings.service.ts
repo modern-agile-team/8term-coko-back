@@ -6,10 +6,17 @@ import { UserInfo } from 'src/users/entities/user.entity';
 import { createFilterType } from 'src/ranking/utils/filter-utils';
 import { createOrderBy } from 'src/ranking/utils/sort-utils';
 import { Sort } from './entities/ranking.entity';
+import { Subscription, timer } from 'rxjs';
+import { UsersRepository } from 'src/users/repositories/users.reposirory';
+import { ProgressRepository } from 'src/progress/progress.repository';
 
 @Injectable()
 export class RankingsService {
-  constructor(private readonly rankingsRepository: RankingsRepository) {}
+  constructor(
+    private readonly rankingsRepository: RankingsRepository,
+    private readonly usersRepository: UsersRepository,
+    private readonly progressRepository: ProgressRepository,
+  ) {}
 
   /**
    * 해당 페이지의 랭킹정보들을 가져옴
@@ -59,5 +66,55 @@ export class RankingsService {
     const ranking = higherRankCount + 1;
 
     return new ResMyRankingDto({ ranking });
+  }
+
+  // 타이머 관리 객체 // 키는 userId, value인 sunscription에 구독 정보
+  private totalCorrectAnswerUpdateTimers = new Map<number, Subscription>();
+
+  /**
+   * 타이머 관리 메서드 ( 이벤트 리스너에서 호출 )
+   * @param userId
+   * @param totalCorrectAnswer
+   * @param delayMs
+   */
+  async scheduleTotalCorrectAnswerUpdateTimers(
+    userId: number,
+    isCorrect: boolean,
+    delayTime: number,
+  ) {
+    /**
+     * 기존 타이머가 있으면 취소
+     * has() - refillTimer에 subscription 있는지 확인
+     * get().unsubscribe 가져온 정보의 subscription 취소
+     * delete() subscription 삭제
+     * 'subscription' 은 '구독 정보' 정도로 생각하면 될 것 같습니다.
+     */
+    if (this.totalCorrectAnswerUpdateTimers.has(userId)) {
+      this.totalCorrectAnswerUpdateTimers.get(userId).unsubscribe();
+      this.totalCorrectAnswerUpdateTimers.delete(userId);
+    }
+
+    // 총 정답 수 조회
+    const totalCorrectAnswer =
+      await this.progressRepository.countProgressByQuery(
+        userId,
+        {},
+        { isCorrect },
+      );
+
+    console.log('랭킹 서비스단 타이머ㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓ', totalCorrectAnswer);
+    // rxjs timer를 사용해 예약
+    const timerSubscription = timer(delayTime).subscribe(async () => {
+      await this.usersRepository.updateUserTotalCorrectAnswer(
+        userId,
+        totalCorrectAnswer,
+      );
+
+      console.log('타이머 끝 콜백함수 실행 !');
+      this.totalCorrectAnswerUpdateTimers.delete(userId);
+    });
+
+    // 새 subscription 저장
+    this.totalCorrectAnswerUpdateTimers.set(userId, timerSubscription);
   }
 }

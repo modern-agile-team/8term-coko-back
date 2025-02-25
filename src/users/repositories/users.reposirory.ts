@@ -38,4 +38,21 @@ export class UsersRepository {
       data: { totalAttendance: { increment: ATTENDANCE_INCREASE_VALUE } },
     });
   }
+
+  /**
+   * 유저의 총 정답수 업데이트
+   * @param userId
+   * @param totalCorrectAnswer
+   * @param txOrPrisma
+   */
+  async updateUserTotalCorrectAnswer(
+    userId: number,
+    totalCorrectAnswer: number,
+    txOrPrisma: PrismaClientOrTransaction = this.prisma,
+  ) {
+    await txOrPrisma.user.update({
+      where: { id: userId },
+      data: { totalCorrectAnswer },
+    });
+  }
 }

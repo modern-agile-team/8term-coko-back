@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateProgressDto } from './dto/create-progress.dto';
 import { QueryProgressDto } from './dto/query-progress.dto';
 import { ProgressRepository } from './progress.repository';
@@ -68,6 +68,14 @@ export class ProgressService {
       quizId,
       body,
     );
+
+    // 정답일 경우만 해당 이벤트 발행
+    if (progress.isCorrect) {
+      this.eventEmitter.emit('quiz.correct', {
+        userId,
+        isCorrect: progress.isCorrect,
+      });
+    }
 
     // progress 업데이트가 완료된 후 이벤트 발행
     this.eventEmitter.emit('progress.updated', progress);
