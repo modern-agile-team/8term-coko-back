@@ -8,10 +8,14 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { BuyUserItemsDto } from '../dtos/buy-userItems.dto';
 import { EquipUseritemDto } from '../dtos/equip-useritem.dto';
 import { ResponseItemDto } from '../dtos/response-item.dto';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class UserItemsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
   //사용자 아이템 목록 조회
   async getUserItems(userId: number) {
@@ -101,6 +105,8 @@ export class UserItemsService {
         data: userItemsData,
       });
     });
+
+    this.eventEmitter.emit('itme.buy', { userId });
   }
 
   //아이템 장착/해제
