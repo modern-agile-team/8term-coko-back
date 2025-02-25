@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ChallengesRepository } from './challenges.repository';
 import { UserChallengesRepository } from './user-challenges/user-challenges.repository';
 import { ChallengeTypeValues } from './const/challenges.constant';
 import { UserInfo } from 'src/users/entities/user.entity';
@@ -10,7 +9,6 @@ export class LevelClearChallengesService {
   private readonly challengeType = ChallengeTypeValues.LEVEL_CLEAR;
 
   constructor(
-    private readonly challengesRepository: ChallengesRepository,
     private readonly userChallengesRepository: UserChallengesRepository,
   ) {}
 
