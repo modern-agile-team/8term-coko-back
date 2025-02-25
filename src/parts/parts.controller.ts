@@ -30,6 +30,15 @@ export class PartsController {
     return ResPartDto.fromArray(parts);
   }
 
+  @ApiParts.findOne()
+  @Get(':partId')
+  async findOne(
+    @Param('partId', PositiveIntPipe) partId: number,
+  ): Promise<ResPartDto> {
+    const part = await this.partsService.findOne(partId);
+    return new ResPartDto(part);
+  }
+
   @ApiParts.create()
   @Post()
   @HttpCode(204)
