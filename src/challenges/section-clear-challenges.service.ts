@@ -22,6 +22,7 @@ export class SectionsChallengesService {
     // 섹션 정보를 가져와서 order 값을 확인.
     const section = await this.sectionsRepository.findOneSectionById(sectionId);
     if (!section) {
+      return null;
       throw new NotFoundException('존재하지 않는 섹션입니다.');
     }
 
