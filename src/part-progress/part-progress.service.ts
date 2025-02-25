@@ -12,7 +12,7 @@ import {
   PartStatusValues,
 } from './entities/part-progress.entity';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { Evnet } from 'src/challenges/const/challenges.constant';
+import { EVENT } from 'src/challenges/const/challenges.constant';
 
 @Injectable()
 export class PartProgressService {
@@ -107,7 +107,7 @@ export class PartProgressService {
     const completed = new CreatePartProgressDto(PartStatusValues.COMPLETED);
 
     const eventPartStatusCompleted = (userId: number, sectionId: number) => {
-      this.eventEmitter.emit(Evnet.PartStatus.Completed, {
+      this.eventEmitter.emit(EVENT.PART_STATUS.COMPLETED, {
         userId,
         sectionId,
       });

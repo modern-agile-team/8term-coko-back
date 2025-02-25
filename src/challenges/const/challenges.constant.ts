@@ -12,11 +12,13 @@ export const ChallengeTypeValues = {
   FIRST_404_VISIT: 'FIRST_404_VISIT',
 } as const;
 
-export const Evnet = {
-  PartStatus: {
-    Completed: 'partStatus.completed',
+export const EVENT = {
+  PART_STATUS: {
+    COMPLETED: 'partStatus.completed',
   },
-  User: {
-    LevelUp: 'user.levelUp',
+  USER: {
+    LEVEL_UP: 'user.levelUp',
   },
 } as const;
+
+event;

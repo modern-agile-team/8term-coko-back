@@ -8,7 +8,7 @@ import {
 } from '../constants/user-experience.constant';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UserInfo } from '../entities/user.entity';
-import { Evnet } from 'src/challenges/const/challenges.constant';
+import { EVENT } from 'src/challenges/const/challenges.constant';
 
 @Injectable()
 export class UserExperienceService {
@@ -50,7 +50,7 @@ export class UserExperienceService {
     });
 
     // 이벤트 발생
-    this.eventEmitter.emit(Evnet.User.LevelUp, {
+    this.eventEmitter.emit(EVENT.USER.LEVEL_UP, {
       user: updatedExperience,
     });
 
