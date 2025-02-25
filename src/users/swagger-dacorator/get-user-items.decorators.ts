@@ -1,6 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { ResponseItemDto } from '../dtos/response-item.dto';
+import { ResponseUserItemDto } from '../dtos/response-useritem.dto';
 
 export function ApiGetUserItems() {
   return applyDecorators(
@@ -13,7 +13,7 @@ export function ApiGetUserItems() {
     ApiResponse({
       status: 200,
       description: '사용자 아이템 목록 조회 성공',
-      type: [ResponseItemDto], //배열 형태로 변환됨을 명시
+      type: [ResponseUserItemDto], //배열 형태로 변환됨을 명시
     }),
     ApiResponse({
       status: 401,
