@@ -1,9 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ItemsModule } from './items/items.module';
-import { UserPointModule } from './users/modules/user-point.module';
-import { UserExperienceModule } from './users/modules/user-experience.module';
-import { UserItemsModule } from './users/modules/user-items.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { SectionsModule } from './sections/sections.module';
 import { ConfigModule } from '@nestjs/config';
@@ -18,6 +15,7 @@ import { AttendanceModule } from './attendance/attendance.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ChallengesModule } from './challenges/challenges.module';
 import { SseModule } from './sse/sse.module';
+import { OpinionsModule } from './opinions/opinions.module';
 @Module({
   imports: [
     ItemsModule,
@@ -38,6 +36,7 @@ import { SseModule } from './sse/sse.module';
     EventEmitterModule.forRoot(),
     ChallengesModule,
     SseModule,
+    OpinionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

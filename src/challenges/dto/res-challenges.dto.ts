@@ -1,5 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Challenge } from '../challenges.interface';
+import {
+  ChallengeType,
+  ChallengeTypeValues,
+} from '../const/challenges.constant';
 
 export class ResChallengesDto
   implements Omit<Challenge, 'createdAt' | 'updatedAt'>
@@ -24,6 +28,13 @@ export class ResChallengesDto
     description: '도전과제 클리어시 줄 경험치, 기본적으로 0',
   })
   readonly experience: number;
+
+  @ApiProperty({
+    description: '도전과제 타입',
+    example: ChallengeTypeValues.LEVEL_CLEAR,
+    enum: ChallengeTypeValues,
+  })
+  readonly challengeType: ChallengeType;
 
   @ApiProperty({
     example: 0,

@@ -44,13 +44,15 @@ export class UserChallengesRepository {
     });
   }
 
-  async updateUserChallengesById(
-    id: number,
+  async updateUserChallengesByUserId(
+    userId: number,
+    challengeId: number,
     data: UpdateUserChallengesDto,
-  ): Promise<UserChallenge> {
+  ): Promise<UserChallengesAndInfo> {
     return await this.prisma.userChallenge.update({
-      where: { id },
+      where: { userId_challengeId: { userId, challengeId } },
       data,
+      include: { challenge: true },
     });
   }
 }

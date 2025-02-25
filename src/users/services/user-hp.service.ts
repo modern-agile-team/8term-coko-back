@@ -46,7 +46,7 @@ export class UserHpService {
     }
 
     if (userHp.hp === 0) {
-      throw new BadRequestException(`id ${userId}'s HP is 0`);
+      throw new BadRequestException(`HP is 0`); // 프런트가 useId 빼달라네요 .. (25.02.21)
     }
 
     // hp 감소

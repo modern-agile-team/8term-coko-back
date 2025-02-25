@@ -28,6 +28,17 @@ enum PartStatus {
   COMPLETED
 }
 
+enum ChallengeType {
+  SECTION_CLEAR
+  LEVEL_CLEAR
+  ALL_SECTIONS_CLEAR
+  ATTENDANCE_STREAK
+  RANKING_CHALLENGE
+  FIRST_ITEM_PURCHASE
+  FIRST_WRONG_ANSWER
+  FIRST_404_VISIT
+}
+
 model Quiz {
   id           Int        @id @default(autoincrement())
   partId       Int        @map("part_id")
@@ -75,6 +86,7 @@ model User {
   attendance             Attendance[]
   userDailyQuest         UserDailyQuest[]
   userChallenge          UserChallenge[]
+  opinions               Opinion[]
 
   @@map("users")
 }
@@ -244,17 +256,19 @@ model UserDailyQuest {
 }
 
 model Challenge {
-  id         Int      @id @default(autoincrement())
-  content    String   @db.VarChar(255)
-  point      Int      @default(0)
-  experience Int      @default(0)
-  condition  Int      @default(0)
-  badgeName  String   @unique @map("badge_name") @db.VarChar(255)
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
+  id            Int           @id @default(autoincrement())
+  content       String        @db.VarChar(255)
+  point         Int           @default(0)
+  experience    Int           @default(0)
+  challengeType ChallengeType @map("challenge_type")
+  condition     Int           @default(0)
+  badgeName     String        @unique @map("badge_name") @db.VarChar(255)
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
 
   UserChallenge UserChallenge[]
 
+  @@unique([challengeType, condition])
   @@map("challenges")
 }
 
@@ -273,4 +287,16 @@ model UserChallenge {
   @@unique([userId, challengeId])
   @@index([challengeId])
   @@map("user_challenges")
+}
+
+model Opinion {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  title     String   @db.VarChar(255)
+  content   String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("opinions")
 }

@@ -3,12 +3,9 @@ import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/common/decorators/get-user.decorator';
 import { UserInfo } from 'src/users/entities/user.entity';
 import { RankingsService } from './rankings.service';
-import { ApiRankings } from './ranking.swagger';
-import { RankingQueryDto } from './dtos/ranking-query.dto';
+import { ApiRankings } from './rankings.swagger';
 import { ApiTags } from '@nestjs/swagger';
-import { RankingPaginationResponseDto } from './dtos/ranking-pagination-res.dto';
 import { ResMyRankingDto } from './dtos/res-my-ranking.dto';
-import { Sort } from './entities/ranking.entity';
 import { RankingSortDto } from './dtos/ranking-sort.dto';
 
 @ApiTags('rankings')
