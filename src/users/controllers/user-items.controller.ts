@@ -72,7 +72,6 @@ export class UserItemsController {
     );
   }
 
-  //4. 모든 장착된 아이템 해제
   @Put('reset-equipment')
   @HttpCode(204)
   @ApiResetEquipment()

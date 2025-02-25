@@ -7,7 +7,6 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { BuyUserItemsDto } from '../dtos/buy-userItems.dto';
 import { EquipUseritemDto } from '../dtos/equip-useritem.dto';
-import { ResponseItemDto } from '../dtos/response-item.dto';
 import { UserItemsPaginationQueryDto } from '../dtos/userItems-pagination-query.dto';
 import { UserItemsRepository } from '../repositories/user-items.repository';
 import { UserItemsPaginationResponseDto } from '../dtos/response-userItems-pagination.dto';
