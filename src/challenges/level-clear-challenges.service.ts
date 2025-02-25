@@ -26,10 +26,10 @@ export class LevelClearChallengesService {
       (userChallenge) => userChallenge.id,
     );
 
-    await this.userChallengesRepository.updateManyByUserAndType(
-      userChallengeIds,
-      { completed: true, completedDate: new Date() },
-    );
+    await this.userChallengesRepository.updateManyByIds(userChallengeIds, {
+      completed: true,
+      completedDate: new Date(),
+    });
 
     const [first, ...order] = userChallenges;
 

@@ -20,5 +20,3 @@ export const EVENT = {
     LEVEL_UP: 'user.levelUp',
   },
 } as const;
-
-event;

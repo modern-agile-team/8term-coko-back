@@ -89,7 +89,7 @@ export class UserChallengesRepository {
     });
   }
 
-  async updateManyByUserAndType(ids: number[], data: UpdateUserChallengesDto) {
+  async updateManyByIds(ids: number[], data: UpdateUserChallengesDto) {
     return await this.prisma.userChallenge.updateMany({
       where: { id: { in: ids }, completed: false },
       data,
