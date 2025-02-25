@@ -8,7 +8,7 @@ export class RankingEventsListener {
   constructor(private readonly rankingsService: RankingsService) {}
 
   /**
-   * hp 감소시 이벤트
+   * 퀴즈 정답시 이벤트
    * @param payload
    */
   @OnEvent('quiz.correct')
