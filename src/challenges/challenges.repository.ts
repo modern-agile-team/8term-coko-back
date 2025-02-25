@@ -4,7 +4,7 @@ import { UpdateChallengesDto } from './dto/update-challenges.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 import { Challenge } from './challenges.interface';
-import { ChallengeType } from './const/challenges.constant';
+import { ChallengeType } from './user-challenges/user-challenges.interface';
 
 @Injectable()
 export class ChallengesRepository {

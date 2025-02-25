@@ -1,5 +1,5 @@
 import { OffsetPaginationBaseResponseDto } from 'src/pagination/dtos/offset-pagination-res.dto';
-import { ChallengeType } from './const/challenges.constant';
+import { ChallengeType } from './user-challenges/user-challenges.interface';
 
 export interface Challenge {
   id: number;

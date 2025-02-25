@@ -1,5 +1,3 @@
-import { ValueOf } from 'src/common/util/type-utils';
-
 /**
  * 도전과제 타입 값들
  */
@@ -14,4 +12,11 @@ export const ChallengeTypeValues = {
   FIRST_404_VISIT: 'FIRST_404_VISIT',
 } as const;
 
-export type ChallengeType = ValueOf<typeof ChallengeTypeValues>;
+export const Evnet = {
+  PartStatus: {
+    Completed: 'partStatus.completed',
+  },
+  User: {
+    LevelUp: 'user.levelUp',
+  },
+} as const;

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import {
+  ChallengeType,
   UserChallenge,
   UserChallengesAndInfo,
 } from './user-challenges.interface';
@@ -45,6 +46,30 @@ export class UserChallengesRepository {
   ): Promise<UserChallenge[]> {
     return await this.prisma.userChallenge.findMany({
       where: { userId, challengeId: { in: challengeIds } },
+      orderBy: {},
+    });
+  }
+
+  async findManyByUserAndType(
+    userId: number,
+    lowerCondition: number,
+    challengeType: ChallengeType,
+  ): Promise<UserChallengesAndInfo[]> {
+    return await this.prisma.userChallenge.findMany({
+      where: {
+        userId,
+        completed: false,
+        challenge: {
+          challengeType,
+          condition: { lte: lowerCondition },
+        },
+      },
+      include: { challenge: true },
+      orderBy: {
+        challenge: {
+          condition: 'desc',
+        },
+      },
     });
   }
 
@@ -68,7 +93,7 @@ export class UserChallengesRepository {
     data: UpdateUserChallengesDto,
   ): Promise<UserChallengesAndInfo> {
     return await this.prisma.userChallenge.update({
-      where: { userId_challengeId: { userId, challengeId } },
+      where: { userId_challengeId: { userId, challengeId }, completed: false },
       data,
       include: { challenge: true },
     });
@@ -92,6 +117,13 @@ export class UserChallengesRepository {
         challengeId: { in: challengeIds },
         completed: false,
       },
+      data,
+    });
+  }
+
+  async updateManyByUserAndType(ids: number[], data: UpdateUserChallengesDto) {
+    return await this.prisma.userChallenge.updateMany({
+      where: { id: { in: ids }, completed: false },
       data,
     });
   }
