@@ -45,6 +45,15 @@ export class ChallengesRepository {
     });
   }
 
+  async findManyByTypeAndConditions(
+    challengeType: ChallengeType,
+    conditions: number[],
+  ): Promise<Challenge[]> {
+    return await this.prisma.challenge.findMany({
+      where: { challengeType, condition: { in: conditions } },
+    });
+  }
+
   async createChallenge(
     body: CreateChallengesDto,
     defaultUserChallenges: { userId: number }[],
