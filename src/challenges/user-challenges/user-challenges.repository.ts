@@ -67,8 +67,8 @@ export class UserChallengesRepository {
   //Event 핸들러에서 호출할 서비스 메서드에서 사용
   async findManyByUserAndType(
     userId: number,
-    lowerCondition: number,
     challengeType: ChallengeType,
+    lowerCondition?: number,
   ): Promise<UserChallengesAndInfo[]> {
     return await this.prisma.userChallenge.findMany({
       where: {
@@ -76,7 +76,7 @@ export class UserChallengesRepository {
         completed: false,
         challenge: {
           challengeType,
-          condition: { lte: lowerCondition },
+          condition: { ...(lowerCondition && { lte: lowerCondition }) },
         },
       },
       include: { challenge: true },

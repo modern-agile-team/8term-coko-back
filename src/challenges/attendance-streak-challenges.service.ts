@@ -16,6 +16,19 @@ export class AttendanceStreakChallengesService {
   async completedChallenge(
     userId: number,
   ): Promise<UserChallengesAndInfo | null> {
+    // 조건인자인 2번째 인자보다 낮으면서, complete되지 않은 도전과제를 가져옴
+
+    const userChallenges =
+      await this.userChallengesRepository.findManyByUserAndType(
+        userId,
+        this.challengeType,
+      );
+
+    // 모든 도전과제가 complete 라면
+    if (userChallenges.length === 0) {
+      return null;
+    }
+
     const now = new Date();
     const nowKST = new Date(now.getTime() + 9 * 60 * 60 * 1000); // UTC → KST 변환
     // 현재 날짜
@@ -51,15 +64,15 @@ export class AttendanceStreakChallengesService {
       }
     }
 
-    // 조건인자인 2번째 인자보다 낮으면서, complete되지 않은 도전과제를 가져옴
-    const userChallenges =
+    // 업데이트 할 유저의 도전과제 조회
+    const userChallengesForUpdate =
       await this.userChallengesRepository.findManyByUserAndType(
         userId,
-        streak,
         this.challengeType,
+        streak,
       );
 
-    const userChallengeIds = userChallenges.map(
+    const userChallengeIds = userChallengesForUpdate.map(
       (userChallenge) => userChallenge.id,
     );
 
@@ -69,7 +82,7 @@ export class AttendanceStreakChallengesService {
       completedDate: new Date(),
     });
 
-    const [first, ...order] = userChallenges;
+    const [first, ...order] = userChallengesForUpdate;
 
     return first;
   }
