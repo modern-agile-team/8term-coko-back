@@ -18,8 +18,8 @@ export class LevelClearChallengesService {
     const userChallenges =
       await this.userChallengesRepository.findManyByUserAndType(
         user.id,
-        user.level,
         this.challengeType,
+        user.level,
       );
 
     const userChallengeIds = userChallenges.map(
