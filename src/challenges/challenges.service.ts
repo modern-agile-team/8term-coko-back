@@ -20,7 +20,7 @@ export class ChallengesService {
   async findAllByPageAndLimit(
     query: QueryChallengesDto,
   ): Promise<PaginationChallenges> {
-    const { page, limit } = query;
+    const { page, limit, challengeType } = query;
     const allChallengesCount =
       await this.challengesRepository.getTotalChallengesCount();
 
@@ -28,6 +28,7 @@ export class ChallengesService {
       await this.challengesRepository.findSelectedPageChallengesInfo(
         page,
         limit,
+        challengeType,
       );
 
     return {

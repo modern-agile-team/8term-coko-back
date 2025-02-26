@@ -17,10 +17,12 @@ export class ChallengesRepository {
   async findSelectedPageChallengesInfo(
     page: number,
     limit: number,
+    challengeType?: ChallengeType,
   ): Promise<Challenge[]> {
     return await this.prisma.challenge.findMany({
       skip: (page - 1) * limit, // 건너뛸 항목 수 계산
       take: limit, // 가져올 항목 수
+      where: { ...(challengeType && { challengeType }) },
     });
   }
 
