@@ -6,6 +6,7 @@ interface UserModel {
   experienceForNextLevel: number;
   point: number;
   totalAttendance: number;
+  totalCorrectAnswer: number;
   createdAt: Date;
 }
 
@@ -17,5 +18,6 @@ export class UserInfo implements UserModel {
   experienceForNextLevel: number;
   point: number;
   totalAttendance: number;
+  totalCorrectAnswer: number;
   createdAt: Date;
 }
