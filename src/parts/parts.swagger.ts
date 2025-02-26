@@ -89,6 +89,18 @@ export const ApiParts = {
       }),
     );
   },
+  findOne: () => {
+    return applyDecorators(
+      ApiOperation({
+        summary: '하나 조회',
+      }),
+      ApiResponse({
+        status: 200,
+        description: '파트의 id, 상위섹션 id, 파트의 name을 조회함',
+        type: ResPartDto,
+      }),
+    );
+  },
   updateAll: () => {
     return applyDecorators(
       ApiOperation({
