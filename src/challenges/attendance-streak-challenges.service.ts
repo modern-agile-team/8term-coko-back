@@ -32,7 +32,7 @@ export class AttendanceStreakChallengesService {
 
     let streak = 0;
 
-    // 일단 최대 21일 동안 검사 ( 도전과제가 21일까지 밖에 없기 때문에 이후 도전과제가 늘어나면 )
+    // 최대 30일 동안 검사
     for (let i = 0; i < 30; i++) {
       // DB에서 userId와 currentDate에 해당하는 출석 기록을 조회
       const attendance = await this.attedanceRepository.findAttendanceRecord(
