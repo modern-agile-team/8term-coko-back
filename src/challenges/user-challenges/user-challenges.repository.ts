@@ -116,7 +116,7 @@ export class UserChallengesRepository {
 
   //Event 핸들러에서 호출할 서비스 메서드에서 사용
   async updateById(id: number, data: UpdateUserChallengesDto) {
-    return await this.prisma.userChallenge.updateMany({
+    return await this.prisma.userChallenge.update({
       where: { id, completed: false },
       data,
     });
