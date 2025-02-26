@@ -10,6 +10,9 @@ import { EquipUseritemDto } from '../dtos/equip-useritem.dto';
 import { UserItemsPaginationQueryDto } from '../dtos/userItems-pagination-query.dto';
 import { UserItemsRepository } from '../repositories/user-items.repository';
 import { UserItemsPaginationResponseDto } from '../dtos/response-userItems-pagination.dto';
+import { UserItem } from '../entities/user-item.entity';
+import { Item } from 'src/items/entities/item.entity';
+
 @Injectable()
 export class UserItemsService {
   constructor(
@@ -48,10 +51,18 @@ export class UserItemsService {
     };
 
     const totalCount = await this.userItemsRepository.getTotalItemCount(where);
-    const contents = await this.userItemsRepository.findUserItems(
+    const userItems = await this.userItemsRepository.findUserItems(
       page,
       limit,
       where,
+    );
+    const contents = await Promise.all(
+      userItems.map(async (userItem) => {
+        const item = await this.prisma.item.findUnique({
+          where: { id: userItem.itemId },
+        });
+        return { ...userItem, item };
+      }),
     );
 
     return new UserItemsPaginationResponseDto({

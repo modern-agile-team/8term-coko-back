@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserItem } from '../entities/user-item.entity';
+import { Item } from 'src/items/entities/item.entity';
 
 interface WhereClause {
   userId?: number;
@@ -22,6 +23,9 @@ export class UserItemsRepository {
       where,
       skip: (page - 1) * limit,
       take: limit,
+      include: {
+        item: true,
+      },
     });
   }
 
