@@ -3,6 +3,8 @@ import { AttendanceRepository } from './attendance.repository';
 import { ResMyMonthlyAttendanceDto } from './dtos/res-monthly-attendance.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UsersRepository } from 'src/users/repositories/users.reposirory';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EVENT } from 'src/challenges/const/challenges.constant';
 
 @Injectable()
 export class AttendanceService {
@@ -10,6 +12,7 @@ export class AttendanceService {
     private readonly attendanceRepository: AttendanceRepository,
     private readonly prisma: PrismaService,
     private readonly usersRepository: UsersRepository,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   /**
@@ -50,6 +53,11 @@ export class AttendanceService {
 
       // user의 total_attendance가 증가
       await this.usersRepository.increaseUserTotalAttendance(userId, tx);
+
+      // 연속 출석 도전과제 검사 이벤트 발행
+      this.eventEmitter.emit(EVENT.ATTENDANCE.STREAK, {
+        userId,
+      });
     });
   }
 

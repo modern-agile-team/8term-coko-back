@@ -19,4 +19,7 @@ export const EVENT = {
   USER: {
     LEVEL_UP: 'user.levelUp',
   },
+  ATTENDANCE: {
+    STREAK: 'attendance.streak',
+  },
 } as const;
