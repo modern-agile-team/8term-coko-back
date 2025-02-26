@@ -28,9 +28,6 @@ export class UserExperienceController {
     @User() user: UserInfo,
     @Body() updateExperienceData: UpdateExperienceDto,
   ) {
-    return this.experienceService.updateExperience(
-      user.id,
-      updateExperienceData,
-    );
+    return this.experienceService.updateExperience(user, updateExperienceData);
   }
 }

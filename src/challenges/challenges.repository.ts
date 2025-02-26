@@ -4,7 +4,7 @@ import { UpdateChallengesDto } from './dto/update-challenges.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 import { Challenge } from './challenges.interface';
-import { ChallengeType } from './const/challenges.constant';
+import { ChallengeType } from './user-challenges/user-challenges.interface';
 
 @Injectable()
 export class ChallengesRepository {
@@ -42,6 +42,15 @@ export class ChallengesRepository {
   ): Promise<Challenge> {
     return await this.prisma.challenge.findUnique({
       where: { challengeType_condition: { challengeType, condition } },
+    });
+  }
+
+  async findManyByTypeAndConditions(
+    challengeType: ChallengeType,
+    conditions: number[],
+  ): Promise<Challenge[]> {
+    return await this.prisma.challenge.findMany({
+      where: { challengeType, condition: { in: conditions } },
     });
   }
 

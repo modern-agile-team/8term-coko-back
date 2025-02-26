@@ -8,6 +8,7 @@ import { SectionsChallengesService } from './section-clear-challenges.service';
 import { ChallengesEventsListener } from './events/challenges.event';
 import { SectionsModule } from 'src/sections/sections.module';
 import { SseModule } from 'src/sse/sse.module';
+import { LevelClearChallengesService } from './level-clear-challenges.service';
 
 @Module({
   imports: [UserChallengesModule, UsersCoreModule, SectionsModule, SseModule],
@@ -16,6 +17,7 @@ import { SseModule } from 'src/sse/sse.module';
     ChallengesService,
     ChallengesRepository,
     SectionsChallengesService,
+    LevelClearChallengesService,
 
     ChallengesEventsListener,
   ],
