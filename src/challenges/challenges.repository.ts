@@ -38,6 +38,18 @@ export class ChallengesRepository {
     });
   }
 
+  async findOneByChallengeTypeAndCondition({
+    challengeType,
+    condition,
+  }: {
+    challengeType: ChallengeType;
+    condition: number;
+  }): Promise<Challenge> {
+    return await this.prisma.challenge.findUnique({
+      where: { challengeType_condition: { challengeType, condition } },
+    });
+  }
+
   async findOneByTypeAndCondition(
     challengeType: ChallengeType,
     condition: number,

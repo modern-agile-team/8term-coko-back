@@ -9,6 +9,7 @@ import { ChallengesRepository } from './challenges.repository';
 import { QueryChallengesDto } from './dto/query-challenges.dto';
 import { Challenge, PaginationChallenges } from './challenges.interface';
 import { UsersRepository } from 'src/users/repositories/users.reposirory';
+import { ChallengeType } from './user-challenges/user-challenges.interface';
 
 @Injectable()
 export class ChallengesService {
@@ -62,10 +63,29 @@ export class ChallengesService {
     return challenges;
   }
 
+  async chackedTypeAndConditionUnique(typeAndCondition: {
+    challengeType: ChallengeType;
+    condition: number;
+  }): Promise<Challenge> {
+    const challenges =
+      await this.challengesRepository.findOneByChallengeTypeAndCondition(
+        typeAndCondition,
+      );
+
+    if (challenges) {
+      throw new ConflictException(
+        `도전과제 타입과 컨디션의 조합은 유니크 해야합니다.`,
+      );
+    }
+
+    return challenges;
+  }
+
   async create(body: CreateChallengesDto): Promise<Challenge> {
     const { badgeName } = body;
 
     await this.chackedBadgeName(badgeName);
+    await this.chackedTypeAndConditionUnique(body);
 
     const allUsers = await this.usersRepository.findAllUsers();
 
