@@ -22,7 +22,7 @@ import { User } from 'src/common/decorators/get-user.decorator';
 import { UserInfo } from 'src/users/entities/user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { OffsetPaginationBaseResponseDto } from 'src/pagination/dtos/offset-pagination-res.dto';
-import { UserItem } from '@prisma/client';
+import { UserItem } from 'src/users/entities/user-item.entity';
 
 @ApiTags('user-items')
 @Controller('users/me/items')

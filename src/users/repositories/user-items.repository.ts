@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserItem } from '../entities/user-item.entity';
-import { Item } from 'src/items/entities/item.entity';
 
 interface WhereClause {
-  userId?: number;
+  userId: number;
   mainCategoryId?: number;
   subCategoryId?: number;
 }
@@ -20,7 +19,13 @@ export class UserItemsRepository {
     where: WhereClause,
   ): Promise<UserItem[]> {
     return this.prisma.userItem.findMany({
-      where,
+      where: {
+        userId: where.userId,
+        item: {
+          ...(where.mainCategoryId && { mainCategoryId: where.mainCategoryId }),
+          ...(where.subCategoryId && { subCategoryId: where.subCategoryId }),
+        },
+      },
       skip: (page - 1) * limit,
       take: limit,
       include: {
@@ -47,6 +52,14 @@ export class UserItemsRepository {
 
   //아이템 총 개수 조회
   async getTotalItemCount(where: WhereClause): Promise<number> {
-    return this.prisma.userItem.count({ where });
+    return this.prisma.userItem.count({
+      where: {
+        userId: where.userId,
+        item: {
+          ...(where.mainCategoryId && { mainCategoryId: where.mainCategoryId }),
+          ...(where.subCategoryId && { subCategoryId: where.subCategoryId }),
+        },
+      },
+    });
   }
 }

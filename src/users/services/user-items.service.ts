@@ -26,23 +26,6 @@ export class UserItemsService {
     query: UserItemsPaginationQueryDto,
   ): Promise<UserItemsPaginationResponseDto> {
     const { mainCategoryId, subCategoryId, page, limit } = query;
-    //카테고리 존재 여부 확인
-    if (
-      mainCategoryId &&
-      !(await this.userItemsRepository.existMainCategory(mainCategoryId))
-    ) {
-      throw new NotFoundException(
-        `존재하지 않는 메인 카테고리입니다: ${mainCategoryId}`,
-      );
-    }
-    if (
-      subCategoryId &&
-      !(await this.userItemsRepository.existSubCategory(subCategoryId))
-    ) {
-      throw new NotFoundException(
-        `존재하지 않는 서브 카테고리입니다: ${subCategoryId}`,
-      );
-    }
 
     const where = {
       userId,
@@ -50,20 +33,39 @@ export class UserItemsService {
       ...(subCategoryId && { subCategoryId }),
     };
 
-    const totalCount = await this.userItemsRepository.getTotalItemCount(where);
     const userItems = await this.userItemsRepository.findUserItems(
       page,
       limit,
       where,
     );
+
     const contents = await Promise.all(
       userItems.map(async (userItem) => {
         const item = await this.prisma.item.findUnique({
           where: { id: userItem.itemId },
         });
+
+        if (
+          mainCategoryId &&
+          !(await this.userItemsRepository.existMainCategory(mainCategoryId))
+        ) {
+          throw new NotFoundException(
+            `존재하지 않는 메인 카테고리입니다: ${mainCategoryId}`,
+          );
+        }
+        if (
+          subCategoryId &&
+          !(await this.userItemsRepository.existSubCategory(subCategoryId))
+        ) {
+          throw new NotFoundException(
+            `존재하지 않는 서브 카테고리입니다: ${subCategoryId}`,
+          );
+        }
         return { ...userItem, item };
       }),
     );
+
+    const totalCount = contents.length;
 
     return new UserItemsPaginationResponseDto({
       totalCount,
