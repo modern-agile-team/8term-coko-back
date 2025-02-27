@@ -103,11 +103,17 @@ export class ChallengesService {
     challengeId: number,
     body: UpdateChallengesDto,
   ): Promise<Challenge> {
-    const { badgeName } = body;
+    const { badgeName, challengeType, condition } = body;
 
     await this.findOne(challengeId);
 
-    badgeName && (await this.chackedBadgeName(badgeName));
+    if (badgeName) {
+      await this.chackedBadgeName(badgeName);
+    }
+
+    if (challengeType && condition) {
+      await this.chackedTypeAndConditionUnique({ challengeType, condition });
+    }
 
     return await this.challengesRepository.updateChallengesById(
       challengeId,
