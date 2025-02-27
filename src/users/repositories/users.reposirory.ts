@@ -38,4 +38,33 @@ export class UsersRepository {
       data: { totalAttendance: { increment: ATTENDANCE_INCREASE_VALUE } },
     });
   }
+
+  /**
+   * 유저의 총 정답수 업데이트
+   * @param userId
+   * @param totalCorrectAnswer
+   * @param txOrPrisma
+   */
+  async updateUserTotalCorrectAnswer(
+    userId: number,
+    totalCorrectAnswer: number,
+    txOrPrisma: PrismaClientOrTransaction = this.prisma,
+  ) {
+    await txOrPrisma.user.update({
+      where: { id: userId },
+      data: { totalCorrectAnswer },
+    });
+  }
+
+  /**
+   * 모든 유저의 id를 조회
+   * @returns
+   */
+  async getAllUserIds(): Promise<{ id: number }[]> {
+    const users = await this.prisma.user.findMany({
+      select: { id: true },
+    });
+
+    return users;
+  }
 }

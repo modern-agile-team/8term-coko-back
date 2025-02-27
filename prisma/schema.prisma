@@ -76,6 +76,7 @@ model User {
   experienceForNextLevel Int              @default(50) @map("experience_for_next_level")
   point                  Int              @default(0)
   totalAttendance        Int              @default(0) @map("total_attendance")
+  totalCorrectAnswer     Int              @default(0) @map("total_correct_answer")
   createdAt              DateTime         @default(now()) @map("created_at")
   updatedAt              DateTime         @updatedAt @map("updated_at")
   Progress               Progress[]

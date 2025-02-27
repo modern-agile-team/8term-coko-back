@@ -23,6 +23,9 @@ export class ResponseUserDto {
   @ApiProperty({ example: 27 })
   readonly totalAttendance: number;
 
+  @ApiProperty({ example: 18 })
+  readonly totalCorrectAnswer: number;
+
   @ApiProperty({ example: '2025-01-22T02:20:18.611Z' })
   readonly createdAt: Date;
 
@@ -35,5 +38,6 @@ export class ResponseUserDto {
     this.point = user.point;
     this.totalAttendance = user.totalAttendance;
     this.createdAt = user.createdAt;
+    this.totalCorrectAnswer = user.totalCorrectAnswer;
   }
 }
