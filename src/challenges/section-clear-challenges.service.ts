@@ -51,6 +51,7 @@ export class SectionsChallengesService {
     const incompleteParts =
       await this.partProgressRepository.findAllExceptStatusValue(
         userId,
+        section.id,
         PartStatusValues.COMPLETED,
       );
 
