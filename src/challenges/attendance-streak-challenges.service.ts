@@ -17,7 +17,6 @@ export class AttendanceStreakChallengesService {
     userId: number,
   ): Promise<UserChallengesAndInfo | null> {
     // 조건인자인 2번째 인자보다 낮으면서, complete되지 않은 도전과제를 가져옴
-
     const userChallenges =
       await this.userChallengesRepository.findManyByUserAndType(
         userId,
