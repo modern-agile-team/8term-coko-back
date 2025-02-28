@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { RankingsService } from './rankings.service';
 import { ApiRankings } from './rankings.swagger';
 import { RankingQueryDto } from './dtos/ranking-query.dto';
@@ -25,5 +25,16 @@ export class RankingsController {
     );
 
     return allRankings;
+  }
+
+  /**
+   * 시즌 종료 시점 반환
+   */
+  @ApiRankings.getNextSeasonEndTime()
+  @Get('season')
+  getNextSeasonEndTime() {
+    return {
+      seasonEndTime: this.rankingsService.getNextSeasonEndTime(),
+    };
   }
 }
