@@ -14,10 +14,11 @@ import { BuyUserItemsDto } from '../dtos/buy-userItems.dto';
 import { EquipUseritemDto } from '../dtos/equip-useritem.dto';
 import { UserItemsPaginationQueryDto } from '../dtos/userItems-pagination-query.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { ApiGetUserItems } from '../swagger-dacorator/get-user-items.decorators';
-import { ApiPostUserItems } from '../swagger-dacorator/post-user-items.decorators';
-import { ApiPatchUserItems } from '../swagger-dacorator/patch-user-items.decorator';
-import { ApiResetEquipment } from '../swagger-dacorator/put-user-items.decorators';
+import { ApiGetUserItems } from '../swagger-decorator/get-user-items.decorators';
+import { ApiPostUserItems } from '../swagger-decorator/post-user-items.decorators';
+import { ApiPatchUserItems } from '../swagger-decorator/patch-user-items.decorator';
+import { ApiGetEquippedUserItems } from '../swagger-decorator/get-equipped-user-items.decorators';
+import { ApiResetEquipment } from '../swagger-decorator/put-user-items.decorators';
 import { User } from 'src/common/decorators/get-user.decorator';
 import { UserInfo } from 'src/users/entities/user.entity';
 import { AuthGuard } from '@nestjs/passport';
@@ -72,6 +73,19 @@ export class UserItemsController {
     );
   }
 
+  //4. 장착된 아이템 조회
+  @Get('equipped')
+  @ApiGetEquippedUserItems()
+  @HttpCode(200)
+  @UseGuards(AuthGuard('accessToken'))
+  async getEquippedUserItems(
+    @User() user: UserInfo,
+    @Query() query: { mainCategoryId?: number; subCategoryId?: number },
+  ): Promise<UserItem[]> {
+    return this.userItemsService.getEquippedUserItems(user.id, query);
+  }
+
+  //5. 장착 아이템 초기화
   @Put('reset-equipment')
   @HttpCode(204)
   @ApiResetEquipment()

@@ -6,6 +6,7 @@ interface WhereClause {
   userId: number;
   mainCategoryId?: number;
   subCategoryId?: number;
+  isEquipped?: boolean;
 }
 
 @Injectable()
@@ -28,6 +29,22 @@ export class UserItemsRepository {
       },
       skip: (page - 1) * limit,
       take: limit,
+      include: {
+        item: true,
+      },
+    });
+  }
+
+  async findEquippedUserItems(where: WhereClause): Promise<UserItem[]> {
+    return this.prisma.userItem.findMany({
+      where: {
+        userId: where.userId,
+        isEquipped: where.isEquipped,
+        item: {
+          ...(where.mainCategoryId && { mainCategoryId: where.mainCategoryId }),
+          ...(where.subCategoryId && { subCategoryId: where.subCategoryId }),
+        },
+      },
       include: {
         item: true,
       },

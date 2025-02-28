@@ -270,6 +270,34 @@ export class UserItemsService {
     });
   }
 
+  //1. 사용자 아이템 목록 조회
+  async getEquippedUserItems(
+    userId: number,
+    query: { mainCategoryId?: number; subCategoryId?: number },
+  ): Promise<UserItem[]> {
+    const { mainCategoryId, subCategoryId } = query;
+
+    const where = {
+      userId,
+      isEquipped: true,
+      ...(mainCategoryId && { mainCategoryId }),
+      ...(subCategoryId && { subCategoryId }),
+    };
+
+    const userItems =
+      await this.userItemsRepository.findEquippedUserItems(where);
+
+    const contents = await Promise.all(
+      userItems.map(async (userItem) => {
+        const item = await this.prisma.item.findUnique({
+          where: { id: userItem.itemId },
+        });
+        return { ...userItem, item };
+      }),
+    );
+
+    return contents;
+  }
   //4. 모든 장착된 아이템 해제
   async resetEquipment(userId: number): Promise<void> {
     // 사용자 존재 여부 확인
