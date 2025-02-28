@@ -12,6 +12,7 @@ import { LevelClearChallengesService } from './level-clear-challenges.service';
 import { AttendanceStreakChallengesService } from './attendance-streak-challenges.service';
 import { AttendanceModule } from 'src/attendance/attendance.module';
 import { RankingChallengesService } from './ranking-challenges.service';
+import { FirstItemBuyChallengesService } from './first-item-buy.challenges.service';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { RankingChallengesService } from './ranking-challenges.service';
     ChallengesService,
     ChallengesRepository,
     SectionsChallengesService,
+    FirstItemBuyChallengesService,
     LevelClearChallengesService,
     AttendanceStreakChallengesService,
     RankingChallengesService,

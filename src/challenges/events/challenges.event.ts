@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { SectionsChallengesService } from '../section-clear-challenges.service';
 import { OnEvent } from '@nestjs/event-emitter';
 import { SseService } from 'src/sse/sse.service';
+import { FirstItemBuyChallengesService } from '../first-item-buy.challenges.service';
 import { LevelClearChallengesService } from '../level-clear-challenges.service';
 import { UserInfo } from 'src/users/entities/user.entity';
 import { EVENT } from '../const/challenges.constant';
@@ -16,6 +17,7 @@ export class ChallengesEventsListener {
     private readonly levelClearChallengesService: LevelClearChallengesService,
     private readonly attendanceStreakChallengesService: AttendanceStreakChallengesService,
     private readonly rankingChallengesService: RankingChallengesService,
+    private readonly firstItemBuyChallengesService: FirstItemBuyChallengesService,
   ) {}
 
   /**
@@ -125,6 +127,27 @@ export class ChallengesEventsListener {
         `handleLevelRankingChallenge 에러 발생 (userId: ${userId}):`,
         error,
       );
+    }
+  }
+
+  /**
+   * 유저가 아이템을 구매 했을때 호출되는 이벤트
+   * @param payload
+   */
+  @OnEvent(EVENT.ITEM.BUY)
+  async handleFirstItemBuyChallenge(payload: { userId: number }) {
+    const { userId } = payload;
+
+    const userChallengesAndInfo =
+      await this.firstItemBuyChallengesService.completedChallenge(userId);
+
+    if (userChallengesAndInfo) {
+      //sse메시지
+      this.sseService.notifyUser(userId, {
+        type: 'partStatus.completed',
+        message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
+        timestamp: new Date().toISOString(),
+      });
     }
   }
 }

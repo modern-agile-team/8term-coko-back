@@ -37,4 +37,7 @@ export const EVENT = {
   CORRECT_ANSWER_RANKING: {
     ATTAIN: 'correctAnswerRanking.attain',
   },
+  ITEM: {
+    BUY: 'item.buy',
+  },
 } as const;
