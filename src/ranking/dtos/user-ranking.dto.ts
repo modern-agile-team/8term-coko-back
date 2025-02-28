@@ -30,4 +30,10 @@ export class UserRankingDto {
     example: 17,
   })
   totalAttendance: number;
+
+  @ApiProperty({
+    description: '사용자의 총 정답수',
+    example: 28,
+  })
+  totalCorrectAnswer: number;
 }

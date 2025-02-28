@@ -9,6 +9,7 @@ import { ChallengesRepository } from './challenges.repository';
 import { QueryChallengesDto } from './dto/query-challenges.dto';
 import { Challenge, PaginationChallenges } from './challenges.interface';
 import { UsersRepository } from 'src/users/repositories/users.reposirory';
+import { ChallengeType } from './user-challenges/user-challenges.interface';
 
 @Injectable()
 export class ChallengesService {
@@ -20,7 +21,7 @@ export class ChallengesService {
   async findAllByPageAndLimit(
     query: QueryChallengesDto,
   ): Promise<PaginationChallenges> {
-    const { page, limit } = query;
+    const { page, limit, challengeType } = query;
     const allChallengesCount =
       await this.challengesRepository.getTotalChallengesCount();
 
@@ -28,6 +29,7 @@ export class ChallengesService {
       await this.challengesRepository.findSelectedPageChallengesInfo(
         page,
         limit,
+        challengeType,
       );
 
     return {
@@ -61,10 +63,29 @@ export class ChallengesService {
     return challenges;
   }
 
+  async chackedTypeAndConditionUnique(typeAndCondition: {
+    challengeType: ChallengeType;
+    condition: number;
+  }): Promise<Challenge> {
+    const challenges =
+      await this.challengesRepository.findOneByChallengeTypeAndCondition(
+        typeAndCondition,
+      );
+
+    if (challenges) {
+      throw new ConflictException(
+        `도전과제 타입과 컨디션의 조합은 유니크 해야합니다.`,
+      );
+    }
+
+    return challenges;
+  }
+
   async create(body: CreateChallengesDto): Promise<Challenge> {
     const { badgeName } = body;
 
     await this.chackedBadgeName(badgeName);
+    await this.chackedTypeAndConditionUnique(body);
 
     const allUsers = await this.usersRepository.findAllUsers();
 
@@ -82,11 +103,17 @@ export class ChallengesService {
     challengeId: number,
     body: UpdateChallengesDto,
   ): Promise<Challenge> {
-    const { badgeName } = body;
+    const { badgeName, challengeType, condition } = body;
 
     await this.findOne(challengeId);
 
-    badgeName && (await this.chackedBadgeName(badgeName));
+    if (badgeName) {
+      await this.chackedBadgeName(badgeName);
+    }
+
+    if (challengeType && condition) {
+      await this.chackedTypeAndConditionUnique({ challengeType, condition });
+    }
 
     return await this.challengesRepository.updateChallengesById(
       challengeId,

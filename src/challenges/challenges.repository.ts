@@ -4,7 +4,7 @@ import { UpdateChallengesDto } from './dto/update-challenges.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 import { Challenge } from './challenges.interface';
-import { ChallengeType } from './const/challenges.constant';
+import { ChallengeType } from './user-challenges/user-challenges.interface';
 
 @Injectable()
 export class ChallengesRepository {
@@ -17,10 +17,12 @@ export class ChallengesRepository {
   async findSelectedPageChallengesInfo(
     page: number,
     limit: number,
+    challengeType?: ChallengeType,
   ): Promise<Challenge[]> {
     return await this.prisma.challenge.findMany({
       skip: (page - 1) * limit, // 건너뛸 항목 수 계산
       take: limit, // 가져올 항목 수
+      where: { ...(challengeType && { challengeType }) },
     });
   }
 
@@ -36,12 +38,33 @@ export class ChallengesRepository {
     });
   }
 
+  async findOneByChallengeTypeAndCondition({
+    challengeType,
+    condition,
+  }: {
+    challengeType: ChallengeType;
+    condition: number;
+  }): Promise<Challenge> {
+    return await this.prisma.challenge.findUnique({
+      where: { challengeType_condition: { challengeType, condition } },
+    });
+  }
+
   async findOneByTypeAndCondition(
     challengeType: ChallengeType,
     condition: number,
   ): Promise<Challenge> {
     return await this.prisma.challenge.findUnique({
       where: { challengeType_condition: { challengeType, condition } },
+    });
+  }
+
+  async findManyByTypeAndConditions(
+    challengeType: ChallengeType,
+    conditions: number[],
+  ): Promise<Challenge[]> {
+    return await this.prisma.challenge.findMany({
+      where: { challengeType, condition: { in: conditions } },
     });
   }
 

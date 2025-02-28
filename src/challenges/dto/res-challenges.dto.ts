@@ -1,9 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Challenge } from '../challenges.interface';
-import {
-  ChallengeType,
-  ChallengeTypeValues,
-} from '../const/challenges.constant';
+import { ChallengeTypeValues } from '../const/challenges.constant';
+import { ChallengeType } from '../user-challenges/user-challenges.interface';
 
 export class ResChallengesDto
   implements Omit<Challenge, 'createdAt' | 'updatedAt'>
@@ -53,6 +51,7 @@ export class ResChallengesDto
     this.content = challenges.content;
     this.point = challenges.point;
     this.experience = challenges.experience;
+    this.challengeType = challenges.challengeType;
     this.condition = challenges.condition;
     this.badgeName = challenges.badgeName;
   }

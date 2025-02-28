@@ -50,4 +50,14 @@ export class AttendanceRepository {
       },
     });
   }
+
+  // 출석 기록 조회
+  async findAttendanceRecord(userId: number, currentDate: Date) {
+    return await this.prisma.attendance.findFirst({
+      where: {
+        userId,
+        date: currentDate, // currentDate와 DB의 date가 정확히 일치해야 합니다.
+      },
+    });
+  }
 }

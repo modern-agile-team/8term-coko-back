@@ -8,5 +8,6 @@ import { UsersCoreModule } from 'src/users/modules/users-core.module';
   imports: [UsersCoreModule],
   controllers: [AttendanceController],
   providers: [AttendanceService, AttendanceRepository],
+  exports: [AttendanceRepository],
 })
 export class AttendanceModule {}

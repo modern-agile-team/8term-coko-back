@@ -1,5 +1,7 @@
 import { OffsetPaginationBaseResponseDto } from 'src/pagination/dtos/offset-pagination-res.dto';
 import { Challenge } from '../challenges.interface';
+import { ValueOf } from 'src/common/util/type-utils';
+import { ChallengeTypeValues } from '../const/challenges.constant';
 
 export interface UserChallenge {
   id: number;
@@ -20,3 +22,5 @@ export interface PaginationUserChallenges
     OffsetPaginationBaseResponseDto<UserChallengesAndInfo>,
     'totalPage'
   > {}
+
+export type ChallengeType = ValueOf<typeof ChallengeTypeValues>;
