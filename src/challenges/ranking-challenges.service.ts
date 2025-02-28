@@ -3,7 +3,6 @@ import { UserChallengesRepository } from './user-challenges/user-challenges.repo
 import { ChallengeTypeValues } from './const/challenges.constant';
 import { UserChallengesAndInfo } from './user-challenges/user-challenges.interface';
 import { AttendanceRepository } from 'src/attendance/attendance.repository';
-import { RankingsRepository } from 'src/ranking/rankings.repository';
 
 @Injectable()
 export class RankingChallengesService {
