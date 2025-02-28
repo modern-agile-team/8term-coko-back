@@ -11,6 +11,7 @@ import { SseModule } from 'src/sse/sse.module';
 import { LevelClearChallengesService } from './level-clear-challenges.service';
 import { AttendanceStreakChallengesService } from './attendance-streak-challenges.service';
 import { AttendanceModule } from 'src/attendance/attendance.module';
+import { RankingChallengesService } from './ranking-challenges.service';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { AttendanceModule } from 'src/attendance/attendance.module';
     SectionsChallengesService,
     LevelClearChallengesService,
     AttendanceStreakChallengesService,
+    RankingChallengesService,
 
     ChallengesEventsListener,
   ],
