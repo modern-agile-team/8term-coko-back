@@ -23,12 +23,16 @@ export class UserChallengesRepository {
     page: number,
     limit: number,
     challengeType: ChallengeType,
+    completed: boolean,
   ): Promise<UserChallengesAndInfo[]> {
+    console.log('completed', completed);
     return await this.prisma.userChallenge.findMany({
       where: { userId, challenge: { challengeType } },
       skip: (page - 1) * limit, // 건너뛸 항목 수 계산
       take: limit, // 가져올 항목 수
       include: { challenge: true },
+      orderBy: { completed: completed ? 'desc' : 'asc' },
+      //orderBy: { completed: 'asc' },
     });
   }
 
