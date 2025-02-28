@@ -10,10 +10,14 @@ import { Subscription, timer } from 'rxjs';
 import { UsersRepository } from 'src/users/repositories/users.reposirory';
 import { ProgressRepository } from 'src/progress/progress.repository';
 import { Cron } from '@nestjs/schedule';
-import { DAILY_RESET } from 'src/daily-quests/users-daily-quests/const/users-daily-quests.const';
+import {
+  DAILY_RESET,
+  WEEKLY_SEASON_RESET_TIME,
+} from 'src/daily-quests/users-daily-quests/const/users-daily-quests.const';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
+import { TopRankerPaginaion } from 'src/common/constants/rankings-constants';
 
 @Injectable()
 export class RankingsService {
@@ -125,7 +129,7 @@ export class RankingsService {
    * 00시(자정)마다 모든 유저의 총 정답 수 업데이트
    */
   @Cron(DAILY_RESET)
-  async DailyUpdateAllUsersTotalCorrectAnswer(): Promise<void> {
+  async dailyUpdateAllUsersTotalCorrectAnswer(): Promise<void> {
     // 모든 유저의 id 조회
     const users = await this.usersRepository.getAllUserIds();
     const userIds = users.map((user) => user.id);

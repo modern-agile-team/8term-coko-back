@@ -27,6 +27,9 @@ export class RankingsController {
     return allRankings;
   }
 
+  /**
+   * 시즌 종료 시점 반환
+   */
   @ApiRankings.getNextSeasonEndTime()
   @Get('season')
   getNextSeasonEndTime() {

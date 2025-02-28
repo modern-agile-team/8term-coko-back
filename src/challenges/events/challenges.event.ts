@@ -103,10 +103,10 @@ export class ChallengesEventsListener {
   }
 
   /**
-   * 주간 시즌 종료될 때 호출되는 이벤트
+   * 주간 시즌 종료될 때 호출되는 레벨 이벤트
    */
-  @OnEvent(EVENT.RANKING.ATTAIN)
-  async handleRankingChallenge(payload: { userId: number }) {
+  @OnEvent(EVENT.LEVEL_RANKING.ATTAIN)
+  async handleLevelRankingChallenge(payload: { userId: number }) {
     const { userId } = payload;
     try {
       const userChallengesAndInfo =
@@ -115,14 +115,14 @@ export class ChallengesEventsListener {
       if (userChallengesAndInfo) {
         // SSE 메시지 전송
         this.sseService.notifyUser(userId, {
-          type: EVENT.RANKING.ATTAIN,
+          type: EVENT.LEVEL_RANKING.ATTAIN,
           message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
           timestamp: new Date().toISOString(),
         });
       }
     } catch (error) {
       console.error(
-        `handleLevelChallenge 에러 발생 (userId: ${userId}):`,
+        `handleLevelRankingChallenge 에러 발생 (userId: ${userId}):`,
         error,
       );
     }
