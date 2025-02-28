@@ -96,7 +96,7 @@ export class ChallengesEventsListener {
       }
     } catch (error) {
       console.error(
-        `handleLevelChallenge 에러 발생 (userId: ${userId}):`,
+        `handleAttendanceStreakChallenge 에러 발생 (userId: ${userId}):`,
         error,
       );
     }
