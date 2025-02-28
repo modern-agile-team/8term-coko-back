@@ -1,26 +1,9 @@
 import { IsOptional, IsInt, Min } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
+import { UserItemsQueryDto } from './userItems-query.dto';
 
-export class UserItemsPaginationQueryDto {
-  @IsOptional()
-  @IsInt()
-  @ApiPropertyOptional({
-    description: '메인 카테고리 ID',
-    example: 1,
-  })
-  @Type(() => Number)
-  mainCategoryId?: number;
-
-  @IsOptional()
-  @IsInt()
-  @ApiPropertyOptional({
-    description: '서브 카테고리 ID',
-    example: 2,
-  })
-  @Type(() => Number)
-  subCategoryId?: number;
-
+export class UserItemsPaginationQueryDto extends UserItemsQueryDto {
   @IsInt()
   @Min(1)
   @ApiPropertyOptional({
