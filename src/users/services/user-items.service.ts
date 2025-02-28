@@ -276,11 +276,9 @@ export class UserItemsService {
     query: { mainCategoryId?: number; subCategoryId?: number },
   ): Promise<UserItem[]> {
     const mainCategoryId = query.mainCategoryId
-      ? Number(query.mainCategoryId)
+      ? query.mainCategoryId
       : undefined;
-    const subCategoryId = query.subCategoryId
-      ? Number(query.subCategoryId)
-      : undefined;
+    const subCategoryId = query.subCategoryId ? query.subCategoryId : undefined;
 
     if (
       mainCategoryId &&
