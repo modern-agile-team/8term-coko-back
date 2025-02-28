@@ -7,18 +7,24 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { BuyUserItemsDto } from '../dtos/buy-userItems.dto';
 import { EquipUseritemDto } from '../dtos/equip-useritem.dto';
+
 import { UserItemsPaginationQueryDto } from '../dtos/userItems-pagination-query.dto';
 import { UserItemsRepository } from '../repositories/user-items.repository';
 import { UserItemsPaginationResponseDto } from '../dtos/response-userItems-pagination.dto';
 import { UserItem } from '../entities/user-item.entity';
 import { Item } from 'src/items/entities/item.entity';
 import { UserItemsQueryDto } from '../dtos/userItems-query.dto';
+import { ResponseItemDto } from '../dtos/response-item.dto';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EVENT } from 'src/challenges/const/challenges.constant';
+
 
 @Injectable()
 export class UserItemsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly userItemsRepository: UserItemsRepository,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   //1. 사용자 아이템 목록 조회
@@ -64,6 +70,26 @@ export class UserItemsService {
         }
         return { ...userItem, item };
       }),
+
+
+  //사용자 아이템 목록 조회
+  async getUserItems(userId: number) {
+    const userItems = await this.prisma.userItem.findMany({
+      where: { userId },
+      include: {
+        item: {
+          include: {
+            mainCategory: true,
+            subCategory: true,
+          },
+        },
+      },
+    });
+    if (!userItems) {
+      throw new NotFoundException('아이템을 찾을 수 없습니다.');
+    }
+    return userItems.map(
+      (userItem) => new ResponseItemDto(userItem.item, userItem),
     );
 
     const totalCount = contents.length;
@@ -143,6 +169,9 @@ export class UserItemsService {
         data: userItemsData,
       });
     });
+
+    //아이템을 구매했을때 이벤트 생성
+    this.eventEmitter.emit(EVENT.ITEM.BUY, { userId });
   }
 
   //3. 아이템 장착/해제
