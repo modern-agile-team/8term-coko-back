@@ -17,7 +17,7 @@ export class FirstItemBuyChallengesService {
         this.challengeType,
       );
 
-    if (userChallengesForUpdate.length) {
+    if (userChallengesForUpdate.length === 0) {
       return null;
     }
 
