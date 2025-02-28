@@ -275,7 +275,29 @@ export class UserItemsService {
     userId: number,
     query: { mainCategoryId?: number; subCategoryId?: number },
   ): Promise<UserItem[]> {
-    const { mainCategoryId, subCategoryId } = query;
+    const mainCategoryId = query.mainCategoryId
+      ? Number(query.mainCategoryId)
+      : undefined;
+    const subCategoryId = query.subCategoryId
+      ? Number(query.subCategoryId)
+      : undefined;
+
+    if (
+      mainCategoryId &&
+      !(await this.userItemsRepository.existMainCategory(mainCategoryId))
+    ) {
+      throw new NotFoundException(
+        `존재하지 않는 메인 카테고리입니다: ${mainCategoryId}`,
+      );
+    }
+    if (
+      subCategoryId &&
+      !(await this.userItemsRepository.existSubCategory(subCategoryId))
+    ) {
+      throw new NotFoundException(
+        `존재하지 않는 서브 카테고리입니다: ${subCategoryId}`,
+      );
+    }
 
     const where = {
       userId,
