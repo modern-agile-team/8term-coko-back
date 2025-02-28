@@ -12,6 +12,7 @@ import { UserItemsRepository } from '../repositories/user-items.repository';
 import { UserItemsPaginationResponseDto } from '../dtos/response-userItems-pagination.dto';
 import { UserItem } from '../entities/user-item.entity';
 import { Item } from 'src/items/entities/item.entity';
+import { UserItemsQueryDto } from '../dtos/userItems-query.dto';
 
 @Injectable()
 export class UserItemsService {
@@ -273,12 +274,10 @@ export class UserItemsService {
   //1. 사용자 아이템 목록 조회
   async getEquippedUserItems(
     userId: number,
-    query: { mainCategoryId?: number; subCategoryId?: number },
+    query: UserItemsQueryDto,
   ): Promise<UserItem[]> {
-    const mainCategoryId = query.mainCategoryId
-      ? query.mainCategoryId
-      : undefined;
-    const subCategoryId = query.subCategoryId ? query.subCategoryId : undefined;
+    const mainCategoryId = query.mainCategoryId ?? null;
+    const subCategoryId = query.subCategoryId ?? null;
 
     if (
       mainCategoryId &&

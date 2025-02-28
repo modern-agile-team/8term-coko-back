@@ -24,6 +24,7 @@ import { UserInfo } from 'src/users/entities/user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { OffsetPaginationBaseResponseDto } from 'src/pagination/dtos/offset-pagination-res.dto';
 import { UserItem } from 'src/users/entities/user-item.entity';
+import { UserItemsQueryDto } from '../dtos/userItems-query.dto';
 
 @ApiTags('user-items')
 @Controller('users/me/items')
@@ -80,7 +81,7 @@ export class UserItemsController {
   @UseGuards(AuthGuard('accessToken'))
   async getEquippedUserItems(
     @User() user: UserInfo,
-    @Query() query: { mainCategoryId?: number; subCategoryId?: number },
+    @Query() query: UserItemsQueryDto,
   ): Promise<UserItem[]> {
     return this.userItemsService.getEquippedUserItems(user.id, query);
   }
