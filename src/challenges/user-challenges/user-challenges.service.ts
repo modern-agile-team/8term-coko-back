@@ -18,7 +18,7 @@ export class UserChallengesService {
     userId: number,
     query: QueryChallengesDto,
   ): Promise<PaginationUserChallenges> {
-    const { page, limit } = query;
+    const { page, limit, challengeType } = query;
     const allUserChallengessCount =
       await this.userChallengesRepository.getTotalUserChallengesCount(userId);
 
@@ -27,6 +27,7 @@ export class UserChallengesService {
         userId,
         page,
         limit,
+        challengeType,
       );
 
     return {
