@@ -113,13 +113,13 @@ export class ChallengesEventsListener {
     const userChallengesAndInfo =
       await this.firstItemBuyChallengesService.completedChallenge(userId);
 
-    // if (userChallengesAndInfo) {
-    //   //sse메시지
-    //   this.sseService.notifyUser(userId, {
-    //     type: 'partStatus.completed',
-    //     message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
-    //     timestamp: new Date().toISOString(),
-    //   });
-    // }
+    if (userChallengesAndInfo) {
+      //sse메시지
+      this.sseService.notifyUser(userId, {
+        type: 'partStatus.completed',
+        message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
+        timestamp: new Date().toISOString(),
+      });
+    }
   }
 }

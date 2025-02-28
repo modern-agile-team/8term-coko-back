@@ -1,27 +1,38 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PartStatus } from '@prisma/client';
-import { ChallengesRepository } from './challenges.repository';
-import { PartProgressRepository } from 'src/part-progress/part-progress.repository';
-import { PartStatusValues } from 'src/part-progress/entities/part-progress.entity';
+import { Injectable } from '@nestjs/common';
 import { UserChallengesRepository } from './user-challenges/user-challenges.repository';
-import { UpdateUserChallengesDto } from './user-challenges/dto/update-user-challenges.dto';
 import { ChallengeTypeValues } from './const/challenges.constant';
-import { SectionsRepository } from 'src/sections/sections.repository';
 
 @Injectable()
 export class FirstItemBuyChallengesService {
   private readonly challengeType = ChallengeTypeValues.FIRST_ITEM_PURCHASE;
 
   constructor(
-    private readonly sectionsRepository: SectionsRepository,
-    private readonly challengesRepository: ChallengesRepository,
-    private readonly partProgressRepository: PartProgressRepository,
     private readonly userChallengesRepository: UserChallengesRepository,
   ) {}
 
   async completedChallenge(userId: number) {
-    //userChallengesRepository 조회
-    //userChallengesRepository 업데이트
-    return;
+    const userChallengesForUpdate =
+      await this.userChallengesRepository.findManyByUserAndType(
+        userId,
+        this.challengeType,
+      );
+
+    if (userChallengesForUpdate.length) {
+      return null;
+    }
+
+    const userChallengeIds = userChallengesForUpdate.map(
+      (userChallenge) => userChallenge.id,
+    );
+
+    // 위에서 가져온 도전과제들을 complete로 변경
+    await this.userChallengesRepository.updateManyByIds(userChallengeIds, {
+      completed: true,
+      completedDate: new Date(),
+    });
+
+    const [first, ...order] = userChallengesForUpdate;
+
+    return first;
   }
 }
