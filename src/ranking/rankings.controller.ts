@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { RankingsService } from './rankings.service';
 import { ApiRankings } from './rankings.swagger';
 import { RankingQueryDto } from './dtos/ranking-query.dto';
@@ -27,6 +27,7 @@ export class RankingsController {
     return allRankings;
   }
 
+  @ApiRankings.getNextSeasonEndTime()
   @Get('season')
   getNextSeasonEndTime() {
     return {
