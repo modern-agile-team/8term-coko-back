@@ -51,6 +51,7 @@ export class ResChallengesDto
     this.content = challenges.content;
     this.point = challenges.point;
     this.experience = challenges.experience;
+    this.challengeType = challenges.challengeType;
     this.condition = challenges.condition;
     this.badgeName = challenges.badgeName;
   }

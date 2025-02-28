@@ -16,10 +16,11 @@ export class PartProgressRepository {
 
   async findAllExceptStatusValue(
     userId: number,
+    sectionId: number,
     status: PartStatus,
   ): Promise<PartProgress[]> {
     return this.prisma.partProgress.findMany({
-      where: { userId, status: { not: status } },
+      where: { userId, status: { not: status }, part: { sectionId } },
     });
   }
 

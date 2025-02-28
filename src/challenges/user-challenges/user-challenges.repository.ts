@@ -22,9 +22,10 @@ export class UserChallengesRepository {
     userId: number,
     page: number,
     limit: number,
+    challengeType: ChallengeType,
   ): Promise<UserChallengesAndInfo[]> {
     return await this.prisma.userChallenge.findMany({
-      where: { userId },
+      where: { userId, challenge: { challengeType } },
       skip: (page - 1) * limit, // 건너뛸 항목 수 계산
       take: limit, // 가져올 항목 수
       include: { challenge: true },

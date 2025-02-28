@@ -1,7 +1,9 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, Min } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, Min } from 'class-validator';
 import { PaginationDefaults } from 'src/common/constants/rankings-constants';
+import { ChallengeType } from '../user-challenges/user-challenges.interface';
+import { ChallengeTypeValues } from '../const/challenges.constant';
 
 export class QueryChallengesDto {
   @ApiPropertyOptional({
@@ -25,4 +27,13 @@ export class QueryChallengesDto {
   @Min(1)
   @Type(() => Number)
   readonly page?: number = PaginationDefaults.PAGE_NUMBER;
+
+  @ApiPropertyOptional({
+    description: `ChallengeType값(enum) 넣기`,
+    example: ChallengeTypeValues.LEVEL_CLEAR,
+    enum: ChallengeTypeValues,
+  })
+  @IsOptional()
+  @IsEnum(ChallengeTypeValues, { message: 'bad challenge type' })
+  readonly challengeType?: ChallengeType;
 }

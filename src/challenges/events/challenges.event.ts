@@ -6,6 +6,7 @@ import { LevelClearChallengesService } from '../level-clear-challenges.service';
 import { UserInfo } from 'src/users/entities/user.entity';
 import { EVENT } from '../const/challenges.constant';
 import { AttendanceStreakChallengesService } from '../attendance-streak-challenges.service';
+import { RankingChallengesService } from '../ranking-challenges.service';
 
 @Injectable()
 export class ChallengesEventsListener {
@@ -14,6 +15,7 @@ export class ChallengesEventsListener {
     private readonly sectionsChallengesService: SectionsChallengesService,
     private readonly levelClearChallengesService: LevelClearChallengesService,
     private readonly attendanceStreakChallengesService: AttendanceStreakChallengesService,
+    private readonly rankingChallengesService: RankingChallengesService,
   ) {}
 
   /**
@@ -75,7 +77,7 @@ export class ChallengesEventsListener {
   }
 
   /**
-   * 유저가 7일 연속 출석 했을때 호출되는 이벤트
+   * 유저가 출석 했을 때 호출되는 이벤트
    */
   @OnEvent(EVENT.ATTENDANCE.STREAK)
   async handleAttendanceStreakChallenge(payload: { userId: number }) {
@@ -88,6 +90,32 @@ export class ChallengesEventsListener {
         // SSE 메시지 전송
         this.sseService.notifyUser(userId, {
           type: EVENT.ATTENDANCE.STREAK,
+          message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
+          timestamp: new Date().toISOString(),
+        });
+      }
+    } catch (error) {
+      console.error(
+        `handleLevelChallenge 에러 발생 (userId: ${userId}):`,
+        error,
+      );
+    }
+  }
+
+  /**
+   * 주간 시즌 종료될 때 호출되는 이벤트
+   */
+  @OnEvent(EVENT.RANKING.ATTAIN)
+  async handleRankingChallenge(payload: { userId: number }) {
+    const { userId } = payload;
+    try {
+      const userChallengesAndInfo =
+        await this.rankingChallengesService.completedChallenge(userId);
+
+      if (userChallengesAndInfo) {
+        // SSE 메시지 전송
+        this.sseService.notifyUser(userId, {
+          type: EVENT.RANKING.ATTAIN,
           message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
           timestamp: new Date().toISOString(),
         });
