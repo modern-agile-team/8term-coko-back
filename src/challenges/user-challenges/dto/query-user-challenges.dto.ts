@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import { IsBoolean, IsOptional } from 'class-validator';
 import { QueryChallengesDto } from 'src/challenges/dto/query-challenges.dto';
 
