@@ -108,7 +108,7 @@ export class UserItemsService {
     });
 
     //아이템을 구매했을때 이벤트 생성
-    this.eventEmitter.emit(EVENT.ITME.BUY, { userId });
+    this.eventEmitter.emit(EVENT.ITEM.BUY, { userId });
   }
 
   //아이템 장착/해제

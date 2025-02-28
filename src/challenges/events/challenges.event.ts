@@ -106,8 +106,8 @@ export class ChallengesEventsListener {
    * 유저가 아이템을 구매 했을때 호출되는 이벤트
    * @param payload
    */
-  @OnEvent(EVENT.ITME.BUY)
-  async handleFirstItmeBuyChallenge(payload: { userId: number }) {
+  @OnEvent(EVENT.ITEM.BUY)
+  async handleFirstItemBuyChallenge(payload: { userId: number }) {
     const { userId } = payload;
 
     const userChallengesAndInfo =
