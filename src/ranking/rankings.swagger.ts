@@ -30,4 +30,15 @@ export const ApiRankings = {
       }),
     );
   },
+  getNextSeasonEndTime: () => {
+    return applyDecorators(
+      ApiOperation({
+        summary: '주간 시즌 종료 시점 가져오기',
+      }),
+      ApiResponse({
+        status: 200,
+        description: `주간 시즌 종료 시점을 성공적으로 가져옴`,
+      }),
+    );
+  },
 };
