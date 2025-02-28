@@ -164,14 +164,6 @@ export class RankingsService {
       nextEnd = nextEnd.add(1, 'week');
     }
 
-    console.log(
-      '여기는 챌린지 종료 시간 알려주는 곳ㅅㅅㅅㅅㅅㅅㅅㅅ',
-      now,
-      nextEnd,
-    );
-
-    // ISO 문자열(UTC기준 or 서버 로컬 기준) 반환
-    // 클라이언트에서 시간대 변환해서 쓰면 됨
     return nextEnd.toISOString();
   }
 }

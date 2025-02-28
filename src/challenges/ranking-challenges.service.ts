@@ -11,7 +11,6 @@ export class RankingChallengesService {
 
   constructor(
     private readonly userChallengesRepository: UserChallengesRepository,
-    private readonly rankingRepository: RankingsRepository,
     private readonly attedanceRepository: AttendanceRepository,
   ) {}
 

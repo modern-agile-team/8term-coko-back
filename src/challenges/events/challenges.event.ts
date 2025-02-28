@@ -105,7 +105,7 @@ export class ChallengesEventsListener {
   /**
    * 주간 시즌 종료될 때 호출되는 이벤트
    */
-  @OnEvent(EVENT.ATTENDANCE.STREAK)
+  @OnEvent(EVENT.RANKING.ATTAIN)
   async handleRankingChallenge(payload: { userId: number }) {
     const { userId } = payload;
     try {
@@ -115,7 +115,7 @@ export class ChallengesEventsListener {
       if (userChallengesAndInfo) {
         // SSE 메시지 전송
         this.sseService.notifyUser(userId, {
-          type: EVENT.ATTENDANCE.STREAK,
+          type: EVENT.RANKING.ATTAIN,
           message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
           timestamp: new Date().toISOString(),
         });
