@@ -9,6 +9,7 @@ import { BuyUserItemsDto } from '../dtos/buy-userItems.dto';
 import { EquipUseritemDto } from '../dtos/equip-useritem.dto';
 import { ResponseItemDto } from '../dtos/response-item.dto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EVENT } from 'src/challenges/const/challenges.constant';
 
 @Injectable()
 export class UserItemsService {
@@ -106,7 +107,8 @@ export class UserItemsService {
       });
     });
 
-    this.eventEmitter.emit('itme.buy', { userId });
+    //아이템을 구매했을때 이벤트 생성
+    this.eventEmitter.emit(EVENT.ITME.BUY, { userId });
   }
 
   //아이템 장착/해제

@@ -22,4 +22,7 @@ export const EVENT = {
   ATTENDANCE: {
     STREAK: 'attendance.streak',
   },
+  ITME: {
+    BUY: 'itme.buy',
+  },
 } as const;

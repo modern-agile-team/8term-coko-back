@@ -103,46 +103,23 @@ export class ChallengesEventsListener {
   }
 
   /**
-   * partStatus가 completed로 변경될 때, 호출되는 이벤트
-   * 전체 섹션이 완료되었는지 체크함
+   * 유저가 아이템을 구매 했을때 호출되는 이벤트
    * @param payload
    */
-  @OnEvent('itme.buy')
+  @OnEvent(EVENT.ITME.BUY)
   async handleFirstItmeBuyChallenge(payload: { userId: number }) {
     const { userId } = payload;
 
     const userChallengesAndInfo =
       await this.firstItemBuyChallengesService.completedChallenge(userId);
 
-    if (userChallengesAndInfo) {
-      //sse메시지
-      this.sseService.notifyUser(userId, {
-        type: 'partStatus.completed',
-        message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
-        timestamp: new Date().toISOString(),
-      });
-    }
-  }
-
-  /**
-   * partStatus가 completed로 변경될 때, 호출되는 이벤트
-   * 전체 섹션이 완료되었는지 체크함
-   * @param payload
-   */
-  @OnEvent('itme.buy')
-  async handleFirstItmeBuyChallenge(payload: { userId: number }) {
-    const { userId } = payload;
-
-    const userChallengesAndInfo =
-      await this.firstItemBuyChallengesService.completedChallenge(userId);
-
-    if (userChallengesAndInfo) {
-      //sse메시지
-      this.sseService.notifyUser(userId, {
-        type: 'partStatus.completed',
-        message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
-        timestamp: new Date().toISOString(),
-      });
-    }
+    // if (userChallengesAndInfo) {
+    //   //sse메시지
+    //   this.sseService.notifyUser(userId, {
+    //     type: 'partStatus.completed',
+    //     message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
+    //     timestamp: new Date().toISOString(),
+    //   });
+    // }
   }
 }
