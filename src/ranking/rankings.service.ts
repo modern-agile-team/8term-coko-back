@@ -11,6 +11,7 @@ import { UsersRepository } from 'src/users/repositories/users.reposirory';
 import { ProgressRepository } from 'src/progress/progress.repository';
 import { Cron } from '@nestjs/schedule';
 import { DAILY_RESET } from 'src/daily-quests/users-daily-quests/const/users-daily-quests.const';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class RankingsService {
@@ -145,5 +146,32 @@ export class RankingsService {
         );
       }),
     );
+  }
+
+  /**
+   * 다음 시즌 종료 시각(다음 일요일 01:00) 계산
+   */
+  getNextSeasonEndTime(): string {
+    // 현재 시각
+    const now = dayjs();
+
+    // 이번 주 일요일 01:00보다 이미 시간이 지났다면 다음 주 일요일 01:00
+    // dayjs().day(0) === "일요일 00시" 를 기준으로 계산
+    let nextEnd = now.day(0).hour(1).minute(0).second(0).millisecond(0);
+
+    // 만약 이미 일요일 01:00을 지난 상태라면 다음 주 일요일로 세팅
+    if (now.isAfter(nextEnd)) {
+      nextEnd = nextEnd.add(1, 'week');
+    }
+
+    console.log(
+      '여기는 챌린지 종료 시간 알려주는 곳ㅅㅅㅅㅅㅅㅅㅅㅅ',
+      now,
+      nextEnd,
+    );
+
+    // ISO 문자열(UTC기준 or 서버 로컬 기준) 반환
+    // 클라이언트에서 시간대 변환해서 쓰면 됨
+    return nextEnd.toISOString();
   }
 }

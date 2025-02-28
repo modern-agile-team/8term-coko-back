@@ -26,4 +26,11 @@ export class RankingsController {
 
     return allRankings;
   }
+
+  @Get('season')
+  getNextSeasonEndTime() {
+    return {
+      seasonEndTime: this.rankingsService.getNextSeasonEndTime(),
+    };
+  }
 }
