@@ -6,7 +6,8 @@ import { AttendanceRepository } from 'src/attendance/attendance.repository';
 
 @Injectable()
 export class RankingChallengesService {
-  private readonly challengeType = ChallengeTypeValues.RANKING_ATTAIN;
+  private readonly levelChallengeType =
+    ChallengeTypeValues.LEVEL_RANKING_ATTAIN;
 
   constructor(
     private readonly userChallengesRepository: UserChallengesRepository,
@@ -16,14 +17,14 @@ export class RankingChallengesService {
   async completedChallenge(
     userId: number,
   ): Promise<UserChallengesAndInfo | null> {
-    const userChallenges =
+    const userLevelChallenges =
       await this.userChallengesRepository.findManyByUserAndType(
         userId,
-        this.challengeType,
+        this.levelChallengeType,
       );
 
     // 모든 도전과제가 complete 라면
-    if (userChallenges.length === 0) {
+    if (userLevelChallenges.length === 0) {
       return null;
     }
   }
