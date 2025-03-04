@@ -34,7 +34,11 @@ export class UserChallengesRepository {
       skip: (page - 1) * limit, // 건너뛸 항목 수 계산
       take: limit, // 가져올 항목 수
       include: { challenge: true },
-      orderBy: { completed: 'desc' },
+      orderBy: [
+        { completed: 'desc' },
+        { challenge: { challengeType: 'desc' } },
+        { challenge: { condition: 'asc' } },
+      ],
     });
   }
 
