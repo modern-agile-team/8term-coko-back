@@ -21,11 +21,22 @@ export class UserItemsRepository {
     where: WhereClause,
   ): Promise<(UserItem & { item: Item })[]> {
     return this.prisma.userItem.findMany({
-      where,
+      where: {
+        userId: where.userId,
+        item: {
+          mainCategoryId: where.mainCategoryId ?? undefined,
+          subCategoryId: where.subCategoryId ?? undefined,
+        },
+      },
       skip: (page - 1) * limit,
       take: limit,
       include: {
-        item: true,
+        item: {
+          include: {
+            mainCategory: true,
+            subCategory: true,
+          },
+        },
       },
     });
   }
