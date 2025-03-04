@@ -79,7 +79,6 @@ export class ProgressService {
     } else {
       this.eventEmitter.emit(EVENT.QUIZ.INCORRECT, {
         userId,
-        isCorrect: progress.isCorrect,
       });
     }
 

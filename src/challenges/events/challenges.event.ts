@@ -8,7 +8,7 @@ import { UserInfo } from 'src/users/entities/user.entity';
 import { EVENT } from '../const/challenges.constant';
 import { AttendanceStreakChallengesService } from '../attendance-streak-challenges.service';
 import { RankingChallengesService } from '../ranking-challenges.service';
-import { Progress } from 'src/progress/entities/progress.entity';
+import { FirstWrongAnswerChallengesService } from '../first-wrong-answer.challenges.service';
 
 @Injectable()
 export class ChallengesEventsListener {
@@ -19,6 +19,7 @@ export class ChallengesEventsListener {
     private readonly attendanceStreakChallengesService: AttendanceStreakChallengesService,
     private readonly rankingChallengesService: RankingChallengesService,
     private readonly firstItemBuyChallengesService: FirstItemBuyChallengesService,
+    private readonly firstWrongAnswerChallengesService: FirstWrongAnswerChallengesService,
   ) {}
 
   /**
@@ -157,14 +158,11 @@ export class ChallengesEventsListener {
    * @param payload
    */
   @OnEvent(EVENT.QUIZ.INCORRECT)
-  async handleFirstWrongAnswerChallenge(payload: {
-    userId: number;
-    isCorrect: boolean;
-  }) {
+  async handleFirstWrongAnswerChallenge(payload: { userId: number }) {
     const { userId } = payload;
 
     const userChallengesAndInfo =
-      await this.요기에집어넣으시옹.completedChallenge(userId);
+      await this.firstWrongAnswerChallengesService.completedChallenge(userId);
 
     if (userChallengesAndInfo) {
       //sse메시지

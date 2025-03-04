@@ -13,6 +13,7 @@ import { AttendanceStreakChallengesService } from './attendance-streak-challenge
 import { AttendanceModule } from 'src/attendance/attendance.module';
 import { RankingChallengesService } from './ranking-challenges.service';
 import { FirstItemBuyChallengesService } from './first-item-buy.challenges.service';
+import { FirstWrongAnswerChallengesService } from './first-wrong-answer.challenges.service';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { FirstItemBuyChallengesService } from './first-item-buy.challenges.servi
     LevelClearChallengesService,
     AttendanceStreakChallengesService,
     RankingChallengesService,
+    FirstWrongAnswerChallengesService,
 
     ChallengesEventsListener,
   ],
