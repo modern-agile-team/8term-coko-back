@@ -76,6 +76,11 @@ export class ProgressService {
         userId,
         isCorrect: progress.isCorrect,
       });
+    } else {
+      this.eventEmitter.emit(EVENT.QUIZ.INCORRECT, {
+        userId,
+        isCorrect: progress.isCorrect,
+      });
     }
 
     // progress 업데이트가 완료된 후 이벤트 발행

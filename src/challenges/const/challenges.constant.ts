@@ -43,4 +43,7 @@ export const EVENT = {
   PROGRESS: {
     UPDATED: 'progress.updated',
   },
+  QUIZ: {
+    INCORRECT: 'quiz.incorrect',
+  },
 } as const;
