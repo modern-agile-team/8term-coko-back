@@ -40,4 +40,7 @@ export const EVENT = {
   ITEM: {
     BUY: 'item.buy',
   },
+  PROGRESS: {
+    UPDATED: 'progress.updated',
+  },
 } as const;

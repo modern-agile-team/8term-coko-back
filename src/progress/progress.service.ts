@@ -9,6 +9,7 @@ import { QuizzesRepository } from 'src/quizzes/quizzes.repository';
 import { ResProgressDto } from './dto/res-progress.dto';
 import { Progress } from './entities/progress.entity';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EVENT } from 'src/challenges/const/challenges.constant';
 
 @Injectable()
 export class ProgressService {
@@ -78,7 +79,7 @@ export class ProgressService {
     }
 
     // progress 업데이트가 완료된 후 이벤트 발행
-    this.eventEmitter.emit('progress.updated', progress);
+    this.eventEmitter.emit(EVENT.PROGRESS.UPDATED, progress);
 
     return progress;
   }
