@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserItem } from '../entities/user-item.entity';
+import { Item } from 'src/items/entities/item.entity';
 
 interface WhereClause {
   userId: number;
@@ -18,15 +19,9 @@ export class UserItemsRepository {
     page: number,
     limit: number,
     where: WhereClause,
-  ): Promise<UserItem[]> {
+  ): Promise<(UserItem & { item: Item })[]> {
     return this.prisma.userItem.findMany({
-      where: {
-        userId: where.userId,
-        item: {
-          ...(where.mainCategoryId && { mainCategoryId: where.mainCategoryId }),
-          ...(where.subCategoryId && { subCategoryId: where.subCategoryId }),
-        },
-      },
+      where,
       skip: (page - 1) * limit,
       take: limit,
       include: {

@@ -32,43 +32,45 @@ export class UserItemsService {
   ): Promise<UserItemsPaginationResponseDto> {
     const { mainCategoryId, subCategoryId, page, limit } = query;
 
+    if (
+      mainCategoryId &&
+      !(await this.userItemsRepository.existMainCategory(mainCategoryId))
+    ) {
+      throw new NotFoundException(
+        `존재하지 않는 메인 카테고리입니다: ${mainCategoryId}`,
+      );
+    }
+    if (
+      subCategoryId &&
+      !(await this.userItemsRepository.existSubCategory(subCategoryId))
+    ) {
+      throw new NotFoundException(
+        `존재하지 않는 서브 카테고리입니다: ${subCategoryId}`,
+      );
+    }
+
     const where = {
       userId,
       ...(mainCategoryId && { mainCategoryId }),
       ...(subCategoryId && { subCategoryId }),
     };
 
-    const userItems = await this.userItemsRepository.findUserItems(
+    const contents = await this.userItemsRepository.findUserItems(
       page,
       limit,
       where,
     );
 
-    const contents = await Promise.all(
-      userItems.map(async (userItem) => {
-        const item = await this.prisma.item.findUnique({
-          where: { id: userItem.itemId },
-        });
+    const totalCount = await this.prisma.userItem.count({
+      where,
+    });
 
-        if (
-          mainCategoryId &&
-          !(await this.userItemsRepository.existMainCategory(mainCategoryId))
-        ) {
-          throw new NotFoundException(
-            `존재하지 않는 메인 카테고리입니다: ${mainCategoryId}`,
-          );
-        }
-        if (
-          subCategoryId &&
-          !(await this.userItemsRepository.existSubCategory(subCategoryId))
-        ) {
-          throw new NotFoundException(
-            `존재하지 않는 서브 카테고리입니다: ${subCategoryId}`,
-          );
-        }
-        return { ...userItem, item };
-      }),
-    );
+    return new UserItemsPaginationResponseDto({
+      totalCount,
+      currentPage: page,
+      limit,
+      contents,
+    });
   }
   //사용자 아이템 목록 조회
   async getUserItems(userId: number) {
@@ -86,18 +88,7 @@ export class UserItemsService {
     if (!userItems) {
       throw new NotFoundException('아이템을 찾을 수 없습니다.');
     }
-    return userItems.map(
-      (userItem) => new ResponseUserItemDto(userItem.item, userItem),
-    );
-
-    const totalCount = contents.length;
-
-    return new UserItemsPaginationResponseDto({
-      totalCount,
-      currentPage: page,
-      limit,
-      contents,
-    });
+    return userItems.map((userItem) => new ResponseUserItemDto(userItem));
   }
 
   //2. 아이템 구매
