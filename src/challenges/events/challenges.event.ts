@@ -6,7 +6,10 @@ import { LevelClearChallengesService } from '../level-clear-challenges.service';
 import { UserInfo } from 'src/users/entities/user.entity';
 import { EVENT } from '../const/challenges.constant';
 import { AttendanceStreakChallengesService } from '../attendance-streak-challenges.service';
-import { RankingChallengesService } from '../ranking-challenges.service';
+import { RankingChallengesService } from '../level-ranking-challenges.service';
+import { RankingPaginationResponseDto } from 'src/ranking/dtos/ranking-pagination-res.dto';
+import { plainToClass } from 'class-transformer';
+import { nowKST } from 'src/common/function/time.helper';
 
 @Injectable()
 export class ChallengesEventsListener {
@@ -106,25 +109,29 @@ export class ChallengesEventsListener {
    * 주간 시즌 종료될 때 호출되는 레벨 이벤트
    */
   @OnEvent(EVENT.LEVEL_RANKING.ATTAIN)
-  async handleLevelRankingChallenge(payload: { userId: number }) {
-    const { userId } = payload;
+  async handleLevelRankingChallenge(payload: {
+    levelTopRankers: RankingPaginationResponseDto;
+  }) {
+    const { levelTopRankers } = payload;
     try {
-      const userChallengesAndInfo =
-        await this.rankingChallengesService.completedChallenge(userId);
+      const userChallengesAndInfos =
+        await this.rankingChallengesService.completedLevelRankingChallenge(
+          levelTopRankers,
+        );
 
-      if (userChallengesAndInfo) {
-        // SSE 메시지 전송
-        this.sseService.notifyUser(userId, {
-          type: EVENT.LEVEL_RANKING.ATTAIN,
-          message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
-          timestamp: new Date().toISOString(),
+      // 업데이트 한 도전과제가 있다면
+      if (userChallengesAndInfos) {
+        // userChallengesAndInfos가 배열이므로, 각각의 userId에 대해 SSE 알림 전송
+        userChallengesAndInfos.forEach((challengeInfo) => {
+          this.sseService.notifyUser(challengeInfo.userId, {
+            type: EVENT.LEVEL_RANKING.ATTAIN,
+            message: `도전과제 완료 : ${challengeInfo.challenge.content}`,
+            timestamp: nowKST(),
+          });
         });
       }
     } catch (error) {
-      console.error(
-        `handleLevelRankingChallenge 에러 발생 (userId: ${userId}):`,
-        error,
-      );
+      console.error(`handleLevelRankingChallenge 에러 발생`, error);
     }
   }
 }

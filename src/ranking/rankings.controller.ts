@@ -37,4 +37,16 @@ export class RankingsController {
       seasonEndTime: this.rankingsService.getNextSeasonEndTime(),
     };
   }
+
+  // top 3 랭킹 정보 테스트 api
+  @Get('rankertest')
+  async updateWeeklySeasonResults() {
+    return await this.rankingsService.updateWeeklySeasonResults();
+  }
+
+  // 주간 랭킹 집계 테스트
+  @Get('test-weekly')
+  async testUpdateWeeklySeasonResults() {
+    return await this.rankingsService.updateWeeklySeasonResults();
+  }
 }
