@@ -36,7 +36,7 @@ export class UserChallengesRepository {
       include: { challenge: true },
       orderBy: [
         { completed: 'desc' },
-        { challenge: { challengeType: 'desc' } },
+        { challenge: { challengeType: 'asc' } },
         { challenge: { condition: 'asc' } },
       ],
     });
