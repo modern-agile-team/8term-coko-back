@@ -144,7 +144,7 @@ export class ChallengesEventsListener {
     if (userChallengesAndInfo) {
       //sse메시지
       this.sseService.notifyUser(userId, {
-        type: 'partStatus.completed',
+        type: EVENT.ITEM.BUY,
         message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
         timestamp: new Date().toISOString(),
       });
