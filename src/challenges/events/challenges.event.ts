@@ -199,6 +199,36 @@ export class ChallengesEventsListener {
   }
 
   /**
+   * 주간 시즌 종료될 때 호출되는 정답수 이벤트
+   */
+  @OnEvent(EVENT.POINT_RANKING.ATTAIN)
+  async handleCorrectAnswerRankingChallenge(payload: {
+    porrectAnswerTopRankers: RankingPaginationResponseDto;
+  }) {
+    const { porrectAnswerTopRankers } = payload;
+    try {
+      const userChallengesAndInfos =
+        await this.rankingChallengesService.completedCorrectAnswerRankingChallenge(
+          porrectAnswerTopRankers,
+        );
+
+      // 업데이트 한 도전과제가 있다면
+      if (userChallengesAndInfos) {
+        // userChallengesAndInfos가 배열이므로, 각각의 userId에 대해 SSE 알림 전송
+        userChallengesAndInfos.forEach((challengeInfo) => {
+          this.sseService.notifyUser(challengeInfo.userId, {
+            type: EVENT.CORRECT_ANSWER_RANKING.ATTAIN,
+            message: `도전과제 완료 : ${challengeInfo.challenge.content}`,
+            timestamp: nowKST(),
+          });
+        });
+      }
+    } catch (error) {
+      console.error(`handleCorrectAnswerRankingChallenge 에러 발생`, error);
+    }
+  }
+
+  /**
    * 유저가 아이템을 구매 했을때 호출되는 이벤트
    * @param payload
    */
