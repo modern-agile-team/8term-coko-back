@@ -40,7 +40,6 @@ export class UserItemsService {
         `존재하지 않는 메인 카테고리입니다: ${mainCategoryId}`,
       );
     }
-    console.log(this);
     if (
       subCategoryId &&
       !(await this.userItemsRepository.existSubCategory(subCategoryId))
