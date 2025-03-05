@@ -324,16 +324,7 @@ export class UserItemsService {
     const userItems =
       await this.userItemsRepository.findEquippedUserItems(where);
 
-    const contents = await Promise.all(
-      userItems.map(async (userItem) => {
-        const item = await this.prisma.item.findUnique({
-          where: { id: userItem.itemId },
-        });
-        return { ...userItem, item };
-      }),
-    );
-
-    return contents;
+    return userItems;
   }
   //4. 모든 장착된 아이템 해제
   async resetEquipment(userId: number): Promise<void> {
