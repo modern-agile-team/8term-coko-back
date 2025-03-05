@@ -127,7 +127,6 @@ model ItemMainCategory {
   name            String            @unique @db.VarChar(255)
   ItemSubCategory ItemSubCategory[]
   items           Item[]
-  UserItem        UserItem[]
 
   @@map("item_main_categories")
 }
@@ -138,7 +137,6 @@ model ItemSubCategory {
   mainCategoryId Int              @map("main_category_id")
   mainCategory   ItemMainCategory @relation(fields: [mainCategoryId], references: [id])
   items          Item[]
-  UserItem       UserItem[]
 
   @@map("item_sub_categories")
 }
@@ -150,34 +148,26 @@ model Item {
   image          String
   mainCategoryId Int              @map("main_category_id")
   subCategoryId  Int?             @map("sub_category_id")
-  mainCategory   ItemMainCategory @relation(fields: [mainCategoryId], references: [id], onDelete: Cascade)
-  subCategory    ItemSubCategory? @relation(fields: [subCategoryId], references: [id], onDelete: Cascade)
+  mainCategory   ItemMainCategory @relation(fields: [mainCategoryId], references: [id])
+  subCategory    ItemSubCategory? @relation(fields: [subCategoryId], references: [id])
   userItems      UserItem[]
 
-  @@index([mainCategoryId])
-  @@index([subCategoryId])
   @@map("items")
 }
 
 model UserItem {
-  id             Int      @id @default(autoincrement())
-  userId         Int      @map("user_id")
-  itemId         Int      @map("item_id")
-  purchasedAt    DateTime @default(now()) @map("purchased_at")
-  isEquipped     Boolean  @default(false) @map("is_equipped")
-  mainCategoryId Int?     @map("main_category_id")
-  subCategoryId  Int?     @map("sub_category_id")
+  id          Int      @id @default(autoincrement())
+  userId      Int      @map("user_id")
+  itemId      Int      @map("item_id")
+  purchasedAt DateTime @default(now()) @map("purchased_at")
+  isEquipped  Boolean  @default(false) @map("is_equipped")
 
-  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  item         Item              @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  mainCategory ItemMainCategory? @relation(fields: [mainCategoryId], references: [id], onDelete: Cascade)
-  subCategory  ItemSubCategory?  @relation(fields: [subCategoryId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
 
   @@unique([userId, itemId])
   @@index([userId])
   @@index([itemId])
-  @@index([mainCategoryId])
-  @@index([subCategoryId])
   @@map("user_items")
 }
 
