@@ -31,7 +31,6 @@ import { UserItemsQueryDto } from '../dtos/userItems-query.dto';
 export class UserItemsController {
   constructor(private readonly userItemsService: UserItemsService) {}
 
-  //1. 전체 아이템 목록 조회 : GET /users/me/items?mainCategoryId=1&subCategoryId=2&page=1&limit=8
   @Get()
   @ApiGetUserItems()
   @HttpCode(200)
@@ -43,7 +42,6 @@ export class UserItemsController {
     return this.userItemsService.getUserItemsByCategory(user.id, query);
   }
 
-  //2. user의 아이템 구매
   @Post()
   @HttpCode(204)
   @ApiPostUserItems()
@@ -59,7 +57,6 @@ export class UserItemsController {
     );
   }
 
-  //3. 아이템 장착/해제
   @Patch()
   @HttpCode(204)
   @ApiPatchUserItems()
@@ -74,7 +71,6 @@ export class UserItemsController {
     );
   }
 
-  //4. 장착된 아이템 조회
   @Get('equipped')
   @ApiGetEquippedUserItems()
   @HttpCode(200)
@@ -86,7 +82,6 @@ export class UserItemsController {
     return this.userItemsService.getEquippedUserItems(user.id, query);
   }
 
-  //5. 장착 아이템 초기화
   @Put('reset-equipment')
   @HttpCode(204)
   @ApiResetEquipment()
