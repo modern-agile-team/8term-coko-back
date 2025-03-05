@@ -11,6 +11,7 @@ import { DAILY_RESET } from './const/users-daily-quests.const';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Progress } from 'src/progress/entities/progress.entity';
 import { ProgressRepository } from 'src/progress/progress.repository';
+import { EVENT } from 'src/challenges/const/challenges.constant';
 
 @Injectable()
 export class UsersDailyQuestsService {
@@ -98,7 +99,7 @@ export class UsersDailyQuestsService {
     return this.usersDailyQuestsRepository.deleteAll();
   }
 
-  @OnEvent('progress.updated')
+  @OnEvent(EVENT.PROGRESS.UPDATED)
   async handleProgressUpdatedEvent(progress: Progress) {
     await this.update(progress.userId);
   }

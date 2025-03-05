@@ -23,7 +23,7 @@ export class ChallengesService {
   ): Promise<PaginationChallenges> {
     const { page, limit, challengeType } = query;
     const allChallengesCount =
-      await this.challengesRepository.getTotalChallengesCount();
+      await this.challengesRepository.getTotalChallengesCount(query);
 
     const challenges =
       await this.challengesRepository.findSelectedPageChallengesInfo(

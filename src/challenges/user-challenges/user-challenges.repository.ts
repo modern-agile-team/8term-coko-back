@@ -7,14 +7,25 @@ import {
 } from './user-challenges.interface';
 import { CreateUserChallengesDto } from './dto/create-user-challenges.dto';
 import { UpdateUserChallengesDto } from './dto/update-user-challenges.dto';
+import { QueryUserChallengesDto } from './dto/query-user-challenges.dto';
 
 @Injectable()
 export class UserChallengesRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getTotalUserChallengesCount(userId: number): Promise<number> {
+  async getTotalUserChallengesCount(
+    userId: number,
+    query: QueryUserChallengesDto,
+  ): Promise<number> {
+    const { challengeType, completed } = query;
     return await this.prisma.userChallenge.count({
-      where: { userId },
+      where: {
+        userId,
+        ...(completed === undefined ? {} : { completed }),
+        challenge: {
+          ...(challengeType && { challengeType }),
+        },
+      },
     });
   }
 

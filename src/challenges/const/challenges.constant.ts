@@ -40,4 +40,10 @@ export const EVENT = {
   ITEM: {
     BUY: 'item.buy',
   },
+  PROGRESS: {
+    UPDATED: 'progress.updated',
+  },
+  QUIZ: {
+    INCORRECT: 'quiz.incorrect',
+  },
 } as const;

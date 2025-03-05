@@ -8,6 +8,7 @@ import { UserInfo } from 'src/users/entities/user.entity';
 import { EVENT } from '../const/challenges.constant';
 import { AttendanceStreakChallengesService } from '../attendance-streak-challenges.service';
 import { RankingChallengesService } from '../ranking-challenges.service';
+import { FirstWrongAnswerChallengesService } from '../first-wrong-answer.challenges.service';
 
 @Injectable()
 export class ChallengesEventsListener {
@@ -18,6 +19,7 @@ export class ChallengesEventsListener {
     private readonly attendanceStreakChallengesService: AttendanceStreakChallengesService,
     private readonly rankingChallengesService: RankingChallengesService,
     private readonly firstItemBuyChallengesService: FirstItemBuyChallengesService,
+    private readonly firstWrongAnswerChallengesService: FirstWrongAnswerChallengesService,
   ) {}
 
   /**
@@ -145,6 +147,27 @@ export class ChallengesEventsListener {
       //sse메시지
       this.sseService.notifyUser(userId, {
         type: EVENT.ITEM.BUY,
+        message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
+        timestamp: new Date().toISOString(),
+      });
+    }
+  }
+
+  /**
+   * 퀴즈 진행도가 업데이트 되면 호출되는 이벤트
+   * @param payload
+   */
+  @OnEvent(EVENT.QUIZ.INCORRECT)
+  async handleFirstWrongAnswerChallenge(payload: { userId: number }) {
+    const { userId } = payload;
+
+    const userChallengesAndInfo =
+      await this.firstWrongAnswerChallengesService.completedChallenge(userId);
+
+    if (userChallengesAndInfo) {
+      //sse메시지
+      this.sseService.notifyUser(userId, {
+        type: EVENT.QUIZ.INCORRECT,
         message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
         timestamp: new Date().toISOString(),
       });
