@@ -133,4 +133,94 @@ export class ChallengesEventsListener {
       console.error(`handleLevelRankingChallenge 에러 발생`, error);
     }
   }
+
+  /**
+   * 주간 시즌 종료될 때 호출되는 포인트 이벤트
+   */
+  @OnEvent(EVENT.POINT_RANKING.ATTAIN)
+  async handlePointRankingChallenge(payload: {
+    pointTopRankers: RankingPaginationResponseDto;
+  }) {
+    const { pointTopRankers } = payload;
+    try {
+      const userChallengesAndInfos =
+        await this.rankingChallengesService.completedPointRankingChallenge(
+          pointTopRankers,
+        );
+
+      // 업데이트 한 도전과제가 있다면
+      if (userChallengesAndInfos) {
+        // userChallengesAndInfos가 배열이므로, 각각의 userId에 대해 SSE 알림 전송
+        userChallengesAndInfos.forEach((challengeInfo) => {
+          this.sseService.notifyUser(challengeInfo.userId, {
+            type: EVENT.POINT_RANKING.ATTAIN,
+            message: `도전과제 완료 : ${challengeInfo.challenge.content}`,
+            timestamp: nowKST(),
+          });
+        });
+      }
+    } catch (error) {
+      console.error(`handlePointRankingChallenge 에러 발생`, error);
+    }
+  }
+
+  /**
+   * 주간 시즌 종료될 때 호출되는 출석 이벤트
+   */
+  @OnEvent(EVENT.ATTENDANCE_RANKING.ATTAIN)
+  async handleAttendanceRankingChallenge(payload: {
+    attendanceTopRankers: RankingPaginationResponseDto;
+  }) {
+    const { attendanceTopRankers } = payload;
+    try {
+      const userChallengesAndInfos =
+        await this.rankingChallengesService.completedAttendanceRankingChallenge(
+          attendanceTopRankers,
+        );
+
+      // 업데이트 한 도전과제가 있다면
+      if (userChallengesAndInfos) {
+        // userChallengesAndInfos가 배열이므로, 각각의 userId에 대해 SSE 알림 전송
+        userChallengesAndInfos.forEach((challengeInfo) => {
+          this.sseService.notifyUser(challengeInfo.userId, {
+            type: EVENT.ATTENDANCE_RANKING.ATTAIN,
+            message: `도전과제 완료 : ${challengeInfo.challenge.content}`,
+            timestamp: nowKST(),
+          });
+        });
+      }
+    } catch (error) {
+      console.error(`handleAttendanceRankingChallenge 에러 발생`, error);
+    }
+  }
+
+  /**
+   * 주간 시즌 종료될 때 호출되는 정답수 이벤트
+   */
+  @OnEvent(EVENT.CORRECT_ANSWER_RANKING.ATTAIN)
+  async handleCorrectAnswerRankingChallenge(payload: {
+    correctAnswerTopRankers: RankingPaginationResponseDto;
+  }) {
+    const { correctAnswerTopRankers } = payload;
+    try {
+      const userChallengesAndInfos =
+        await this.rankingChallengesService.completedCorrectAnswerRankingChallenge(
+          correctAnswerTopRankers,
+        );
+
+      // 업데이트 한 도전과제가 있다면
+      if (userChallengesAndInfos) {
+        // userChallengesAndInfos가 배열이므로, 각각의 userId에 대해 SSE 알림 전송
+        userChallengesAndInfos.forEach((challengeInfo) => {
+          this.sseService.notifyUser(challengeInfo.userId, {
+            type: EVENT.CORRECT_ANSWER_RANKING.ATTAIN,
+            message: `도전과제 완료 : ${challengeInfo.challenge.content}`,
+            timestamp: nowKST(),
+          });
+        });
+      }
+    } catch (error) {
+      console.error(`handleCorrectAnswerRankingChallenge 에러 발생`, error);
+    }
+  }
 }

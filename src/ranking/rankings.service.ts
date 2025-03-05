@@ -187,31 +187,38 @@ export class RankingsService {
       TopRankerPaginaion.PAGE_NUMBER,
       TopRankerPaginaion.PAGE_LIMIT,
     );
-    // const pointTopRankers = await this.findSelectedPageRankings(
-    //   'point',
-    //   TopRankerPaginaion.PAGE_NUMBER,
-    //   TopRankerPaginaion.PAGE_LIMIT,
-    // );
-    // const attendanceTopRankers = await this.findSelectedPageRankings(
-    //   'totalAttendance',
-    //   TopRankerPaginaion.PAGE_NUMBER,
-    //   TopRankerPaginaion.PAGE_LIMIT,
-    // );
-    // const totalCorrectAnswerTopRankers = await this.findSelectedPageRankings(
-    //   'totalCorrectAnswer',
-    //   TopRankerPaginaion.PAGE_NUMBER,
-    //   TopRankerPaginaion.PAGE_LIMIT,
-    // );
+    const pointTopRankers = await this.findSelectedPageRankings(
+      'point',
+      TopRankerPaginaion.PAGE_NUMBER,
+      TopRankerPaginaion.PAGE_LIMIT,
+    );
+    const attendanceTopRankers = await this.findSelectedPageRankings(
+      'totalAttendance',
+      TopRankerPaginaion.PAGE_NUMBER,
+      TopRankerPaginaion.PAGE_LIMIT,
+    );
+    const correctAnswerTopRankers = await this.findSelectedPageRankings(
+      'totalCorrectAnswer',
+      TopRankerPaginaion.PAGE_NUMBER,
+      TopRankerPaginaion.PAGE_LIMIT,
+    );
 
-    // 레벨 랭킹 도전과제 검사 이벤트 발행
+    // 랭킹 도전과제 검사 이벤트 4가지 발행
     this.eventEmitter.emit(EVENT.LEVEL_RANKING.ATTAIN, { levelTopRankers });
+    this.eventEmitter.emit(EVENT.POINT_RANKING.ATTAIN, { pointTopRankers });
+    this.eventEmitter.emit(EVENT.ATTENDANCE_RANKING.ATTAIN, {
+      attendanceTopRankers,
+    });
+    this.eventEmitter.emit(EVENT.CORRECT_ANSWER_RANKING.ATTAIN, {
+      correctAnswerTopRankers,
+    });
 
     if (true) {
       return {
         levelTopRankers,
-        // pointTopRankers,
-        // attendanceTopRankers,
-        // totalCorrectAnswerTopRankers,
+        pointTopRankers,
+        attendanceTopRankers,
+        correctAnswerTopRankers,
       };
     }
   }
