@@ -181,7 +181,7 @@ export class RankingsService {
 
   // 매주 월요일 00시 랭킹 집계
   @Cron(WEEKLY_SEASON_RESET_TIME, { timeZone: 'Asia/Seoul' })
-  async updateWeeklySeasonResults(): Promise<any> {
+  async updateWeeklySeasonResults(): Promise<void> {
     const levelTopRankers = await this.findSelectedPageRankings(
       'level',
       TopRankerPaginaion.PAGE_NUMBER,
@@ -212,14 +212,5 @@ export class RankingsService {
     this.eventEmitter.emit(EVENT.CORRECT_ANSWER_RANKING.ATTAIN, {
       correctAnswerTopRankers,
     });
-
-    if (true) {
-      return {
-        levelTopRankers,
-        pointTopRankers,
-        attendanceTopRankers,
-        correctAnswerTopRankers,
-      };
-    }
   }
 }
