@@ -62,7 +62,13 @@ export class UserItemsService {
     );
 
     const totalCount = await this.prisma.userItem.count({
-      where,
+      where: {
+        userId,
+        item: {
+          ...(mainCategoryId && { mainCategoryId }),
+          ...(subCategoryId && { subCategoryId }),
+        },
+      },
     });
 
     return new UserItemsPaginationResponseDto({

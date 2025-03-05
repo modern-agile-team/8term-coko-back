@@ -23,8 +23,10 @@ export class UserItemsRepository {
     return this.prisma.userItem.findMany({
       where: {
         userId: where.userId,
-        ...(where.mainCategoryId && { mainCategoryId: where.mainCategoryId }),
-        ...(where.subCategoryId && { subCategoryId: where.subCategoryId }),
+        item: {
+          ...(where.mainCategoryId && { mainCategoryId: where.mainCategoryId }),
+          ...(where.subCategoryId && { subCategoryId: where.subCategoryId }),
+        },
       },
       skip: (page - 1) * limit,
       take: limit,
