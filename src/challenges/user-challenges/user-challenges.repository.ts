@@ -7,7 +7,6 @@ import {
 } from './user-challenges.interface';
 import { CreateUserChallengesDto } from './dto/create-user-challenges.dto';
 import { UpdateUserChallengesDto } from './dto/update-user-challenges.dto';
-import { toUSVString } from 'util';
 
 @Injectable()
 export class UserChallengesRepository {

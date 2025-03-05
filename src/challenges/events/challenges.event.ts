@@ -8,7 +8,6 @@ import { EVENT } from '../const/challenges.constant';
 import { AttendanceStreakChallengesService } from '../attendance-streak-challenges.service';
 import { RankingChallengesService } from '../ranking-challenges.service';
 import { RankingPaginationResponseDto } from 'src/ranking/dtos/ranking-pagination-res.dto';
-import { plainToClass } from 'class-transformer';
 import { nowKST } from 'src/common/function/time.helper';
 
 @Injectable()
