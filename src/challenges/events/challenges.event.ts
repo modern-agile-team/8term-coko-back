@@ -235,17 +235,20 @@ export class ChallengesEventsListener {
   @OnEvent(EVENT.ITEM.BUY)
   async handleFirstItemBuyChallenge(payload: { userId: number }) {
     const { userId } = payload;
+    try {
+      const userChallengesAndInfo =
+        await this.firstItemBuyChallengesService.completedChallenge(userId);
 
-    const userChallengesAndInfo =
-      await this.firstItemBuyChallengesService.completedChallenge(userId);
-
-    if (userChallengesAndInfo) {
-      //sse메시지
-      this.sseService.notifyUser(userId, {
-        type: EVENT.ITEM.BUY,
-        message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
-        timestamp: new Date().toISOString(),
-      });
+      if (userChallengesAndInfo) {
+        //sse메시지
+        this.sseService.notifyUser(userId, {
+          type: EVENT.ITEM.BUY,
+          message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
+          timestamp: new Date().toISOString(),
+        });
+      }
+    } catch (error) {
+      console.error(`handleCorrectAnswerRankingChallenge 에러 발생`, error);
     }
   }
 
@@ -256,17 +259,20 @@ export class ChallengesEventsListener {
   @OnEvent(EVENT.QUIZ.INCORRECT)
   async handleFirstWrongAnswerChallenge(payload: { userId: number }) {
     const { userId } = payload;
+    try {
+      const userChallengesAndInfo =
+        await this.firstWrongAnswerChallengesService.completedChallenge(userId);
 
-    const userChallengesAndInfo =
-      await this.firstWrongAnswerChallengesService.completedChallenge(userId);
-
-    if (userChallengesAndInfo) {
-      //sse메시지
-      this.sseService.notifyUser(userId, {
-        type: EVENT.QUIZ.INCORRECT,
-        message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
-        timestamp: new Date().toISOString(),
-      });
+      if (userChallengesAndInfo) {
+        //sse메시지
+        this.sseService.notifyUser(userId, {
+          type: EVENT.QUIZ.INCORRECT,
+          message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
+          timestamp: new Date().toISOString(),
+        });
+      }
+    } catch (error) {
+      console.error(`handleCorrectAnswerRankingChallenge 에러 발생`, error);
     }
   }
 }
