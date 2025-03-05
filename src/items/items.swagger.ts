@@ -3,7 +3,6 @@ import {
   ApiOperation,
   ApiResponse,
   ApiBody,
-  ApiParam,
   ApiCookieAuth,
 } from '@nestjs/swagger';
 import { CreateItemDto } from './dto/create-item.dto';
