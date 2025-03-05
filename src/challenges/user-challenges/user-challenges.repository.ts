@@ -7,14 +7,25 @@ import {
 } from './user-challenges.interface';
 import { CreateUserChallengesDto } from './dto/create-user-challenges.dto';
 import { UpdateUserChallengesDto } from './dto/update-user-challenges.dto';
+import { QueryUserChallengesDto } from './dto/query-user-challenges.dto';
 
 @Injectable()
 export class UserChallengesRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getTotalUserChallengesCount(userId: number): Promise<number> {
+  async getTotalUserChallengesCount(
+    userId: number,
+    query: QueryUserChallengesDto,
+  ): Promise<number> {
+    const { challengeType, completed } = query;
     return await this.prisma.userChallenge.count({
-      where: { userId },
+      where: {
+        userId,
+        ...(completed === undefined ? {} : { completed }),
+        challenge: {
+          ...(challengeType && { challengeType }),
+        },
+      },
     });
   }
 
@@ -23,12 +34,22 @@ export class UserChallengesRepository {
     page: number,
     limit: number,
     challengeType: ChallengeType,
+    completed: boolean,
   ): Promise<UserChallengesAndInfo[]> {
     return await this.prisma.userChallenge.findMany({
-      where: { userId, challenge: { challengeType } },
+      where: {
+        userId,
+        challenge: { challengeType },
+        ...(completed === undefined ? {} : { completed }),
+      },
       skip: (page - 1) * limit, // 건너뛸 항목 수 계산
       take: limit, // 가져올 항목 수
       include: { challenge: true },
+      orderBy: [
+        { completed: 'desc' },
+        { challenge: { challengeType: 'asc' } },
+        { challenge: { condition: 'asc' } },
+      ],
     });
   }
 

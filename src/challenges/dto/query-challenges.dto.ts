@@ -8,7 +8,7 @@ import { ChallengeTypeValues } from '../const/challenges.constant';
 export class QueryChallengesDto {
   @ApiPropertyOptional({
     description: '페이지 크기',
-    example: PaginationDefaults.PAGE_LIMIT,
+    example: 100,
     default: PaginationDefaults.PAGE_LIMIT,
   })
   @IsOptional()
@@ -30,7 +30,6 @@ export class QueryChallengesDto {
 
   @ApiPropertyOptional({
     description: `ChallengeType값(enum) 넣기`,
-    example: ChallengeTypeValues.LEVEL_CLEAR,
     enum: ChallengeTypeValues,
   })
   @IsOptional()

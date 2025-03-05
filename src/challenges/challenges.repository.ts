@@ -5,13 +5,17 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 import { Challenge } from './challenges.interface';
 import { ChallengeType } from './user-challenges/user-challenges.interface';
+import { QueryChallengesDto } from './dto/query-challenges.dto';
 
 @Injectable()
 export class ChallengesRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getTotalChallengesCount(): Promise<number> {
-    return await this.prisma.challenge.count();
+  async getTotalChallengesCount(query: QueryChallengesDto): Promise<number> {
+    const { challengeType } = query;
+    return await this.prisma.challenge.count({
+      where: { ...(challengeType && { challengeType }) },
+    });
   }
 
   async findSelectedPageChallengesInfo(

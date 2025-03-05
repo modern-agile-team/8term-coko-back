@@ -7,12 +7,77 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { BuyUserItemsDto } from '../dtos/buy-userItems.dto';
 import { EquipUseritemDto } from '../dtos/equip-useritem.dto';
-import { ResponseItemDto } from '../dtos/response-item.dto';
+import { UserItemsPaginationQueryDto } from '../dtos/userItems-pagination-query.dto';
+import { UserItemsRepository } from '../repositories/user-items.repository';
+import { UserItemsPaginationResponseDto } from '../dtos/response-userItems-pagination.dto';
+import { UserItem } from '../entities/user-item.entity';
+import { Item } from 'src/items/entities/item.entity';
+import { UserItemsQueryDto } from '../dtos/userItems-query.dto';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EVENT } from 'src/challenges/const/challenges.constant';
+import { ResponseUserItemDto } from '../dtos/response-useritem.dto';
 
 @Injectable()
 export class UserItemsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly userItemsRepository: UserItemsRepository,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
+  //1. 사용자 아이템 목록 조회
+  async getUserItemsByCategory(
+    userId: number,
+    query: UserItemsPaginationQueryDto,
+  ): Promise<UserItemsPaginationResponseDto> {
+    const { mainCategoryId, subCategoryId, page, limit } = query;
+
+    if (
+      mainCategoryId &&
+      !(await this.userItemsRepository.existMainCategory(mainCategoryId))
+    ) {
+      throw new NotFoundException(
+        `존재하지 않는 메인 카테고리입니다: ${mainCategoryId}`,
+      );
+    }
+    if (
+      subCategoryId &&
+      !(await this.userItemsRepository.existSubCategory(subCategoryId))
+    ) {
+      throw new NotFoundException(
+        `존재하지 않는 서브 카테고리입니다: ${subCategoryId}`,
+      );
+    }
+
+    const where = {
+      userId,
+      ...(mainCategoryId && { mainCategoryId }),
+      ...(subCategoryId && { subCategoryId }),
+    };
+
+    const contents = await this.userItemsRepository.findUserItems(
+      page,
+      limit,
+      where,
+    );
+
+    const totalCount = await this.prisma.userItem.count({
+      where: {
+        userId,
+        item: {
+          ...(mainCategoryId && { mainCategoryId }),
+          ...(subCategoryId && { subCategoryId }),
+        },
+      },
+    });
+
+    return new UserItemsPaginationResponseDto({
+      totalCount,
+      currentPage: page,
+      limit,
+      contents,
+    });
+  }
   //사용자 아이템 목록 조회
   async getUserItems(userId: number) {
     const userItems = await this.prisma.userItem.findMany({
@@ -29,12 +94,10 @@ export class UserItemsService {
     if (!userItems) {
       throw new NotFoundException('아이템을 찾을 수 없습니다.');
     }
-    return userItems.map(
-      (userItem) => new ResponseItemDto(userItem.item, userItem),
-    );
+    return userItems.map((userItem) => new ResponseUserItemDto(userItem));
   }
 
-  //아이템 구매
+  //2. 아이템 구매
   async buyUserItems(
     buyUserItemsDto: BuyUserItemsDto,
     userId: number,
@@ -101,9 +164,12 @@ export class UserItemsService {
         data: userItemsData,
       });
     });
+
+    //아이템을 구매했을때 이벤트 생성
+    this.eventEmitter.emit(EVENT.ITEM.BUY, { userId });
   }
 
-  //아이템 장착/해제
+  //3. 아이템 장착/해제
   async updateItemEquipStatus(
     equipUseritemDto: EquipUseritemDto,
     userId: number,
@@ -229,6 +295,44 @@ export class UserItemsService {
     });
   }
 
+  //1. 사용자 아이템 목록 조회
+  async getEquippedUserItems(
+    userId: number,
+    query: UserItemsQueryDto,
+  ): Promise<UserItem[]> {
+    const mainCategoryId = query.mainCategoryId ?? null;
+    const subCategoryId = query.subCategoryId ?? null;
+
+    if (
+      mainCategoryId &&
+      !(await this.userItemsRepository.existMainCategory(mainCategoryId))
+    ) {
+      throw new NotFoundException(
+        `존재하지 않는 메인 카테고리입니다: ${mainCategoryId}`,
+      );
+    }
+    if (
+      subCategoryId &&
+      !(await this.userItemsRepository.existSubCategory(subCategoryId))
+    ) {
+      throw new NotFoundException(
+        `존재하지 않는 서브 카테고리입니다: ${subCategoryId}`,
+      );
+    }
+
+    const where = {
+      userId,
+      isEquipped: true,
+      ...(mainCategoryId && { mainCategoryId }),
+      ...(subCategoryId && { subCategoryId }),
+    };
+
+    const userItems =
+      await this.userItemsRepository.findEquippedUserItems(where);
+
+    return userItems;
+  }
+  //4. 모든 장착된 아이템 해제
   async resetEquipment(userId: number): Promise<void> {
     // 사용자 존재 여부 확인
     const user = await this.prisma.user.findUnique({ where: { id: userId } });

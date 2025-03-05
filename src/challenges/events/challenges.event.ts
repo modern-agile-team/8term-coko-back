@@ -2,11 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { SectionsChallengesService } from '../section-clear-challenges.service';
 import { OnEvent } from '@nestjs/event-emitter';
 import { SseService } from 'src/sse/sse.service';
+import { FirstItemBuyChallengesService } from '../first-item-buy.challenges.service';
 import { LevelClearChallengesService } from '../level-clear-challenges.service';
 import { UserInfo } from 'src/users/entities/user.entity';
 import { EVENT } from '../const/challenges.constant';
 import { AttendanceStreakChallengesService } from '../attendance-streak-challenges.service';
 import { RankingChallengesService } from '../ranking-challenges.service';
+import { FirstWrongAnswerChallengesService } from '../first-wrong-answer.challenges.service';
 import { RankingPaginationResponseDto } from 'src/ranking/dtos/ranking-pagination-res.dto';
 import { nowKST } from 'src/common/function/time.helper';
 
@@ -18,6 +20,8 @@ export class ChallengesEventsListener {
     private readonly levelClearChallengesService: LevelClearChallengesService,
     private readonly attendanceStreakChallengesService: AttendanceStreakChallengesService,
     private readonly rankingChallengesService: RankingChallengesService,
+    private readonly firstItemBuyChallengesService: FirstItemBuyChallengesService,
+    private readonly firstWrongAnswerChallengesService: FirstWrongAnswerChallengesService,
   ) {}
 
   /**
@@ -195,32 +199,44 @@ export class ChallengesEventsListener {
   }
 
   /**
-   * 주간 시즌 종료될 때 호출되는 정답수 이벤트
+   * 유저가 아이템을 구매 했을때 호출되는 이벤트
+   * @param payload
    */
-  @OnEvent(EVENT.CORRECT_ANSWER_RANKING.ATTAIN)
-  async handleCorrectAnswerRankingChallenge(payload: {
-    correctAnswerTopRankers: RankingPaginationResponseDto;
-  }) {
-    const { correctAnswerTopRankers } = payload;
-    try {
-      const userChallengesAndInfos =
-        await this.rankingChallengesService.completedCorrectAnswerRankingChallenge(
-          correctAnswerTopRankers,
-        );
+  @OnEvent(EVENT.ITEM.BUY)
+  async handleFirstItemBuyChallenge(payload: { userId: number }) {
+    const { userId } = payload;
 
-      // 업데이트 한 도전과제가 있다면
-      if (userChallengesAndInfos) {
-        // userChallengesAndInfos가 배열이므로, 각각의 userId에 대해 SSE 알림 전송
-        userChallengesAndInfos.forEach((challengeInfo) => {
-          this.sseService.notifyUser(challengeInfo.userId, {
-            type: EVENT.CORRECT_ANSWER_RANKING.ATTAIN,
-            message: `도전과제 완료 : ${challengeInfo.challenge.content}`,
-            timestamp: nowKST(),
-          });
-        });
-      }
-    } catch (error) {
-      console.error(`handleCorrectAnswerRankingChallenge 에러 발생`, error);
+    const userChallengesAndInfo =
+      await this.firstItemBuyChallengesService.completedChallenge(userId);
+
+    if (userChallengesAndInfo) {
+      //sse메시지
+      this.sseService.notifyUser(userId, {
+        type: EVENT.ITEM.BUY,
+        message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
+        timestamp: new Date().toISOString(),
+      });
+    }
+  }
+
+  /**
+   * 퀴즈 진행도가 업데이트 되면 호출되는 이벤트
+   * @param payload
+   */
+  @OnEvent(EVENT.QUIZ.INCORRECT)
+  async handleFirstWrongAnswerChallenge(payload: { userId: number }) {
+    const { userId } = payload;
+
+    const userChallengesAndInfo =
+      await this.firstWrongAnswerChallengesService.completedChallenge(userId);
+
+    if (userChallengesAndInfo) {
+      //sse메시지
+      this.sseService.notifyUser(userId, {
+        type: EVENT.QUIZ.INCORRECT,
+        message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
+        timestamp: new Date().toISOString(),
+      });
     }
   }
 }

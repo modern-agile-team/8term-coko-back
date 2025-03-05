@@ -57,6 +57,28 @@ export class UsersService {
     });
   }
 
+  private async createDefaultUserItems(
+    txOrPrisma: any = this.prisma,
+  ): Promise<{ itemId: number; isEquipped: boolean; purchasedAt: Date }[]> {
+    const defaultItem = await txOrPrisma.item.findUnique({
+      where: { name: '파랑 물약' },
+    });
+
+    if (!defaultItem) {
+      throw new NotFoundException(
+        '기본 아이템(파랑 물약)이 items 테이블에 존재하지 않습니다.',
+      );
+    }
+
+    return [
+      {
+        itemId: defaultItem.id,
+        isEquipped: true,
+        purchasedAt: new Date(),
+      },
+    ];
+  }
+
   getAllUsers(): Promise<ResponseUserDto[]> {
     return this.prisma.user.findMany();
   }
@@ -75,6 +97,9 @@ export class UsersService {
     const defaultUserChallenges =
       await this.createDefaultUserChallenges(txOrPrisma);
 
+    // 유저 생성시 기본 유저 아이템을 생성
+    const defaultUserItems = await this.createDefaultUserItems(txOrPrisma);
+
     // 유저 생성시 기본 유저 생명력 생성
     const userResponse = await txOrPrisma.user.create({
       data: {
@@ -84,6 +109,7 @@ export class UsersService {
         partProgress: { create: defaultPartProgress },
         userHp: { create: {} },
         userChallenge: { create: defaultUserChallenges },
+        userItems: { create: defaultUserItems },
       },
     });
 

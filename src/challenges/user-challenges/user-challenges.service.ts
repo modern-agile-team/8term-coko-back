@@ -1,12 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserChallengesDto } from './dto/create-user-challenges.dto';
-import { UpdateUserChallengesDto } from './dto/update-user-challenges.dto';
 import { UserChallengesRepository } from './user-challenges.repository';
-import { QueryChallengesDto } from '../dto/query-challenges.dto';
 import {
   PaginationUserChallenges,
   UserChallenge,
 } from './user-challenges.interface';
+import { QueryUserChallengesDto } from './dto/query-user-challenges.dto';
 
 @Injectable()
 export class UserChallengesService {
@@ -16,11 +15,14 @@ export class UserChallengesService {
 
   async findAllByPageAndLimit(
     userId: number,
-    query: QueryChallengesDto,
+    query: QueryUserChallengesDto,
   ): Promise<PaginationUserChallenges> {
-    const { page, limit, challengeType } = query;
+    const { page, limit, challengeType, completed } = query;
     const allUserChallengessCount =
-      await this.userChallengesRepository.getTotalUserChallengesCount(userId);
+      await this.userChallengesRepository.getTotalUserChallengesCount(
+        userId,
+        query,
+      );
 
     const userChallengess =
       await this.userChallengesRepository.findSelectedPageUserChallengessInfo(
@@ -28,6 +30,7 @@ export class UserChallengesService {
         page,
         limit,
         challengeType,
+        completed,
       );
 
     return {

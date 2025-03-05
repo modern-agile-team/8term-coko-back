@@ -122,6 +122,7 @@ export const ApiChallenges = {
     return applyDecorators(
       ApiOperation({
         summary: '모든 유저-도전과제 페이지네이션으로 조회',
+        description: `기본적으로 true, 완료된 도전과제가 앞으로 먼저 옴`,
       }),
       ApiResponse({
         status: 200,
