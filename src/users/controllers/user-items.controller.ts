@@ -25,6 +25,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { OffsetPaginationBaseResponseDto } from 'src/pagination/dtos/offset-pagination-res.dto';
 import { UserItem } from 'src/users/entities/user-item.entity';
 import { UserItemsQueryDto } from '../dtos/userItems-query.dto';
+import { ResponseUserEquippedDto } from '../dtos/response-user-equipped.dto';
 
 @ApiTags('user-items')
 @Controller('users/me/items')
@@ -82,8 +83,12 @@ export class UserItemsController {
   async getEquippedUserItems(
     @User() user: UserInfo,
     @Query() query: UserItemsQueryDto,
-  ): Promise<UserItem[]> {
-    return this.userItemsService.getEquippedUserItems(user.id, query);
+  ): Promise<ResponseUserEquippedDto[]> {
+    const response = await this.userItemsService.getEquippedUserItems(
+      user.id,
+      query,
+    );
+    return ResponseUserEquippedDto.fromArray(response);
   }
 
   //5. 장착 아이템 초기화

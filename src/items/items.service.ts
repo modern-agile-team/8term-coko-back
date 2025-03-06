@@ -11,6 +11,7 @@ import { Item } from '@prisma/client';
 import { ItemsRepository } from './items.repository';
 import { ItemsPaginationResponseDto } from './dto/items-pagination-response.dto';
 import { itemsPaginationQueryDto } from './dto/items-pagination-query.dto';
+import { ItemDto } from './dto/response-item.dto';
 
 @Injectable()
 export class ItemsService {
@@ -97,7 +98,7 @@ export class ItemsService {
     if (!item) {
       throw new NotFoundException(`아이템을 찾을 수 없습니다. ID: ${id}`);
     }
-    return item;
+    return new ItemDto(item);
   }
 
   async updateItem(id: number, body: UpdateItemDto) {
