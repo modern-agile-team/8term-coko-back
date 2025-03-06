@@ -1,8 +1,9 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 export function ApiGetExperience() {
   return applyDecorators(
+    ApiCookieAuth('accessToken'),
     ApiOperation({
       summary: '경험치 조회',
       description: `## 경험치 조회`,

@@ -9,7 +9,7 @@ import { ResponseUserEquippedDto } from '../dtos/response-user-equipped.dto';
 
 export function ApiGetEquippedUserItems() {
   return applyDecorators(
-    ApiCookieAuth('access-token'),
+    ApiCookieAuth('accessToken'),
     ApiOperation({
       summary: '사용자가 장착한 아이템 목록 조회',
       description:

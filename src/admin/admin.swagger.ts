@@ -4,9 +4,8 @@ import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 export const ApiAdmins = {
   loginAdmin: () => {
     return applyDecorators(
-      ApiCookieAuth('adminAccessToken'),
       ApiOperation({
-        summary: 'admin 정보 인증',
+        summary: 'admin 로그인',
       }),
       ApiResponse({
         status: 200,
@@ -18,7 +17,7 @@ export const ApiAdmins = {
     return applyDecorators(
       ApiCookieAuth('adminAccessToken'),
       ApiOperation({
-        summary: 'admin 토큰 인증',
+        summary: 'admin 토큰 인증 - admin',
       }),
       ApiResponse({
         status: 200,

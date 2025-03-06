@@ -1,11 +1,11 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
-export function ApiAdminGetUser() {
+export function ApiGetUser() {
   return applyDecorators(
-    ApiCookieAuth('adminAccessToken'),
+    ApiCookieAuth('accessToken'),
     ApiOperation({
-      summary: '단일 유저 조회 - admin',
+      summary: '단일 유저 조회',
       description: `## 단일 유저 조회`,
     }),
     ApiResponse({

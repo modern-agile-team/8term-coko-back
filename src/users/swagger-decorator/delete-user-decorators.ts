@@ -1,10 +1,11 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 export function ApiDeleteUser() {
   return applyDecorators(
+    ApiCookieAuth('accessToken'),
     ApiOperation({
-      summary: ' 유저 삭제',
+      summary: ' 유저 삭제 (회원 탈퇴시 사용)',
       description: ` ## 유저 삭제`,
     }),
     ApiResponse({
