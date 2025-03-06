@@ -28,6 +28,12 @@ export class ResponseUserEquippedDto implements Item {
   readonly image: string;
 
   @ApiProperty({
+    example: 1,
+    description: '서브 카테고리 아이디',
+  })
+  readonly subCategoryId: number;
+
+  @ApiProperty({
     example: false,
     description: '장착 여부',
   })
@@ -38,6 +44,7 @@ export class ResponseUserEquippedDto implements Item {
     this.name = userItem.item.name;
     this.price = userItem.item.price;
     this.image = userItem.item.image;
+    this.subCategoryId = userItem.item.subCategoryId;
     this.isEquipped = userItem.isEquipped;
   }
 
