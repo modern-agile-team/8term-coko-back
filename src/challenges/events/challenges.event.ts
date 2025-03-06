@@ -5,12 +5,12 @@ import { SseService } from 'src/sse/sse.service';
 import { FirstItemBuyChallengesService } from '../first-item-buy.challenges.service';
 import { LevelClearChallengesService } from '../level-clear-challenges.service';
 import { UserInfo } from 'src/users/entities/user.entity';
-import { EVENT } from '../const/challenges.constant';
 import { AttendanceStreakChallengesService } from '../attendance-streak-challenges.service';
 import { RankingChallengesService } from '../ranking-challenges.service';
 import { FirstWrongAnswerChallengesService } from '../first-wrong-answer.challenges.service';
 import { RankingPaginationResponseDto } from 'src/ranking/dtos/ranking-pagination-res.dto';
 import { nowKST } from 'src/common/function/time.helper';
+import { EVENT } from 'src/common/constants/event-constants';
 
 @Injectable()
 export class ChallengesEventsListener {
@@ -256,7 +256,7 @@ export class ChallengesEventsListener {
    * 퀴즈 진행도가 업데이트 되면 호출되는 이벤트
    * @param payload
    */
-  @OnEvent(EVENT.QUIZ.INCORRECT)
+  @OnEvent(EVENT.QUIZ_INCORRECT)
   async handleFirstWrongAnswerChallenge(payload: { userId: number }) {
     const { userId } = payload;
     try {
@@ -266,7 +266,7 @@ export class ChallengesEventsListener {
       if (userChallengesAndInfo) {
         //sse메시지
         this.sseService.notifyUser(userId, {
-          type: EVENT.QUIZ.INCORRECT,
+          type: EVENT.QUIZ_INCORRECT,
           message: `도전과제 완료 : ${userChallengesAndInfo.challenge.content}`,
           timestamp: new Date().toISOString(),
         });

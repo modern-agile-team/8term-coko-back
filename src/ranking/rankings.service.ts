@@ -19,7 +19,7 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { TopRankerPaginaion } from 'src/common/constants/rankings-constants';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { EVENT } from 'src/challenges/const/challenges.constant';
+import { EVENT } from 'src/common/constants/event-constants';
 
 @Injectable()
 export class RankingsService {

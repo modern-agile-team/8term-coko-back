@@ -9,7 +9,7 @@ import { QuizzesRepository } from 'src/quizzes/quizzes.repository';
 import { ResProgressDto } from './dto/res-progress.dto';
 import { Progress } from './entities/progress.entity';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { EVENT } from 'src/challenges/const/challenges.constant';
+import { EVENT } from 'src/common/constants/event-constants';
 
 @Injectable()
 export class ProgressService {
@@ -77,7 +77,7 @@ export class ProgressService {
         isCorrect: progress.isCorrect,
       });
     } else {
-      this.eventEmitter.emit(EVENT.QUIZ.INCORRECT, {
+      this.eventEmitter.emit(EVENT.QUIZ_INCORRECT, {
         userId,
       });
     }
