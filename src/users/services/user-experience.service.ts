@@ -8,7 +8,7 @@ import {
 } from '../constants/user-experience.constant';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UserInfo } from '../entities/user.entity';
-import { EVENT } from 'src/challenges/const/challenges.constant';
+import { EVENT } from 'src/common/constants/event-constants';
 
 @Injectable()
 export class UserExperienceService {

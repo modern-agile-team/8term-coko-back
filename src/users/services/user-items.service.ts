@@ -14,8 +14,8 @@ import { UserItem } from '../entities/user-item.entity';
 import { Item } from 'src/items/entities/item.entity';
 import { UserItemsQueryDto } from '../dtos/userItems-query.dto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { EVENT } from 'src/challenges/const/challenges.constant';
 import { ResponseUserItemDto } from '../dtos/response-useritem.dto';
+import { EVENT } from 'src/common/constants/event-constants';
 
 @Injectable()
 export class UserItemsService {

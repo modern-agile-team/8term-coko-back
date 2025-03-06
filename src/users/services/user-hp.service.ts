@@ -8,6 +8,7 @@ import { UserHp } from '../entities/user-hp.entity';
 import { SseService } from 'src/sse/sse.service';
 import { Subscription, timer } from 'rxjs';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EVENT } from 'src/common/constants/event-constants';
 
 @Injectable()
 export class UserHpService {
@@ -54,7 +55,7 @@ export class UserHpService {
       await this.userHpRepository.decreaseUserHpByUserId(userId);
 
     // 이벤트 발행
-    this.eventEmitter.emit('hp.decreased', {
+    this.eventEmitter.emit(EVENT.HP.DECREASED, {
       userId,
       decreasedHpValue,
       hpStorage: userHp.hpStorage,

@@ -12,7 +12,7 @@ import {
   PartStatusValues,
 } from './entities/part-progress.entity';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { EVENT } from 'src/challenges/const/challenges.constant';
+import { EVENT } from 'src/common/constants/event-constants';
 
 @Injectable()
 export class PartProgressService {
