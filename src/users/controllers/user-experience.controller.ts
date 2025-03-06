@@ -1,7 +1,7 @@
 import { Controller, Get, Body, Patch, Param, UseGuards } from '@nestjs/common';
 import { UpdateExperienceDto } from '../dtos/update-experience.dto';
 import { UserExperienceService } from '../services/user-experience.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { ApiGetExperience } from '../swagger-decorator/get-user-experience-decorators';
 import { ApiUpdateExperience } from '../swagger-decorator/patch-user-experience-decorators';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
@@ -23,6 +23,7 @@ export class UserExperienceController {
 
   @Patch()
   @ApiUpdateExperience()
+  @ApiExcludeEndpoint()
   @UseGuards(AuthGuard('accessToken'))
   updateExperience(
     @User() user: UserInfo,

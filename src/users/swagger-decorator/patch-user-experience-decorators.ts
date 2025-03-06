@@ -14,7 +14,6 @@ export function ApiUpdateExperience() {
         JSON: {
           example: {
             id: 15,
-            nickname: 'gwgw123',
             level: 1,
             experience: 30,
             experienceForNextLevel: 50,

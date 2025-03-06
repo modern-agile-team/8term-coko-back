@@ -1,8 +1,9 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 export function ApiGetAllUsers() {
   return applyDecorators(
+    ApiCookieAuth('adminAccessToken'),
     ApiOperation({
       summary: '전체 유저 조회',
       description: `## 전체 유저 조회`,

@@ -1,21 +1,27 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
-export function ApiDeleteUser() {
+export function ApiGetUser() {
   return applyDecorators(
-    ApiCookieAuth('adminAccessToken'),
+    ApiCookieAuth('accessToken'),
     ApiOperation({
-      summary: ' 유저 삭제',
-      description: ` ## 유저 삭제`,
+      summary: '단일 유저 조회',
+      description: `## 단일 유저 조회`,
     }),
     ApiResponse({
       status: 200,
-      description: '성공적으로 유저가 삭제 된 경우',
+      description: '성공적으로 단일 유저가 조회된 경우',
       content: {
         JSON: {
           example: {
-            statusCode: 204,
-            message: 'No Content',
+            id: 2,
+            nickname: 'gwgw123',
+            profileImage: null,
+            maxHealthPoint: 5,
+            level: 2,
+            experience: 30,
+            experienceForNextLevel: 60,
+            point: 200,
           },
         },
       },

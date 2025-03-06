@@ -16,13 +16,14 @@ import { ResponseUserDto } from '../dtos/response-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiGetAllUsers } from '../swagger-decorator/get-all-users-decorators';
-import { ApiGetUser } from '../swagger-decorator/get-user-decorators';
+import { ApiGetUser } from '../swagger-decorator/get-me-decorators';
 import { ApiUpdateUser } from '../swagger-decorator/patch-user-decorators';
 import { ApiDeleteUser } from '../swagger-decorator/delete-user-decorators';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/common/decorators/get-user.decorator';
 import { UserInfo } from '../entities/user.entity';
+import { ApiAdminGetUser } from '../swagger-decorator/get-user-decorators';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @ApiTags('users')
@@ -87,7 +88,7 @@ export class UsersController {
    * @param userId
    * @returns
    */
-  @ApiGetUser()
+  @ApiAdminGetUser()
   @Get(':userId')
   @UseGuards(AuthGuard('adminAccessToken'))
   async getUser(@Param('userId', PositiveIntPipe) userId: number) {
