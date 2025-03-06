@@ -4,7 +4,7 @@ import { ResMyMonthlyAttendanceDto } from './dtos/res-monthly-attendance.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UsersRepository } from 'src/users/repositories/users.reposirory';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { EVENT } from 'src/challenges/const/challenges.constant';
+import { EVENT } from 'src/common/constants/event-constants';
 
 @Injectable()
 export class AttendanceService {

@@ -11,7 +11,7 @@ import { DAILY_RESET } from './const/users-daily-quests.const';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Progress } from 'src/progress/entities/progress.entity';
 import { ProgressRepository } from 'src/progress/progress.repository';
-import { EVENT } from 'src/challenges/const/challenges.constant';
+import { EVENT } from 'src/common/constants/event-constants';
 
 @Injectable()
 export class UsersDailyQuestsService {

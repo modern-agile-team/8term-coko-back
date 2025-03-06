@@ -14,36 +14,3 @@ export const ChallengeTypeValues = {
   FIRST_WRONG_ANSWER: 'FIRST_WRONG_ANSWER',
   FIRST_404_VISIT: 'FIRST_404_VISIT',
 } as const;
-
-export const EVENT = {
-  PART_STATUS: {
-    COMPLETED: 'partStatus.completed',
-  },
-  USER: {
-    LEVEL_UP: 'user.levelUp',
-  },
-  ATTENDANCE: {
-    STREAK: 'attendance.streak',
-  },
-  LEVEL_RANKING: {
-    ATTAIN: 'levelRanking.attain',
-  },
-  POINT_RANKING: {
-    ATTAIN: 'pointRanking.attain',
-  },
-  ATTENDANCE_RANKING: {
-    ATTAIN: 'attendanceRanking.attain',
-  },
-  CORRECT_ANSWER_RANKING: {
-    ATTAIN: 'correctAnswerRanking.attain',
-  },
-  ITEM: {
-    BUY: 'item.buy',
-  },
-  PROGRESS: {
-    UPDATED: 'progress.updated',
-  },
-  QUIZ: {
-    INCORRECT: 'quiz.incorrect',
-  },
-} as const;
