@@ -18,6 +18,8 @@ import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { TopRankerPaginaion } from 'src/common/constants/rankings-constants';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EVENT } from 'src/challenges/const/challenges.constant';
 
 @Injectable()
 export class RankingsService {
@@ -25,6 +27,7 @@ export class RankingsService {
     private readonly rankingsRepository: RankingsRepository,
     private readonly usersRepository: UsersRepository,
     private readonly progressRepository: ProgressRepository,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   /**
@@ -174,5 +177,40 @@ export class RankingsService {
     }
 
     return nextEnd.format();
+  }
+
+  // 매주 월요일 00시 랭킹 집계
+  @Cron(WEEKLY_SEASON_RESET_TIME, { timeZone: 'Asia/Seoul' })
+  async updateWeeklySeasonResults(): Promise<void> {
+    const levelTopRankers = await this.findSelectedPageRankings(
+      'level',
+      TopRankerPaginaion.PAGE_NUMBER,
+      TopRankerPaginaion.PAGE_LIMIT,
+    );
+    const pointTopRankers = await this.findSelectedPageRankings(
+      'point',
+      TopRankerPaginaion.PAGE_NUMBER,
+      TopRankerPaginaion.PAGE_LIMIT,
+    );
+    const attendanceTopRankers = await this.findSelectedPageRankings(
+      'totalAttendance',
+      TopRankerPaginaion.PAGE_NUMBER,
+      TopRankerPaginaion.PAGE_LIMIT,
+    );
+    const correctAnswerTopRankers = await this.findSelectedPageRankings(
+      'totalCorrectAnswer',
+      TopRankerPaginaion.PAGE_NUMBER,
+      TopRankerPaginaion.PAGE_LIMIT,
+    );
+
+    // 랭킹 도전과제 검사 이벤트 4가지 발행
+    this.eventEmitter.emit(EVENT.LEVEL_RANKING.ATTAIN, { levelTopRankers });
+    this.eventEmitter.emit(EVENT.POINT_RANKING.ATTAIN, { pointTopRankers });
+    this.eventEmitter.emit(EVENT.ATTENDANCE_RANKING.ATTAIN, {
+      attendanceTopRankers,
+    });
+    this.eventEmitter.emit(EVENT.CORRECT_ANSWER_RANKING.ATTAIN, {
+      correctAnswerTopRankers,
+    });
   }
 }

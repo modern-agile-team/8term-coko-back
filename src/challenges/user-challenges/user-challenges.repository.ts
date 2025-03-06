@@ -137,10 +137,14 @@ export class UserChallengesRepository {
   }
 
   //Event 핸들러에서 호출할 서비스 메서드에서 사용
-  async updateById(id: number, data: UpdateUserChallengesDto) {
+  async updateById(
+    id: number,
+    data: UpdateUserChallengesDto,
+  ): Promise<UserChallengesAndInfo> {
     return await this.prisma.userChallenge.update({
       where: { id, completed: false },
       data,
+      include: { challenge: true },
     });
   }
 
@@ -149,6 +153,25 @@ export class UserChallengesRepository {
     return await this.prisma.userChallenge.updateMany({
       where: { id: { in: ids }, completed: false },
       data,
+    });
+  }
+
+  //Event 핸들러에서 호출할 서비스 메서드에서 사용 (랭킹 도전과제에서만 사용됨)
+  async findOneRankingByUserAndType(
+    userId: number,
+    challengeType: ChallengeType,
+    exactCondition: number,
+  ): Promise<UserChallenge> {
+    return await this.prisma.userChallenge.findFirst({
+      where: {
+        userId,
+        completed: false,
+        challenge: {
+          challengeType,
+          condition: exactCondition,
+        },
+      },
+      include: { challenge: true },
     });
   }
 }

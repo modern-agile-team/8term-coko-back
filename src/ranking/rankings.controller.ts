@@ -4,6 +4,8 @@ import { ApiRankings } from './rankings.swagger';
 import { RankingQueryDto } from './dtos/ranking-query.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { RankingPaginationResponseDto } from './dtos/ranking-pagination-res.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { ResSeasonEndTimeDto } from './dtos/res-season-end-time.dto';
 
 @ApiTags('rankings')
 @Controller('rankings')
@@ -32,7 +34,8 @@ export class RankingsController {
    */
   @ApiRankings.getNextSeasonEndTime()
   @Get('season')
-  getNextSeasonEndTime() {
+  @UseGuards(AuthGuard('accessToken'))
+  getNextSeasonEndTime(): ResSeasonEndTimeDto {
     return {
       seasonEndTime: this.rankingsService.getNextSeasonEndTime(),
     };
