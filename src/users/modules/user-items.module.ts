@@ -6,5 +6,6 @@ import { UserItemsRepository } from '../repositories/user-items.repository';
 @Module({
   controllers: [UserItemsController],
   providers: [UserItemsService, UserItemsRepository],
+  exports: [UserItemsRepository],
 })
 export class UserItemsModule {}

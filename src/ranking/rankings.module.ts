@@ -6,9 +6,10 @@ import { UsersCoreModule } from 'src/users/modules/users-core.module';
 import { UsersRankingsController } from './user-rankings.controller';
 import { ProgressModule } from 'src/progress/progress.module';
 import { RankingEventsListener } from './rankings.event';
+import { UserItemsModule } from 'src/users/modules/user-items.module';
 
 @Module({
-  imports: [UsersCoreModule, ProgressModule],
+  imports: [UsersCoreModule, ProgressModule, UserItemsModule],
   controllers: [RankingsController, UsersRankingsController],
   providers: [RankingsService, RankingsRepository, RankingEventsListener],
 })
