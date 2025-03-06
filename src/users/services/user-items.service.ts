@@ -1,7 +1,6 @@
 import {
   Injectable,
   NotFoundException,
-  InternalServerErrorException,
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -11,7 +10,6 @@ import { UserItemsPaginationQueryDto } from '../dtos/userItems-pagination-query.
 import { UserItemsRepository } from '../repositories/user-items.repository';
 import { UserItemsPaginationResponseDto } from '../dtos/response-userItems-pagination.dto';
 import { UserItem } from '../entities/user-item.entity';
-import { Item } from 'src/items/entities/item.entity';
 import { UserItemsQueryDto } from '../dtos/userItems-query.dto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ResponseUserItemDto } from '../dtos/response-useritem.dto';

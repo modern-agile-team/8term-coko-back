@@ -1,5 +1,3 @@
-import { Query } from '@nestjs/common';
-
 export const EVENT = {
   PART_STATUS: {
     COMPLETED: 'partStatus.completed',
