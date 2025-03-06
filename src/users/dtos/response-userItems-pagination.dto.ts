@@ -1,13 +1,19 @@
 import { OffsetPaginationBaseResponseDto } from 'src/pagination/dtos/offset-pagination-res.dto';
 import { UserItem } from '../entities/user-item.entity';
-import { Item } from 'src/items/entities/item.entity';
+import { ResponseUserEquippedDto } from './response-user-equipped.dto';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class UserItemsPaginationResponseDto extends OffsetPaginationBaseResponseDto<
-  UserItem & { item: Item }
-> {
-  readonly contents: (UserItem & { item: Item })[];
-  constructor(props: Omit<UserItemsPaginationResponseDto, 'totalPage'>) {
-    super(props);
-    this.contents = props.contents;
+export class UserItemsPaginationResponseDto extends OffsetPaginationBaseResponseDto<ResponseUserEquippedDto> {
+  @ApiProperty({
+    description: '아이템객체 + 유저아이템 장작여부',
+    type: [ResponseUserEquippedDto],
+  })
+  readonly contents: ResponseUserEquippedDto[];
+  constructor(
+    props: Omit<OffsetPaginationBaseResponseDto<UserItem>, 'totalPage'>,
+  ) {
+    const convertedContents = ResponseUserEquippedDto.fromArray(props.contents);
+    super({ ...props, contents: convertedContents });
+    this.contents = convertedContents;
   }
 }

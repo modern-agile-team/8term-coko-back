@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Item } from '@prisma/client';
 
-export class ItemDto {
+export class ItemDto implements Item {
   @ApiProperty({
     description: '아이템 ID',
     example: 1,
@@ -37,6 +38,15 @@ export class ItemDto {
     required: false,
   })
   subCategoryId: number | null;
+
+  constructor(item: Item) {
+    this.id = item.id;
+    this.name = item.name;
+    this.image = item.image;
+    this.price = item.price;
+    this.mainCategoryId = item.mainCategoryId;
+    this.subCategoryId = item.subCategoryId;
+  }
 }
 
 export class PaginatedItemsResponseDto {
@@ -49,6 +59,5 @@ export class PaginatedItemsResponseDto {
   @ApiProperty({ description: '현재 페이지', example: 1 })
   currentPage: number;
 
-  @ApiProperty({ description: '아이템 목록', type: [ItemDto] })
   contents: ItemDto[];
 }
