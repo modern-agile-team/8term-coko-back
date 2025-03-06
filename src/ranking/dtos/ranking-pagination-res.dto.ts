@@ -9,6 +9,11 @@ export class RankingPaginationResponseDto extends OffsetPaginationBaseResponseDt
     type: [UserRankingDto],
   })
   readonly contents: UserRankingDto[];
+
+  @ApiProperty({
+    description: '조회된 유저의 장착아이템 목록',
+    type: [UserItem],
+  })
   readonly equippedItems: UserItem[];
 
   constructor(props: Omit<RankingPaginationResponseDto, 'totalPage'>) {
