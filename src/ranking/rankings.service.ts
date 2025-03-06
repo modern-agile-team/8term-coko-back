@@ -20,6 +20,7 @@ import utc from 'dayjs/plugin/utc';
 import { TopRankerPaginaion } from 'src/common/constants/rankings-constants';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { EVENT } from 'src/challenges/const/challenges.constant';
+import { UserItemsRepository } from 'src/users/repositories/user-items.repository';
 
 @Injectable()
 export class RankingsService {
@@ -27,6 +28,7 @@ export class RankingsService {
     private readonly rankingsRepository: RankingsRepository,
     private readonly usersRepository: UsersRepository,
     private readonly progressRepository: ProgressRepository,
+    private readonly userItemsRepository: UserItemsRepository,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
@@ -41,6 +43,9 @@ export class RankingsService {
     page: number,
     limit: number,
   ): Promise<RankingPaginationResponseDto> {
+    // 유저가 가지고 있는 아이템 저장할 배열
+    const equippedItems = [];
+
     // 랭킹 정보 정렬 조건
     const orderBy = createOrderBy(sort);
 
@@ -54,11 +59,22 @@ export class RankingsService {
       orderBy,
     );
 
+    // limit만큼 반복
+    for (let i = 0; i < limit; i++) {
+      equippedItems.push(
+        await this.userItemsRepository.findEquippedUserItems({
+          userId: contents[i].id,
+          isEquipped: true,
+        }),
+      );
+    }
+
     return new RankingPaginationResponseDto({
       totalCount,
       currentPage: page,
       limit,
       contents,
+      equippedItems,
     });
   }
 

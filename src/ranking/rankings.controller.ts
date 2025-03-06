@@ -12,7 +12,7 @@ import { ResSeasonEndTimeDto } from './dtos/res-season-end-time.dto';
 export class RankingsController {
   constructor(private readonly rankingsService: RankingsService) {}
 
-  // 랭킹 페이지 조회
+  // 랭킹 페이지 조회 (+ 각 유저의 아이템들까지 가져오기)
   @ApiRankings.findSelectedPageRankings()
   @Get()
   async findSelectedPageRankings(

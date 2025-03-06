@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserRankingDto } from './user-ranking.dto';
 import { OffsetPaginationBaseResponseDto } from 'src/pagination/dtos/offset-pagination-res.dto';
+import { UserItem } from 'src/users/entities/user-item.entity';
 
 export class RankingPaginationResponseDto extends OffsetPaginationBaseResponseDto<UserRankingDto> {
   @ApiProperty({
@@ -8,9 +9,11 @@ export class RankingPaginationResponseDto extends OffsetPaginationBaseResponseDt
     type: [UserRankingDto],
   })
   readonly contents: UserRankingDto[];
+  readonly equippedItems: UserItem[];
 
   constructor(props: Omit<RankingPaginationResponseDto, 'totalPage'>) {
     super(props);
     this.contents = props.contents;
+    this.equippedItems = props.equippedItems;
   }
 }
