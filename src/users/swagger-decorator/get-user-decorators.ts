@@ -5,7 +5,7 @@ export function ApiAdminGetUser() {
   return applyDecorators(
     ApiCookieAuth('adminAccessToken'),
     ApiOperation({
-      summary: '단일 유저 조회',
+      summary: '단일 유저 조회 - admin',
       description: `## 단일 유저 조회`,
     }),
     ApiResponse({
