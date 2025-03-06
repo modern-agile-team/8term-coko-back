@@ -22,10 +22,9 @@ import { ApiResetEquipment } from '../swagger-decorator/put-user-items.decorator
 import { User } from 'src/common/decorators/get-user.decorator';
 import { UserInfo } from 'src/users/entities/user.entity';
 import { AuthGuard } from '@nestjs/passport';
-import { OffsetPaginationBaseResponseDto } from 'src/pagination/dtos/offset-pagination-res.dto';
-import { UserItem } from 'src/users/entities/user-item.entity';
 import { UserItemsQueryDto } from '../dtos/userItems-query.dto';
 import { ResponseUserEquippedDto } from '../dtos/response-user-equipped.dto';
+import { UserItemsPaginationResponseDto } from '../dtos/response-userItems-pagination.dto';
 
 @ApiTags('user-items')
 @Controller('users/me/items')
@@ -40,7 +39,7 @@ export class UserItemsController {
   async getUserItemsByCategory(
     @User() user: UserInfo,
     @Query() query: UserItemsPaginationQueryDto,
-  ): Promise<OffsetPaginationBaseResponseDto<UserItem>> {
+  ): Promise<UserItemsPaginationResponseDto> {
     return this.userItemsService.getUserItemsByCategory(user.id, query);
   }
 
