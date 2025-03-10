@@ -37,7 +37,7 @@ export class UsersController {
   @ApiGetUser()
   @Get('me')
   @UseGuards(AuthGuard('accessToken'))
-  async getMe(@User() user: UserInfo) {
+  async getMe(@User() user: UserInfo): Promise<ResponseUserDto> {
     return this.usersService.getUser(user.id);
   }
 
@@ -52,7 +52,7 @@ export class UsersController {
   async deleteMe(
     @User() user: UserInfo,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<void> {
     await this.usersService.deleteUser(user.id, res);
   }
 
@@ -63,7 +63,7 @@ export class UsersController {
   @ApiGetAllUsers()
   @Get()
   @UseGuards(AuthGuard('adminAccessToken'))
-  async getAllUsers() {
+  async getAllUsers(): Promise<ResponseUserDto[]> {
     return this.usersService.getAllUsers();
   }
 
@@ -91,7 +91,9 @@ export class UsersController {
   @ApiAdminGetUser()
   @Get(':userId')
   @UseGuards(AuthGuard('adminAccessToken'))
-  async getUser(@Param('userId', PositiveIntPipe) userId: number) {
+  async getUser(
+    @Param('userId', PositiveIntPipe) userId: number,
+  ): Promise<ResponseUserDto> {
     return this.usersService.getUser(userId);
   }
 }
