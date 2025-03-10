@@ -201,15 +201,15 @@ export class ChallengesEventsListener {
   /**
    * 주간 시즌 종료될 때 호출되는 정답수 이벤트
    */
-  @OnEvent(EVENT.POINT_RANKING.ATTAIN)
+  @OnEvent(EVENT.CORRECT_ANSWER_RANKING.ATTAIN)
   async handleCorrectAnswerRankingChallenge(payload: {
-    porrectAnswerTopRankers: RankingPaginationResponseDto;
+    correctAnswerTopRankers: RankingPaginationResponseDto;
   }) {
-    const { porrectAnswerTopRankers } = payload;
+    const { correctAnswerTopRankers } = payload;
     try {
       const userChallengesAndInfos =
         await this.rankingChallengesService.completedCorrectAnswerRankingChallenge(
-          porrectAnswerTopRankers,
+          correctAnswerTopRankers,
         );
 
       // 업데이트 한 도전과제가 있다면
