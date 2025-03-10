@@ -7,6 +7,7 @@ import { ApiGetPoint } from '../swagger-decorator/get-user-point-decorators';
 import { AuthGuard } from '@nestjs/passport';
 import { UserInfo } from '../entities/user.entity';
 import { User } from 'src/common/decorators/get-user.decorator';
+import { ResponsePointDto } from '../dtos/response-point.dto';
 
 @ApiTags('point')
 @Controller('users/me/point')
@@ -16,7 +17,7 @@ export class UserPointController {
   @Get()
   @ApiGetPoint()
   @UseGuards(AuthGuard('accessToken'))
-  getUserPoint(@User() user: UserInfo) {
+  getUserPoint(@User() user: UserInfo): Promise<ResponsePointDto> {
     return this.pointsService.getUserPoint(user.id);
   }
 
@@ -24,7 +25,10 @@ export class UserPointController {
   @ApiUpdatePoint()
   @ApiExcludeEndpoint()
   @UseGuards(AuthGuard('accessToken'))
-  updatePoint(@User() user: UserInfo, @Body() updatePointData: UpdatePointDto) {
+  updatePoint(
+    @User() user: UserInfo,
+    @Body() updatePointData: UpdatePointDto,
+  ): Promise<ResponsePointDto> {
     return this.pointsService.updatePoint(user.id, updatePointData);
   }
 }
