@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { UserHpService } from '../services/user-hp.service';
 import { HP_REFILL_TIME } from '../constants/user-hp.constant';
+import { EVENT } from 'src/common/constants/event-constants';
 
 @Injectable()
 export class HpEventsListener {
@@ -11,7 +12,7 @@ export class HpEventsListener {
    * hp 감소시 이벤트
    * @param payload
    */
-  @OnEvent('hp.decreased')
+  @OnEvent(EVENT.HP.DECREASED)
   handleHpDecreasedEvent(payload: {
     userId: number;
     decreasedHpValue: any;
