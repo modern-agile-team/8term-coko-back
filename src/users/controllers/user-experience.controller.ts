@@ -8,6 +8,7 @@ import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe
 import { UserInfo } from '../entities/user.entity';
 import { User } from 'src/common/decorators/get-user.decorator';
 import { AuthGuard } from '@nestjs/passport';
+import { ResponseExperienceDto } from '../dtos/response-experience.dto';
 
 @ApiTags('experience')
 @Controller('users/me/experience')
@@ -17,7 +18,7 @@ export class UserExperienceController {
   @Get()
   @ApiGetExperience()
   @UseGuards(AuthGuard('accessToken'))
-  getUserExperience(@User() user: UserInfo) {
+  getUserExperience(@User() user: UserInfo): Promise<ResponseExperienceDto> {
     return this.experienceService.getUserExperience(user.id);
   }
 
@@ -28,7 +29,7 @@ export class UserExperienceController {
   updateExperience(
     @User() user: UserInfo,
     @Body() updateExperienceData: UpdateExperienceDto,
-  ) {
+  ): Promise<ResponseExperienceDto> {
     return this.experienceService.updateExperience(user, updateExperienceData);
   }
 }
