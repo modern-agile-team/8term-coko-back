@@ -6,6 +6,7 @@ import {
 import { UpdatePointDto } from '../dtos/update-point.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ResponsePointDto } from '../dtos/response-point.dto';
+import { PrismaClientOrTransaction } from 'src/prisma/prisma.type';
 
 @Injectable()
 export class UserPointService {
@@ -24,15 +25,16 @@ export class UserPointService {
   async updatePoint(
     id: number,
     updatePointData: UpdatePointDto,
+    txOrPrisma: PrismaClientOrTransaction = this.prisma,
   ): Promise<ResponsePointDto> {
-    const user = await this.prisma.user.findUnique({ where: { id } });
+    const user = await txOrPrisma.user.findUnique({ where: { id } });
     if (!user) {
       throw new NotFoundException(`id ${id} not found`);
     } else if (0 > user.point + updatePointData.point) {
       throw new BadRequestException('user points are not enough');
     }
 
-    const userPoint = await this.prisma.user.update({
+    const userPoint = await txOrPrisma.user.update({
       where: { id },
       data: { point: { increment: updatePointData.point } },
     });

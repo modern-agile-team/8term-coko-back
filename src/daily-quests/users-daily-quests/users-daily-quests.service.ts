@@ -12,13 +12,17 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { Progress } from 'src/progress/entities/progress.entity';
 import { ProgressRepository } from 'src/progress/progress.repository';
 import { EVENT } from 'src/common/constants/event-constants';
+import { UserPointService } from 'src/users/services/user-point.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersDailyQuestsService {
   constructor(
+    private readonly prisma: PrismaService,
     private readonly progressRepository: ProgressRepository,
     private readonly dailyQuestsRepository: DailyQuestsRepository,
     private readonly usersDailyQuestsRepository: UsersDailyQuestsRepository,
+    private readonly userPointService: UserPointService,
   ) {}
 
   async findOne(userDailyQuestId: number): Promise<UserDailyQuest> {
@@ -88,10 +92,23 @@ export class UsersDailyQuestsService {
       completed: shouldBeCompleted,
     };
 
-    return this.usersDailyQuestsRepository.updateById(
-      userDailyQuest.id,
-      updatedData,
-    );
+    return this.prisma.$transaction(async (tx) => {
+      if (shouldBeCompleted) {
+        await this.userPointService.updatePoint(
+          userId,
+          {
+            point: userDailyQuest.dailyQuest.point,
+          },
+          tx,
+        );
+      }
+
+      return this.usersDailyQuestsRepository.updateById(
+        userDailyQuest.id,
+        updatedData,
+        tx,
+      );
+    });
   }
 
   @Cron(DAILY_RESET)
