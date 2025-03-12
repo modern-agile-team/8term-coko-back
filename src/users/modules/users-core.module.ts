@@ -13,6 +13,6 @@ import { UserItemsModule } from './user-items.module';
     UsersModule,
     UserItemsModule,
   ],
-  exports: [UserHpModule, UsersModule],
+  exports: [UserHpModule, UsersModule, UserPointModule],
 })
 export class UsersCoreModule {}
