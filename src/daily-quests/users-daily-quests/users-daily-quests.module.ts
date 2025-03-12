@@ -6,6 +6,8 @@ import { DailyQuestsModule } from '../daily-quests.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ProgressModule } from 'src/progress/progress.module';
 import { UsersCoreModule } from 'src/users/modules/users-core.module';
+import { UsersDailyQuestsEventsListener } from './events/users-daily-quests.event';
+import { SseModule } from 'src/sse/sse.module';
 
 @Module({
   imports: [
@@ -13,8 +15,13 @@ import { UsersCoreModule } from 'src/users/modules/users-core.module';
     ScheduleModule.forRoot(),
     ProgressModule,
     UsersCoreModule,
+    SseModule,
   ],
   controllers: [UsersDailyQuestsController],
-  providers: [UsersDailyQuestsService, UsersDailyQuestsRepository],
+  providers: [
+    UsersDailyQuestsService,
+    UsersDailyQuestsRepository,
+    UsersDailyQuestsEventsListener,
+  ],
 })
 export class UsersDailyQuestsModule {}

@@ -8,10 +8,7 @@ import {
   UserDailyQuestWiteQuestInfo,
 } from './users-daily-quests.interface';
 import { DAILY_RESET } from './const/users-daily-quests.const';
-import { OnEvent } from '@nestjs/event-emitter';
-import { Progress } from 'src/progress/entities/progress.entity';
 import { ProgressRepository } from 'src/progress/progress.repository';
-import { EVENT } from 'src/common/constants/event-constants';
 import { UserPointService } from 'src/users/services/user-point.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -114,10 +111,5 @@ export class UsersDailyQuestsService {
   @Cron(DAILY_RESET)
   async deleteAllDailyQuests(): Promise<{ count: number }> {
     return this.usersDailyQuestsRepository.deleteAll();
-  }
-
-  @OnEvent(EVENT.PROGRESS.UPDATED)
-  async handleProgressUpdatedEvent(progress: Progress) {
-    await this.update(progress.userId);
   }
 }
