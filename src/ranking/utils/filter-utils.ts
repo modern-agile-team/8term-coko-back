@@ -8,6 +8,24 @@ import { UserInfo } from 'src/users/users.entity';
  * @returns
  */
 export function createFilterType(sort: string, user: UserInfo): object {
+  if (sort === 'level') {
+    return {
+      OR: [
+        { level: { gt: user.level } },
+        {
+          AND: [{ level: user.level }, { experience: { gt: user.experience } }],
+        },
+        {
+          AND: [
+            { level: user.level },
+            { experience: user.experience },
+            { totalCorrectAnswer: { gt: user.totalCorrectAnswer } },
+          ],
+        },
+      ],
+    };
+  }
+
   if (sort === 'point') {
     return {
       OR: [
@@ -21,17 +39,6 @@ export function createFilterType(sort: string, user: UserInfo): object {
             { level: user.level },
             { experience: { gt: user.experience } },
           ],
-        },
-      ],
-    };
-  }
-
-  if (sort === 'level') {
-    return {
-      OR: [
-        { level: { gt: user.level } },
-        {
-          AND: [{ level: user.level }, { experience: { gt: user.experience } }],
         },
       ],
     };
