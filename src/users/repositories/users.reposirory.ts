@@ -29,20 +29,24 @@ export class UsersRepository {
    * @param userId
    * @param txOrPrisma
    */
-  async increaseUserTotalAttendance(
+  async increaseUserTotalAttendanceAndPoint(
     userId: number,
+    attendanceRewardPoint: number,
     txOrPrisma: PrismaClientOrTransaction = this.prisma,
   ) {
     await txOrPrisma.user.update({
       where: { id: userId },
-      data: { totalAttendance: { increment: ATTENDANCE_INCREASE_VALUE } },
+      data: {
+        point: { increment: attendanceRewardPoint },
+        totalAttendance: { increment: ATTENDANCE_INCREASE_VALUE },
+      },
     });
   }
 
   /**
    * 유저의 총 정답수 업데이트
    * @param userId
-   * @param totalCorrectAnswer
+   * @param totalCorrectAnswern
    * @param txOrPrisma
    */
   async updateUserTotalCorrectAnswer(
