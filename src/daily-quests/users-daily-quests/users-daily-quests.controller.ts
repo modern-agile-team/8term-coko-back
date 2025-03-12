@@ -5,7 +5,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { PositiveIntPipe } from 'src/common/pipes/positive-int/positive-int.pipe';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/common/decorators/get-user.decorator';
-import { UserInfo } from 'src/users/entities/user.entity';
+import { UserInfo } from 'src/users/users.entity';
 import { ResUserDailyQuestDto } from './dto/res-user-daily-quest.dto';
 import { ApiUserDailyQuest } from './users-daily-quest.swagger';
 

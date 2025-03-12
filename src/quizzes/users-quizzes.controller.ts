@@ -6,7 +6,7 @@ import { ApiQuizzes } from './quizzes.swagger';
 import { ResQuizDto } from './dto/res-quiz.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/common/decorators/get-user.decorator';
-import { UserInfo } from 'src/users/entities/user.entity';
+import { UserInfo } from 'src/users/users.entity';
 
 @ApiTags('quizzes')
 @Controller('users/me/quizzes')

@@ -1,4 +1,4 @@
-import { UserItem } from 'src/users/entities/user-item.entity';
+import { UserItem } from 'src/users/user-items/user-item.entity';
 
 export class Item {
   id: number;

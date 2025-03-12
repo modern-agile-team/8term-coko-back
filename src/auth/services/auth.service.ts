@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { TokenService } from './token.service';
-import { UsersService } from 'src/users/services/users.service';
+import { UsersService } from 'src/users/users.service';
 import { RedisService } from '../redis/redis.service';
 import { PrismaClientOrTransaction } from 'src/prisma/prisma.type';
 import { Response } from 'express';

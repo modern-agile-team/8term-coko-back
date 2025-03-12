@@ -16,11 +16,11 @@ import { TokenService } from './services/token.service';
 import { RedisService } from './redis/redis.service';
 import { ConfigService } from '@nestjs/config';
 import { SocialUserInfoDto } from './dtos/social-user-info.dto';
-import { UserInfo } from 'src/users/entities/user.entity';
+import { UserInfo } from 'src/users/users.entity';
 import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { ApiAuth } from './auth-swagger';
 import { ResponseUserDto } from 'src/users/dtos/response-user.dto';
-import { UsersService } from 'src/users/services/users.service';
+import { UsersService } from 'src/users/users.service';
 
 @ApiTags('auth')
 @Controller('auth')

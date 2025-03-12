@@ -8,7 +8,7 @@ import { UpdateChallengesDto } from './dto/update-challenges.dto';
 import { ChallengesRepository } from './challenges.repository';
 import { QueryChallengesDto } from './dto/query-challenges.dto';
 import { Challenge, PaginationChallenges } from './challenges.interface';
-import { UsersRepository } from 'src/users/repositories/users.reposirory';
+import { UsersRepository } from 'src/users/users.reposirory';
 import { ChallengeType } from './user-challenges/user-challenges.interface';
 
 @Injectable()
