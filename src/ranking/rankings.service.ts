@@ -59,8 +59,8 @@ export class RankingsService {
       orderBy,
     );
 
-    // limit만큼 반복
-    for (let i = 0; i < limit; i++) {
+    // contents.length 만큼 반복 = 해당 페이지에 보여줄 사용자 만큼
+    for (let i = 0; i < contents.length; i++) {
       equippedItems.push(
         await this.userItemsRepository.findEquippedUserItems({
           userId: contents[i].id,
