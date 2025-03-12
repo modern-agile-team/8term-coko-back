@@ -60,7 +60,7 @@ export class RankingsService {
     );
 
     // limit만큼 반복
-    for (let i = 0; i < limit; i++) {
+    for (let i = 0; i < contents.length; i++) {
       equippedItems.push(
         await this.userItemsRepository.findEquippedUserItems({
           userId: contents[i].id,
