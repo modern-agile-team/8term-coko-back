@@ -5,7 +5,7 @@ import { MessageEvent } from '@nestjs/common';
 import { SseService } from './sse.service';
 import { Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
-import { UserInfo } from 'src/users/entities/user.entity';
+import { UserInfo } from 'src/users/users.entity';
 import { User } from 'src/common/decorators/get-user.decorator';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
 

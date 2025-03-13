@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { RankingsRepository } from './rankings.repository';
 import { RankingPaginationResponseDto } from './dtos/ranking-pagination-res.dto';
 import { ResMyRankingDto } from './dtos/res-my-ranking.dto';
-import { UserInfo } from 'src/users/entities/user.entity';
+import { UserInfo } from 'src/users/users.entity';
 import { createFilterType } from 'src/ranking/utils/filter-utils';
 import { createOrderBy } from 'src/ranking/utils/sort-utils';
 import { Sort } from './entities/ranking.entity';
 import { Subscription, timer } from 'rxjs';
-import { UsersRepository } from 'src/users/repositories/users.reposirory';
+import { UsersRepository } from 'src/users/users.repository';
 import { ProgressRepository } from 'src/progress/progress.repository';
 import { Cron } from '@nestjs/schedule';
 import {
@@ -20,7 +20,7 @@ import utc from 'dayjs/plugin/utc';
 import { TopRankerPaginaion } from 'src/common/constants/rankings-constants';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { EVENT } from 'src/common/constants/event-constants';
-import { UserItemsRepository } from 'src/users/repositories/user-items.repository';
+import { UserItemsRepository } from 'src/users/user-items/user-items.repository';
 
 @Injectable()
 export class RankingsService {

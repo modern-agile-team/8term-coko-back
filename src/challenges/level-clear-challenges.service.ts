@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserChallengesRepository } from './user-challenges/user-challenges.repository';
 import { ChallengeTypeValues } from './const/challenges.constant';
-import { UserInfo } from 'src/users/entities/user.entity';
+import { UserInfo } from 'src/users/users.entity';
 import { UserChallengesAndInfo } from './user-challenges/user-challenges.interface';
 
 @Injectable()

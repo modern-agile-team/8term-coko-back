@@ -4,7 +4,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { SseService } from 'src/sse/sse.service';
 import { FirstItemBuyChallengesService } from '../first-item-buy.challenges.service';
 import { LevelClearChallengesService } from '../level-clear-challenges.service';
-import { UserInfo } from 'src/users/entities/user.entity';
+import { UserInfo } from 'src/users/users.entity';
 import { AttendanceStreakChallengesService } from '../attendance-streak-challenges.service';
 import { RankingChallengesService } from '../ranking-challenges.service';
 import { FirstWrongAnswerChallengesService } from '../first-wrong-answer.challenges.service';

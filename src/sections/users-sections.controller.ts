@@ -6,7 +6,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/common/decorators/get-user.decorator';
 import { QuerySectionDto } from './dto/query-section.dto';
 import { ResPaginationOfSectionPartsDto } from './dto/res-pagination-of-section-parts.dto';
-import { UserInfo } from 'src/users/entities/user.entity';
+import { UserInfo } from 'src/users/users.entity';
 
 @ApiTags('sections')
 @Controller('users/me/sections')

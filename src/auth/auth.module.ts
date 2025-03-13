@@ -14,7 +14,7 @@ import {
   AdminAccessTokenStrategy,
   RefreshTokenStrategy,
 } from './jwt/jwt.strategy';
-import { UsersCoreModule } from 'src/users/modules/users-core.module';
+import { UsersCoreModule } from 'src/users/users-core.module';
 import { HttpModule } from '@nestjs/axios';
 
 @Module({
