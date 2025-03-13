@@ -13,6 +13,6 @@ import { UserExperienceModule } from './user-experience/user-experience.module';
     UsersModule,
     UserItemsModule,
   ],
-  exports: [UserHpModule, UsersModule],
+  exports: [UserHpModule, UsersModule, UserPointModule],
 })
 export class UsersCoreModule {}
