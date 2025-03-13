@@ -2,7 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { AttendanceRepository } from './attendance.repository';
 import { ResMyMonthlyAttendanceDto } from './dtos/res-monthly-attendance.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UsersRepository } from 'src/users/users.reposirory';
+import { UsersRepository } from 'src/users/users.repository';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { EVENT } from 'src/common/constants/event-constants';
 import { ATTENDANCE_REWARD_POINT } from './attendance.constants';

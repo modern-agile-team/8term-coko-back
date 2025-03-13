@@ -9,7 +9,7 @@ import {
 } from 'src/part-progress/entities/part-progress.entity';
 import { Part } from 'src/parts/entities/part.entity';
 import { PrismaClientOrTransaction } from 'src/prisma/prisma.type';
-import { UsersRepository } from './users.reposirory';
+import { UsersRepository } from './users.repository';
 import { Challenge } from 'src/challenges/challenges.interface';
 
 @Injectable()

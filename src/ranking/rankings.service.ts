@@ -7,7 +7,7 @@ import { createFilterType } from 'src/ranking/utils/filter-utils';
 import { createOrderBy } from 'src/ranking/utils/sort-utils';
 import { Sort } from './entities/ranking.entity';
 import { Subscription, timer } from 'rxjs';
-import { UsersRepository } from 'src/users/users.reposirory';
+import { UsersRepository } from 'src/users/users.repository';
 import { ProgressRepository } from 'src/progress/progress.repository';
 import { Cron } from '@nestjs/schedule';
 import {
