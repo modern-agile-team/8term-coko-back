@@ -3,7 +3,7 @@ import { ChallengesService } from './challenges.service';
 import { ChallengesController } from './challenges.controller';
 import { ChallengesRepository } from './challenges.repository';
 import { UserChallengesModule } from './user-challenges/user-challenges.module';
-import { UsersCoreModule } from 'src/users/modules/users-core.module';
+import { UsersCoreModule } from 'src/users/users-core.module';
 import { SectionsChallengesService } from './section-clear-challenges.service';
 import { ChallengesEventsListener } from './events/challenges.event';
 import { SectionsModule } from 'src/sections/sections.module';

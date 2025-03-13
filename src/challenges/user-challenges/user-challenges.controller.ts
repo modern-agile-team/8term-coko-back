@@ -3,7 +3,7 @@ import { UserChallengesService } from './user-challenges.service';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/common/decorators/get-user.decorator';
-import { UserInfo } from 'src/users/entities/user.entity';
+import { UserInfo } from 'src/users/users.entity';
 import { ResUserChallengesPaginationDto } from './dto/res-user-challenges-pagination.dto';
 import { ApiChallenges } from '../challenges.swagger';
 import { QueryUserChallengesDto } from './dto/query-user-challenges.dto';

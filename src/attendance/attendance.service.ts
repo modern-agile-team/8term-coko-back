@@ -2,9 +2,10 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { AttendanceRepository } from './attendance.repository';
 import { ResMyMonthlyAttendanceDto } from './dtos/res-monthly-attendance.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UsersRepository } from 'src/users/repositories/users.reposirory';
+import { UsersRepository } from 'src/users/users.repository';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { EVENT } from 'src/common/constants/event-constants';
+import { ATTENDANCE_REWARD_POINT } from './attendance.constants';
 
 @Injectable()
 export class AttendanceService {
@@ -45,14 +46,18 @@ export class AttendanceService {
     }
 
     /**
-     * attendance row가 추가되면서 + user의 total_attendance가 증가 해야함
+     * attendance row가 추가되면서 + user의 total_attendance가 증가 해야함 + 해당 사용자에게 1000 point 지급
      */
     await this.prisma.$transaction(async (tx) => {
       // attendance row 추가
       await this.attendanceRepository.saveAttendance(userId, today, tx);
 
       // user의 total_attendance가 증가
-      await this.usersRepository.increaseUserTotalAttendance(userId, tx);
+      await this.usersRepository.increaseUserTotalAttendanceAndPoint(
+        userId,
+        ATTENDANCE_REWARD_POINT,
+        tx,
+      );
 
       // 연속 출석 도전과제 검사 이벤트 발행
       this.eventEmitter.emit(EVENT.ATTENDANCE.STREAK, {

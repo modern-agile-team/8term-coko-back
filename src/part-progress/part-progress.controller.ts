@@ -13,7 +13,7 @@ import { ResPartProgressDto } from './dto/res-part-progress.dto';
 import { ApiPartProgress } from './part-progress.swagger';
 import { ApiTags } from '@nestjs/swagger';
 import { User } from 'src/common/decorators/get-user.decorator';
-import { UserInfo } from 'src/users/entities/user.entity';
+import { UserInfo } from 'src/users/users.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { CreatePartProgressDto } from './dto/create-part-progress.dto';
 

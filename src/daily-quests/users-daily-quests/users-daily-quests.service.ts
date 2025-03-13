@@ -9,7 +9,7 @@ import {
 } from './users-daily-quests.interface';
 import { DAILY_RESET } from './const/users-daily-quests.const';
 import { ProgressRepository } from 'src/progress/progress.repository';
-import { UserPointService } from 'src/users/services/user-point.service';
+import { UserPointService } from 'src/users/user-point/user-point.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()

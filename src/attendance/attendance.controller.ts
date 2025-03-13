@@ -11,7 +11,7 @@ import { AttendanceService } from './attendance.service';
 import { ApiAttendance } from './attendance.swagger';
 import { AttendanceDateDto } from './dtos/attendance-date-query.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { UserInfo } from 'src/users/entities/user.entity';
+import { UserInfo } from 'src/users/users.entity';
 import { User } from 'src/common/decorators/get-user.decorator';
 import { ResMyMonthlyAttendanceDto } from './dtos/res-monthly-attendance.dto';
 

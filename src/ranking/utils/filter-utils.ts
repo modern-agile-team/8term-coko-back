@@ -1,4 +1,4 @@
-import { UserInfo } from 'src/users/entities/user.entity';
+import { UserInfo } from 'src/users/users.entity';
 
 /**
  * 나의 랭킹 조회시 사용하는 함수,

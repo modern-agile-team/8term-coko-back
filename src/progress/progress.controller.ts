@@ -17,7 +17,7 @@ import { ApiProgress } from './progress.swagger';
 import { ResProgressDto } from './dto/res-progress.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/common/decorators/get-user.decorator';
-import { UserInfo } from 'src/users/entities/user.entity';
+import { UserInfo } from 'src/users/users.entity';
 
 @ApiTags('progress')
 @Controller('users/me/progress')
