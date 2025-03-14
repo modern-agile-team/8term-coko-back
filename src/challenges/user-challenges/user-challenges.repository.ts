@@ -165,12 +165,23 @@ export class UserChallengesRepository {
     return await this.prisma.userChallenge.findFirst({
       where: {
         userId,
-        completed: false,
         challenge: {
           challengeType,
           condition: exactCondition,
         },
       },
+      include: { challenge: true },
+    });
+  }
+
+  //Event 핸들러에서 호출할 서비스 메서드에서 사용 (랭킹 도전과제에서만 사용됨)
+  async updateRankingChallengeById(
+    id: number,
+    data: UpdateUserChallengesDto,
+  ): Promise<UserChallengesAndInfo> {
+    return await this.prisma.userChallenge.update({
+      where: { id },
+      data,
       include: { challenge: true },
     });
   }
