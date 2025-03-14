@@ -28,7 +28,6 @@ import { LoggerModule } from './logger/logger.module';
     ItemsModule,
     SectionsModule,
     PrismaModule,
-    PrismaModule,
     RankingsModule,
     UsersCoreModule,
     SectionsModule,
