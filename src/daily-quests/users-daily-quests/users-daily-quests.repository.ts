@@ -5,6 +5,7 @@ import {
   UserDailyQuest,
   UserDailyQuestWiteQuestInfo,
 } from './users-daily-quests.interface';
+import { PrismaClientOrTransaction } from 'src/prisma/prisma.type';
 
 @Injectable()
 export class UsersDailyQuestsRepository {
@@ -38,8 +39,9 @@ export class UsersDailyQuestsRepository {
   async updateById(
     id: number,
     body: UpdateUsersDailyQuestDto,
+    txOrPrisma: PrismaClientOrTransaction = this.prisma,
   ): Promise<UserDailyQuestWiteQuestInfo> {
-    return this.prisma.userDailyQuest.update({
+    return txOrPrisma.userDailyQuest.update({
       where: { id },
       data: { ...body },
       include: { dailyQuest: true },
