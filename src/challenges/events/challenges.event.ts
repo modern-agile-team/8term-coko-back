@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, LoggerService } from '@nestjs/common';
 import { SectionsChallengesService } from '../section-clear-challenges.service';
 import { OnEvent } from '@nestjs/event-emitter';
 import { SseService } from 'src/sse/sse.service';
@@ -11,6 +11,7 @@ import { FirstWrongAnswerChallengesService } from '../first-wrong-answer.challen
 import { RankingPaginationResponseDto } from 'src/ranking/dtos/ranking-pagination-res.dto';
 import { nowKST } from 'src/common/function/time.helper';
 import { EVENT } from 'src/common/constants/event-constants';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 @Injectable()
 export class ChallengesEventsListener {
@@ -22,6 +23,8 @@ export class ChallengesEventsListener {
     private readonly rankingChallengesService: RankingChallengesService,
     private readonly firstItemBuyChallengesService: FirstItemBuyChallengesService,
     private readonly firstWrongAnswerChallengesService: FirstWrongAnswerChallengesService,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER)
+    private readonly logger: LoggerService,
   ) {}
 
   /**
@@ -49,7 +52,7 @@ export class ChallengesEventsListener {
         });
       }
     } catch (error) {
-      console.error(
+      this.logger.error(
         `handleSectionsChallenge 에러 발생 (userId: ${userId}, sectionId: ${sectionId}):`,
         error,
       );
@@ -75,7 +78,7 @@ export class ChallengesEventsListener {
         });
       }
     } catch (error) {
-      console.error(
+      this.logger.error(
         `handleLevelChallenge 에러 발생 (userId: ${user.id}):`,
         error,
       );
@@ -101,7 +104,7 @@ export class ChallengesEventsListener {
         });
       }
     } catch (error) {
-      console.error(
+      this.logger.error(
         `handleAttendanceStreakChallenge 에러 발생 (userId: ${userId}):`,
         error,
       );
@@ -134,7 +137,7 @@ export class ChallengesEventsListener {
         });
       }
     } catch (error) {
-      console.error(`handleLevelRankingChallenge 에러 발생`, error);
+      this.logger.error(`handleLevelRankingChallenge 에러 발생`, error);
     }
   }
 
@@ -164,7 +167,7 @@ export class ChallengesEventsListener {
         });
       }
     } catch (error) {
-      console.error(`handlePointRankingChallenge 에러 발생`, error);
+      this.logger.error(`handlePointRankingChallenge 에러 발생`, error);
     }
   }
 
@@ -194,7 +197,7 @@ export class ChallengesEventsListener {
         });
       }
     } catch (error) {
-      console.error(`handleAttendanceRankingChallenge 에러 발생`, error);
+      this.logger.error(`handleAttendanceRankingChallenge 에러 발생`, error);
     }
   }
 
@@ -224,7 +227,7 @@ export class ChallengesEventsListener {
         });
       }
     } catch (error) {
-      console.error(`handleCorrectAnswerRankingChallenge 에러 발생`, error);
+      this.logger.error(`handleCorrectAnswerRankingChallenge 에러 발생`, error);
     }
   }
 
@@ -248,7 +251,7 @@ export class ChallengesEventsListener {
         });
       }
     } catch (error) {
-      console.error(`handleCorrectAnswerRankingChallenge 에러 발생`, error);
+      this.logger.error(`handleCorrectAnswerRankingChallenge 에러 발생`, error);
     }
   }
 
@@ -272,7 +275,7 @@ export class ChallengesEventsListener {
         });
       }
     } catch (error) {
-      console.error(`handleCorrectAnswerRankingChallenge 에러 발생`, error);
+      this.logger.error(`handleCorrectAnswerRankingChallenge 에러 발생`, error);
     }
   }
 }
