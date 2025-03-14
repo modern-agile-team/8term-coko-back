@@ -3,9 +3,19 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { LoggerConfigService } from './logger/logger.config';
+import { WinstonModule } from 'nest-winston';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {});
+  // Nest 로거 대신 Winston 로거를 사용하겠다는 설정
+  const loggerConfigService = new LoggerConfigService();
+  const winstonLogger = WinstonModule.createLogger(
+    loggerConfigService.createWinstonModuleOptions(),
+  );
+
+  const app = await NestFactory.create(AppModule, {
+    logger: winstonLogger,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Coko API')

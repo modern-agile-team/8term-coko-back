@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, LoggerService } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { TokenService } from './token.service';
@@ -9,6 +9,7 @@ import { Response } from 'express';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +20,8 @@ export class AuthService {
     private readonly redisService: RedisService,
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER)
+    private readonly logger: LoggerService,
   ) {}
 
   /**
@@ -97,7 +100,7 @@ export class AuthService {
           ),
         );
       } catch (revokeError) {
-        console.error(revokeError);
+        this.logger.error(revokeError);
       }
     }
     if (providerInfo === 'kakao') {
@@ -117,7 +120,7 @@ export class AuthService {
           ),
         );
       } catch (revokeError) {
-        console.error(revokeError);
+        this.logger.error(revokeError);
       }
     }
     if (providerInfo === 'github') {
@@ -141,7 +144,7 @@ export class AuthService {
           }),
         );
       } catch (revokeError) {
-        console.error(revokeError);
+        this.logger.error(revokeError);
       }
     }
     await this.usersService.deleteUser(userId, res);

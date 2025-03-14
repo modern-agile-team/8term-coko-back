@@ -1,4 +1,5 @@
 export const EVENT = {
+  // 도전과제에서 사용
   PART_STATUS: {
     COMPLETED: 'partStatus.completed',
   },
@@ -23,12 +24,17 @@ export const EVENT = {
   ITEM: {
     BUY: 'item.buy',
   },
-  PROGRESS: {
-    UPDATED: 'progress.updated',
-  },
+  QUIZ_INCORRECT: 'quiz.incorrect',
+  //////////////////////////////////////////
+
+  // hp 깎일때
   HP: {
     DECREASED: 'hp.decreased',
   },
+  // 퀴즈 맞혔을때
   QUIZ_CORRECT: 'quiz.correct',
-  QUIZ_INCORRECT: 'quiz.incorrect',
+  // 일일퀘스트가 완료됐을 때
+  PROGRESS: {
+    UPDATED: 'progress.updated',
+  },
 } as const;
