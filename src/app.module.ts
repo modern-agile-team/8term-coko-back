@@ -16,14 +16,18 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ChallengesModule } from './challenges/challenges.module';
 import { SseModule } from './sse/sse.module';
 import { OpinionsModule } from './opinions/opinions.module';
+import { LoggerModule } from './logger/logger.module';
+
 @Module({
   imports: [
-    ItemsModule,
-    SectionsModule,
-    PrismaModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    EventEmitterModule.forRoot(),
+    LoggerModule,
+    ItemsModule,
+    SectionsModule,
+    PrismaModule,
     PrismaModule,
     RankingsModule,
     UsersCoreModule,
@@ -33,7 +37,6 @@ import { OpinionsModule } from './opinions/opinions.module';
     PaginationModule,
     DailyQuestsModule,
     AttendanceModule,
-    EventEmitterModule.forRoot(),
     ChallengesModule,
     SseModule,
     OpinionsModule,
