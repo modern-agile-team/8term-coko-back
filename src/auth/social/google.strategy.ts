@@ -25,7 +25,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   ): Promise<void> {
     const { displayName, provider, id } = profile;
     const email = profile.emails[0]?.value;
-    console.log(profile);
 
     const user: SocialUserInfoDto = {
       name: displayName,
