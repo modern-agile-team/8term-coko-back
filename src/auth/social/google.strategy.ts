@@ -24,6 +24,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     done: VerifyCallback,
   ): Promise<void> {
     const { displayName, provider, id } = profile;
+    const email = profile.emails[0]?.value;
+    console.log(profile);
 
     const user: SocialUserInfoDto = {
       name: displayName,
@@ -31,6 +33,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       socialRefreshToken: refreshToken || null,
       provider,
       providerId: id,
+      email,
     };
 
     // user로 들어간 데이터를 dto 객체에 맞게 변경시켜줌

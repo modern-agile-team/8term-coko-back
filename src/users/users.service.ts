@@ -87,6 +87,7 @@ export class UsersService {
     provider: string,
     providerId: string,
     name: string,
+    email: string,
     txOrPrisma: PrismaClientOrTransaction = this.prisma,
   ): Promise<ResponseUserDto> {
     // 유저 생성시 디폴트 파트 진행도를 생성
@@ -106,6 +107,7 @@ export class UsersService {
         provider,
         providerId,
         name,
+        email,
         partProgress: { create: defaultPartProgress },
         userHp: { create: {} },
         userChallenge: { create: defaultUserChallenges },

@@ -13,7 +13,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
       clientID: configService.get<string>('GITHUB_CLIENT_ID'),
       clientSecret: configService.get<string>('GITHUB_CLIENT_SECRET'),
       callbackURL: configService.get<string>('GITHUB_CALLBACK_URL'),
-      scope: ['read:user'],
+      scope: ['read:user', 'user:email'],
     });
   }
 
@@ -27,13 +27,15 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
 
     // profile내 profile내 displayName 값이 존재하면 우선 사용, 없으면 username 사용
     const nickname = profile.displayName || username;
+    const email = profile.emails?.[0]?.value;
 
-    const user: any = {
+    const user: SocialUserInfoDto = {
       name: nickname,
       socialAccessToken: accessToken,
       socialRefreshToken: refreshToken || null,
       provider,
       providerId: id,
+      email,
     };
 
     // user로 들어간 데이터를 dto 객체에 맞게 변경시켜줌

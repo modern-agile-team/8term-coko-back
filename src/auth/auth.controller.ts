@@ -20,7 +20,6 @@ import { UserInfo } from 'src/users/users.entity';
 import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { ApiAuth } from './auth-swagger';
 import { ResponseUserDto } from 'src/users/dtos/response-user.dto';
-import { UsersService } from 'src/users/users.service';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -31,7 +30,6 @@ export class AuthController {
     private readonly cookieService: CookieService,
     private readonly tokenService: TokenService,
     private readonly redisService: RedisService,
-    private readonly usersService: UsersService,
   ) {}
 
   /**
@@ -51,6 +49,7 @@ export class AuthController {
     @User() user: SocialUserInfoDto,
     @Res({ passthrough: true }) res: Response,
   ) {
+    console.log(user);
     const { accessToken, refreshToken } =
       await this.authService.socialLogin(user);
 

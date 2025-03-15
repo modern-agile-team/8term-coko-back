@@ -74,10 +74,11 @@ model User {
   provider               String           @db.VarChar(20)
   providerId             String           @unique @map("provider_id")
   name                   String           @db.VarChar(30)
+  email                  String           @unique
   level                  Int              @default(1)
   experience             Int              @default(0)
   experienceForNextLevel Int              @default(50) @map("experience_for_next_level")
-  point                  Int              @default(0)
+  point                  Int              @default(3000)
   totalAttendance        Int              @default(0) @map("total_attendance")
   totalCorrectAnswer     Int              @default(0) @map("total_correct_answer")
   createdAt              DateTime         @default(now()) @map("created_at")
