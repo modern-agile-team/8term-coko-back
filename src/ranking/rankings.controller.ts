@@ -34,7 +34,6 @@ export class RankingsController {
    */
   @ApiRankings.getNextSeasonEndTime()
   @Get('season')
-  @UseGuards(AuthGuard('accessToken'))
   getNextSeasonEndTime(): ResSeasonEndTimeDto {
     return {
       seasonEndTime: this.rankingsService.getNextSeasonEndTime(),

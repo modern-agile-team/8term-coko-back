@@ -47,13 +47,14 @@ export class RankingChallengesService {
 
       // (2) 도전과제가 존재한다면 completed 처리
       if (userLevelChallenge) {
-        const updatedChallenge = await this.userChallengesRepository.updateById(
-          userLevelChallenge.id,
-          {
-            completed: true,
-            completedDate: nowKST(),
-          },
-        );
+        const updatedChallenge =
+          await this.userChallengesRepository.updateRankingChallengeById(
+            userLevelChallenge.id,
+            {
+              completed: true,
+              completedDate: nowKST(),
+            },
+          );
 
         completedChallenges.push(updatedChallenge);
       }
@@ -89,13 +90,14 @@ export class RankingChallengesService {
 
       // (2) 도전과제가 존재한다면 completed 처리
       if (userPointChallenge) {
-        const updatedChallenge = await this.userChallengesRepository.updateById(
-          userPointChallenge.id,
-          {
-            completed: true,
-            completedDate: nowKST(),
-          },
-        );
+        const updatedChallenge =
+          await this.userChallengesRepository.updateRankingChallengeById(
+            userPointChallenge.id,
+            {
+              completed: true,
+              completedDate: nowKST(),
+            },
+          );
 
         completedChallenges.push(updatedChallenge);
       }
@@ -131,13 +133,14 @@ export class RankingChallengesService {
 
       // (2) 도전과제가 존재한다면 completed 처리
       if (userAttendanceChallenge) {
-        const updatedChallenge = await this.userChallengesRepository.updateById(
-          userAttendanceChallenge.id,
-          {
-            completed: true,
-            completedDate: nowKST(),
-          },
-        );
+        const updatedChallenge =
+          await this.userChallengesRepository.updateRankingChallengeById(
+            userAttendanceChallenge.id,
+            {
+              completed: true,
+              completedDate: nowKST(),
+            },
+          );
 
         completedChallenges.push(updatedChallenge);
       }
@@ -173,13 +176,14 @@ export class RankingChallengesService {
 
       // (2) 도전과제가 존재한다면 completed 처리
       if (userCorrectAnswerChallenge) {
-        const updatedChallenge = await this.userChallengesRepository.updateById(
-          userCorrectAnswerChallenge.id,
-          {
-            completed: true,
-            completedDate: nowKST(),
-          },
-        );
+        const updatedChallenge =
+          await this.userChallengesRepository.updateRankingChallengeById(
+            userCorrectAnswerChallenge.id,
+            {
+              completed: true,
+              completedDate: nowKST(),
+            },
+          );
 
         completedChallenges.push(updatedChallenge);
       }
