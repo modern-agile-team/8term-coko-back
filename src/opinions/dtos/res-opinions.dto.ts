@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ResMyOpinionsDto } from './res-my-opinions.dto';
+import { ResOpinionsWithEmailDto } from './res-opinions-with-email.dto';
 
 export class ResOpinionsDto {
   @ApiProperty({
@@ -10,18 +10,18 @@ export class ResOpinionsDto {
 
   @ApiProperty({
     description: '조회된 문의 목록',
-    type: [ResMyOpinionsDto],
+    type: [ResOpinionsWithEmailDto],
   })
-  readonly opinions: ResMyOpinionsDto[];
+  readonly opinions: ResOpinionsWithEmailDto[];
 
-  constructor(totalCount: number, opinions: ResMyOpinionsDto[]) {
+  constructor(totalCount: number, opinions: ResOpinionsWithEmailDto[]) {
     this.totalCount = totalCount;
     this.opinions = opinions;
   }
 
   static fromArray(
     totalCount: number,
-    opinions: ResMyOpinionsDto[],
+    opinions: ResOpinionsWithEmailDto[],
   ): ResOpinionsDto {
     return new ResOpinionsDto(totalCount, opinions);
   }
