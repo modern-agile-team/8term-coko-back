@@ -1,0 +1,65 @@
+#   postgres:
+#     image: postgres:15
+#     restart: always
+#     volumes:
+#       - ./postgres-data:/var/lib/postgresql/data
+#     ports:
+#       - '5432:5432'
+#     environment:
+#       POSTGRES_USER: postgres
+#       POSTGRES_PASSWORD: postgres
+#       POSTGRES_DB: postgres
+services:
+  back:
+    image: ${IMAGE_NAME}
+    expose:
+      - '3000'
+    env_file: .env
+    volumes:
+      - /home/ubuntu/logs:/app/logs
+    networks:
+      - backend
+
+  redis:
+    image: redis:7.2.6
+    command: redis-server /usr/local/etc/redis/redis.conf --requirepass $REDIS_>
+    volumes:
+      - ./conf/redis.conf:/usr/local/etc/redis/redis.conf
+      - redis_data:/data
+    ports:
+      - '6379:6379'
+    env_file:
+      - .env
+    networks:
+      - backend
+
+  nginx:
+    image: nginx:1.15-alpine
+    restart: unless-stopped
+    volumes:
+      - ./conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    ports:
+      - '80:80'
+      - '443:443'
+    command: '/bin/sh -c ''while :; do sleep 12h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+    networks:
+      - backend
+
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  redis_data:

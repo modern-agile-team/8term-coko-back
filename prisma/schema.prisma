@@ -1,0 +1,307 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Category {
+  COMBINATION
+  MULTIPLE_CHOICE
+  OX_SELECTOR
+  SHORT_ANSWER
+}
+
+enum PartStatus {
+  LOCKED
+  STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum ChallengeType {
+  SECTION_CLEAR
+  LEVEL_CLEAR
+  ALL_SECTIONS_CLEAR
+  ATTENDANCE_STREAK
+  LEVEL_RANKING_ATTAIN
+  POINT_RANKING_ATTAIN
+  ATTENDANCE_RANKING_ATTAIN
+  CORRECT_ANSWER_RANKING_ATTAIN
+  FIRST_ITEM_PURCHASE
+  FIRST_WRONG_ANSWER
+  FIRST_404_VISIT
+}
+
+model Quiz {
+  id           Int        @id @default(autoincrement())
+  partId       Int        @map("part_id")
+  title        String     @db.VarChar(255)
+  question     String     @db.VarChar(1000)
+  answer       String[]
+  answerChoice String[]   @map("answer_choice")
+  category     Category
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  part         Part       @relation(fields: [partId], references: [id], onDelete: Restrict)
+  progress     Progress[]
+
+  @@map("quizzes")
+}
+
+model Section {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(255)
+  order     Int
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  part      Part[]
+
+  @@map("sections")
+}
+
+model User {
+  id                     Int              @id @default(autoincrement())
+  provider               String           @db.VarChar(20)
+  providerId             String           @unique @map("provider_id")
+  name                   String           @db.VarChar(30)
+  email                  String           @unique
+  level                  Int              @default(1)
+  experience             Int              @default(0)
+  experienceForNextLevel Int              @default(50) @map("experience_for_next_level")
+  point                  Int              @default(3000)
+  totalAttendance        Int              @default(0) @map("total_attendance")
+  totalCorrectAnswer     Int              @default(0) @map("total_correct_answer")
+  createdAt              DateTime         @default(now()) @map("created_at")
+  updatedAt              DateTime         @updatedAt @map("updated_at")
+  Progress               Progress[]
+  userItems              UserItem[]
+  token                  Token[]
+  partProgress           PartProgress[]
+  userHp                 UserHp?
+  attendance             Attendance[]
+  userDailyQuest         UserDailyQuest[]
+  userChallenge          UserChallenge[]
+  opinions               Opinion[]
+
+  @@map("users")
+}
+
+model Progress {
+  userId    Int      @map("user_id")
+  quizId    Int      @map("quiz_id")
+  isCorrect Boolean  @map("is_correct")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@id([userId, quizId])
+  @@map("progress")
+}
+
+model Part {
+  id           Int            @id @default(autoincrement())
+  sectionId    Int            @map("section_id")
+  name         String         @unique @db.VarChar(255)
+  order        Int
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+  section      Section        @relation(fields: [sectionId], references: [id], onDelete: Restrict)
+  quiz         Quiz[]
+  PartProgress PartProgress[]
+
+  @@map("parts")
+}
+
+model ItemMainCategory {
+  id              Int               @id @default(autoincrement())
+  name            String            @unique @db.VarChar(255)
+  ItemSubCategory ItemSubCategory[]
+  items           Item[]
+
+  @@map("item_main_categories")
+}
+
+model ItemSubCategory {
+  id             Int              @id @default(autoincrement())
+  name           String           @unique @db.VarChar(255)
+  mainCategoryId Int              @map("main_category_id")
+  mainCategory   ItemMainCategory @relation(fields: [mainCategoryId], references: [id])
+  items          Item[]
+
+  @@map("item_sub_categories")
+}
+
+model Item {
+  id             Int              @id @default(autoincrement())
+  name           String           @unique @db.VarChar(255)
+  price          Int
+  image          String
+  mainCategoryId Int              @map("main_category_id")
+  subCategoryId  Int?             @map("sub_category_id")
+  mainCategory   ItemMainCategory @relation(fields: [mainCategoryId], references: [id])
+  subCategory    ItemSubCategory? @relation(fields: [subCategoryId], references: [id])
+  userItems      UserItem[]
+
+  @@map("items")
+}
+
+model UserItem {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @map("user_id")
+  itemId      Int      @map("item_id")
+  purchasedAt DateTime @default(now()) @map("purchased_at")
+  isEquipped  Boolean  @default(false) @map("is_equipped")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, itemId])
+  @@index([userId])
+  @@index([itemId])
+  @@map("user_items")
+}
+
+model Token {
+  id                 Int     @id @default(autoincrement())
+  userId             Int     @unique @map("user_id")
+  socialAccessToken  String  @map("social_access_token")
+  socialRefreshToken String? @map("social_refresh_token")
+  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("token")
+}
+
+model PartProgress {
+  userId    Int        @map("user_id")
+  partId    Int        @map("part_id")
+  status    PartStatus
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  part      Part       @relation(fields: [partId], references: [id], onDelete: Cascade)
+
+  @@id([userId, partId])
+  @@map("part_progress")
+}
+
+model UserHp {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique @map("user_id")
+  hp        Int      @default(10)
+  hpStorage Int      @default(10) @map("hp_storage")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_hps")
+}
+
+model AdminUser {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique @db.VarChar(50)
+  password  String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("admin_users")
+}
+
+model DailyQuest {
+  id             Int              @id @default(autoincrement())
+  content        String           @db.VarChar(255)
+  point          Int              @default(0)
+  experience     Int              @default(0)
+  condition      Int              @default(0)
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+  UserDailyQuest UserDailyQuest[]
+
+  @@map("daily_quests")
+}
+
+model Attendance {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  date      DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@map("attendances")
+}
+
+model UserDailyQuest {
+  id                Int      @id @default(autoincrement())
+  userId            Int      @map("user_id")
+  dailyQuestId      Int      @map("daily_quest_id")
+  conditionProgress Int      @default(0) @map("condition_progress")
+  completed         Boolean  @default(false)
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dailyQuest DailyQuest @relation(fields: [dailyQuestId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, dailyQuestId])
+  @@index([dailyQuestId])
+  @@map("user_daily_quests")
+}
+
+model Challenge {
+  id            Int           @id @default(autoincrement())
+  content       String        @db.VarChar(255)
+  point         Int           @default(0)
+  experience    Int           @default(0)
+  challengeType ChallengeType @map("challenge_type")
+  condition     Int           @default(0)
+  badgeName     String        @unique @map("badge_name") @db.VarChar(255)
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  UserChallenge UserChallenge[]
+
+  @@unique([challengeType, condition])
+  @@map("challenges")
+}
+
+model UserChallenge {
+  id            Int       @id @default(autoincrement())
+  userId        Int       @map("user_id")
+  challengeId   Int       @map("challenge_id")
+  completed     Boolean   @default(false)
+  completedDate DateTime? @map("completed_date")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  challenge Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, challengeId])
+  @@index([challengeId])
+  @@map("user_challenges")
+}
+
+model Opinion {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  title     String   @db.VarChar(255)
+  content   String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("opinions")
+}
