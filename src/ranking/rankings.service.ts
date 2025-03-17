@@ -174,7 +174,7 @@ export class RankingsService {
   }
 
   /**
-   * 다음 시즌 종료 시각(다음 월요일 00:00) 계산
+   * 다음 시즌 종료 시각(다음 토요일 00:00) 계산
    */
   getNextSeasonEndTime(): string {
     dayjs.extend(utc);
@@ -183,19 +183,19 @@ export class RankingsService {
     // 현재 시각
     const now = dayjs().tz('Asia/Seoul');
 
-    // 이번 주 월요일 00:00보다 이미 시간이 지났다면 다음 주 월요일 00:00
-    // dayjs().day(1) === "월요일 00시" 를 시즌 종료로 계산 (25.02.28)
-    let nextEnd = now.day(1).hour(0).minute(0).second(0).millisecond(0);
+    // 이번 주 토요일 00:00보다 이미 시간이 지났다면 다음 주 토요일 00:00
+    // dayjs().day(6) === "토요일 00시" 를 시즌 종료로 계산 (25.03.17)
+    let nextEnd = now.day(6).hour(0).minute(0).second(0).millisecond(0);
 
-    // 만약 이미 월요일 00:00을 지난 상태라면 다음 주 월요일로 세팅
+    // 만약 이미 토요일 00:00을 지난 상태라면 다음 주 토요일로 세팅
     if (now.isAfter(nextEnd)) {
-      nextEnd = nextEnd.add(1, 'week');
+      nextEnd = nextEnd.add(6, 'week');
     }
 
     return nextEnd.format();
   }
 
-  // 매주 월요일 00시 랭킹 집계
+  // 매주 토요일 00시 랭킹 집계
   @Cron(WEEKLY_SEASON_RESET_TIME, { timeZone: 'Asia/Seoul' })
   async updateWeeklySeasonResults(): Promise<void> {
     const levelTopRankers = await this.findSelectedPageRankings(
