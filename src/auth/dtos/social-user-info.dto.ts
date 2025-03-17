@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsOptional, IsString } from 'class-validator';
 
 export class SocialUserInfoDto {
   @IsString()
@@ -19,4 +19,7 @@ export class SocialUserInfoDto {
   @IsString()
   @Transform(({ value }) => String(value))
   providerId: string;
+
+  @IsEmail()
+  email: string;
 }

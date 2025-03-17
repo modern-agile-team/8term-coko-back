@@ -54,4 +54,12 @@ export class CreateUserDto {
   })
   @IsInt()
   readonly providerId: string;
+
+  @ApiProperty({
+    type: String,
+    description: '소셜 email',
+    example: 'gwgw123@gmail.com',
+  })
+  @IsInt()
+  readonly email: string;
 }

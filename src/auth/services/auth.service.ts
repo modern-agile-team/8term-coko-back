@@ -36,6 +36,7 @@ export class AuthService {
       provider,
       providerId,
       name,
+      email,
       socialAccessToken,
       socialRefreshToken,
     } = user;
@@ -47,6 +48,7 @@ export class AuthService {
         provider,
         providerId,
         name,
+        email,
         tx,
       );
 
@@ -156,6 +158,7 @@ export class AuthService {
     provider: string,
     providerId: string,
     name: string,
+    email: string,
     txOrPrisma: PrismaClientOrTransaction = this.prisma,
   ) {
     // 기존 유저 정보 조회
@@ -170,6 +173,7 @@ export class AuthService {
       provider,
       providerId,
       name,
+      email,
       txOrPrisma,
     );
   }

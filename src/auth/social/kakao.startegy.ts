@@ -13,7 +13,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
       clientID: configService.get<string>('KAKAO_CLIENT_ID'),
       clientSecret: configService.get<string>('KAKAO_CLIENT_SECRET'),
       callbackURL: configService.get<string>('KAKAO_CALLBACK_URL'),
-      scope: ['profile_nickname'],
+      scope: ['profile_nickname', 'account_email'],
     });
   }
 
@@ -27,13 +27,15 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
 
     // profile._json 내 properties.nickname 값이 존재하면 우선 사용, 없으면 username 사용
     const nickname = profile._json?.properties?.nickname || username;
+    const email = profile._json?.kakao_account?.email;
 
-    const user: any = {
+    const user: SocialUserInfoDto = {
       name: nickname,
       socialAccessToken: accessToken,
       socialRefreshToken: refreshToken || null,
       provider,
       providerId: id,
+      email,
     };
 
     // user로 들어간 데이터를 dto 객체에 맞게 변경시켜줌
