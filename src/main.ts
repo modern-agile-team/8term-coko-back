@@ -80,6 +80,7 @@ async function bootstrap() {
       'https://localhost:3000',
       'https://cokoedu.com',
       'https://admin.cokoedu.com',
+      'https://8term-coko-front.vercel.app',
     ],
     credentials: true,
     methods: 'GET,POST,PUT,PATCH,DELETE',
