@@ -17,6 +17,7 @@ import { ChallengesModule } from './challenges/challenges.module';
 import { SseModule } from './sse/sse.module';
 import { OpinionsModule } from './opinions/opinions.module';
 import { LoggerModule } from './logger/logger.module';
+import { S3Module } from './s3/s3.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { LoggerModule } from './logger/logger.module';
     ChallengesModule,
     SseModule,
     OpinionsModule,
+    S3Module,
   ],
   controllers: [AppController],
   providers: [AppService],
