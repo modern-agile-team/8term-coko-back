@@ -18,6 +18,7 @@ import { SseModule } from './sse/sse.module';
 import { OpinionsModule } from './opinions/opinions.module';
 import { LoggerModule } from './logger/logger.module';
 import { S3Module } from './s3/s3.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { S3Module } from './s3/s3.module';
       isGlobal: true,
     }),
     EventEmitterModule.forRoot(),
+    ScheduleModule.forRoot(),
     LoggerModule,
     ItemsModule,
     SectionsModule,
