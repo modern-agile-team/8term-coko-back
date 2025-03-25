@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { S3Service } from './s3.service';
-import { LogUploadScheduler } from './LogUploadScheduler';
+import { LogUploadScheduler } from './log-upload-scheduler';
 
 @Module({
   imports: [],
