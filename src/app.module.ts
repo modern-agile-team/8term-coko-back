@@ -17,6 +17,8 @@ import { ChallengesModule } from './challenges/challenges.module';
 import { SseModule } from './sse/sse.module';
 import { OpinionsModule } from './opinions/opinions.module';
 import { LoggerModule } from './logger/logger.module';
+import { S3Module } from './s3/s3.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -24,6 +26,7 @@ import { LoggerModule } from './logger/logger.module';
       isGlobal: true,
     }),
     EventEmitterModule.forRoot(),
+    ScheduleModule.forRoot(),
     LoggerModule,
     ItemsModule,
     SectionsModule,
@@ -39,6 +42,7 @@ import { LoggerModule } from './logger/logger.module';
     ChallengesModule,
     SseModule,
     OpinionsModule,
+    S3Module,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -16,7 +16,10 @@ export class LoggerConfigService {
       transports: [
         new winston.transports.Console({
           format: winston.format.combine(
-            winston.format.timestamp(),
+            winston.format.timestamp({
+              format: () =>
+                new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
+            }),
             winston.format.ms(),
             nestWinstonModuleUtilities.format.nestLike('MyApp', {
               colors: true,
@@ -37,7 +40,10 @@ export class LoggerConfigService {
           format: winston.format.combine(
             winston.format.errors({ stack: true }),
             errorOnlyFilter(),
-            winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+            winston.format.timestamp({
+              format: () =>
+                new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
+            }),
             winston.format.printf((info) => {
               const stack = info.stack ? `\n${info.stack}` : '';
               return `[${info.timestamp}] ${info.level.toUpperCase()}: ${info.message}${stack}`;
@@ -54,7 +60,10 @@ export class LoggerConfigService {
           level: 'info',
           format: winston.format.combine(
             nonErrorFilter(),
-            winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+            winston.format.timestamp({
+              format: () =>
+                new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
+            }),
             winston.format.printf(
               (info) =>
                 `[${info.timestamp}] ${info.level.toUpperCase()}: ${info.message}`,
