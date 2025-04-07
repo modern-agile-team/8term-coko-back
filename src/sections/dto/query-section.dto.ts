@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, Min } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsPositive } from 'class-validator';
 import { DEFALTE_PAGE_SIZE } from '../const/section.const';
 
 export class QuerySectionDto {
@@ -12,9 +12,10 @@ export class QuerySectionDto {
     example: 1,
   })
   @IsOptional()
+  @IsNotEmpty()
   @Type(() => Number)
   @IsInt()
-  @Min(1)
+  @IsPositive()
   readonly cursor?: number;
 
   @ApiPropertyOptional({
@@ -25,8 +26,9 @@ export class QuerySectionDto {
     example: 3,
   })
   @IsOptional()
+  @IsNotEmpty()
   @Type(() => Number)
   @IsInt()
-  @Min(1)
+  @IsPositive()
   readonly pageSize?: number;
 }

@@ -10,11 +10,7 @@ import { PartsRepository } from 'src/parts/parts.repository';
 import { Section } from './entities/section.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateSectionOrderDto } from './dto/update-section-order.dto';
-import {
-  SectionParts,
-  SectionPartsPartProgress,
-  SectionPartsStatus,
-} from 'src/common/type/type';
+import { SectionPartsStatus } from 'src/common/type/type';
 import { PaginationService } from 'src/pagination/pagination.service';
 import { QuerySectionDto } from './dto/query-section.dto';
 import { PaginatedResult } from 'src/pagination/pagination.interface';

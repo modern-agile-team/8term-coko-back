@@ -1,12 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, Min } from 'class-validator';
+import { IsInt, IsNotEmpty, IsPositive } from 'class-validator';
 
 export class UpdateSectionOrderDto {
   @ApiProperty({
     description: '섹션 순서',
     example: 1,
   })
+  @IsNotEmpty()
   @IsInt()
-  @Min(0)
+  @IsPositive()
   readonly order: number;
 }
