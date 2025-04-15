@@ -1,3 +1,4 @@
 export const DAILY_RESET = '0 15 * * *'; //// UTC 15시 === KST 00시
+export const LOG_FILE_UPLOAD_TIME = '1 15 * * *'; // = KST 00시 01분
 
 export const WEEKLY_SEASON_RESET_TIME = '0 0 0 * * 6'; // timezone 옵션을 사용해 KST 매주 토요일 00시 작동
