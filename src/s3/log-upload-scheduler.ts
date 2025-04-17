@@ -3,8 +3,8 @@ import { Cron } from '@nestjs/schedule';
 import * as path from 'path';
 import * as fs from 'fs';
 import { S3Service } from './s3.service';
-import { DAILY_RESET } from 'src/daily-quests/users-daily-quests/const/users-daily-quests.const';
-import { nowKST } from 'src/common/function/time.helper';
+import { LOG_FILE_UPLOAD_TIME } from 'src/daily-quests/users-daily-quests/const/users-daily-quests.const';
+import { yesterdayKST } from 'src/common/function/time.helper';
 
 @Injectable()
 export class LogUploadScheduler {
@@ -12,11 +12,12 @@ export class LogUploadScheduler {
 
   constructor(private readonly s3Service: S3Service) {}
 
-  // 매일 자정에 실행
-  @Cron(DAILY_RESET)
+  // 매일 00시 01분 에 실행
+  @Cron(LOG_FILE_UPLOAD_TIME)
   async handleLogUpload() {
     // 현재 날짜를 YYYY-MM-DD 형식으로 구함
-    const dateStr = nowKST().toISOString().split('T')[0];
+    const dateStr = yesterdayKST().toISOString().split('T')[0];
+
     const logConfigs = [
       {
         dir: path.join(process.cwd(), 'logs/info'),
